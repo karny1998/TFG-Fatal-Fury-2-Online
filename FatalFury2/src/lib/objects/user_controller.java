@@ -10,11 +10,12 @@ enum state{standing1, standing2, standing3, standing4, walking1, walking2, walki
 
 public class user_controller {
     private String charac, path = "assets\\sprites\\characters\\";
-    private Screen screen;
     private state currentState = state.standing1;
     private List<Image> animation;
+    private int x = 600, y = 200;
 
     public user_controller(character ch){
+        new IsKeyPressed();
         if(ch == character.andy){
             charac = "andy";
         }
@@ -32,9 +33,23 @@ public class user_controller {
     }
 
     public screenObject getAnimation(){
+        controlKey key = IsKeyPressed.keyPressed();
+        if(key == controlKey.A){
+            x -= 20;
+        }
+        else if(key == controlKey.D){
+            x += 20;
+        }
+        else if(key == controlKey.W){
+            y -= 20;
+        }
+        else if(key == controlKey.S){
+            y += 20;
+        }
+
         if(currentState == state.standing1){
             currentState =  state.standing2;
-            return new screenObject(500, 500, animation.get(0));
+            return new screenObject(x, y, animation.get(0));
         }
         else if(currentState == state.standing2 || currentState == state.standing4){
             if(currentState == state.standing2){
@@ -43,12 +58,12 @@ public class user_controller {
             else{
                 currentState =  state.standing1;
             }
-            return new screenObject(200, 200, animation.get(1));
+            return new screenObject(x, y, animation.get(1));
         }
         else if(currentState == state.standing3){
             currentState =  state.standing4;
-            return new screenObject(500, 500, animation.get(2));
+            return new screenObject(x, y, animation.get(2));
         }
-        return new screenObject(500, 500, animation.get(0));
+        return new screenObject(x, y, animation.get(0));
     }
 }

@@ -17,7 +17,7 @@ public class Screen extends JPanel {
     public Screen() {
         user = new user_controller(character.terry);
         setSurfaceSize();
-        Timer user_control = new Timer(200, new ActionListener() {
+        Timer user_control = new Timer(150, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 screenObjects.add(user.getAnimation());
