@@ -9,7 +9,7 @@ enum character{terry, mai, andy}
 enum state{standing1, standing2, standing3, standing4, walking1, walking2, walking3, walking4}
 
 public class user_controller {
-    private String charac, path = "assets\\sprites\\characters\\";
+    private String charac, path = "assets/sprites/characters/";
     private state currentState = state.standing1;
     private List<Image> animation;
     private int x = 600, y = 200;
@@ -25,7 +25,7 @@ public class user_controller {
         else{
             charac = "terry";
         }
-        path = path + charac + "\\standing\\";
+        path = path + charac + "/standing/";
         animation = new ArrayList<Image>();;
         for(int i = 1; i <= 3; ++i){
             animation.add(new ImageIcon(path+i+".png").getImage());
