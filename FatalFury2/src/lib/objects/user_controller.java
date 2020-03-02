@@ -1,11 +1,11 @@
 package lib.objects;
 
+import lib.Enums.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import lib.Enums.*;
-
 
 enum state{standing1, standing2, standing3, standing4, walking1, walking2, walking3, walking4}
 
@@ -13,7 +13,7 @@ public class user_controller {
     private String charac, path = "assets/sprites/characters/";
     private state currentState = state.standing1;
     private List<Image> animation;
-    private int x = 600, y = 200;
+    private int x = 350, y = 100;
 
     public user_controller(Playable_Character ch){
         new IsKeyPressed();
@@ -50,7 +50,7 @@ public class user_controller {
 
         if(currentState == state.standing1){
             currentState =  state.standing2;
-            return new screenObject(x, y,  400, 400, animation.get(0), Item_Type.PLAYER);
+            return new screenObject(x, y,  600, 600, animation.get(0), Item_Type.PLAYER);
         }
         else if(currentState == state.standing2 || currentState == state.standing4){
             if(currentState == state.standing2){
@@ -59,12 +59,12 @@ public class user_controller {
             else{
                 currentState =  state.standing1;
             }
-            return new screenObject(x, y, 400, 400, animation.get(1), Item_Type.PLAYER);
+            return new screenObject(x, y, 600, 600, animation.get(1), Item_Type.PLAYER);
         }
         else if(currentState == state.standing3){
             currentState =  state.standing4;
-            return new screenObject(x, y, 400, 400, animation.get(2), Item_Type.PLAYER);
+            return new screenObject(x, y, 600, 600, animation.get(2), Item_Type.PLAYER);
         }
-        return new screenObject(x, y, 400, 400, animation.get(0), Item_Type.PLAYER);
+        return new screenObject(x, y, 600, 600, animation.get(0), Item_Type.PLAYER);
     }
 }
