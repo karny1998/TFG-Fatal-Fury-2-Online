@@ -18,6 +18,8 @@ public class animation {
     Boolean hasEnd = true, ended = false, unstoppable = false;
     //En qué frame de la animación se estaba
     int state = 0;
+    // El sentido en que avanza la animación
+    int increment = 1;
     //Momento en el que salió el último frame
     long startTime = 0;
     //También tendrá un sonido asignado
@@ -26,15 +28,16 @@ public class animation {
 
     //Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas
     public void addFrame(screenObject s, Double t, int iX, int iY){
-        frames.set(frames.size(), s);
-        times.set(times.size(), t);
-        coords.set(coords.size(), new Pair(iX,iY));
+        frames.add(frames.size(), s);
+        times.add(times.size(), t);
+        coords.add(coords.size(), new Pair(iX,iY));
     }
 
     //Inicia los cálculos de la animación
     public  void start(){
         ended = false;
         state = 0;
+        increment = 1;
         startTime = System.currentTimeMillis();
     }
 
@@ -42,6 +45,7 @@ public class animation {
     public  void reset(){
         ended = false;
         state = 0;
+        increment = 1;
         startTime = 0;
     }
 
@@ -57,7 +61,15 @@ public class animation {
         }
         long current = System.currentTimeMillis();
         double elapsedTime = current - startTime;
-        if(state == frames.size()-1 && elapsedTime >= times.get(state)){
+        if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
+            increment = 1;
+            state += increment;
+            result = frames.get(state);
+            result.setX(x);
+            result.setY(y);
+            startTime = current;
+        }
+        else if(state == frames.size()-1 && elapsedTime >= times.get(state)){
             if(hasEnd){
                 ended = true;
                 result = frames.get(state);
@@ -65,7 +77,8 @@ public class animation {
                 result.setY(y);
             }
             else{
-                state = 0;
+                increment = -1;
+                state += increment;
                 startTime = current;
                 result = frames.get(state);
                 result.setX(x+coords.get(coords.size()-1).getKey());
@@ -73,11 +86,17 @@ public class animation {
             }
         }
         else if(elapsedTime >= times.get(state)){
-            state++;
+            state += increment;
             startTime = current;
             result = frames.get(state);
-            result.setX(x+coords.get((state-1)%coords.size()).getKey());
-            result.setY(y+coords.get((state-1)%coords.size()).getValue());
+            if (state == 0) {
+                result.setX(x);
+                result.setY(y);
+            }
+            else{
+                result.setX(x+coords.get((state-1)%coords.size()).getKey());
+                result.setY(y+coords.get((state-1)%coords.size()).getValue());
+            }
         }
         else{
             result = frames.get(state);
@@ -87,6 +106,7 @@ public class animation {
         return result;
     }
 
+    //Getters y setters
     public void setCoords(ArrayList<Pair<Integer, Integer>> coords) {
         this.coords = coords;
     }

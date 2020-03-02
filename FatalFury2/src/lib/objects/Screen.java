@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Screen extends JPanel {
 
-    static int resX = 1280, resY = 720, timerDelay = 150, refreshDelay = 150;
+    static int resX = 1280, resY = 720, timerDelay = 150, refreshDelay = 15;
     static Boolean debug = true, inGame = true;
     private Map<Item_Type, screenObject> screenObjects = new HashMap<Item_Type, screenObject>();
     private user_controller user;
@@ -48,9 +48,18 @@ public class Screen extends JPanel {
             }
         });
         screen_refresh.start();
-
         //Por el momento fijo
         startGame();
+        //GameLoop
+        /*Timer GameLoop = new Timer(refreshDelay, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                screenObject ply = user.getAnimation();
+                screenObjects.put(Item_Type.PLAYER, ply);
+                repaint();
+            }
+        });
+        GameLoop.start();*/
     }
 
     private void setSurfaceSize() {
@@ -70,7 +79,6 @@ public class Screen extends JPanel {
                 g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
             }
         }
-        screenObjects.clear();
     }
 
     private void doDrawingInMenu(Graphics g) {
