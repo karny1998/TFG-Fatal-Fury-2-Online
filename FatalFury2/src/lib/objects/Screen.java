@@ -72,7 +72,6 @@ public class Screen extends JPanel {
     private void doDrawingInGame(Graphics g) {
         Item_Type[] order = {Item_Type.SCENARY, Item_Type.PLAYER, Item_Type.ENEMY,Item_Type.PLAYERTHROWABLE, Item_Type.ENEMYTHROWABLE};
         Graphics2D g2d = (Graphics2D) g;
-        d.drawFPS(g2d);
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
             if(img != null) {
@@ -87,6 +86,7 @@ public class Screen extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+        d.drawFPS(g);
         super.paintComponent(g);
         if(inGame) {
             doDrawingInGame(g);
