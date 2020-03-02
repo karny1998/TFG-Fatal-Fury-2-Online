@@ -1,6 +1,7 @@
 package lib.objects;
-import java.awt.Image;
-import lib.Enums.*;
+import lib.Enums.Item_Type;
+
+import java.awt.*;
 
 //Elemento que se acabará mostrando por pantalla
 public class screenObject {
