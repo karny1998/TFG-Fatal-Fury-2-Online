@@ -1,13 +1,11 @@
 package lib.objects;
 import java.awt.Image;
-
-//Tipos de elementos que se van a imprimir por pantalla
-enum type{none, scenary, player, enemy, playerThrowable, enemyThrowable}
+import lib.Enums.*;
 
 //Elemento que se acabará mostrando por pantalla
 public class screenObject {
     //Tipo de elemento
-    private type objectType = type.none;
+    private Item_Type objectType = Item_Type.NONE;
     //Posición
     private int x = 1, y = 1;
     //Dimensiones
@@ -56,16 +54,16 @@ public class screenObject {
         return x;
     }
 
-    public type getObjectType() {
+    public Item_Type getObjectType() {
         return objectType;
     }
 
-    public void setObjectType(type objectType) {
+    public void setObjectType(Item_Type objectType) {
         this.objectType = objectType;
     }
 
     //Constructor principal completo
-    public screenObject(int _x, int _y, int _width, int _height, Image _img, type _t){
+    public screenObject(int _x, int _y, int _width, int _height, Image _img, Item_Type _t){
         x = _x; y = _y; img = _img;
         width = _width; height = _height;
         objectType = _t;

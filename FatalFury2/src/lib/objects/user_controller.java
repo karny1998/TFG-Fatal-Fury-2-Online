@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import lib.Enums.*;
 
-enum character{terry, mai, andy}
+
 enum state{standing1, standing2, standing3, standing4, walking1, walking2, walking3, walking4}
 
 public class user_controller {
@@ -14,12 +15,12 @@ public class user_controller {
     private List<Image> animation;
     private int x = 600, y = 200;
 
-    public user_controller(character ch){
+    public user_controller(Playable_Character ch){
         new IsKeyPressed();
-        if(ch == character.andy){
+        if(ch == Playable_Character.ANDY){
             charac = "andy";
         }
-        else if(ch == character.mai){
+        else if(ch == Playable_Character.MAI){
             charac = "mai";
         }
         else{
@@ -49,7 +50,7 @@ public class user_controller {
 
         if(currentState == state.standing1){
             currentState =  state.standing2;
-            return new screenObject(x, y,  400, 400, animation.get(0), type.player);
+            return new screenObject(x, y,  400, 400, animation.get(0), Item_Type.PLAYER);
         }
         else if(currentState == state.standing2 || currentState == state.standing4){
             if(currentState == state.standing2){
@@ -58,12 +59,12 @@ public class user_controller {
             else{
                 currentState =  state.standing1;
             }
-            return new screenObject(x, y, 400, 400, animation.get(1), type.player);
+            return new screenObject(x, y, 400, 400, animation.get(1), Item_Type.PLAYER);
         }
         else if(currentState == state.standing3){
             currentState =  state.standing4;
-            return new screenObject(x, y, 400, 400, animation.get(2), type.player);
+            return new screenObject(x, y, 400, 400, animation.get(2), Item_Type.PLAYER);
         }
-        return new screenObject(x, y, 400, 400, animation.get(0), type.player);
+        return new screenObject(x, y, 400, 400, animation.get(0), Item_Type.PLAYER);
     }
 }
