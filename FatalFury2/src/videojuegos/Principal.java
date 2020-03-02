@@ -1,6 +1,8 @@
 package videojuegos;
 
+import lib.Enums.Playable_Character;
 import lib.objects.*;
+import lib.sound.Sound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +26,8 @@ public class Principal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                Sound test =  new Sound(Playable_Character.ANDY);
+                test.play("Ost/Rivers.wav");
                 Principal ex = new Principal();
                 ex.setVisible(true);
             }
