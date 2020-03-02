@@ -49,7 +49,7 @@ public class user_controller {
 
         if(currentState == state.standing1){
             currentState =  state.standing2;
-            return new screenObject(x, y, animation.get(0));
+            return new screenObject(x, y,  400, 400, animation.get(0), type.player);
         }
         else if(currentState == state.standing2 || currentState == state.standing4){
             if(currentState == state.standing2){
@@ -58,12 +58,12 @@ public class user_controller {
             else{
                 currentState =  state.standing1;
             }
-            return new screenObject(x, y, animation.get(1));
+            return new screenObject(x, y, 400, 400, animation.get(1), type.player);
         }
         else if(currentState == state.standing3){
             currentState =  state.standing4;
-            return new screenObject(x, y, animation.get(2));
+            return new screenObject(x, y, 400, 400, animation.get(2), type.player);
         }
-        return new screenObject(x, y, animation.get(0));
+        return new screenObject(x, y, 400, 400, animation.get(0), type.player);
     }
 }
