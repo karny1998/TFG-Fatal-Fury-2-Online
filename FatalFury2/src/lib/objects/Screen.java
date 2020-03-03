@@ -86,8 +86,8 @@ public class Screen extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        d.drawFPS(g);
         super.paintComponent(g);
+        d.drawFPS(g);
         if(inGame) {
             doDrawingInGame(g);
         }
