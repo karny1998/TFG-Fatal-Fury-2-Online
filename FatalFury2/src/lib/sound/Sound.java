@@ -34,6 +34,7 @@ public class Sound {
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException {
         String routes[];
+        //TODO Load from folder instead from route
         switch ( type ){
             case Terry_audio:
                 routes = new String[Character_Voices_Size];
