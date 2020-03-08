@@ -44,6 +44,6 @@ public class user_controller {
         else if(key == controlKey.S){
             y += 20;
         }
-        return anim.getFrame(x,y);
+        return anim.getFrame(x,y,1);
     }
 }

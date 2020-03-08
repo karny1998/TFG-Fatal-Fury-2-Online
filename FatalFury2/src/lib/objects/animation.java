@@ -49,14 +49,30 @@ public class animation {
         startTime = 0;
     }
 
+    public Boolean getEnded() {
+        return ended;
+    }
+
+    public void setEnded(Boolean ended) {
+        this.ended = ended;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(int increment) {
+        this.increment = increment;
+    }
+
     //Obtiene el frame de la animación correspondiente al momento actual
     //a partir de unas coordenadas base
-    public screenObject getFrame(int x, int y){
+    public screenObject getFrame(int x, int y, int orientation){
         screenObject result;
         if(ended){
             result = frames.get(frames.size());
-            result.setX(x+coords.get(frames.size()).getKey());
-            result.setY(y+coords.get(frames.size()).getValue());
+            result.setX(x+orientation*coords.get(frames.size()).getKey());
+            result.setY(y+orientation*coords.get(frames.size()).getValue());
             return frames.get(frames.size());
         }
         long current = System.currentTimeMillis();
@@ -81,8 +97,8 @@ public class animation {
                 state += increment;
                 startTime = current;
                 result = frames.get(state);
-                result.setX(x+coords.get(coords.size()-1).getKey());
-                result.setY(y+coords.get(coords.size()-1).getValue());
+                result.setX(x+orientation*coords.get(coords.size()-1).getKey());
+                result.setY(y+orientation*coords.get(coords.size()-1).getValue());
             }
         }
         else if(elapsedTime >= times.get(state)){
@@ -94,8 +110,8 @@ public class animation {
                 result.setY(y);
             }
             else{
-                result.setX(x+coords.get((state-1)%coords.size()).getKey());
-                result.setY(y+coords.get((state-1)%coords.size()).getValue());
+                result.setX(x+orientation*coords.get((state-1)%coords.size()).getKey());
+                result.setY(y+orientation*coords.get((state-1)%coords.size()).getValue());
             }
         }
         else{
