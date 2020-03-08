@@ -96,9 +96,10 @@ public class character {
     }
 
     public screenObject getFrame(String mov){
-        if (!movements.get(state).hasEnd() || movements.get(state).hasEnd() && movements.get(state).ended()){
-            state = combos.get(mov);
+        if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
+                || movements.get(state).hasEnd() && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
+            state = combos.get(mov);
             movements.get(state).start();
         }
         screenObject s =  movements.get(state).getFrame(x,y, -orientation);
