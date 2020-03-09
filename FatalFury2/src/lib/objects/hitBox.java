@@ -4,24 +4,19 @@ import java.awt.*;
 
 public class hitBox {
 
-    private int width, height;
     private int x, y;
-    // if !hitbox -> its a hurtbox
+    private int width, height;
     private Boolean hitbox;
 
     public hitBox(int originX, int originY, int width, int height, Boolean hitbox) {
-        this.width = width;
-        this.height = height;
-        this.x = originX;
-        this.y = originY;
+        this.x = originX;               this.y = originY;
+        this.width = width;             this.height = height;
         this.hitbox = hitbox;
     }
 
     public void updateHitBox(int newX, int newY, int newWidth, int newHeight) {
-        this.x = newX;
-        this.y = newY;
-        this.width = newWidth;
-        this.height = newHeight;
+        this.x = newX;                  this.y = newY;
+        this.width = newWidth;          this.height = newHeight;
     }
 
 
@@ -47,31 +42,15 @@ public class hitBox {
     }
 
 
-    public Boolean isHitbox() {
-        return hitbox;
-    }
-
-    public Boolean isHurtbox() {
-        return !hitbox;
-    }
+    public Boolean isHitbox() { return hitbox; }
+    public Boolean isHurtbox() { return !hitbox; }
 
 
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+    public int getX() { return x; }
+    public int getY() { return y; }
 
 
     }
