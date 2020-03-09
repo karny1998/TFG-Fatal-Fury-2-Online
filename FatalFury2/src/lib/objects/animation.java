@@ -1,6 +1,8 @@
 package lib.objects;
 
 import javafx.util.Pair;
+import lib.Enums.Character_Voices;
+import lib.sound.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,17 @@ public class animation {
     //Momento en el que salió el último frame
     long startTime = 0;
     //También tendrá un sonido asignado
+    Sound sound;
+    Character_Voices soundType;
+    Boolean playing = false;
+
+    public Character_Voices getSoundType() {
+        return soundType;
+    }
+
+    public void setSoundType(Character_Voices soundType) {
+        this.soundType = soundType;
+    }
 
     public animation() {}
 
@@ -35,6 +48,7 @@ public class animation {
 
     //Inicia los cálculos de la animación
     public  void start(){
+        playing = false;
         ended = false;
         state = 0;
         increment = 1;
@@ -43,6 +57,7 @@ public class animation {
 
     //Finaliza la animación
     public  void reset(){
+        playing = false;
         ended = false;
         state = 0;
         increment = 1;
@@ -68,11 +83,16 @@ public class animation {
     //Obtiene el frame de la animación correspondiente al momento actual
     //a partir de unas coordenadas base
     public screenObject getFrame(int x, int y, int orientation){
+        if(!playing && hasEnd){
+            sound.playCharacterVoice(soundType);
+            playing = true;
+        }
         screenObject result;
         if(ended){
-            result = frames.get(frames.size());
-            result.setX(x+orientation*coords.get(frames.size()).getKey());
-            result.setY(y+orientation*coords.get(frames.size()).getValue());
+            result = frames.get(frames.size()).cloneSO();
+            result.setX(x+coords.get(frames.size()).getKey());
+            result.setY(y+coords.get(frames.size()).getValue());
+            result.setWidth(result.getWidth()*orientation);
             return frames.get(frames.size());
         }
         long current = System.currentTimeMillis();
@@ -80,7 +100,7 @@ public class animation {
         if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
             increment = 1;
             state += increment;
-            result = frames.get(state);
+            result = frames.get(state).cloneSO();
             result.setX(x);
             result.setY(y);
             startTime = current;
@@ -88,7 +108,7 @@ public class animation {
         else if(state == frames.size()-1 && elapsedTime >= times.get(state)){
             if(hasEnd){
                 ended = true;
-                result = frames.get(state);
+                result = frames.get(state).cloneSO();
                 result.setX(x);
                 result.setY(y);
             }
@@ -96,29 +116,30 @@ public class animation {
                 increment = -1;
                 state += increment;
                 startTime = current;
-                result = frames.get(state);
-                result.setX(x+orientation*coords.get(coords.size()-1).getKey());
-                result.setY(y+orientation*coords.get(coords.size()-1).getValue());
+                result = frames.get(state).cloneSO();
+                result.setX(x+coords.get(coords.size()-1).getKey());
+                result.setY(y+coords.get(coords.size()-1).getValue());
             }
         }
         else if(elapsedTime >= times.get(state)){
             state += increment;
             startTime = current;
-            result = frames.get(state);
+            result = frames.get(state).cloneSO();
             if (state == 0) {
                 result.setX(x);
                 result.setY(y);
             }
             else{
-                result.setX(x+orientation*coords.get((state-1)%coords.size()).getKey());
-                result.setY(y+orientation*coords.get((state-1)%coords.size()).getValue());
+                result.setX(x+coords.get((state-1)%coords.size()).getKey());
+                result.setY(y+coords.get((state-1)%coords.size()).getValue());
             }
         }
         else{
-            result = frames.get(state);
+            result = frames.get(state).cloneSO();
             result.setX(x);
             result.setY(y);
         }
+        result.setWidth(result.getWidth()*orientation);
         return result;
     }
 
@@ -182,4 +203,8 @@ public class animation {
     public void setUnstoppable(Boolean unstoppable) {
         this.unstoppable = unstoppable;
     }
+
+    public void setSound(Sound s){sound = s;}
+
+    public Sound getSound(){return sound;}
 }

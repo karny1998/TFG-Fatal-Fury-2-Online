@@ -4,11 +4,12 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-enum controlKey { NONE, A, D, W, S}
+enum controlKey { NONE, A, D, W, S, LEFT, RIGHT,UP,DOWN}
 
 public class IsKeyPressed {
 
-    private static volatile boolean aPressed = false, dPressed = false, wPressed = false, sPressed = false;
+    private static volatile boolean aPressed = false, dPressed = false, wPressed = false, sPressed = false,
+                                    leftPressed = false, rightPressed = false, upPressed = false, downPressed = false;
 
     public static controlKey keyPressed() {
         synchronized (IsKeyPressed.class) {
@@ -24,6 +25,18 @@ public class IsKeyPressed {
             }
             else if (sPressed){
                 key = controlKey.S;
+            }
+            else if (leftPressed){
+                key = controlKey.LEFT;
+            }
+            else if (rightPressed){
+                key = controlKey.RIGHT;
+            }
+            else if (upPressed){
+                key = controlKey.UP;
+            }
+            else if (downPressed){
+                key = controlKey.DOWN;
             }
             return key;
         }
@@ -48,6 +61,18 @@ public class IsKeyPressed {
                             else if (ke.getKeyCode() == KeyEvent.VK_S) {
                                 sPressed = true;
                             }
+                            else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+                                leftPressed = true;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                                rightPressed = true;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_UP) {
+                                upPressed = true;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+                                downPressed = true;
+                            }
                             break;
 
                         case KeyEvent.KEY_RELEASED:
@@ -62,6 +87,18 @@ public class IsKeyPressed {
                             }
                             else if (ke.getKeyCode() == KeyEvent.VK_S) {
                                 sPressed = false;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+                                leftPressed = false;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                                rightPressed = false;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_UP) {
+                                upPressed = false;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+                                downPressed = false;
                             }
                             break;
                     }

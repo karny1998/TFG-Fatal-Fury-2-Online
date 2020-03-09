@@ -1,7 +1,9 @@
 package lib.objects;
 
+import lib.Enums.Audio_Type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
+import lib.sound.Sound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +16,9 @@ public class character {
     Map<Movement, movement> movements = new HashMap<Movement, movement>();
     int life = 100;
     int orientation = 1;
-    int x = 150, y = 260;
+    int x = 150, y = 160;
     Movement state = Movement.STANDING;
+    Sound voices;
 
     public character(Playable_Character c){
         charac = c;
@@ -26,7 +29,8 @@ public class character {
             //generar movimientos de andy
         }
         else{
-            new terry().generateMovs(combos, movements);
+            voices = new Sound(Audio_Type.Andy_audio);
+            new terry().generateMovs(combos, movements, voices);
         }
         movements.get(Movement.STANDING).start();
     }
@@ -102,7 +106,7 @@ public class character {
             state = combos.get(mov);
             movements.get(state).start();
         }
-        screenObject s =  movements.get(state).getFrame(x,y, -orientation);
+        screenObject s =  movements.get(state).getFrame(x,y, orientation);
         x = s.getX();
         y = s.getY();
         return s;
