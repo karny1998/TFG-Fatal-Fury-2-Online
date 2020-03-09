@@ -1,8 +1,12 @@
 package lib.sound;
 
+import javafx.scene.media.MediaPlayer;
 import lib.Enums.*;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,8 +16,10 @@ public class Sound {
     private static String Special_Effects_Route = "assets/sound/special_effects/";
 
     private Playable_Character character;
-    private AudioInputStream[] audio;
-    private Clip clipActual;
+    private Clip[] clips;
+
+
+    private MediaPlayer mp;
 
     private static int Character_Voices_Size = Character_Voices.values().length;
     private static int Announcer_Voices_Size = Announcer_voices.values().length;
@@ -25,14 +31,15 @@ public class Sound {
 
     public Sound(Audio_Type type){
         try {
-            this.loadAudio(type);
+          this.loadAudio(type);
+
         } catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException {
+    private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
         String routes[];
         //TODO Load from folder instead from route
         switch ( type ){
@@ -123,38 +130,38 @@ public class Sound {
                 throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        audio = new AudioInputStream[routes.length];
-
+        clips = new Clip[routes.length];
         for(int i = 0; i < routes.length; i++){
-           audio[i] =  AudioSystem.getAudioInputStream(new File(routes[i]).getAbsoluteFile());
+           clips[i] = AudioSystem.getClip();
+           clips[i].open(AudioSystem.getAudioInputStream(new File(routes[i]).getAbsoluteFile()));
+
         }
 
     }
 //TODO stop, pause, reset, etc.
 //https://www.geeksforgeeks.org/play-audio-file-using-java/
 
-    private synchronized void play(int index) {
+    private void play(int index) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    clipActual = AudioSystem.getClip();
-                    clipActual.open(audio[index]);
-                    clipActual.start();
+                    clips[index].setFramePosition(0);
+                    clips[index].start();
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
             }
         }).start();
+
     }
+
 
     private synchronized void loop(int index) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    clipActual = AudioSystem.getClip();
-                    clipActual.open(audio[index]);
-                    clipActual.loop(Clip.LOOP_CONTINUOUSLY);
-                    clipActual.start();
+                    clips[index].setFramePosition(0);
+                    clips[index].loop(Clip.LOOP_CONTINUOUSLY);
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
@@ -162,10 +169,6 @@ public class Sound {
         }).start();
     }
 
-    public void stop() {
-        //TODO salta excepcion
-        clipActual.stop();
-    }
 
 
     public synchronized void playCharacterVoice(Character_Voices index){
