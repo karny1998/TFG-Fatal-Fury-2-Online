@@ -20,6 +20,7 @@ public class Screen extends JPanel {
     private Debug d = new Debug(debug, resX, resY, refreshDelay);
     private Map<String, Timer> timers = new HashMap<String, Timer>();
 
+
     private void startGame(){
         Timer user_control = new Timer(timerDelay, new ActionListener() {
             @Override

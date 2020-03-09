@@ -1,9 +1,6 @@
 package videojuegos;
 
-import lib.Enums.Audio_Type;
-import lib.Enums.Music;
 import lib.objects.Screen;
-import lib.sound.Sound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +25,6 @@ public class Principal extends JFrame {
             @Override
             public void run() {
                 //TEST
-                Sound announcer =  new Sound(Audio_Type.Music_Audio);
-                announcer.playMusic(Music.TEST, false);
 
                 Principal ex = new Principal();
                 ex.setVisible(true);
