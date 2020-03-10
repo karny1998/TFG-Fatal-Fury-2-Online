@@ -41,7 +41,8 @@ public class Sound {
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
         String routes[];
-        //TODO Load from folder instead from route
+        //TODO METER RESTO SONIDOS
+        //TODO Load from folder instead ºfrom route
         switch ( type ){
             case Terry_audio:
                 routes = new String[Character_Voices_Size];
@@ -71,7 +72,7 @@ public class Sound {
                 routes[Character_Voices.Hurt_3.ordinal()] = Voice_Route + "Andy/Hurt_3.wav";
                 routes[Character_Voices.Special_1.ordinal()] = Voice_Route + "Andy/Special_1.wav";
                 routes[Character_Voices.Special_2.ordinal()] = Voice_Route + "Andy/Special_2.wav";
-                routes[Character_Voices.Special_3.ordinal()] = Voice_Route + "Andy/Special_3.wav";
+                  routes[Character_Voices.Special_3.ordinal()] = Voice_Route + "Andy/Special_3.wav";
                 routes[Character_Voices.Special_4.ordinal()] = Voice_Route + "Andy/Special_4.wav";
                 routes[Character_Voices.Desperation_Move.ordinal()] = Voice_Route + "Andy/Desperation_Move.wav";
                 routes[Character_Voices.Win.ordinal()] = Voice_Route + "Andy/Win.wav";
@@ -142,54 +143,56 @@ public class Sound {
 //https://www.geeksforgeeks.org/play-audio-file-using-java/
 
     private void play(int index) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    clips[index].setFramePosition(0);
-                    clips[index].start();
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }).start();
-
-    }
-
-
-    private synchronized void loop(int index) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    clips[index].setFramePosition(0);
-                    clips[index].loop(Clip.LOOP_CONTINUOUSLY);
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }).start();
-    }
-
-
-
-    public synchronized void playCharacterVoice(Character_Voices index){
-        play(index.ordinal());
-    }
-
-    public synchronized void playAnnouncerVoice(Announcer_voices index){
-        play(index.ordinal());
-    }
-
-    public synchronized void playMusic(Music index, Boolean loop){
-        if (loop) {
-            loop(index.ordinal());
-        } else {
-            play(index.ordinal());
+        try {
+            clips[index].setFramePosition(0);
+            clips[index].start();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 
-    public synchronized void playSfx(Character_Voices index){
-        play(index.ordinal());
+
+    private void loop(int index) {
+        try {
+            clips[index].setFramePosition(0);
+            clips[index].loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
+
+    private void stop(int index){
+        if(clips[index].isRunning()){
+            clips[index].stop();
+        }
+    }
+
+    private void resume(int index){
+        if(!clips[index].isRunning() && clips[index].getFramePosition() != 0){
+            clips[index].start();
+        }
+    }
+
+    public void playCharacterVoice(Character_Voices index){ play(index.ordinal()); }
+    public void stopCharacterVoice(Character_Voices index){ stop(index.ordinal()); }
+    public void resumeCharacter_Voices(Character_Voices index){ resume(index.ordinal()); }
+
+
+    public void playAnnouncerVoice(Announcer_voices index){ play(index.ordinal()); }
+    public void stopAnnouncerVoice(Announcer_voices index){ stop(index.ordinal()); }
+    public void resumeAnnouncerVoice(Announcer_voices index){ resume(index.ordinal()); }
+
+
+    public void playMusic(Music index){ play(index.ordinal()); }
+    public void loopMusic(Music index){ loop(index.ordinal()); }
+    public void stopMusic(Music index){ stop(index.ordinal()); }
+    public void resumeMusic(Music index){ resume(index.ordinal()); }
+
+
+
+    public void playSfx(Character_Voices index){ play(index.ordinal()); }
+    public void stopSfx(Character_Voices index){ stop(index.ordinal()); }
+    public void resumeSfx(Character_Voices index){ resume(index.ordinal()); }
 
 }

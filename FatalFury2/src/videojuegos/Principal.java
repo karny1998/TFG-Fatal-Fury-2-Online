@@ -24,8 +24,6 @@ public class Principal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                //TEST
-
                 Principal ex = new Principal();
                 ex.setVisible(true);
             }
