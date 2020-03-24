@@ -29,6 +29,10 @@ public class enemy_controller {
         }
     }
 
+    public character getPlayer() {
+        return player;
+    }
+
     public screenObject getAnimation(){
         controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
         controlKey key =  array1[rand.nextInt(array1.length)];

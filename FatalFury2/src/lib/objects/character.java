@@ -111,4 +111,34 @@ public class character {
         y = s.getY();
         return s;
     }
+
+    public hitBox getHitbox(){
+        hitBox aux = movements.get(state).getHitbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), true);
+    }
+
+    public hitBox getHurtbox(){
+        hitBox aux = movements.get(state).getHurtbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), false);
+    }
+
+    public Sound getVoices() {
+        return voices;
+    }
+
+    public void setVoices(Sound voices) {
+        this.voices = voices;
+    }
+
+    public void applyDamage(int dmg){
+        life -= dmg;
+    }
 }

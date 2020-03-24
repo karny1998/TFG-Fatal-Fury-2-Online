@@ -16,28 +16,17 @@ public class Screen extends JPanel {
     static int resX = 1280, resY = 720, timerDelay = 1, refreshDelay = 15;
     static Boolean debug = true, inGame = true;
     private Map<Item_Type, screenObject> screenObjects = new HashMap<Item_Type, screenObject>();
-    private user_controller user;
-    private enemy_controller enemy;
+    private fight_controller fight;
     private scenary scene;
     private Debug d = new Debug(debug, resX, resY, refreshDelay);
     private Map<String, Timer> timers = new HashMap<String, Timer>();
 
 
     private void startGame(){
-        Timer user_control = new Timer(timerDelay, new ActionListener() {
+        Timer fight_control = new Timer(timerDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //CALCULAR COSAS DEL JUGADOR
-                screenObject ply = user.getAnimation();
-                screenObjects.put(Item_Type.PLAYER, ply);
-            }
-        });
-        Timer enemy_control = new Timer(timerDelay, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //CALCULAR COSAS DEL JUGADOR
-                screenObject ply = enemy.getAnimation();
-                screenObjects.put(Item_Type.ENEMY, ply);
+                fight.getAnimation(screenObjects);
             }
         });
         Timer scenary_control = new Timer(timerDelay, new ActionListener() {
@@ -50,25 +39,22 @@ public class Screen extends JPanel {
                 screenObjects.put(Item_Type.SCENARY_2, ply);
             }
         });
-        user_control.start();
-        enemy_control.start();
+        fight_control.start();
         scenary_control.start();
-        timers.put("user_control", user_control);
-        timers.put("enemy_control", enemy_control);
+        timers.put("fight_control", fight_control);
         timers.put("scenary_control", scenary_control);
     }
 
     private void stopGame(){
-        timers.get("user_control").stop();
-        timers.get("enemy_control").stop();
+        timers.get("fight_control").stop();
         timers.get("scenary_control").stop();
         inGame = false;
     }
 
     public Screen() {
-        user = new user_controller(Playable_Character.TERRY);
-        enemy = new enemy_controller(Playable_Character.TERRY);
-
+        user_controller user = new user_controller(Playable_Character.TERRY);
+        enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+        fight = new fight_controller(user,enemy);
 
         scene = new scenary();
         scene.setAnim1(usa.generateAnimation1());
@@ -113,6 +99,10 @@ public class Screen extends JPanel {
                 g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
             }
         }
+        fight.getPlayerControler().getPlayer().getHitbox().drawHitBox(g2d);
+        fight.getEnemyControler().getPlayer().getHitbox().drawHitBox(g2d);
+        fight.getPlayerControler().getPlayer().getHurtbox().drawHitBox(g2d);
+        fight.getEnemyControler().getPlayer().getHurtbox().drawHitBox(g2d);
     }
 
     private void doDrawingInMenu(Graphics g) {

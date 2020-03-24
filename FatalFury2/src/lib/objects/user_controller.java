@@ -5,6 +5,15 @@ import lib.Enums.Playable_Character;
 public class user_controller {
     private String charac, path = "assets/sprites/characters/";
     character player;
+
+    public character getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(character player) {
+        this.player = player;
+    }
+
     private int x = 500, y = 160;
     private animation anim = new animation();
 

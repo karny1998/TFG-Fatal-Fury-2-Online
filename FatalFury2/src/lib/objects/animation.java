@@ -28,6 +28,42 @@ public class animation {
     Sound sound;
     Character_Voices soundType;
     Boolean playing = false;
+    //Hitbox asociada
+    hitBox hitbox = new hitBox(-10000,-10000,1,1,true);
+    // Hurtbox asociada
+    hitBox hurtBox = new hitBox(-10000,-10000,1,1,false);;
+
+    public Boolean getPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(Boolean playing) {
+        this.playing = playing;
+    }
+
+    public hitBox getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(hitBox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    public void setHitbox(int originX, int originY, int width, int height) {
+        this.hitbox = new hitBox(originX, originY, width, height, true);
+    }
+
+    public hitBox getHurtBox() {
+        return hurtBox;
+    }
+
+    public void setHurtBox(hitBox hurtBox) {
+        this.hurtBox = hurtBox;
+    }
+
+    public void setHurtBox(int originX, int originY, int width, int height) {
+        this.hurtBox = new hitBox(originX, originY, width, height, false);
+    }
 
     public Character_Voices getSoundType() {
         return soundType;

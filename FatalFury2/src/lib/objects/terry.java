@@ -25,8 +25,10 @@ public class terry {
         mov = new movement(Movement.STANDING, anim);
         movs.put(Movement.STANDING,mov);
         combos.put("",Movement.STANDING);
+        anim.setHurtBox(145,110,220,390);
         //ANDANDO
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
         for(int i = 1; i <= 3; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "walking/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -39,6 +41,7 @@ public class terry {
         combos.put("LEFT",Movement.WALKING);
         //ANDANDO HACIA ATRAS
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
         for(int i = 3; i >= 1; --i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "walking/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -51,6 +54,7 @@ public class terry {
         combos.put("RIGHT",Movement.WALKING_BACK);
         //AGACHARSE
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(false);
         for(int i = 1; i <= 3; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "crouch/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -63,6 +67,7 @@ public class terry {
         combos.put("DOWN",Movement.CROUCH);
         //POÑOTASO DÉBIL
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
         for(int i = 1; i <= 2; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "soft_punch/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -75,6 +80,8 @@ public class terry {
         combos.put("A",Movement.SOFT_PUNCH);
         //POÑOTASO FUERTE
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
+        anim.setHitbox(15, 170, 130,75);
         anim.setHasEnd(true);
         for(int i = 1; i <= 2; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "hard_punch/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -85,10 +92,11 @@ public class terry {
         mov = new movement(Movement.HARD_PUNCH, anim);
         movs.put(Movement.HARD_PUNCH,mov);
         combos.put("S",Movement.HARD_PUNCH);
-        //CODASO
         anim.setSound(sounds);
         anim.setSoundType(Character_Voices.Hit_3);
+        //CODASO
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
         for(int i = 1; i <= 2; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "attack_poke/"+i+".png").getImage(), Item_Type.PLAYER);
@@ -101,6 +109,7 @@ public class terry {
         combos.put("D",Movement.ATTACK_POKE);
         //VOLTERETA
         anim = new animation();
+        anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
         for(int i = 1; i <= 4; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "roll_front/"+i+".png").getImage(), Item_Type.PLAYER);

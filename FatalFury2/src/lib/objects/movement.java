@@ -80,4 +80,12 @@ public class movement {
     public screenObject getFrame(int x, int y, int orientation) {
         return anim.getFrame(x,y, orientation);
     }
+
+    public hitBox getHitbox(){
+        return anim.getHitbox();
+    }
+
+    public hitBox getHurtbox(){
+        return anim.getHurtBox();
+    }
 }
