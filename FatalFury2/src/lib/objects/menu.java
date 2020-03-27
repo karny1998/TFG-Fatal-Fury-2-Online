@@ -7,51 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class menu {
-    public class selectionable{
-        Selectionable type;
-        animation anim;
-        menu men = null;
-
-        public selectionable(){}
-
-        public selectionable(Selectionable type, animation anim, menu men) {
-            this.type = type;
-            this.anim = anim;
-            this.men = men;
-        }
-        public selectionable(Selectionable type, animation anim) {
-            this.type = type;
-            this.anim = anim;
-        }
-
-        public menu getMen() {
-            return men;
-        }
-
-        public void setMen(menu men) {
-            this.men = men;
-        }
-
-        public Selectionable getType() {
-            return type;
-        }
-
-        public void setType(Selectionable type) {
-            this.type = type;
-        }
-
-        public animation getAnim() {
-            return anim;
-        }
-
-        public void setAnim(animation anim) {
-            this.anim = anim;
-        }
-    }
-
-    Selectionable orden[];
-    int sel = 0;
-    Map<Selectionable, selectionable> selectionables = new HashMap<Selectionable, selectionable>();
+    private Selectionable orden[];
+    private int sel = 0;
+    private Map<Selectionable, selectionable> selectionables = new HashMap<Selectionable, selectionable>();
 
     public menu(){}
 

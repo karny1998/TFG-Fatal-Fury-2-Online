@@ -16,13 +16,9 @@ public class game_controller {
     private GameState state = GameState.NAVIGATION;
 
     public game_controller() {
-        user_controller user = new user_controller(Playable_Character.TERRY);
-        enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-        fight = new fight_controller(user,enemy);
-
-        scene = new scenary();
-        scene.setAnim1(usa.generateAnimation1());
-        scene.setAnim2(usa.generateAnimation2());
+        new IsKeyPressed();
+        principal = menu_generator.generate();
+        actualMenu = principal;
     }
 
     public game_controller(menu principal) {
@@ -62,27 +58,52 @@ public class game_controller {
 
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
         if(state == GameState.NAVIGATION){
-            controlKey cK = IsKeyPressed.keyPressed();
-            if(cK == controlKey.ENTER){
-                Pair<menu, Selectionable> p = actualMenu.select();
-                if(p.getKey() == null && p.getValue() == Selectionable.GAME_IA){
-                    user_controller user = new user_controller(Playable_Character.TERRY);
-                    enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-                    fight = new fight_controller(user,enemy);
 
-                    scene = new scenary();
-                    scene.setAnim1(usa.generateAnimation1());
-                    scene.setAnim2(usa.generateAnimation2());
+            controlKey cK = IsKeyPressed.keyPressed();
+            screenObject s = actualMenu.getFrame(cK);
+            screenObjects.put(Item_Type.MENU, s);
+            Pair<menu, Selectionable> p = actualMenu.select();
+
+            if(p.getValue() == Selectionable.START && cK != controlKey.NONE){
+                user_controller user = new user_controller(Playable_Character.TERRY);
+                enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+                fight = new fight_controller(user, enemy);
+
+                scene = new scenary();
+                scene.setAnim1(usa.generateAnimation1());
+                scene.setAnim2(usa.generateAnimation2());
+
+                state = GameState.FIGHT;
+
+                screenObjects.remove(Item_Type.MENU);
+            }
+            else if(cK == controlKey.ENTER){
+                if(p.getKey() == null) {
+                    switch (p.getValue()) {
+                        case GAME_IA:
+                            user_controller user = new user_controller(Playable_Character.TERRY);
+                            enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+                            fight = new fight_controller(user, enemy);
+
+                            scene = new scenary();
+                            scene.setAnim1(usa.generateAnimation1());
+                            scene.setAnim2(usa.generateAnimation2());
+
+                            screenObjects.remove(Item_Type.MENU);
+                            state = GameState.FIGHT;
+                    }
                 }
                 else{
                     actualMenu = p.getKey();
                 }
             }
-            screenObject s = actualMenu.getFrame(cK);
-            screenObjects.put(Item_Type.MENU, s);
         }
         else if(state == GameState.FIGHT){
             fight.getAnimation(screenObjects);
+            screenObject ply = scene.getFrame1();
+            screenObjects.put(Item_Type.SCENARY_1, ply);
+            ply = scene.getFrame2();
+            screenObjects.put(Item_Type.SCENARY_2, ply);
         }
     }
 }

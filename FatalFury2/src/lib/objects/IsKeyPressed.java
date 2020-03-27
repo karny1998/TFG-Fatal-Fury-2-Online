@@ -4,7 +4,7 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-enum controlKey { NONE, A, D, W, S, LEFT, RIGHT,UP,DOWN, ENTER}
+enum controlKey {NONE, A, D, W, S, LEFT, RIGHT,UP,DOWN, ENTER}
 
 public class IsKeyPressed {
 
