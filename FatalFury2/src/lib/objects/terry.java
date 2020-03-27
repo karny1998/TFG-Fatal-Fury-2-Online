@@ -90,6 +90,7 @@ public class terry {
         anim.setSound(sounds);
         anim.setSoundType(Character_Voices.Hit_2);
         mov = new movement(Movement.HARD_PUNCH, anim);
+        mov.setDamage(10);
         movs.put(Movement.HARD_PUNCH,mov);
         combos.put("S",Movement.HARD_PUNCH);
         anim.setSound(sounds);

@@ -35,21 +35,7 @@ public class fight_controller {
     }
 
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
-        screenObject ply;
-        if(player.getPlayer().getLife() > 0) {
-            ply = player.getAnimation();
-            screenObjects.put(Item_Type.PLAYER, ply);
-        }
-        else{
-            screenObjects.remove(Item_Type.PLAYER);
-        }
-        if(enemy.getPlayer().getLife() > 0) {
-            ply = enemy.getAnimation();
-            screenObjects.put(Item_Type.ENEMY, ply);
-        }
-        else{
-            screenObjects.remove(Item_Type.ENEMY);
-        }
+        // Calculo de daños y colisiones
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
         hitBox pHit = player.getPlayer().getHitbox();
@@ -59,18 +45,34 @@ public class fight_controller {
         if(!eHit.collides(pHit)){
             if(pHit.collides(eHurt) && player_old_state != player_act_state){
                 System.out.println("OH SI LE HISE PUPA");
-                enemy.getPlayer().applyDamage(10);
+                enemy.getPlayer().applyDamage(player.getPlayer().getDamage());
             }
             if(player_old_state != player_act_state){
                 player_old_state = player_act_state;
             }
             if(eHit.collides(pHurt) && enemy_old_state != enemy_act_state){
                 System.out.println("OH NO ME HISO PUPA");
-                player.getPlayer().applyDamage(10);
+                player.getPlayer().applyDamage(enemy.getPlayer().getDamage());
             }
             if(enemy_old_state != enemy_act_state){
                 enemy_old_state = enemy_act_state;
             }
+        }
+        // Obtención de los frames a dibujar
+        screenObject ply;
+        if(player.getPlayer().getLife() > 0) {
+            ply = player.getAnimation(pHurt.collides(eHurt));
+            screenObjects.put(Item_Type.PLAYER, ply);
+        }
+        else{
+            screenObjects.remove(Item_Type.PLAYER);
+        }
+        if(enemy.getPlayer().getLife() > 0) {
+            ply = enemy.getAnimation(pHurt.collides(eHurt));
+            screenObjects.put(Item_Type.ENEMY, ply);
+        }
+        else{
+            screenObjects.remove(Item_Type.ENEMY);
         }
     }
 }

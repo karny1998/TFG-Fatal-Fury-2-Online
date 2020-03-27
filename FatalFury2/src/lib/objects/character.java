@@ -99,7 +99,7 @@ public class character {
         this.state = state;
     }
 
-    public screenObject getFrame(String mov){
+    public screenObject getFrame(String mov, boolean collides){
         if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
@@ -107,8 +107,11 @@ public class character {
             movements.get(state).start();
         }
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
-        x = s.getX();
-        y = s.getY();
+        if(!collides || state == Movement.WALKING_BACK && orientation == 1
+                    || state == Movement.WALKING && orientation == -1) {
+            x = s.getX();
+            y = s.getY();
+        }
         return s;
     }
 
@@ -140,5 +143,9 @@ public class character {
 
     public void applyDamage(int dmg){
         life -= dmg;
+    }
+
+    public  int getDamage(){
+        return movements.get(state).getDamage();
     }
 }

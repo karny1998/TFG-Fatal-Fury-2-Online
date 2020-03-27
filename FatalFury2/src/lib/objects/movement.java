@@ -59,6 +59,14 @@ public class movement {
         }
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
     public void reset(){
         anim.reset();
         if(type == Movement.THROW){

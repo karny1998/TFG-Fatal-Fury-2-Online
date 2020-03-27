@@ -34,15 +34,15 @@ public class user_controller {
         }
     }
 
-    public screenObject getAnimation(){
+    public screenObject getAnimation(boolean collides){
         controlKey key = IsKeyPressed.keyPressed();
         controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
         String array2[] = {"LEFT", "RIGHT", "DOWN", "A","S", "D", "W"};
         for(int i = 0; i < array1.length; ++i){
             if(array1[i] == key){
-                return player.getFrame(array2[i]);
+                return player.getFrame(array2[i], collides);
             }
         }
-        return player.getFrame("");
+        return player.getFrame("", collides);
     }
 }
