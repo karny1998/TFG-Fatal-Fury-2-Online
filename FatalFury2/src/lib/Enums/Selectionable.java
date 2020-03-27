@@ -1,0 +1,5 @@
+package lib.Enums;
+
+public enum Selectionable {
+    START, PRINCIPAL_GAME, PRINCIPAL_HOW, PRINCIPAL_EXIT, GAME_HISTORY, GAME_MULTIPLAYER, GAME_IA
+}

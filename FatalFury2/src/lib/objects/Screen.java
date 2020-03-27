@@ -71,16 +71,6 @@ public class Screen extends JPanel {
         screen_refresh.start();
         //Por el momento fijo
         startGame();
-        //GameLoop
-        /*Timer GameLoop = new Timer(refreshDelay, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screenObject ply = user.getAnimation();
-                screenObjects.put(Item_Type.PLAYER, ply);
-                repaint();
-            }
-        });
-        GameLoop.start();*/
     }
 
     private void setSurfaceSize() {
@@ -91,7 +81,9 @@ public class Screen extends JPanel {
     }
 
     private void doDrawingInGame(Graphics g) {
-        Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY, Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE};
+        Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
+                            Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE,
+                            Item_Type.MENU};
         Graphics2D g2d = (Graphics2D) g;
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);

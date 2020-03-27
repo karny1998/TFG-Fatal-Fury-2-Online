@@ -44,14 +44,12 @@ public class fight_controller {
         hitBox eHurt = enemy.getPlayer().getHurtbox();
         if(!eHit.collides(pHit)){
             if(pHit.collides(eHurt) && player_old_state != player_act_state){
-                System.out.println("OH SI LE HISE PUPA");
                 enemy.getPlayer().applyDamage(player.getPlayer().getDamage());
             }
             if(player_old_state != player_act_state){
                 player_old_state = player_act_state;
             }
             if(eHit.collides(pHurt) && enemy_old_state != enemy_act_state){
-                System.out.println("OH NO ME HISO PUPA");
                 player.getPlayer().applyDamage(enemy.getPlayer().getDamage());
             }
             if(enemy_old_state != enemy_act_state){

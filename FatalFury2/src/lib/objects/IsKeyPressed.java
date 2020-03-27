@@ -4,12 +4,13 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-enum controlKey { NONE, A, D, W, S, LEFT, RIGHT,UP,DOWN}
+enum controlKey { NONE, A, D, W, S, LEFT, RIGHT,UP,DOWN, ENTER}
 
 public class IsKeyPressed {
 
     private static volatile boolean aPressed = false, dPressed = false, wPressed = false, sPressed = false,
-                                    leftPressed = false, rightPressed = false, upPressed = false, downPressed = false;
+                                    leftPressed = false, rightPressed = false, upPressed = false, downPressed = false,
+                                    enterPressed = false;
 
     public static controlKey keyPressed() {
         synchronized (IsKeyPressed.class) {
@@ -37,6 +38,9 @@ public class IsKeyPressed {
             }
             else if (downPressed){
                 key = controlKey.DOWN;
+            }
+            else if (enterPressed){
+                key = controlKey.ENTER;
             }
             return key;
         }
@@ -73,6 +77,9 @@ public class IsKeyPressed {
                             else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
                                 downPressed = true;
                             }
+                            else if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                                enterPressed = true;
+                            }
                             break;
 
                         case KeyEvent.KEY_RELEASED:
@@ -99,6 +106,9 @@ public class IsKeyPressed {
                             }
                             else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
                                 downPressed = false;
+                            }
+                            else if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                                enterPressed = false;
                             }
                             break;
                     }
