@@ -75,4 +75,7 @@ public class screenObject {
         img = _img;
     }
 
+    public screenObject cloneSO(){
+        return new screenObject(this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.getImg(), this.getObjectType());
+    }
 }

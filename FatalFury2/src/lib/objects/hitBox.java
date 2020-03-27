@@ -3,7 +3,8 @@ package lib.objects;
 import java.awt.*;
 
 public class hitBox {
-
+    // Coordenadas dentro del sprite (suponiendo la esquina
+    // del sprite como 0,0)
     private int x, y;
     private int width, height;
     private Boolean hitbox;
@@ -39,6 +40,8 @@ public class hitBox {
             g.setColor(Color.BLUE);
         }
         g.drawRect(this.x, this.y, this.width, this.height);
+        g.setColor(Color.WHITE);
+        g.drawString(""+x+" "+ y, x, y);
     }
 
 
@@ -48,9 +51,35 @@ public class hitBox {
 
 
     public int getWidth() { return width; }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public Boolean getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(Boolean hitbox) {
+        this.hitbox = hitbox;
+    }
+
     public int getHeight() { return height; }
     public int getX() { return x; }
     public int getY() { return y; }
 
+    public hitBox(){}
 
     }
