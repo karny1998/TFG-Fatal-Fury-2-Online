@@ -4,11 +4,12 @@ import lib.Enums.Movement;
 
 //Clase que representa los movimientos de un personaje
 public class movement {
+    // Tipo de movimiento
     Movement type = Movement.NONE;
+    // Animaciones del personaje y de las cosas que lanza
     animation anim, throwable;
+    // Daño del movimiento
     int damage = 0;
-    //HITBOX
-    //HURTBOX
 
     public movement(Movement type, animation anim) {
         this.type = type;
@@ -23,6 +24,34 @@ public class movement {
         }
     }
 
+    // Inicia las animaciones
+    public void start(){
+        anim.start();
+        if(type == Movement.THROW){
+            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
+            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
+            //EL COMIENZO DE LA ANIM Y LA SUYA
+            throwable.start();
+        }
+    }
+
+    // Termina y reinicia las animaciones
+    public void reset(){
+        anim.reset();
+        if(type == Movement.THROW){
+            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
+            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
+            //EL COMIENZO DE LA ANIM Y LA SUYA
+            throwable.reset();
+        }
+    }
+
+    // Si ha terminado o no el movimiento
+    public boolean ended(){
+        return anim.getEnded();
+    }
+
+    // Getters y setters
     public boolean unstoppable(){return anim.getUnstoppable();}
 
     public Movement getType() {
@@ -49,36 +78,12 @@ public class movement {
         throwable.addFrame(s,t,iX,iY);
     }
 
-    public void start(){
-        anim.start();
-        if(type == Movement.THROW){
-            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
-            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
-            //EL COMIENZO DE LA ANIM Y LA SUYA
-            throwable.start();
-        }
-    }
-
     public int getDamage() {
         return damage;
     }
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public void reset(){
-        anim.reset();
-        if(type == Movement.THROW){
-            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
-            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
-            //EL COMIENZO DE LA ANIM Y LA SUYA
-            throwable.reset();
-        }
-    }
-
-    public boolean ended(){
-        return anim.getEnded();
     }
 
     public boolean hasEnd(){

@@ -2,9 +2,13 @@ package lib.objects;
 
 import lib.Enums.Selectionable;
 
+// Una de las opciones seleccionables de un menú
 public class selectionable{
+    // Tipo de selección
     private Selectionable type;
+    // Animación de cuando el cursor está en la opción
     private animation anim;
+    // Menú al que lleva (si es null es que no continua la navegación)
     private menu men = null;
 
     public selectionable(){}
@@ -19,6 +23,7 @@ public class selectionable{
         this.anim = anim;
     }
 
+    // Getters y setters
     public menu getMen() {
         return men;
     }

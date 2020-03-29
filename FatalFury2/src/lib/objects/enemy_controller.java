@@ -4,12 +4,17 @@ import lib.Enums.Playable_Character;
 
 import java.util.Random;
 
+// Clase que representa el control de un personaje por IA
 public class enemy_controller {
-    private String charac, path = "assets/sprites/characters/";
+    // Nombre del personaje seleccionado
+    private String charac;
+    // Personaje seleccionado
     character player;
+    // Coordenadas del personaje
     private int x = 750, y = 160;
-    private animation anim = new animation();
+    // Generador de randoms
     private Random rand = new Random();
+    // Gestión de que no se salga del escenario (no rula bien)
     private int posAprox = 0;
 
     public enemy_controller(Playable_Character ch){
@@ -29,10 +34,10 @@ public class enemy_controller {
         }
     }
 
-    public character getPlayer() {
-        return player;
-    }
-
+    // Obtener el frame del personaje
+    // collides indica si colisiona con el jugador o no
+    // En esta función se llamaría a la IA
+    // Por ahora se juega aleatoriamente
     public screenObject getAnimation(boolean collides){
         controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
         controlKey key =  array1[rand.nextInt(array1.length)];
@@ -53,5 +58,54 @@ public class enemy_controller {
             }
         }
         return player.getFrame("", collides);
+    }
+
+    // Getters y setters
+    public character getPlayer() {
+        return player;
+    }
+
+    public String getCharac() {
+        return charac;
+    }
+
+    public void setCharac(String charac) {
+        this.charac = charac;
+    }
+
+    public void setPlayer(character player) {
+        this.player = player;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Random getRand() {
+        return rand;
+    }
+
+    public void setRand(Random rand) {
+        this.rand = rand;
+    }
+
+    public int getPosAprox() {
+        return posAprox;
+    }
+
+    public void setPosAprox(int posAprox) {
+        this.posAprox = posAprox;
     }
 }

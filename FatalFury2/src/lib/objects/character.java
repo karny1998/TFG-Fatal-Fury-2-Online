@@ -10,16 +10,24 @@ import java.util.Map;
 
 public class character {
     Playable_Character charac;
-    //EL string contendra la cadena de botones que representa
-    //cada movimiento
+    // String que representa el combo para usar un tipo de ataque
     Map<String, Movement> combos = new HashMap<String, Movement>();
+    // Movimiento asociando a un tipo de ataque
     Map<Movement, movement> movements = new HashMap<Movement, movement>();
+    // Podría haberse puesto en un único mapa, pero fue para independizar
+    // el movimiento en sí del combo necesario
+    // Vida del personaje
     int life = 100;
+    // Orientación del personaje (1 mira hacia la izquierda, -1 hacia la derecha)
     int orientation = 1;
+    // Coordenadas actuales del personaje
     int x = 150, y = 160;
+    // Estado del personaje en cuanto a movimientos
     Movement state = Movement.STANDING;
+    // Reproductor de voces del personaje
     Sound voices;
 
+    // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c){
         charac = c;
         if(c == Playable_Character.MAI){
@@ -32,9 +40,47 @@ public class character {
             voices = new Sound(Audio_Type.Andy_audio);
             new terry().generateMovs(combos, movements, voices);
         }
+        // Por defecto está en STANDING
         movements.get(Movement.STANDING).start();
     }
 
+    // Devuelve el frame correspondiente al movimiento identificado por el combo mov
+    // en caso de no estar en un estado que no se pueda interrumpir
+    // collides indica si colisiona o no con el otro personaje
+    public screenObject getFrame(String mov, boolean collides){
+        // Si el movimiento es infinito y el movimiento es diferente del actual
+        // o el movimiento no es infinito pero ha terminado
+        // Actualiza el estado
+        if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
+                || movements.get(state).hasEnd() && movements.get(state).ended()){
+            movements.get(state).getAnim().reset();
+            state = combos.get(mov);
+            movements.get(state).start();
+        }
+        // Frame a mostrar
+        screenObject s =  movements.get(state).getFrame(x,y, orientation);
+        // Si no colisiona, o está andando hacia atrás mirando a la izquierda
+        // o está andando hacia adelante mirando hacia la derecha (ambos casos
+        // se aleja del enemigo), se actualizan las coordenadas del personaje
+        if(!collides || state == Movement.WALKING_BACK && orientation == 1
+                || state == Movement.WALKING && orientation == -1) {
+            x = s.getX();
+            y = s.getY();
+        }
+        // En caso contrario, las coordenadas del objeto son las sin actualizar del personaje
+        else{
+            s.setX(x);
+            s.setY(y);
+        }
+        return s;
+    }
+
+    // Aplicar un daño recibido al personaje
+    public void applyDamage(int dmg){
+        life -= dmg;
+    }
+
+    //Getters y setters
     public Playable_Character getCharac() {
         return charac;
     }
@@ -99,22 +145,6 @@ public class character {
         this.state = state;
     }
 
-    public screenObject getFrame(String mov, boolean collides){
-        if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
-                || movements.get(state).hasEnd() && movements.get(state).ended()){
-            movements.get(state).getAnim().reset();
-            state = combos.get(mov);
-            movements.get(state).start();
-        }
-        screenObject s =  movements.get(state).getFrame(x,y, orientation);
-        if(!collides || state == Movement.WALKING_BACK && orientation == 1
-                    || state == Movement.WALKING && orientation == -1) {
-            x = s.getX();
-            y = s.getY();
-        }
-        return s;
-    }
-
     public hitBox getHitbox(){
         hitBox aux = movements.get(state).getHitbox();
         int auxX = x + aux.getX();
@@ -139,10 +169,6 @@ public class character {
 
     public void setVoices(Sound voices) {
         this.voices = voices;
-    }
-
-    public void applyDamage(int dmg){
-        life -= dmg;
     }
 
     public  int getDamage(){

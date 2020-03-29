@@ -6,29 +6,59 @@ import lib.Enums.Selectionable;
 import java.util.HashMap;
 import java.util.Map;
 
+// Clase que representa un menú
 public class menu {
+    // Orden de los tipos de las opciones a seleccionar
     private Selectionable orden[];
+    // "Cursor"
     private int sel = 0;
+    // Lista de las opciones del menú
     private Map<Selectionable, selectionable> selectionables = new HashMap<Selectionable, selectionable>();
+    // Tiempo de referencia (para evitar problemas de que una tecla avance 2 menús)
     private long referenceTime = System.currentTimeMillis();
-    private menu father;
+    // Coordenadas
     private int x = 0, y = 0;
 
     public menu(){}
-
-    public menu getFather() {
-        return father;
-    }
-
-    public void setFather(menu father) {
-        this.father = father;
-    }
 
     public menu(Selectionable[] orden, Map<Selectionable, selectionable> selectionables) {
         this.orden = orden;
         this.selectionables = selectionables;
     }
 
+    // Actualizar tiempo de referencia (hacerlo cuando se acabe de seleccionar)
+    public void updateTime(){referenceTime = System.currentTimeMillis();}
+
+    // Obtener el frame del menú (también sube y baja el cursor)
+    public screenObject getFrame(controlKey key){
+        long current = System.currentTimeMillis();
+        if(current - referenceTime > 300.0){
+            if(key == controlKey.UP && sel > 0){
+                sel--;
+                referenceTime = current;
+            }
+            else if(key == controlKey.DOWN && sel < orden.length-1){
+                sel++;
+                referenceTime = current;
+            }
+        }
+        return selectionables.get(orden[sel]).getAnim().getFrame(x,y,1);
+    }
+
+    // Devuelve el menú (si es que tiene) y el tipo de opción, del seleccionable
+    // en el que está el cursor
+    public Pair<menu, Selectionable> select(){
+        long current = System.currentTimeMillis();
+        if(current - referenceTime > 300.0){
+            return new Pair<>(selectionables.get(orden[sel]).getMen(), orden[sel]);
+        }
+        // Si no ha pasado el tiempo requerido para poder navegar
+        else{
+            return new Pair<>(this, Selectionable.NONE);
+        }
+    }
+
+    // Getters y setters
     public Selectionable[] getOrden() {
         return orden;
     }
@@ -43,23 +73,6 @@ public class menu {
 
     public void setSelectionables(Map<Selectionable, selectionable> selectionables) {
         this.selectionables = selectionables;
-    }
-
-    public void updateTime(){referenceTime = System.currentTimeMillis();}
-
-    public screenObject getFrame(controlKey key){
-        long current = System.currentTimeMillis();
-        if(current - referenceTime > 300.0){
-            if(key == controlKey.UP && sel > 0){
-                sel--;
-                referenceTime = current;
-            }
-            else if(key == controlKey.DOWN && sel < orden.length-1){
-                sel++;
-                referenceTime = current;
-            }
-        }
-        return selectionables.get(orden[sel]).getAnim().getFrame(x,y,1);
     }
 
     public int getX() {
@@ -78,13 +91,4 @@ public class menu {
         this.y = y;
     }
 
-    public Pair<menu, Selectionable> select(){
-        long current = System.currentTimeMillis();
-        if(current - referenceTime > 300.0){
-            return new Pair<>(selectionables.get(orden[sel]).getMen(), orden[sel]);
-        }
-        else{
-            return new Pair<>(this, Selectionable.NONE);
-        }
-    }
 }

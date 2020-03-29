@@ -2,18 +2,15 @@ package lib.objects;
 
 import lib.Enums.Playable_Character;
 
+// Clase que representa un controlador de interacción entre
+// el personaje y el jugador
 public class user_controller {
-    private String charac, path = "assets/sprites/characters/";
+    // Nombre del personaje seleccionado
+    private String charac;
+    // Personaje seleccionado
     character player;
-
-    public character getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(character player) {
-        this.player = player;
-    }
-
+    // Coordenadas iniciales del personaje
+    // (en verdad creo que se podrían quitar)
     private int x = 500, y = 160;
     private animation anim = new animation();
 
@@ -34,6 +31,8 @@ public class user_controller {
         }
     }
 
+    // Obtiene el frame del personaje
+    // collides indica si colisiona con el enemigo
     public screenObject getAnimation(boolean collides){
         controlKey key = IsKeyPressed.keyPressed();
         controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
@@ -44,5 +43,46 @@ public class user_controller {
             }
         }
         return player.getFrame("", collides);
+    }
+
+    // Getters y setters
+    public character getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(character player) {
+        this.player = player;
+    }
+
+    public String getCharac() {
+        return charac;
+    }
+
+    public void setCharac(String charac) {
+        this.charac = charac;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public animation getAnim() {
+        return anim;
+    }
+
+    public void setAnim(animation anim) {
+        this.anim = anim;
     }
 }

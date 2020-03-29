@@ -20,58 +20,19 @@ public class animation {
     Boolean hasEnd = true, ended = false, unstoppable = false;
     //En qué frame de la animación se estaba
     int state = 0;
-    // El sentido en que avanza la animación
+    // El sentido en que avanza la animación (frame 1, 2, 3.. o 3, 2, 1)
     int increment = 1;
     //Momento en el que salió el último frame
     long startTime = 0;
-    //También tendrá un sonido asignado
+    //Sonido asignado y su tipo
     Sound sound;
     Character_Voices soundType;
+    // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
     hitBox hitbox = new hitBox(-10000,-10000,1,1,true);
     // Hurtbox asociada
     hitBox hurtBox = new hitBox(-10000,-10000,1,1,false);;
-
-    public Boolean getPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(Boolean playing) {
-        this.playing = playing;
-    }
-
-    public hitBox getHitbox() {
-        return hitbox;
-    }
-
-    public void setHitbox(hitBox hitbox) {
-        this.hitbox = hitbox;
-    }
-
-    public void setHitbox(int originX, int originY, int width, int height) {
-        this.hitbox = new hitBox(originX, originY, width, height, true);
-    }
-
-    public hitBox getHurtBox() {
-        return hurtBox;
-    }
-
-    public void setHurtBox(hitBox hurtBox) {
-        this.hurtBox = hurtBox;
-    }
-
-    public void setHurtBox(int originX, int originY, int width, int height) {
-        this.hurtBox = new hitBox(originX, originY, width, height, false);
-    }
-
-    public Character_Voices getSoundType() {
-        return soundType;
-    }
-
-    public void setSoundType(Character_Voices soundType) {
-        this.soundType = soundType;
-    }
 
     public animation() {}
 
@@ -91,7 +52,7 @@ public class animation {
         startTime = System.currentTimeMillis();
     }
 
-    //Finaliza la animación
+    //Finaliza y reinicia la animación
     public  void reset(){
         playing = false;
         ended = false;
@@ -100,30 +61,17 @@ public class animation {
         startTime = 0;
     }
 
-    public Boolean getEnded() {
-        return ended;
-    }
-
-    public void setEnded(Boolean ended) {
-        this.ended = ended;
-    }
-
-    public int getIncrement() {
-        return increment;
-    }
-
-    public void setIncrement(int increment) {
-        this.increment = increment;
-    }
-
-    //Obtiene el frame de la animación correspondiente al momento actual
-    //a partir de unas coordenadas base
+    // Obtiene el frame de la animación correspondiente al momento actual
+    // a partir de unas coordenadas base. La orientación indica a donde mira
+    // la animación (1 hacia la izquierda, -1 hacia la derecha)
     public screenObject getFrame(int x, int y, int orientation){
+        // Si no se está reprodciendo el sonido, se reproducre
         if(!playing && hasEnd){
             sound.playCharacterVoice(soundType);
             playing = true;
         }
         screenObject result;
+        // Si ha terminado, devuelve el último frame
         if(ended){
             result = frames.get(frames.size()).cloneSO();
             result.setX(x+coords.get(frames.size()).getKey());
@@ -133,6 +81,7 @@ public class animation {
         }
         long current = System.currentTimeMillis();
         double elapsedTime = current - startTime;
+        // Si es infinita, ha terminado y el sentido era el inverso, cambia el sentido
         if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
             increment = 1;
             state += increment;
@@ -141,13 +90,16 @@ public class animation {
             result.setY(y);
             startTime = current;
         }
+        // Si se ha alcanzado el último framde de la animación
         else if(state == frames.size()-1 && elapsedTime >= times.get(state)){
+            // Si tiene final devuelve el último frame
             if(hasEnd){
                 ended = true;
                 result = frames.get(state).cloneSO();
                 result.setX(x);
                 result.setY(y);
             }
+            // Sino, es infinita y cambia el sentido de avance
             else{
                 increment = -1;
                 state += increment;
@@ -157,24 +109,30 @@ public class animation {
                 result.setY(y+coords.get(coords.size()-1).getValue());
             }
         }
+        // Si ha pasado el tiempo requerido entre frame y frame
         else if(elapsedTime >= times.get(state)){
             state += increment;
             startTime = current;
             result = frames.get(state).cloneSO();
+            // Si es el primer frame, no tiene avance en coordenadas
             if (state == 0) {
                 result.setX(x);
                 result.setY(y);
             }
+            // Sino es el primer frame, se coge el avance en coordenadas indicado en el
+            // frame anterior
             else{
                 result.setX(x+coords.get((state-1)%coords.size()).getKey());
                 result.setY(y+coords.get((state-1)%coords.size()).getValue());
             }
         }
+        // Caso por defecto
         else{
             result = frames.get(state).cloneSO();
             result.setX(x);
             result.setY(y);
         }
+        // Ajusta el ancho según la orientación para que mire a un lado y a otro
         result.setWidth(result.getWidth()*orientation);
         return result;
     }
@@ -243,4 +201,60 @@ public class animation {
     public void setSound(Sound s){sound = s;}
 
     public Sound getSound(){return sound;}
+
+    public Boolean getPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(Boolean playing) {
+        this.playing = playing;
+    }
+
+    public hitBox getHitbox() {
+        return hitbox;
+    }
+
+    public void setHitbox(hitBox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    public void setHitbox(int originX, int originY, int width, int height) {
+        this.hitbox = new hitBox(originX, originY, width, height, true);
+    }
+
+    public hitBox getHurtBox() {
+        return hurtBox;
+    }
+
+    public void setHurtBox(hitBox hurtBox) {
+        this.hurtBox = hurtBox;
+    }
+
+    public void setHurtBox(int originX, int originY, int width, int height) {
+        this.hurtBox = new hitBox(originX, originY, width, height, false);
+    }
+
+    public Character_Voices getSoundType() {
+        return soundType;
+    }
+
+    public void setSoundType(Character_Voices soundType) {
+        this.soundType = soundType;
+    }
+
+    public Boolean getEnded() {
+        return ended;
+    }
+
+    public void setEnded(Boolean ended) {
+        this.ended = ended;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(int increment) {
+        this.increment = increment;
+    }
 }
