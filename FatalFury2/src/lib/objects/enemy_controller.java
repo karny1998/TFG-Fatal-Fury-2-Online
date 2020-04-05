@@ -2,36 +2,11 @@ package lib.objects;
 
 import lib.Enums.Playable_Character;
 
-import java.util.Random;
-
 // Clase que representa el control de un personaje por IA
-public class enemy_controller {
-    // Nombre del personaje seleccionado
-    private String charac;
-    // Personaje seleccionado
-    character player;
-    // Coordenadas del personaje
-    private int x = 750, y = 160;
-    // Generador de randoms
-    private Random rand = new Random();
-    // Gestión de que no se salga del escenario (no rula bien)
-    private int posAprox = 0;
+public class enemy_controller extends character_controller{
 
     public enemy_controller(Playable_Character ch){
-        new IsKeyPressed();
-        if(ch == Playable_Character.ANDY){
-            charac = "andy";
-        }
-        else if(ch == Playable_Character.MAI){
-            charac = "mai";
-        }
-        else{
-            charac = "terry";
-            player = new character(Playable_Character.TERRY);
-            player.setX(x);
-            player.setY(y);
-            player.setOrientation(1);
-        }
+        super(ch,750,160, 1);
     }
 
     // Obtener el frame del personaje
@@ -58,54 +33,5 @@ public class enemy_controller {
             }
         }
         return player.getFrame("", collides);
-    }
-
-    // Getters y setters
-    public character getPlayer() {
-        return player;
-    }
-
-    public String getCharac() {
-        return charac;
-    }
-
-    public void setCharac(String charac) {
-        this.charac = charac;
-    }
-
-    public void setPlayer(character player) {
-        this.player = player;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Random getRand() {
-        return rand;
-    }
-
-    public void setRand(Random rand) {
-        this.rand = rand;
-    }
-
-    public int getPosAprox() {
-        return posAprox;
-    }
-
-    public void setPosAprox(int posAprox) {
-        this.posAprox = posAprox;
     }
 }

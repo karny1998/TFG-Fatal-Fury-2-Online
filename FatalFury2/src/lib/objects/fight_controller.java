@@ -8,15 +8,15 @@ import java.util.Map;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller {
     // Controlador del usuario
-    user_controller player;
+    character_controller player;
     // Anterior movimiento del jugador
     Movement player_old_state = Movement.STANDING;
     // Controlador del enemigo
-    enemy_controller enemy;
+    character_controller enemy;
     // Anterior movimiento del enemigo
     Movement enemy_old_state = Movement.STANDING;
 
-    public fight_controller(user_controller p, enemy_controller e){
+    public fight_controller(character_controller p, character_controller e){
         this.player = p;
         this.enemy = e;
         player_old_state = p.getPlayer().getState();
@@ -66,7 +66,7 @@ public class fight_controller {
     }
 
     // Getters y setters
-    public user_controller getPlayerControler() {
+    public character_controller getPlayerControler() {
         return player;
     }
 
@@ -74,7 +74,7 @@ public class fight_controller {
         this.player = player;
     }
 
-    public enemy_controller getEnemyControler() {
+    public character_controller getEnemyControler() {
         return enemy;
     }
 
@@ -82,7 +82,7 @@ public class fight_controller {
         this.enemy = enemy;
     }
 
-    public user_controller getPlayer() {
+    public character_controller getPlayer() {
         return player;
     }
 
@@ -98,7 +98,7 @@ public class fight_controller {
         this.player_old_state = player_old_state;
     }
 
-    public enemy_controller getEnemy() {
+    public character_controller getEnemy() {
         return enemy;
     }
 
