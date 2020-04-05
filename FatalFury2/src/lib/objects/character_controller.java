@@ -4,6 +4,8 @@ import lib.Enums.Playable_Character;
 
 import java.util.Random;
 
+// Representa una clase para controlar a un personaje, independientemente de
+// si es controlado por le usuario o la IA
 public abstract  class character_controller {
     // Nombre del personaje seleccionado
     protected String charac;
@@ -13,8 +15,6 @@ public abstract  class character_controller {
     protected int x = 0, y = 0;
     // Generador de randoms
     protected Random rand = new Random();
-    // Gestión de que no se salga del escenario (no rula bien)
-    protected int posAprox = 0;
 
     public character_controller(Playable_Character ch, int x, int y, int orientation){
         this.x = x; this.y = y;
@@ -77,11 +77,4 @@ public abstract  class character_controller {
         this.rand = rand;
     }
 
-    public int getPosAprox() {
-        return posAprox;
-    }
-
-    public void setPosAprox(int posAprox) {
-        this.posAprox = posAprox;
-    }
 }

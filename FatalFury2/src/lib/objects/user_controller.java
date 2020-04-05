@@ -13,6 +13,8 @@ public class user_controller extends character_controller{
     // Obtiene el frame del personaje
     // collides indica si colisiona con el enemigo
     public screenObject getAnimation(boolean collides){
+        this.x = this.player.getX();
+        this.y = this.player.getY();
         controlKey key = IsKeyPressed.keyPressed();
         controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
         String array2[] = {"LEFT", "RIGHT", "DOWN", "A","S", "D", "W"};

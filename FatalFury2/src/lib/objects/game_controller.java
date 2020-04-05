@@ -75,6 +75,7 @@ public class game_controller {
                         case GAME_IA:
                             user_controller user = new user_controller(Playable_Character.TERRY);
                             enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+                            enemy.setRival(user.getPlayer());
                             fight = new fight_controller(user, enemy);
 
                             scene = new scenary();
