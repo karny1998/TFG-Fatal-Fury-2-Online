@@ -1,5 +1,6 @@
 package lib.objects;
 
+import lib.Enums.Animation_type;
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
@@ -43,8 +44,8 @@ public class terry {
         anim = new animation();
         anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(true);
-        for(int i = 3; i >= 1; --i){
-            screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "walking/"+i+".png").getImage(), Item_Type.PLAYER);
+        for(int i = 1; i <= 3; ++i){
+            screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "walking_back/"+i+".png").getImage(), Item_Type.PLAYER);
             anim.addFrame(s,150.0,50,0);
         }
         anim.setSound(sounds);
@@ -54,9 +55,10 @@ public class terry {
         combos.put("RIGHT",Movement.WALKING_BACK);
         //AGACHARSE
         anim = new animation();
+        anim.setType(Animation_type.HOLDABLE);
         anim.setHurtBox(145,110,220,390);
         anim.setHasEnd(false);
-        for(int i = 1; i <= 3; ++i){
+        for(int i = 1; i <= 2; ++i){
             screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "crouch/"+i+".png").getImage(), Item_Type.PLAYER);
             anim.addFrame(s,150.0,0,0);
         }
@@ -65,6 +67,20 @@ public class terry {
         mov = new movement(Movement.CROUCH, anim);
         movs.put(Movement.CROUCH,mov);
         combos.put("DOWN",Movement.CROUCH);
+        // DESAGACHARSE
+        anim = new animation();
+        anim.setType(Animation_type.ENDABLE);
+        anim.setHurtBox(145,110,220,390);
+        anim.setHasEnd(true);
+        for(int i = 2; i >= 1; --i){
+            screenObject s = new screenObject(150, 160,  500, 500, new ImageIcon(path  + "crouch/"+i+".png").getImage(), Item_Type.PLAYER);
+            anim.addFrame(s,150.0,0,0);
+        }
+        anim.setSound(sounds);
+        anim.setSoundType(Character_Voices.Hurt_1);
+        mov = new movement(Movement.UNDO_CROUCH, anim);
+        movs.put(Movement.UNDO_CROUCH,mov);
+        combos.put("ASDDSADASDSA",Movement.UNDO_CROUCH);
         //POÑOTASO DÉBIL
         anim = new animation();
         anim.setHurtBox(145,110,220,390);

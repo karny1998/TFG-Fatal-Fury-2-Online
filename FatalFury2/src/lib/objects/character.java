@@ -1,5 +1,6 @@
 package lib.objects;
 
+import lib.Enums.Animation_type;
 import lib.Enums.Audio_Type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
@@ -51,7 +52,19 @@ public class character {
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
-        if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
+        if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
+            && combos.get(mov) != state){
+            Movement aux = Movement.NONE;
+            switch (state){
+                case CROUCH:
+                    aux = Movement.UNDO_CROUCH;
+                    break;
+            }
+            movements.get(state).getAnim().reset();
+            state = aux;
+            movements.get(state).start();
+        }
+        else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = combos.get(mov);

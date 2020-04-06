@@ -1,6 +1,7 @@
 package lib.objects;
 
 import javafx.util.Pair;
+import lib.Enums.Animation_type;
 import lib.Enums.Character_Voices;
 import lib.sound.Sound;
 
@@ -10,12 +11,20 @@ import java.util.List;
 //Animación representada por sus frames, cambios de posición
 //y tiempos de transición.
 public class animation {
+    // Tipo de animación
+    Animation_type type = Animation_type.ENDABLE;
     //Imágenes que conforman la animación
     List<screenObject> frames = new ArrayList<screenObject>();
     //Incrementos de coordenadas entre frames
     List<Pair<Integer, Integer>> coords = new ArrayList<Pair<Integer, Integer>>();
     //Tiempos entre transición de un frame a otro
     List<Double> times = new ArrayList<Double>();
+    // Veces que se repeti un frame antes de pasar al siguiente
+    List<Integer> repetitions = new ArrayList<Integer>();
+    // Coordenadas objetivo para terminar el frame
+    List<Pair<Integer, Integer>> waitedCoords = new ArrayList<Pair<Integer, Integer>>();
+    // Si un frame puede ser cortado o no por otra animación
+    List<Boolean> unstoppableVector = new ArrayList<Boolean>();
     //Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
     Boolean hasEnd = true, ended = false, unstoppable = false;
     //En qué frame de la animación se estaba
@@ -24,6 +33,7 @@ public class animation {
     int increment = 1;
     //Momento en el que salió el último frame
     long startTime = 0;
+    long auxTime = 0;
     //Sonido asignado y su tipo
     Sound sound;
     Character_Voices soundType;
@@ -41,6 +51,18 @@ public class animation {
         frames.add(frames.size(), s);
         times.add(times.size(), t);
         coords.add(coords.size(), new Pair(iX,iY));
+        repetitions.add(repetitions.size(), 1);
+        waitedCoords.add(waitedCoords.size(), new Pair(-1,-1));
+        unstoppableVector.add(unstoppableVector.size(), false);
+    }
+
+    public void addFrame(screenObject s, Double t, int iX, int iY, int rep, int wX, int wY, Boolean unstoppable){
+        frames.add(frames.size(), s);
+        times.add(times.size(), t);
+        coords.add(coords.size(), new Pair(iX,iY));
+        repetitions.add(repetitions.size(), rep);
+        waitedCoords.add(waitedCoords.size(), new Pair(wX,wY));
+        unstoppableVector.add(unstoppableVector.size(), unstoppable);
     }
 
     //Inicia los cálculos de la animación
@@ -50,6 +72,7 @@ public class animation {
         state = 0;
         increment = 1;
         startTime = System.currentTimeMillis();
+        auxTime = System.currentTimeMillis();
     }
 
     //Finaliza y reinicia la animación
@@ -59,6 +82,7 @@ public class animation {
         state = 0;
         increment = 1;
         startTime = 0;
+        auxTime = 0;
     }
 
     // Obtiene el frame de la animación correspondiente al momento actual
@@ -72,32 +96,35 @@ public class animation {
         }
         screenObject result;
         // Si ha terminado, devuelve el último frame
-        if(ended){
-            result = frames.get(frames.size()).cloneSO();
-            result.setX(x+coords.get(frames.size()).getKey());
-            result.setY(y+coords.get(frames.size()).getValue());
+        if(ended || type == Animation_type.HOLDABLE && state == frames.size()-1){
+            result = frames.get(frames.size()-1).cloneSO();
+            result.setX(x+coords.get(frames.size()-1).getKey());
+            result.setY(y+coords.get(frames.size()-1).getValue());
             result.setWidth(result.getWidth()*orientation);
-            return frames.get(frames.size());
+            ended = true;
+            return result;
         }
         long current = System.currentTimeMillis();
         double elapsedTime = current - startTime;
+        double elapsedTimeAux = current - auxTime;
+        auxTime = current;
         // Si es infinita, ha terminado y el sentido era el inverso, cambia el sentido
         if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
             increment = 1;
             state += increment;
             result = frames.get(state).cloneSO();
-            result.setX(x);
-            result.setY(y);
+            result.setX((int) (x + coords.get(state).getKey()*(elapsedTimeAux/times.get(state))));
+            result.setY((int) (y + coords.get(state).getValue()*(elapsedTimeAux/times.get(state))));
             startTime = current;
         }
-        // Si se ha alcanzado el último framde de la animación
+        // Si se ha alcanzado el último frame de de la animación
         else if(state == frames.size()-1 && elapsedTime >= times.get(state)){
             // Si tiene final devuelve el último frame
             if(hasEnd){
                 ended = true;
                 result = frames.get(state).cloneSO();
-                result.setX(x);
-                result.setY(y);
+                result.setX((int) (x + coords.get(state).getKey()*(elapsedTimeAux/times.get(state))));
+                result.setY((int) (y + coords.get(state).getValue()*(elapsedTimeAux/times.get(state))));
             }
             // Sino, es infinita y cambia el sentido de avance
             else{
@@ -116,8 +143,8 @@ public class animation {
             result = frames.get(state).cloneSO();
             // Si es el primer frame, no tiene avance en coordenadas
             if (state == 0) {
-                result.setX(x);
-                result.setY(y);
+                result.setX((int) (x + coords.get(state).getKey()*(elapsedTimeAux/times.get(state))));
+                result.setY((int) (y + coords.get(state).getValue()*(elapsedTimeAux/times.get(state))));
             }
             // Sino es el primer frame, se coge el avance en coordenadas indicado en el
             // frame anterior
@@ -129,8 +156,8 @@ public class animation {
         // Caso por defecto
         else{
             result = frames.get(state).cloneSO();
-            result.setX(x);
-            result.setY(y);
+            result.setX((int) (x + coords.get(state).getKey()*(elapsedTimeAux/times.get(state))));
+            result.setY((int) (y + coords.get(state).getValue()*(elapsedTimeAux/times.get(state))));
         }
         // Ajusta el ancho según la orientación para que mire a un lado y a otro
         result.setWidth(result.getWidth()*orientation);
@@ -256,5 +283,37 @@ public class animation {
 
     public void setIncrement(int increment) {
         this.increment = increment;
+    }
+
+    public Animation_type getType() {
+        return type;
+    }
+
+    public void setType(Animation_type type) {
+        this.type = type;
+    }
+
+    public List<Integer> getRepetitions() {
+        return repetitions;
+    }
+
+    public void setRepetitions(List<Integer> repetitions) {
+        this.repetitions = repetitions;
+    }
+
+    public List<Pair<Integer, Integer>> getWaitedCoords() {
+        return waitedCoords;
+    }
+
+    public void setWaitedCoords(List<Pair<Integer, Integer>> waitedCoords) {
+        this.waitedCoords = waitedCoords;
+    }
+
+    public List<Boolean> getUnstoppableVector() {
+        return unstoppableVector;
+    }
+
+    public void setUnstoppableVector(List<Boolean> unstoppableVector) {
+        this.unstoppableVector = unstoppableVector;
     }
 }
