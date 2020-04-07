@@ -78,13 +78,12 @@ public class character {
         if(!collides || state == Movement.WALKING_BACK && orientation == 1
                 || state == Movement.WALKING && orientation == -1) {
             x = s.getX();
-            y = s.getY();
         }
         // En caso contrario, las coordenadas del objeto son las sin actualizar del personaje
         else{
             s.setX(x);
-            s.setY(y);
         }
+        y = s.getY();
         return s;
     }
 
