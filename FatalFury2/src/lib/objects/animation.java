@@ -53,7 +53,7 @@ public class animation {
         unstoppable.add(unstoppable.size(), false);
     }
 
-    public void addFrame(screenObject s, Double t, int iX, int iY, int rep, int wX, int wY, Boolean unstop){
+    public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean unstop){
         frames.add(frames.size(), s);
         times.add(times.size(), t);
         coords.add(coords.size(), new Pair(iX,iY));
