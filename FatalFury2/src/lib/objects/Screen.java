@@ -80,10 +80,6 @@ public class Screen extends JPanel {
             }
         }
         game.writeDirecly(g2d);
-        /*Font f = new Font("Orbitron", Font.ROMAN_BASELINE, 50);
-        g2d.setFont(f);
-        g2d.setColor(Color.BLUE);
-        g2d.drawString("CACA", 400, 300);*/
 
         /*game.getFight().getPlayerControler().getPlayer().getHitbox().drawHitBox(g2d);
         game.getFight().getEnemyControler().getPlayer().getHitbox().drawHitBox(g2d);
