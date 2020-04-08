@@ -116,6 +116,8 @@ public class game_controller {
                     screenObjects.remove(Item_Type.TIMER1);
                     screenObjects.remove(Item_Type.TIMER2);
                     screenObjects.remove(Item_Type.TIMERFRAME);
+                    screenObjects.remove(Item_Type.HPBAR1);
+                    screenObjects.remove(Item_Type.HPBAR2);
                     state = GameState.NAVIGATION;
                     actualMenu = principal;
                     actualMenu.updateTime();
