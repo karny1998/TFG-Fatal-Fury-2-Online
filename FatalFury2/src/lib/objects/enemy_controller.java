@@ -42,6 +42,11 @@ public class enemy_controller extends character_controller{
         return player.getFrame("", collides);
     }
 
+    @Override
+    void reset() {
+        reset(this.player.getCharac(),750,160, 1);
+    }
+
     public character getRival() {
         return rival;
     }

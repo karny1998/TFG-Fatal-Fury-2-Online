@@ -34,6 +34,16 @@ public abstract  class character_controller {
         }
     }
 
+    abstract void reset();
+
+    void reset(Playable_Character ch, int x, int y, int orientation) {
+        this.x = x; this.y = y;
+        player = new character(ch);
+        player.setX(x);
+        player.setY(y);
+        player.setOrientation(orientation);
+    }
+
     abstract screenObject getAnimation(boolean collides);
 
     // GETTERS Y SETTERS

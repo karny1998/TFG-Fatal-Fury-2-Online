@@ -25,4 +25,9 @@ public class user_controller extends character_controller{
         }
         return player.getFrame("", collides);
     }
+
+    @Override
+    void reset() {
+        reset(this.player.getCharac(),500,160, -1);
+    }
 }
