@@ -18,7 +18,7 @@ public class score {
     private int pointer = 0;
     private String path = "files/rank_scores.txt";
     private boolean animLoaded = false;
-    private animation anim = null;
+    private animation anim[] = {null, null, null};
     private Font f = null;
     private List<Pair<String, Integer>> rank;
     private long timeReference = 0;
@@ -110,7 +110,15 @@ public class score {
             }
             timeReference = current;
         }
-        g.drawImage(anim.getFrame(0,0,1).getImg(), 0, 0, 1280,720, null);
+        if(pointer == 0){
+            g.drawImage(anim[0].getFrame(0,0,1).getImg(), 0, 0, 1280,720, null);
+        }
+        else if(pointer == rank.size()-1){
+            g.drawImage(anim[2].getFrame(0,0,1).getImg(), 0, 0, 1280,720, null);
+        }
+        else{
+            g.drawImage(anim[1].getFrame(0,0,1).getImg(), 0, 0, 1280,720, null);
+        }
         g.setFont(f);
         g.setColor(Color.YELLOW);
         int x = 200;
@@ -129,15 +137,35 @@ public class score {
     }
 
     public void loadAnim(){
-        anim = new animation();
-        anim.setHasEnd(false);
-        anim.setType(Animation_type.ENDLESS);
-        anim.setSound(null);
-        anim.setSoundType(Character_Voices.Win);
-        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_1.png").getImage(), Item_Type.SCENARY_2);
-        anim.addFrame(s,250.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_2.png").getImage(), Item_Type.SCENARY_2);
-        anim.addFrame(s,250.0,0,0);
+        anim[0] = new animation();
+        anim[0].setHasEnd(false);
+        anim[0].setType(Animation_type.ENDLESS);
+        anim[0].setSound(null);
+        anim[0].setSoundType(Character_Voices.Win);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        anim[0].addFrame(s,250.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_down.png").getImage(), Item_Type.SCENARY_2);
+        anim[0].addFrame(s,250.0,0,0);
+
+        anim[1] = new animation();
+        anim[1].setHasEnd(false);
+        anim[1].setType(Animation_type.ENDLESS);
+        anim[1].setSound(null);
+        anim[1].setSoundType(Character_Voices.Win);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        anim[1].addFrame(s,250.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_both.png").getImage(), Item_Type.SCENARY_2);
+        anim[1].addFrame(s,250.0,0,0);
+
+        anim[2] = new animation();
+        anim[2].setHasEnd(false);
+        anim[2].setType(Animation_type.ENDLESS);
+        anim[2].setSound(null);
+        anim[2].setSoundType(Character_Voices.Win);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        anim[2].addFrame(s,250.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_up.png").getImage(), Item_Type.SCENARY_2);
+        anim[2].addFrame(s,250.0,0,0);
     }
 
     class scoreComparator implements Comparator {
