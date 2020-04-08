@@ -12,7 +12,7 @@ import java.util.Map;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 10;
+    final int roundTime = 5;
     // Ronda actual de la pelea
     round currentRound;
     // Lista de resultados de todas las rondas
@@ -30,6 +30,10 @@ public class fight_controller implements roundListener {
     boolean playerWin;
     // Ha acabado la pelea (true = acabada)
     boolean hasEnded;
+    // No hay timer
+    boolean noTimer;
+    // Interfaz
+    displayTimer timer = new displayTimer();
 
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e) {
@@ -40,6 +44,7 @@ public class fight_controller implements roundListener {
         this.enemyScore = 0;
         this.results = new ArrayList<>();
         this.hasEnded = false;
+        this.noTimer = false;
         currentRound = new round(player,enemy,roundTime);
         currentRound.addListener(this);
         currentRound.startRound(true);
@@ -112,6 +117,7 @@ public class fight_controller implements roundListener {
             // Se necesita ronda extra
             else {
                 startNewRound(false);
+                noTimer = true;
             }
         }
         // Resultado de la ronda extra
@@ -125,6 +131,18 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        if (noTimer) {
+            screenObjects.remove(Item_Type.TIMER2);
+            List<screenObject> timerObjects = timer.getTimer();
+            screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
+            screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(1));
+        }
+        else {
+            List<screenObject> timerObjects = timer.getTimer(currentRound.getTimeLeft());
+            screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
+            screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
+            screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
+        }
         currentRound.getAnimation(screenObjects);
     }
 

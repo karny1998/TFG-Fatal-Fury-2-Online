@@ -219,6 +219,14 @@ public class round {
     public void setResult(Round_Results result) {
         this.result = result;
     }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+
+    public void setTimeLeft(int timeLeft) {
+        this.timeLeft = timeLeft;
+    }
 }
 
 
