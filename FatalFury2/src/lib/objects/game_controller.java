@@ -104,16 +104,23 @@ public class game_controller {
             // Si se está mostrando la pelea
             else {
                 screenObjects.remove(Item_Type.MENU);
-
                 fight.getAnimation(screenObjects);
-                screenObject ply = scene.getFrame1();
-                screenObjects.put(Item_Type.SCENARY_1, ply);
-                ply = scene.getFrame2();
-                screenObjects.put(Item_Type.SCENARY_2, ply);
+                if (fight.getEnd()) {
+                    state = GameState.NAVIGATION;
+                    actualMenu = principal;
+                    actualMenu.updateTime();
+                }
+                else {
+                    screenObject ply = scene.getFrame1();
+                    screenObjects.put(Item_Type.SCENARY_1, ply);
+                    ply = scene.getFrame2();
+                    screenObjects.put(Item_Type.SCENARY_2, ply);
+                }
             }
         }
         // Si se le ha dado a escape durante una pelea
         else if (state == GameState.ESCAPE){
+            fight.pauseFight();
             screenObject s = escapeMenu.getFrame(cK);
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = escapeMenu.select();
@@ -125,6 +132,7 @@ public class game_controller {
                         state = GameState.FIGHT;
                         screenObjects.remove(Item_Type.MENU);
                         escapeMenu.updateTime();
+                        fight.resumeFight();
                         break;
                     // Volver al menú de juego
                     case ESCAPE_BACK:
