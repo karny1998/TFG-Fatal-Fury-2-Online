@@ -3,6 +3,8 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Round_Results;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
     final int roundTime = 90;
+    // Path
+    String path = "assets/sprites/fight_interface/";
     // Ronda actual de la pelea
     round currentRound;
     // Lista de resultados de todas las rondas
@@ -32,17 +36,20 @@ public class fight_controller implements roundListener {
     boolean noTimer;
     // Interfaz
     displayTimer timer = new displayTimer();
+    Image bar_player, bar_enemy;
 
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e) {
-        this.player = p;
-        this.enemy = e;
-        this.roundCounter = 0;
-        this.playerScore = 0;
-        this.enemyScore = 0;
-        this.results = new ArrayList<>();
-        this.hasEnded = false;
-        this.noTimer = false;
+        player = p;
+        enemy = e;
+        roundCounter = 0;
+        playerScore = 0;
+        enemyScore = 0;
+        results = new ArrayList<>();
+        hasEnded = false;
+        noTimer = false;
+        bar_player = new ImageIcon(path+"/hp_bars/player1_frame.png").getImage();
+        bar_enemy = new ImageIcon(path+"/hp_bars/player2_frame.png").getImage();
         currentRound = new round(player,enemy,roundTime);
         currentRound.addListener(this);
         currentRound.startRound(true);
@@ -129,6 +136,8 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        screenObjects.put(Item_Type.HPBAR1,new screenObject(136,58,414,30,bar_player, Item_Type.HPBAR1));
+        screenObjects.put(Item_Type.HPBAR2,new screenObject(730,58,414,30,bar_enemy, Item_Type.HPBAR2));
         if (noTimer) {
             screenObjects.remove(Item_Type.TIMER2);
             List<screenObject> timerObjects = timer.getTimer();
