@@ -6,6 +6,7 @@ import lib.Enums.Item_Type;
 import lib.Enums.Playable_Character;
 import lib.Enums.Selectionable;
 
+import java.awt.*;
 import java.util.Map;
 
 // Clase que representa un controlador encargado de gestionar todo el juego
@@ -22,6 +23,8 @@ public class game_controller {
     private menu escapeMenu;
     // Estado del juego
     private GameState state = GameState.NAVIGATION;
+    // Ranking
+    private score ranking = new score();
 
     public game_controller() {
         new IsKeyPressed();
@@ -71,6 +74,10 @@ public class game_controller {
                         case PRINCIPAL_EXIT:
                             System.exit(0);
                             break;
+                        case PRINCIPAL_HOW:
+                            ranking.reloadRanking();
+                            state = GameState.RANKING;
+                            break;
                         // Inica una partida
                         case GAME_IA:
                             user_controller user = new user_controller(Playable_Character.TERRY);
@@ -106,6 +113,9 @@ public class game_controller {
                 screenObjects.remove(Item_Type.MENU);
                 fight.getAnimation(screenObjects);
                 if (fight.getEnd()) {
+                    screenObjects.remove(Item_Type.TIMER1);
+                    screenObjects.remove(Item_Type.TIMER2);
+                    screenObjects.remove(Item_Type.TIMERFRAME);
                     state = GameState.NAVIGATION;
                     actualMenu = principal;
                     actualMenu.updateTime();
@@ -146,6 +156,12 @@ public class game_controller {
                         break;
                 }
             }
+        }
+    }
+
+    public void writeDirecly(Graphics2D g){
+        if(state == GameState.RANKING){
+            ranking.printRanking(g);
         }
     }
 

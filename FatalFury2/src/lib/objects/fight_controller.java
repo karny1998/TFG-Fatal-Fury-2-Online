@@ -1,10 +1,8 @@
 package lib.objects;
 
 import lib.Enums.Item_Type;
-import lib.Enums.Movement;
 import lib.Enums.Round_Results;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +10,7 @@ import java.util.Map;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 5;
+    final int roundTime = 90;
     // Ronda actual de la pelea
     round currentRound;
     // Lista de resultados de todas las rondas

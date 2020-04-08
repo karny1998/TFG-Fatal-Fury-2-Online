@@ -79,6 +79,7 @@ public class Screen extends JPanel {
                 g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
             }
         }
+        game.writeDirecly(g2d);
         /*Font f = new Font("Orbitron", Font.ROMAN_BASELINE, 50);
         g2d.setFont(f);
         g2d.setColor(Color.BLUE);
