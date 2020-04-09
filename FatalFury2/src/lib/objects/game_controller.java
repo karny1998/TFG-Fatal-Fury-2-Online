@@ -114,11 +114,7 @@ public class game_controller {
                 screenObjects.remove(Item_Type.MENU);
                 fight.getAnimation(screenObjects);
                 if (fight.getEnd()) {
-                    screenObjects.remove(Item_Type.TIMER1);
-                    screenObjects.remove(Item_Type.TIMER2);
-                    screenObjects.remove(Item_Type.TIMERFRAME);
-                    screenObjects.remove(Item_Type.HPBAR1);
-                    screenObjects.remove(Item_Type.HPBAR2);
+                    clearInterface(screenObjects);
                     state = GameState.NAVIGATION;
                     actualMenu = principal;
                     actualMenu.updateTime();
@@ -163,6 +159,18 @@ public class game_controller {
         else if(state == GameState.RANKING && controlListener.isPressed(keyBinding.getEscape()) ){
             state = GameState.NAVIGATION;
         }
+    }
+
+    private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
+        screenObjects.remove(Item_Type.TIMER1);
+        screenObjects.remove(Item_Type.TIMER2);
+        screenObjects.remove(Item_Type.TIMERFRAME);
+        screenObjects.remove(Item_Type.HPBAR1);
+        screenObjects.remove(Item_Type.HPBAR2);
+        screenObjects.remove(Item_Type.NAME1);
+        screenObjects.remove(Item_Type.NAME2);
+        screenObjects.remove(Item_Type.INDICATOR1);
+        screenObjects.remove(Item_Type.INDICATOR2);
     }
 
     public void writeDirecly(Graphics2D g){
