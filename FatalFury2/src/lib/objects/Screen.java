@@ -1,7 +1,6 @@
 package lib.objects;
 
 import lib.Enums.Item_Type;
-import lib.Enums.Playable_Character;
 import lib.debug.Debug;
 
 import javax.swing.*;
@@ -11,57 +10,45 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+// Clase que se encarga de mostrar todo por pantalla
 public class Screen extends JPanel {
-
+    // Resolución del juego, tiempo de actualización de los cálculos, y tiempo de refresco de la pantalla
     static int resX = 1280, resY = 720, timerDelay = 1, refreshDelay = 15;
-    static Boolean debug = true, inGame = true;
-    private Map<Item_Type, screenObject> screenObjects = new HashMap<Item_Type, screenObject>();
-    private fight_controller fight;
-    private scenary scene;
+    // Si se está debugeando o no
+    static Boolean debug = true;
     private Debug d = new Debug(debug, resX, resY, refreshDelay);
+    // Lista de objetos a mostrar por pantalla, identificados por Item_types
+    private Map<Item_Type, screenObject> screenObjects = new HashMap<Item_Type, screenObject>();
+    // El controlador del juego en sí
+    private game_controller game;
+    // Lista de timers (en verdad ya no sería necesario)
     private Map<String, Timer> timers = new HashMap<String, Timer>();
 
-
+    // Inicia el juego
     private void startGame(){
-        Timer fight_control = new Timer(timerDelay, new ActionListener() {
+        // Timer encargado de recalcular
+        Timer game_control = new Timer(timerDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fight.getAnimation(screenObjects);
+                game.getFrame(screenObjects);
             }
         });
-        Timer scenary_control = new Timer(timerDelay, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //CALCULAR COSAS DEL JUGADOR
-                screenObject ply = scene.getFrame1();
-                screenObjects.put(Item_Type.SCENARY_1, ply);
-                ply = scene.getFrame2();
-                screenObjects.put(Item_Type.SCENARY_2, ply);
-            }
-        });
-        fight_control.start();
-        scenary_control.start();
-        timers.put("fight_control", fight_control);
-        timers.put("scenary_control", scenary_control);
+        game_control.start();
+        timers.put("game_control", game_control);
     }
 
+    // Para el timer del juego
     private void stopGame(){
-        timers.get("fight_control").stop();
-        timers.get("scenary_control").stop();
-        inGame = false;
+        timers.get("game_control").stop();
+        System.exit(0);
     }
 
+    // Inicia todo
     public Screen() {
-        user_controller user = new user_controller(Playable_Character.TERRY);
-        enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-        fight = new fight_controller(user,enemy);
-
-        scene = new scenary();
-        scene.setAnim1(usa.generateAnimation1());
-        scene.setAnim2(usa.generateAnimation2());
-
-
         setSurfaceSize();
+        // Controlador del juego
+        game = new game_controller();
+        // Timer encargado del refresco de la pantalla
         Timer screen_refresh = new Timer(refreshDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,18 +56,8 @@ public class Screen extends JPanel {
             }
         });
         screen_refresh.start();
-        //Por el momento fijo
+        // Inicia el juego
         startGame();
-        //GameLoop
-        /*Timer GameLoop = new Timer(refreshDelay, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screenObject ply = user.getAnimation();
-                screenObjects.put(Item_Type.PLAYER, ply);
-                repaint();
-            }
-        });
-        GameLoop.start();*/
     }
 
     private void setSurfaceSize() {
@@ -90,8 +67,11 @@ public class Screen extends JPanel {
         setPreferredSize(d);
     }
 
-    private void doDrawingInGame(Graphics g) {
-        Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.PLAYER, Item_Type.ENEMY,Item_Type.PLAYERTHROWABLE, Item_Type.ENEMYTHROWABLE};
+    // Muestra por pantalla los screenObjects en la lista
+    private void doDrawing(Graphics g) {
+        Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
+                            Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE,
+                            Item_Type.MENU, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME, Item_Type.HPBAR1, Item_Type.HPBAR2};
         Graphics2D g2d = (Graphics2D) g;
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
@@ -99,25 +79,18 @@ public class Screen extends JPanel {
                 g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
             }
         }
-        fight.getPlayerControler().getPlayer().getHitbox().drawHitBox(g2d);
-        fight.getEnemyControler().getPlayer().getHitbox().drawHitBox(g2d);
-        fight.getPlayerControler().getPlayer().getHurtbox().drawHitBox(g2d);
-        fight.getEnemyControler().getPlayer().getHurtbox().drawHitBox(g2d);
-    }
+        game.writeDirecly(g2d);
 
-    private void doDrawingInMenu(Graphics g) {
-
+        /*game.getFight().getPlayerControler().getPlayer().getHitbox().drawHitBox(g2d);
+        game.getFight().getEnemyControler().getPlayer().getHitbox().drawHitBox(g2d);
+        game.getFight().getPlayerControler().getPlayer().getHurtbox().drawHitBox(g2d);
+        game.getFight().getEnemyControler().getPlayer().getHurtbox().drawHitBox(g2d);*/
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         d.drawFPS(g);
-        if(inGame) {
-            doDrawingInGame(g);
-        }
-        else{
-            doDrawingInMenu(g);
-        }
+        doDrawing(g);
     }
 }

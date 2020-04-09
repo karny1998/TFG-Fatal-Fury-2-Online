@@ -6,8 +6,12 @@ public class hitBox {
     // Coordenadas dentro del sprite (suponiendo la esquina
     // del sprite como 0,0)
     private int x, y;
+    // Ancho y alto de la caja
     private int width, height;
+    // Si es hitbox o hurtbox
     private Boolean hitbox;
+
+    public hitBox(){}
 
     public hitBox(int originX, int originY, int width, int height, Boolean hitbox) {
         this.x = originX;               this.y = originY;
@@ -20,8 +24,6 @@ public class hitBox {
         this.width = newWidth;          this.height = newHeight;
     }
 
-
-
     public Boolean collides(hitBox other) {
         if (this.x < other.x + other.width &&
                 this.x + this.width > other.x &&
@@ -31,7 +33,6 @@ public class hitBox {
         }
         return false;
     }
-
 
     public void drawHitBox(Graphics g) {
         if (this.hitbox) {
@@ -44,11 +45,9 @@ public class hitBox {
         g.drawString(""+x+" "+ y, x, y);
     }
 
-
     public Boolean isHitbox() { return hitbox; }
+
     public Boolean isHurtbox() { return !hitbox; }
-
-
 
     public int getWidth() { return width; }
 
@@ -80,6 +79,4 @@ public class hitBox {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public hitBox(){}
-
-    }
+}

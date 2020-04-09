@@ -3,7 +3,7 @@ import lib.Enums.Item_Type;
 
 import java.awt.*;
 
-//Elemento que se acabará mostrando por pantalla
+// Elemento que se acabará mostrando por pantalla
 public class screenObject {
     //Tipo de elemento
     private Item_Type objectType = Item_Type.NONE;
@@ -13,6 +13,23 @@ public class screenObject {
     private int width = 1, height = 1;
     //Imagen
     private Image img;
+
+    //Constructor principal completo
+    public screenObject(int _x, int _y, int _width, int _height, Image _img, Item_Type _t){
+        x = _x; y = _y; img = _img;
+        width = _width; height = _height;
+        objectType = _t;
+    }
+
+    // Constructor mínimo
+    public screenObject(Image _img){
+        img = _img;
+    }
+
+    // Clonación de un screenObject
+    public screenObject cloneSO(){
+        return new screenObject(this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.getImg(), this.getObjectType());
+    }
 
     // Getters y setters
     public int getWidth() {
@@ -61,21 +78,5 @@ public class screenObject {
 
     public void setObjectType(Item_Type objectType) {
         this.objectType = objectType;
-    }
-
-    //Constructor principal completo
-    public screenObject(int _x, int _y, int _width, int _height, Image _img, Item_Type _t){
-        x = _x; y = _y; img = _img;
-        width = _width; height = _height;
-        objectType = _t;
-    }
-
-    // Constructor mínimo
-    public screenObject(Image _img){
-        img = _img;
-    }
-
-    public screenObject cloneSO(){
-        return new screenObject(this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.getImg(), this.getObjectType());
     }
 }

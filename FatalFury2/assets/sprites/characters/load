@@ -1,0 +1,28 @@
+número de movimientos totales
+carpeta
+movimiento
+combo
+sonido
+tipo de animación
+daño
+tiene final (true o false)
+tiene hitbox?
+x hitbox
+y hitbox
+anchura hitbox
+altura hitbox
+x hurtbox
+y hurtbox
+anchura hitbox
+altura hitbox
+número de frames
+x 
+y 
+anchura 
+altura
+tiempo transición
+incremento x
+incremento y
+x esperada
+y esperada
+es imparable?
