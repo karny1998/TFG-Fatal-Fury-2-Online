@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.util.Map;
 
 public class load_character {
-    public void generateMovs(String charac, Map<String, Movement> combos, Map<Movement, movement> movs, Sound sounds) {
+    public void generateMovs(String charac, Map<String, Movement> combos, Map<Movement, movement> movs, Sound sounds, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
         try {
             String value;
@@ -32,15 +32,15 @@ public class load_character {
                         wHit = 0, hHit = 0, wHurt = 0, hHurt = 0,
                         nFrames = 0;
                 if (hasHit){
-                    xHit = Integer.valueOf(b.readLine());
-                    yHit = Integer.valueOf(b.readLine());
-                    wHit = Integer.valueOf(b.readLine());
-                    hHit = Integer.valueOf(b.readLine());
+                    xHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    yHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    wHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    hHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
                 }
-                xHurt = Integer.valueOf(b.readLine());
-                yHurt = Integer.valueOf(b.readLine());
-                wHurt = Integer.valueOf(b.readLine());
-                hHurt = Integer.valueOf(b.readLine());
+                xHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                yHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                wHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                hHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
                 nFrames = Integer.valueOf(b.readLine());
 
                 animation anim = new animation();
@@ -60,15 +60,17 @@ public class load_character {
                 double tF = 0.0;
                 Boolean stop = false;
                 while(j <= nFrames){
-                    xF = Integer.valueOf(b.readLine());
-                    yF = Integer.valueOf(b.readLine());
-                    wF = Integer.valueOf(b.readLine());
-                    hF = Integer.valueOf(b.readLine());
+                    xF = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    yF = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    wF = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    hF = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     tF = Double.valueOf(b.readLine());
-                    ixF = Integer.valueOf(b.readLine());
-                    iyF = Integer.valueOf(b.readLine());
+                    ixF = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    iyF = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     wxF = Integer.valueOf(b.readLine());
                     wyF = Integer.valueOf(b.readLine());
+                    if(wxF != -1){wxF *= multiplier;}
+                    if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(b.readLine());
                     String ssda = path + "/" + fold + "/" +j + ".png";
                     s = new screenObject(xF, yF,  wF, hF, new ImageIcon(path + fold + "/" + j + ".png").getImage(), Item_Type.PLAYER);
