@@ -3,10 +3,7 @@ package lib.sound;
 import javafx.scene.media.MediaPlayer;
 import lib.Enums.*;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,6 +11,10 @@ public class Sound {
     private static String Voice_Route = "assets/sound/voice/";
     private static String Music_Route = "assets/sound/music/";
     private static String Special_Effects_Route = "assets/sound/special_effects/";
+
+    private float music_audio = 1.0f;
+    private float voice_audio = 1.0f;
+    private float sfx_audio = 1.0f;
 
     private Playable_Character character;
     private Clip[] clips;
@@ -29,6 +30,7 @@ public class Sound {
 
 
 
+
     public Sound(Audio_Type type){
         try {
           this.loadAudio(type);
@@ -41,7 +43,8 @@ public class Sound {
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
         String routes[];
-        //TODO Load from folder instead from route
+        //TODO METER RESTO SONIDOS
+        //TODO Load from folder instead ºfrom route
         switch ( type ){
             case Terry_audio:
                 routes = new String[Character_Voices_Size];
@@ -142,54 +145,110 @@ public class Sound {
 //https://www.geeksforgeeks.org/play-audio-file-using-java/
 
     private void play(int index) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    clips[index].setFramePosition(0);
-                    clips[index].start();
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }).start();
-
-    }
-
-
-    private synchronized void loop(int index) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    clips[index].setFramePosition(0);
-                    clips[index].loop(Clip.LOOP_CONTINUOUSLY);
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }).start();
-    }
-
-
-
-    public synchronized void playCharacterVoice(Character_Voices index){
-        play(index.ordinal());
-    }
-
-    public synchronized void playAnnouncerVoice(Announcer_voices index){
-        play(index.ordinal());
-    }
-
-    public synchronized void playMusic(Music index, Boolean loop){
-        if (loop) {
-            loop(index.ordinal());
-        } else {
-            play(index.ordinal());
+        try {
+            clips[index].setFramePosition(0);
+            clips[index].start();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 
-    public synchronized void playSfx(Character_Voices index){
-        play(index.ordinal());
+
+    private void loop(int index) {
+        try {
+            clips[index].setFramePosition(0);
+            clips[index].loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
+
+    private void stop(int index){
+        if(clips[index].isRunning()){
+            clips[index].stop();
+        }
+    }
+
+    private void resume(int index){
+        if(!clips[index].isRunning() && clips[index].getFramePosition() != 0){
+            clips[index].start();
+        }
+    }
+
+    private void setVolume(float volume, int index){
+        FloatControl gainControl = (FloatControl) clips[index].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(volume));
+    }
+
+    public void musicVolumeDown() {
+        music_audio -= 0.1;
+        if(music_audio < 0.0) { music_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+           setVolume(music_audio, i);
+        }
+    }
+
+    public void musicVolumeUp() {
+        music_audio += 0.1;
+        if(music_audio > 1.0) { music_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(music_audio, i);
+        }
+    }
+
+
+    public void voicesVolumeDown() {
+        voice_audio -= 0.1;
+        if(voice_audio < 0.0) { voice_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(voice_audio, i);
+        }
+    }
+
+    public void voicesVolumeUp() {
+        voice_audio += 0.1;
+        if(voice_audio > 1.0) { voice_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(voice_audio, i);
+        }
+    }
+
+    public void sfxVolumeDown() {
+        sfx_audio -= 0.1;
+        if(sfx_audio < 0.0) { sfx_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(sfx_audio, i);
+        }
+    }
+
+    public void sfxVolumeUp() {
+        sfx_audio += 0.1;
+        if(sfx_audio > 1.0) { sfx_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(sfx_audio, i);
+        }
+    }
+
+    public void playCharacterVoice(Character_Voices index){ play(index.ordinal()); }
+    public void stopCharacterVoice(Character_Voices index){ stop(index.ordinal()); }
+    public void resumeCharacterVoices(Character_Voices index){ resume(index.ordinal()); }
+
+
+    public void playAnnouncerVoice(Announcer_voices index){ play(index.ordinal()); }
+    public void stopAnnouncerVoice(Announcer_voices index){ stop(index.ordinal()); }
+    public void resumeAnnouncerVoice(Announcer_voices index){ resume(index.ordinal()); }
+
+
+    public void playMusic(Music index){ play(index.ordinal()); }
+    public void loopMusic(Music index){ loop(index.ordinal()); }
+    public void stopMusic(Music index){ stop(index.ordinal()); }
+    public void resumeMusic(Music index){ resume(index.ordinal()); }
+
+
+
+    public void playSfx(Character_Voices index){ play(index.ordinal()); }
+    public void stopSfx(Character_Voices index){ stop(index.ordinal()); }
+    public void resumeSfx(Character_Voices index){ resume(index.ordinal()); }
 
 }

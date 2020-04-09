@@ -2,6 +2,8 @@ package lib.objects;
 
 import javafx.util.Pair;
 import lib.Enums.Selectionable;
+import lib.input.controlListener;
+import lib.input.keyBinding;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,14 +32,14 @@ public class menu {
     public void updateTime(){referenceTime = System.currentTimeMillis();}
 
     // Obtener el frame del menú (también sube y baja el cursor)
-    public screenObject getFrame(controlKey key){
+    public screenObject getFrame(){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 300.0){
-            if(key == controlKey.UP && sel > 0){
+            if(controlListener.isPressed(keyBinding.getUp() )&& sel > 0){
                 sel--;
                 referenceTime = current;
             }
-            else if(key == controlKey.DOWN && sel < orden.length-1){
+            else if(controlListener.isPressed(keyBinding.getDown() ) && sel < orden.length-1){
                 sel++;
                 referenceTime = current;
             }
