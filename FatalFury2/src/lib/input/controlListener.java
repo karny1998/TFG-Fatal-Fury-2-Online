@@ -2,6 +2,7 @@ package lib.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -9,6 +10,7 @@ public class  controlListener implements KeyListener {
 
     static Boolean[] keyStatus;
     static Queue<Integer> inputQueue;
+    static Queue<Integer> inputQueue_timestamps;
     static int QUEUE_SIZE = 5;
 
     public controlListener(){
@@ -30,8 +32,11 @@ public class  controlListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         this.keyStatus[e.getKeyCode()] = true;
         this.inputQueue.add(e.getKeyCode());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        this.inputQueue_timestamps.add((int)timestamp.getTime());
         if(this.inputQueue.size() > this.QUEUE_SIZE){
             this.inputQueue.remove();
+            this.inputQueue_timestamps.remove();
         }
     }
 
@@ -66,7 +71,9 @@ public class  controlListener implements KeyListener {
     public static Queue<Integer> getQueue(){
         return inputQueue;
     }
-
+    public static Queue<Integer> getInputQueue_timestamps(){
+        return inputQueue_timestamps;
+    }
 
     public static boolean anyKeyPressed(){
         Boolean status = false;
