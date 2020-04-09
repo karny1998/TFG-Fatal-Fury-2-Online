@@ -40,9 +40,9 @@ public class menu_generator {
 
         animation a = new animation();
         a.setHasEnd(false);
-        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_game.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_game.png").getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -53,9 +53,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_ranking.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -65,9 +65,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_options.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -77,9 +77,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_exit.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -100,9 +100,9 @@ public class menu_generator {
 
         animation a = new animation();
         a.setHasEnd(false);
-        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_history.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_history.png").getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -112,9 +112,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_multiplayer.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -124,9 +124,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_ia.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "game_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -146,9 +146,9 @@ public class menu_generator {
 
         animation a = new animation();
         a.setHasEnd(false);
-        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_resume.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_resume.png").getImage(), Item_Type.MENU);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -158,9 +158,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_back.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
@@ -171,9 +171,9 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
-        a.addFrame(s,500.0,0,0);
         s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_exit.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "escape_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
