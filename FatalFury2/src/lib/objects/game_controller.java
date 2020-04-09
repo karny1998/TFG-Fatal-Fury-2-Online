@@ -75,7 +75,7 @@ public class game_controller {
                         case PRINCIPAL_EXIT:
                             System.exit(0);
                             break;
-                        case PRINCIPAL_HOW:
+                        case PRINCIPAL_RANK:
                             ranking.reloadRanking();
                             state = GameState.RANKING;
                             break;
@@ -159,6 +159,9 @@ public class game_controller {
                         break;
                 }
             }
+        }
+        else if(state == GameState.RANKING && controlListener.isPressed(keyBinding.getEscape()) ){
+            state = GameState.NAVIGATION;
         }
     }
 

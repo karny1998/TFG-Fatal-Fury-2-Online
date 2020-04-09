@@ -34,7 +34,7 @@ public class menu_generator {
 
     private static menu principal(){
         menu men = new menu();
-        men.setOrden(new Selectionable[]{Selectionable.PRINCIPAL_GAME, Selectionable.PRINCIPAL_HOW, Selectionable.PRINCIPAL_EXIT});
+        men.setOrden(new Selectionable[]{Selectionable.PRINCIPAL_GAME, Selectionable.PRINCIPAL_RANK, Selectionable.PRINCIPAL_OPTIONS, Selectionable.PRINCIPAL_EXIT});
         Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
         String path = "assets/sprites/menu/";
 
@@ -55,13 +55,25 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_how.png").getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_ranking.png").getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setSound(null);
         a.setSoundType(Character_Voices.Win);
 
-        sel = new selectionable(Selectionable.PRINCIPAL_HOW,a);
-        aux.put(Selectionable.PRINCIPAL_HOW,sel);
+        sel = new selectionable(Selectionable.PRINCIPAL_RANK,a);
+        aux.put(Selectionable.PRINCIPAL_RANK,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_basic.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "principal_options.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        sel = new selectionable(Selectionable.PRINCIPAL_OPTIONS,a);
+        aux.put(Selectionable.PRINCIPAL_OPTIONS,sel);
 
         a = new animation();
         a.setHasEnd(false);
