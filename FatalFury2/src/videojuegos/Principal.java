@@ -21,6 +21,7 @@ public class Principal extends JFrame {
 
     private void initUI() {
         add(new Screen());
+        setResizable(false);
         pack();
         setTitle("Fatal Fury 2");
         setLocationRelativeTo(null);
