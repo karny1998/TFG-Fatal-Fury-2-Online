@@ -19,6 +19,7 @@ public class  controlListener implements KeyListener {
             keyStatus[i] = false;
         }
         inputQueue = new LinkedList<>();
+        inputQueue_timestamps = new LinkedList<>();
 
     }
 
