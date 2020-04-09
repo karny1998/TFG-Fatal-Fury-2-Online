@@ -174,6 +174,8 @@ public class game_controller {
             fight.player.player.getHurtbox().drawHitBox(g);
             fight.enemy.player.getHitbox().drawHitBox(g);
             fight.enemy.player.getHurtbox().drawHitBox(g);
+            fight.drawHpBarPlayer(g);
+            fight.drawHpBarEnemy(g);
         }
     }
 

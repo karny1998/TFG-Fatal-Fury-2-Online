@@ -28,6 +28,9 @@ public class fight_controller implements roundListener {
     // Puntos de ronda ganados
     int playerScore = 0;
     int enemyScore = 0;
+    // Vida antigua de los jugadores
+    int playerOldHp;
+    int enemyOldHp;
     // Resultado de la pelea (true = victoria)
     boolean playerWin;
     // Ha acabado la pelea (true = acabada)
@@ -162,9 +165,6 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
-        // FRAMES DE BARRAS DE VIDA
-        screenObjects.put(Item_Type.HPBAR1,new screenObject(136,58,414,30,bar_player, Item_Type.HPBAR1));
-        screenObjects.put(Item_Type.HPBAR2,new screenObject(730,58,414,30,bar_enemy, Item_Type.HPBAR2));
         // TIMER
         if (noTimer) {
             screenObjects.remove(Item_Type.TIMER2);
@@ -178,6 +178,9 @@ public class fight_controller implements roundListener {
             screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
             screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
         }
+        // FRAMES DE BARRAS DE VIDA
+        screenObjects.put(Item_Type.HPBAR1,new screenObject(136,58,414,30,bar_player, Item_Type.HPBAR1));
+        screenObjects.put(Item_Type.HPBAR2,new screenObject(730,58,414,30,bar_enemy, Item_Type.HPBAR2));
         // NOMBRES DE LOS PERSONAJES
         screenObjects.put(Item_Type.NAME1,new screenObject(136,89,414,30,name_player, Item_Type.NAME1));
         screenObjects.put(Item_Type.NAME2,new screenObject(730,89,414,30,name_enemy, Item_Type.NAME2));
@@ -186,6 +189,30 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.INDICATOR2,new screenObject(730,20,90,38,indicator_enemy, Item_Type.INDICATOR2));
         // RONDA
         currentRound.getAnimation(screenObjects);
+    }
+
+    // Dibujar barras de vida
+    void drawHpBarPlayer(Graphics2D g) {
+        // x = 140, y = 62, w = 406, h = 22
+        g.setColor(Color.YELLOW);
+        int actualHP = player.getPlayer().getLife();
+        if (actualHP == 100) {
+            g.fillRect(140,62,406,22);
+        }
+        else {
+            int w = 407 * actualHP / 100;
+            g.fillRect(140,62,w,22);
+        }
+    }
+    void drawHpBarEnemy(Graphics2D g) {
+        // x = 734, y = 52, w = 406, h = 22
+        g.setColor(Color.BLACK);
+        int actualHP = enemy.getPlayer().getLife();
+        if (actualHP != 100) {
+            int damage = 100 - actualHP;
+            int w = 407 * damage / 100;
+            g.fillRect(734,62,w,22);
+        }
     }
 
     // Devuelve si ha terminado la pelea
