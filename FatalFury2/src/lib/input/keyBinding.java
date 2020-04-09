@@ -117,13 +117,13 @@ public class keyBinding {
         } else if ( controlListener.isPressed(getLeft())) {
             return "LEFT";
         } else if ( controlListener.isPressed(getWeak_Punch())) {
-            return "WEAK_PUNCH";
+            return "S";
         } else if ( controlListener.isPressed(getWeak_Kick())) {
-            return "WEAK_KICK";
+            return "A";
         } else if ( controlListener.isPressed(getStrong_Punch())) {
-            return "STRONG_PUNCH";
+            return "D";
         } else if ( controlListener.isPressed(getStrong_Kick())) {
-            return "STRONG_KICK";
+            return "W";
         } else {
             return "";
         }

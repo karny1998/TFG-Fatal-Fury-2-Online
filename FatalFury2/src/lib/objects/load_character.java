@@ -65,14 +65,14 @@ public class load_character {
                     wF = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     hF = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     tF = Double.valueOf(b.readLine());
-                    ixF = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    iyF = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    ixF = (int) (Integer.valueOf(b.readLine()) );
+                    iyF = (int) (Integer.valueOf(b.readLine()) );
                     wxF = Integer.valueOf(b.readLine());
                     wyF = Integer.valueOf(b.readLine());
                     if(wxF != -1){wxF *= multiplier;}
                     if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(b.readLine());
-                    String ssda = path + "/" + fold + "/" +j + ".png";
+                    String ssda = path + "/" + fold + "/" + j + ".png";
                     s = new screenObject(xF, yF,  wF, hF, new ImageIcon(path + fold + "/" + j + ".png").getImage(), Item_Type.PLAYER);
                     anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);
                     ++j;
