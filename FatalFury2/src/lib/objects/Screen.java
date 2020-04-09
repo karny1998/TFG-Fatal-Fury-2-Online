@@ -71,7 +71,9 @@ public class Screen extends JPanel {
     private void doDrawing(Graphics g) {
         Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
                             Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE,
-                            Item_Type.MENU, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME, Item_Type.HPBAR1, Item_Type.HPBAR2};
+                            Item_Type.MENU, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
+                            Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
+                            Item_Type.INDICATOR1, Item_Type.INDICATOR2};
         Graphics2D g2d = (Graphics2D) g;
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);

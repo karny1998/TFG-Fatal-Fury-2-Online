@@ -34,14 +34,19 @@ public class fight_controller implements roundListener {
     boolean hasEnded;
     // No hay timer
     boolean noTimer;
+    // Pelea del mismo personaje
+    boolean mirrorFight;
     // Interfaz
     displayTimer timer = new displayTimer();
     Image bar_player, bar_enemy;
+    Image name_player, name_enemy;
+    Image indicator_player, indicator_enemy;
 
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e) {
         player = p;
         enemy = e;
+        mirrorFight = player.getPlayer().getCharac() == enemy.getPlayer().getCharac();
         roundCounter = 0;
         playerScore = 0;
         enemyScore = 0;
@@ -50,6 +55,27 @@ public class fight_controller implements roundListener {
         noTimer = false;
         bar_player = new ImageIcon(path+"/hp_bars/player1_frame.png").getImage();
         bar_enemy = new ImageIcon(path+"/hp_bars/player2_frame.png").getImage();
+        switch (player.getPlayer().getCharac()) {
+            case TERRY:
+                name_player = new ImageIcon(path+"/char_names/terry_blue.png").getImage();
+                break;
+            case MAI:
+                break;
+            case ANDY:
+                break;
+        }
+        switch (enemy.getPlayer().getCharac()) {
+            case TERRY:
+                if (mirrorFight) { name_enemy = new ImageIcon(path+"/char_names/terry_red.png").getImage(); }
+                else { name_enemy = new ImageIcon(path+"/char_names/terry_blue.png").getImage(); }
+                break;
+            case MAI:
+                break;
+            case ANDY:
+                break;
+        }
+        indicator_player = new ImageIcon(path+"/1p.png").getImage();
+        indicator_enemy = new ImageIcon(path+"/2p.png").getImage();
         currentRound = new round(player,enemy,roundTime);
         currentRound.addListener(this);
         currentRound.startRound(true);
@@ -136,8 +162,10 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        // FRAMES DE BARRAS DE VIDA
         screenObjects.put(Item_Type.HPBAR1,new screenObject(136,58,414,30,bar_player, Item_Type.HPBAR1));
         screenObjects.put(Item_Type.HPBAR2,new screenObject(730,58,414,30,bar_enemy, Item_Type.HPBAR2));
+        // TIMER
         if (noTimer) {
             screenObjects.remove(Item_Type.TIMER2);
             List<screenObject> timerObjects = timer.getTimer();
@@ -150,6 +178,13 @@ public class fight_controller implements roundListener {
             screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
             screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
         }
+        // NOMBRES DE LOS PERSONAJES
+        screenObjects.put(Item_Type.NAME1,new screenObject(136,89,414,30,name_player, Item_Type.NAME1));
+        screenObjects.put(Item_Type.NAME2,new screenObject(730,89,414,30,name_enemy, Item_Type.NAME2));
+        // 1P Y 2P
+        screenObjects.put(Item_Type.INDICATOR1,new screenObject(136,20,90,38,indicator_player, Item_Type.INDICATOR1));
+        screenObjects.put(Item_Type.INDICATOR2,new screenObject(730,20,90,38,indicator_enemy, Item_Type.INDICATOR2));
+        // RONDA
         currentRound.getAnimation(screenObjects);
     }
 
