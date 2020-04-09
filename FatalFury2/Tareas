@@ -1,0 +1,27 @@
+-Meter más terry
+-Interfaz de pelea
+-Inputs: para dos usuarios -> multiplayer
+		-Que se guarde la configuración en ficheros
+-Mecánicas de pelea: 
+					-Bloqueos
+					-Ataques en animaciones como agacharse o saltar
+					-Knockdown
+					-Refinar el combate en si (colisione y tal)
+					-Ataques basados en distancia
+					-Agarres
+					-Empujar
+					-Combos
+					
+					-Ajuste de cámara?
+					-Cambio de plano?
+-En combates contra IA pedir nombre
+-Que haya sonidos cuando golpee,pero no cuando no golpee
+-Más opciones de menú: -Seleccion de personajes
+						-Seleccion de mapa
+						
+						-Tras combate: repetir?
+										-Seleccionar nuevo personaje y mapa
+-Menú de configuración teclas y volumen
+-Inteligencia artificial: poda alfa-beta?
+-Todo lo relacionado con arte: música y sprites de mai y andy
+-Animaciones y transiciones?
