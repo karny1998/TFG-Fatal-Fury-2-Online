@@ -165,6 +165,12 @@ public class game_controller {
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
+        else if(state == GameState.FIGHT) {
+            fight.player.player.getHitbox().drawHitBox(g);
+            fight.player.player.getHurtbox().drawHitBox(g);
+            fight.enemy.player.getHitbox().drawHitBox(g);
+            fight.enemy.player.getHurtbox().drawHitBox(g);
+        }
     }
 
     // Getters y setters

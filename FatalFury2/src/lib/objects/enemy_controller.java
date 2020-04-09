@@ -7,7 +7,7 @@ public class enemy_controller extends character_controller{
     private character rival;
 
     public enemy_controller(Playable_Character ch){
-        super(ch,750,160, 1);
+        super(ch,750,290, 1);
     }
 
     public enemy_controller(Playable_Character ch, character rival){
@@ -44,7 +44,7 @@ public class enemy_controller extends character_controller{
 
     @Override
     void reset() {
-        reset(this.player.getCharac(),750,160, 1);
+        reset(this.player.getCharac(),750,290, 1);
     }
 
     public character getRival() {

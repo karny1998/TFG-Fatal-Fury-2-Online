@@ -40,7 +40,13 @@ public class animation {
     //Hitbox asociada
     hitBox hitbox = new hitBox(-10000,-10000,1,1,true);
     // Hurtbox asociada
-    hitBox hurtBox = new hitBox(-10000,-10000,1,1,false);;
+    hitBox hurtBox = new hitBox(-10000,-10000,1,1,false);
+
+    int yCompleted = 0;
+    boolean yAux = false;
+    int totalIncrementY = 0;
+    int desiredY = 0;
+    boolean desiredAssigned = false;
 
     public animation() {}
 
@@ -51,6 +57,7 @@ public class animation {
         coords.add(coords.size(), new Pair(iX,iY));
         waitedCoords.add(waitedCoords.size(), new Pair(-1,-1));
         unstoppable.add(unstoppable.size(), false);
+        totalIncrementY += iY;
     }
 
     public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean unstop){
@@ -59,6 +66,7 @@ public class animation {
         coords.add(coords.size(), new Pair(iX,iY));
         waitedCoords.add(waitedCoords.size(), new Pair(wX,wY));
         unstoppable.add(unstoppable.size(), unstop);
+        totalIncrementY += iY;
     }
 
     //Inicia los cálculos de la animación
@@ -69,6 +77,10 @@ public class animation {
         increment = 1;
         startTime = System.currentTimeMillis();
         auxTime = System.currentTimeMillis();
+        yCompleted = 0;
+        yAux = false;
+        desiredY = 0;
+        desiredAssigned = false;
     }
 
     //Finaliza y reinicia la animación
@@ -79,12 +91,22 @@ public class animation {
         increment = 1;
         startTime = 0;
         auxTime = 0;
+        yCompleted = 0;
+        yAux = false;
+        desiredY = 0;
+        desiredAssigned = false;
+
     }
 
     // Obtiene el frame de la animación correspondiente al momento actual
     // a partir de unas coordenadas base. La orientación indica a donde mira
     // la animación (1 hacia la izquierda, -1 hacia la derecha)
     public screenObject getFrame(int x, int y, int orientation){
+        if(!desiredAssigned){
+            desiredY = y + totalIncrementY;
+            desiredAssigned = true;
+        }
+
         // Si no se está reprodciendo el sonido, se reproducre
         if(!playing && hasEnd){
             sound.playCharacterVoice(soundType);
@@ -95,7 +117,7 @@ public class animation {
         if(ended || type == Animation_type.HOLDABLE && state == frames.size()-1){
             result = frames.get(frames.size()-1).cloneSO();
             result.setX(x+coords.get(frames.size()-1).getKey());
-            result.setY(y+coords.get(frames.size()-1).getValue());
+            result.setY(desiredY);
             result.setWidth(result.getWidth()*orientation);
             ended = true;
             return result;
@@ -114,6 +136,15 @@ public class animation {
             || cX != 0 && cY != 0 && incrementOnX != 0 && incrementOnY != 0) {
             auxTime = current;
         }
+        if(cY > 0 && yCompleted + incrementOnY > cY
+            || cY < 0 && yCompleted + incrementOnY < cY){
+            incrementOnY = cY - yCompleted;
+            if(state == 5){
+                yCompleted = 0;
+            }
+            yCompleted = 0;
+            yAux = true;
+        }
         // Si es infinita, ha terminado y el sentido era el inverso, cambia el sentido
         if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
             increment = 1;
@@ -125,43 +156,48 @@ public class animation {
         }
         // Si se ha alcanzado el último frame de de la animación
         else if(state == frames.size()-1 &&
-                (elapsedTime >= times.get(state)||
+                (elapsedTime >= times.get(state)|| yAux ||
                 wX != -1 && wY != -1 && x == wX && y == wY
                 || wX == -1 && wY != -1 && y == wY
                  || wX != -1 && wY == -1 && x == wX)){
             // Si tiene final devuelve el último frame
             if(hasEnd){
                 ended = true;
-                result = frames.get(state).cloneSO();
-                result.setX(x + incrementOnX);
-                result.setY(y + incrementOnY);
             }
             // Sino, es infinita y cambia el sentido de avance
             else{
                 increment = -1;
                 state += increment;
                 startTime = current;
-                result = frames.get(state).cloneSO();
-                result.setX(x+incrementOnX);
-                result.setY(y+incrementOnY);
             }
+            result = frames.get(state).cloneSO();
+            result.setX(x + incrementOnX);
+            result.setY(desiredY);
+            yAux = false;
         }
         // Si ha pasado el tiempo requerido entre frame y frame
         else if(elapsedTime >= times.get(state) ||
                 wX != -1 && wY != -1 && x == wX && y == wY
                 || wX == -1 && wY != -1 && y == wY
                 || wX != -1 && wY == -1 && x == wX){
-            state += increment;
-            startTime = current;
+
+            if(yCompleted != 0 && yCompleted+incrementOnY != coords.get(state).getValue()){
+                incrementOnY = coords.get(state).getValue() - yCompleted;
+                yCompleted = 0;
+            }
             result = frames.get(state).cloneSO();
             result.setX(x + incrementOnX);
             result.setY(y + incrementOnY);
+            state += increment;
+            startTime = current;
+            yAux = false;
         }
         // Caso por defecto
         else{
             result = frames.get(state).cloneSO();
             result.setX(x + incrementOnX);
             result.setY(y +incrementOnY);
+            if(!yAux){yCompleted += incrementOnY;}
         }
         // Ajusta el ancho según la orientación para que mire a un lado y a otro
         result.setWidth(result.getWidth()*orientation);

@@ -40,7 +40,7 @@ public class character {
         else{
             voices = new Sound(Audio_Type.Andy_audio);
             //new terry().generateMovs(combos, movements, voices);
-            new load_character().generateMovs("terry", combos, movements, voices);
+            new load_character().generateMovs("terry", combos, movements, voices, 0.8);
         }
         // Por defecto está en STANDING
         movements.get(Movement.STANDING).start();

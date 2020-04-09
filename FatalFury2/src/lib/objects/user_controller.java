@@ -7,7 +7,7 @@ import lib.Enums.Playable_Character;
 public class user_controller extends character_controller{
 
     public user_controller(Playable_Character ch){
-        super(ch,500,160, -1);
+        super(ch,500,290, -1);
     }
 
     // Obtiene el frame del personaje
@@ -28,6 +28,6 @@ public class user_controller extends character_controller{
 
     @Override
     void reset() {
-        reset(this.player.getCharac(),500,160, -1);
+        reset(this.player.getCharac(),500,290, -1);
     }
 }
