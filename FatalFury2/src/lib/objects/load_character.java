@@ -72,7 +72,6 @@ public class load_character {
                     if(wxF != -1){wxF *= multiplier;}
                     if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(b.readLine());
-                    String ssda = path + "/" + fold + "/" + j + ".png";
                     s = new screenObject(xF, yF,  wF, hF, new ImageIcon(path + fold + "/" + j + ".png").getImage(), Item_Type.PLAYER);
                     anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);
                     ++j;
