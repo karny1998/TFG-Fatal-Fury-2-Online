@@ -36,11 +36,11 @@ public class hitBox {
 
     public void drawHitBox(Graphics g) {
         if (this.hitbox) {
-            g.setColor(Color.RED);
+            g.setColor(new Color(1,0,0, (float) 0.5));
         } else {
-            g.setColor(Color.BLUE);
+            g.setColor(new Color(0,0,1, (float) 0.5));
         }
-        g.drawRect(this.x, this.y, this.width, this.height);
+        g.fillRect(this.x, this.y, this.width, this.height);
         g.setColor(Color.WHITE);
         g.drawString(""+x+" "+ y, x, y);
     }

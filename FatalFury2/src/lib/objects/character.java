@@ -4,6 +4,7 @@ import lib.Enums.Animation_type;
 import lib.Enums.Audio_Type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
+import lib.input.keyBinding;
 import lib.sound.Sound;
 
 import java.util.HashMap;
@@ -39,6 +40,8 @@ public class character {
         }
         else{
             voices = new Sound(Audio_Type.Andy_audio);
+
+
             //new terry().generateMovs(combos, movements, voices);
             new load_character().generateMovs("terry", combos, movements, voices);
         }
@@ -49,10 +52,12 @@ public class character {
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
-    public screenObject getFrame(String mov, boolean collides){
+    public screenObject getFrame(boolean collides){
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
+        String mov = keyBinding.getMove();
+
         if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
             && combos.get(mov) != state){
             Movement aux = Movement.NONE;

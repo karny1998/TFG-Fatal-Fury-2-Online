@@ -5,11 +5,11 @@ import java.awt.event.KeyListener;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class controlListener implements KeyListener {
+public class  controlListener implements KeyListener {
 
-    Boolean[] keyStatus;
-    Queue<Integer> inputQueue;
-    int QUEUE_SIZE = 5;
+    static Boolean[] keyStatus;
+    static Queue<Integer> inputQueue;
+    static int QUEUE_SIZE = 5;
 
     public controlListener(){
         keyStatus = new Boolean[256];
@@ -40,23 +40,39 @@ public class controlListener implements KeyListener {
         this.keyStatus[e.getKeyCode()] = false;
     }
 
-    public int getLastKey(){
-        if(this.inputQueue.size() == 0){
-            return  -1;
+
+    public static void addNullkey(){
+        inputQueue.add(-1);
+        if(inputQueue.size() > QUEUE_SIZE){
+            inputQueue.remove();
         }
-        return this.inputQueue.peek();
     }
 
-    public boolean isPressed(int keycode){
+
+    public static int getLastKey(){
+        if(inputQueue.size() == 0){
+            return  -1;
+        }
+        return inputQueue.peek();
+    }
+
+    public static boolean isPressed(int keycode){
         if(keycode == -1){
             return false;
         }
-        return this.keyStatus[keycode];
+        return keyStatus[keycode];
     }
 
-    public Queue<Integer> getQueue(){
-        return this.inputQueue;
+    public static Queue<Integer> getQueue(){
+        return inputQueue;
     }
 
 
+    public static boolean anyKeyPressed(){
+        Boolean status = false;
+        for(int i = 0; i < keyStatus.length; i++){
+            status = status || keyStatus[i];
+        }
+        return status;
+    }
 }

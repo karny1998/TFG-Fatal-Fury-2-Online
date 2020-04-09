@@ -1,86 +1,133 @@
 package lib.input;
 
 public class keyBinding {
-    private int up, down, left, right;
-    private int Weak_Punch, Weak_Kick, Strong_Punch, Strong_Kick;
+    private static int escape = 27;
+    private static int enter = 10;
 
-    public keyBinding(){
-        this.up = 38;
-        this.down = 40;
-        this.left = 37;
-        this.right = 39;
+    private static int up = 38;
+    private static int down= 40;
+    private static int left = 37;
+    private static int right = 39;
 
-        //A
-        this.Weak_Punch = 65;
-        //S
-        this.Weak_Kick = 83;
-        //Q
-        this.Strong_Punch = 81;
-        //W
-        this.Strong_Kick = 87;
+    //A
+    private static int Weak_Punch = 65;
+    //S
+    private static int Weak_Kick= 83;
+    //Q
+    private static int Strong_Punch = 81;
+    //W
+    private static int Strong_Kick = 87;
+
+
+
+
+
+
+
+    public static int getUp(){
+        return up;
     }
 
-    public int getUpKey(){
-        return this.up;
-    }
-
-    public int getDown() {
+    public static int getDown() {
         return down;
     }
 
-    public int getLeft() {
+    public static int getLeft() {
         return left;
     }
 
-    public int getRight() {
+    public static int getRight() {
         return right;
     }
 
-    public int getWeak_Punch() {
+    public static int getWeak_Punch() {
         return Weak_Punch;
     }
 
-    public int getWeak_Kick() {
+    public static int getWeak_Kick() {
         return Weak_Kick;
     }
 
-    public int getStrong_Punch() {
+    public static int getStrong_Punch() {
         return Strong_Punch;
     }
 
-    public int getStrong_Kick() {
+    public static int getStrong_Kick() {
         return Strong_Kick;
     }
 
-    public void setUp(int up) {
-        this.up = up;
+    public static int getEscape() {
+        return escape;
     }
 
-    public void setDown(int down) {
-        this.down = down;
+    public static int getEnter() {
+        return enter;
     }
 
-    public void setLeft(int left) {
-        this.left = left;
+
+
+    public static void setUp(int _up) {
+        up = _up;
     }
 
-    public void setRight(int right) {
-        this.right = right;
+    public static void setDown(int _down) {
+        down = _down;
     }
 
-    public void setWeak_Punch(int weak_Punch) {
+    public static void setLeft(int _left) {
+        left = _left;
+    }
+
+    public static void setRight(int _right) {
+        right = _right;
+    }
+
+    public static void setWeak_Punch(int weak_Punch) {
         Weak_Punch = weak_Punch;
     }
 
-    public void setWeak_Kick(int weak_Kick) {
+    public static void setWeak_Kick(int weak_Kick) {
         Weak_Kick = weak_Kick;
     }
 
-    public void setStrong_Punch(int strong_Punch) {
+    public static void setStrong_Punch(int strong_Punch) {
         Strong_Punch = strong_Punch;
     }
 
-    public void setStrong_Kick(int strong_Kick) {
+    public static void setStrong_Kick(int strong_Kick) {
         Strong_Kick = strong_Kick;
     }
+
+    public static void setEscape(int esc) {
+        escape = esc;
+    }
+
+    public static void setEnter(int ent) {
+        enter = ent;
+    }
+
+    public static String getMove(){
+
+        if( controlListener.isPressed(getUp())) {
+            return "UP";
+        } else if ( controlListener.isPressed(getDown())) {
+            return "DOWN";
+        } else if ( controlListener.isPressed(getRight())) {
+            return "RIGHT";
+        } else if ( controlListener.isPressed(getLeft())) {
+            return "LEFT";
+        } else if ( controlListener.isPressed(getWeak_Punch())) {
+            return "WEAK_PUNCH";
+        } else if ( controlListener.isPressed(getWeak_Kick())) {
+            return "WEAK_KICK";
+        } else if ( controlListener.isPressed(getStrong_Punch())) {
+            return "STRONG_PUNCH";
+        } else if ( controlListener.isPressed(getStrong_Kick())) {
+            return "STRONG_KICK";
+        } else {
+            return "";
+        }
+    }
+
+
 }

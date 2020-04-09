@@ -4,6 +4,8 @@ import javafx.util.Pair;
 import lib.Enums.Animation_type;
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
+import lib.input.controlListener;
+import lib.input.keyBinding;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,10 +104,10 @@ public class score {
         long current = System.currentTimeMillis();
         if(current - timeReference > 100.0){
             controlKey cK = IsKeyPressed.keyPressed();
-            if(cK == controlKey.UP && pointer > 0){
+            if(controlListener.isPressed(keyBinding.getUp()) && pointer > 0){
                 --pointer;
             }
-            else if(cK == controlKey.DOWN && pointer < rank.size()-1){
+            else if(controlListener.isPressed(keyBinding.getDown()) && pointer < rank.size()-1){
                 ++pointer;
             }
             timeReference = current;

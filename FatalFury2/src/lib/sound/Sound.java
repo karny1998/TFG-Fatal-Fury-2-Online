@@ -3,10 +3,7 @@ package lib.sound;
 import javafx.scene.media.MediaPlayer;
 import lib.Enums.*;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,6 +11,10 @@ public class Sound {
     private static String Voice_Route = "assets/sound/voice/";
     private static String Music_Route = "assets/sound/music/";
     private static String Special_Effects_Route = "assets/sound/special_effects/";
+
+    private float music_audio = 1.0f;
+    private float voice_audio = 1.0f;
+    private float sfx_audio = 1.0f;
 
     private Playable_Character character;
     private Clip[] clips;
@@ -26,6 +27,7 @@ public class Sound {
     private static int Special_Effects_Size = Special_Effects.values().length;
     private static int Crowd_Voices_Size = Crowd_Voices.values().length;
     private static int Music_Size = Music.values().length;
+
 
 
 
@@ -72,7 +74,7 @@ public class Sound {
                 routes[Character_Voices.Hurt_3.ordinal()] = Voice_Route + "Andy/Hurt_3.wav";
                 routes[Character_Voices.Special_1.ordinal()] = Voice_Route + "Andy/Special_1.wav";
                 routes[Character_Voices.Special_2.ordinal()] = Voice_Route + "Andy/Special_2.wav";
-                  routes[Character_Voices.Special_3.ordinal()] = Voice_Route + "Andy/Special_3.wav";
+                routes[Character_Voices.Special_3.ordinal()] = Voice_Route + "Andy/Special_3.wav";
                 routes[Character_Voices.Special_4.ordinal()] = Voice_Route + "Andy/Special_4.wav";
                 routes[Character_Voices.Desperation_Move.ordinal()] = Voice_Route + "Andy/Desperation_Move.wav";
                 routes[Character_Voices.Win.ordinal()] = Voice_Route + "Andy/Win.wav";
@@ -174,9 +176,63 @@ public class Sound {
         }
     }
 
+    private void setVolume(float volume, int index){
+        FloatControl gainControl = (FloatControl) clips[index].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(volume));
+    }
+
+    public void musicVolumeDown() {
+        music_audio -= 0.1;
+        if(music_audio < 0.0) { music_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+           setVolume(music_audio, i);
+        }
+    }
+
+    public void musicVolumeUp() {
+        music_audio += 0.1;
+        if(music_audio > 1.0) { music_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(music_audio, i);
+        }
+    }
+
+
+    public void voicesVolumeDown() {
+        voice_audio -= 0.1;
+        if(voice_audio < 0.0) { voice_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(voice_audio, i);
+        }
+    }
+
+    public void voicesVolumeUp() {
+        voice_audio += 0.1;
+        if(voice_audio > 1.0) { voice_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(voice_audio, i);
+        }
+    }
+
+    public void sfxVolumeDown() {
+        sfx_audio -= 0.1;
+        if(sfx_audio < 0.0) { sfx_audio = 0.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(sfx_audio, i);
+        }
+    }
+
+    public void sfxVolumeUp() {
+        sfx_audio += 0.1;
+        if(sfx_audio > 1.0) { sfx_audio = 1.0f; }
+        for(int i = 0; i < clips.length; i++){
+            setVolume(sfx_audio, i);
+        }
+    }
+
     public void playCharacterVoice(Character_Voices index){ play(index.ordinal()); }
     public void stopCharacterVoice(Character_Voices index){ stop(index.ordinal()); }
-    public void resumeCharacter_Voices(Character_Voices index){ resume(index.ordinal()); }
+    public void resumeCharacterVoices(Character_Voices index){ resume(index.ordinal()); }
 
 
     public void playAnnouncerVoice(Announcer_voices index){ play(index.ordinal()); }

@@ -5,6 +5,8 @@ import lib.Enums.GameState;
 import lib.Enums.Item_Type;
 import lib.Enums.Playable_Character;
 import lib.Enums.Selectionable;
+import lib.input.controlListener;
+import lib.input.keyBinding;
 
 import java.awt.*;
 import java.util.Map;
@@ -49,24 +51,23 @@ public class game_controller {
     // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
         // Teecla presionada por el usuario
-        controlKey cK = IsKeyPressed.keyPressed();
         // Si se está navegando por los menús
         if(state == GameState.NAVIGATION){
-            screenObject s = actualMenu.getFrame(cK);
+            screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
             // Si el menú es el de start, y se presiona cualquier tecla (de las mapeadas)
-            if(p.getValue() == Selectionable.START && cK != controlKey.NONE){
+            if(p.getValue() == Selectionable.START && controlListener.anyKeyPressed()){
                 actualMenu = p.getKey();
                 actualMenu.updateTime();
             }
             // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            else if(cK == controlKey.ESCAPE){
+            else if( controlListener.isPressed(keyBinding.getEscape())){
                 //actualMenu = actualMenu.getFather();
                 actualMenu.updateTime();
             }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
-            else if(cK == controlKey.ENTER && p.getValue() != Selectionable.NONE){
+            else if(controlListener.isPressed(keyBinding.getEnter()) && p.getValue() != Selectionable.NONE){
                 // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
                 if(p.getKey() == null) {
                     switch (p.getValue()) {
@@ -105,7 +106,7 @@ public class game_controller {
         // Si se está peleando
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
-            if(cK == controlKey.ESCAPE){
+            if(controlListener.isPressed(keyBinding.getEscape())){
                 state = GameState.ESCAPE;
             }
             // Si se está mostrando la pelea
@@ -133,11 +134,11 @@ public class game_controller {
         // Si se le ha dado a escape durante una pelea
         else if (state == GameState.ESCAPE){
             fight.pauseFight();
-            screenObject s = escapeMenu.getFrame(cK);
+            screenObject s = escapeMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = escapeMenu.select();
             // Si se ha presionado enter para seleccionar alguna opción
-            if (cK == controlKey.ENTER){
+            if (controlListener.isPressed(keyBinding.getEnter())){
                 switch (p.getValue()){
                     // Retomar la partida
                     case ESCAPE_RESUME:
