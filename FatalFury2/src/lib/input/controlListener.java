@@ -11,7 +11,7 @@ public class  controlListener implements KeyListener {
     static Boolean[] keyStatus;
     static Queue<Integer> inputQueue;
     static Queue<Integer> inputQueue_timestamps;
-    static int QUEUE_SIZE = 5;
+    static int QUEUE_SIZE = 10;
     static int currentKey;
 
     public controlListener(){

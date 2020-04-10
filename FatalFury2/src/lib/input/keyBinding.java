@@ -107,26 +107,32 @@ public class keyBinding {
     }
 
     public static String getMove(){
-
+        String mov = "";
         if( controlListener.isPressed(getUp())) {
-            return "UP";
-        } else if ( controlListener.isPressed(getDown())) {
-            return "DOWN";
-        } else if ( controlListener.isPressed(getRight())) {
-            return "RIGHT";
-        } else if ( controlListener.isPressed(getLeft())) {
-            return "LEFT";
-        } else if ( controlListener.isPressed(getWeak_Punch())) {
-            return "S";
-        } else if ( controlListener.isPressed(getWeak_Kick())) {
-            return "A";
-        } else if ( controlListener.isPressed(getStrong_Punch())) {
-            return "D";
-        } else if ( controlListener.isPressed(getStrong_Kick())) {
-            return "W";
-        } else {
-            return "";
+            mov += "AR";
+        } if ( controlListener.isPressed(getDown())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "AB";
+        } if ( controlListener.isPressed(getRight())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "DE";
+        } if ( controlListener.isPressed(getLeft())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "IZ";
+        } if ( controlListener.isPressed(getWeak_Punch())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "A";
+        } if ( controlListener.isPressed(getWeak_Kick())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "B";
+        } if ( controlListener.isPressed(getStrong_Punch())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "C";
+        } if ( controlListener.isPressed(getStrong_Kick())) {
+            if(!mov.equals("")){mov += "-";}
+            mov +=  "D";
         }
+        return mov;
     }
 
 

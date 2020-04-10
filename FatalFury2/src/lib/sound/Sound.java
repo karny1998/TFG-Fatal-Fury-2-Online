@@ -40,10 +40,7 @@ public class Sound {
             e.printStackTrace();
         }
     }
-    @Override
-    public void finalize(){
-        System.out.println("BORRADO");
-    }
+
 
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
