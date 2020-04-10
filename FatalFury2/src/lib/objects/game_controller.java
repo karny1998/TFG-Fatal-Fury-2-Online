@@ -152,6 +152,7 @@ public class game_controller {
                         actualMenu = p.getKey();
                         actualMenu.updateTime();
                         state = GameState.NAVIGATION;
+                        clearInterface(screenObjects);
                         break;
                     // Salir del juego
                     case ESCAPE_EXIT:
@@ -186,6 +187,10 @@ public class game_controller {
         screenObjects.remove(Item_Type.NAME2);
         screenObjects.remove(Item_Type.INDICATOR1);
         screenObjects.remove(Item_Type.INDICATOR2);
+        screenObjects.remove(Item_Type.BUBBLE1);
+        screenObjects.remove(Item_Type.BUBBLE2);
+        screenObjects.remove(Item_Type.BUBBLE3);
+        screenObjects.remove(Item_Type.BUBBLE4);
     }
 
     public void writeDirecly(Graphics2D g){
