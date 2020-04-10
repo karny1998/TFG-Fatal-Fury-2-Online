@@ -6,6 +6,7 @@ import lib.Enums.Round_Results;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -52,6 +53,10 @@ public class fight_controller implements roundListener {
     Image name_player, name_enemy;
     Image indicator_player, indicator_enemy;
     roundIndicators bubbles = new roundIndicators();
+    announcerAnimation fightAnnouncement = new announcerAnimation();
+    // Booleanos anuncios
+    boolean showFight = false;
+    long fightTime;
 
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e) {
@@ -87,6 +92,9 @@ public class fight_controller implements roundListener {
         }
         indicator_player = new ImageIcon(path+"/1p.png").getImage();
         indicator_enemy = new ImageIcon(path+"/2p.png").getImage();
+        Date date = new Date();
+        fightTime = date.getTime();
+        showFight = true;
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(true);
@@ -222,6 +230,16 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.BUBBLE2,playerBubbles.get(1));
         screenObjects.put(Item_Type.BUBBLE3,enemyBubbles.get(0));
         screenObjects.put(Item_Type.BUBBLE4,enemyBubbles.get(1));
+        // ANUNCIOS ENTRE RONDAS
+        if (showFight) {
+            screenObjects.put(Item_Type.ANNOUNCEMENT,fightAnnouncement.getFrame());
+            Date date = new Date();
+            long time = date.getTime();
+            if (time - fightTime >= 500) {
+                showFight = false;
+                screenObjects.remove(Item_Type.ANNOUNCEMENT);
+            }
+        }
         // RONDA
         currentRound.getAnimation(screenObjects);
     }

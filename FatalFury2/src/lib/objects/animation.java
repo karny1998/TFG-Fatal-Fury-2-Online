@@ -204,6 +204,10 @@ public class animation {
         return result;
     }
 
+    screenObject getFrame(){
+        return getFrame(frames.get(state).getX(),frames.get(state).getY(),1);
+    }
+
     //Getters y setters
     public void setCoords(ArrayList<Pair<Integer, Integer>> coords) {
         this.coords = coords;
