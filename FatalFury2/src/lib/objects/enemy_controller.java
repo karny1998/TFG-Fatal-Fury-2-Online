@@ -19,7 +19,7 @@ public class enemy_controller extends character_controller{
     // collides indica si colisiona con el jugador o no
     // En esta función se llamaría a la IA
     // Por ahora se juega aleatoriamente
-    public screenObject getAnimation(boolean collides){
+    public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         /*this.x = this.player.getX();
         this.y = this.player.getY();
 
@@ -39,7 +39,7 @@ public class enemy_controller extends character_controller{
                 return player.getFrame(array2[i], collides);
             }
         }*/
-        return player.getFrame("", collides);
+        return player.getFrame("", pHurt, eHurt);
     }
 
     @Override

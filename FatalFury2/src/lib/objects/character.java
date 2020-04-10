@@ -49,7 +49,9 @@ public class character {
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
-    public screenObject getFrame(String mov, boolean collides){
+    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
+        boolean collides = pHurt.collides(eHurt);
+
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
@@ -176,6 +178,10 @@ public class character {
             auxX = x - aux.getX() - aux.getWidth();
         }
         return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), false);
+    }
+
+    public boolean endedMovement(){
+        return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
     }
 
     public Sound getVoices() {

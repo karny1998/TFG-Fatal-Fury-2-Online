@@ -45,7 +45,7 @@ public abstract  class character_controller {
         player.setOrientation(orientation);
     }
 
-    abstract screenObject getAnimation(boolean collides);
+    abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
 
     // GETTERS Y SETTERS
     public String getCharac() {

@@ -152,10 +152,28 @@ public class round {
                 enemy_old_state = enemy_act_state;
             }
         }
+
+        // EL 400 ES EL ANCHO DE LA IMAGEN
+        // Si se sobrepasan
+        if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
+            && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(1);
+            player.getPlayer().setX(player.getPlayer().getX()-400);
+            enemy.getPlayer().setOrientation(-1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()+400);
+        }
+        else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
+                && pHurt.getX() < eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(-1);
+            player.getPlayer().setX(player.getPlayer().getX()+400);
+            enemy.getPlayer().setOrientation(1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
+        }
+
         // Obtención de los frames a dibujar del jugador
         screenObject ply;
         if(player.getPlayer().getLife() > 0) {
-            ply = player.getAnimation(pHurt.collides(eHurt));
+            ply = player.getAnimation(pHurt,eHurt);
             screenObjects.put(Item_Type.PLAYER, ply);
         }
         else{
@@ -163,7 +181,7 @@ public class round {
         }
         // Obtención de los frames a dibujar del enemigo
         if(enemy.getPlayer().getLife() > 0) {
-            ply = enemy.getAnimation(pHurt.collides(eHurt));
+            ply = enemy.getAnimation(eHurt,pHurt);
             screenObjects.put(Item_Type.ENEMY, ply);
         }
         else{

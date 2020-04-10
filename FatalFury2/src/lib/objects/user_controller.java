@@ -13,11 +13,11 @@ public class user_controller extends character_controller{
 
     // Obtiene el frame del personaje
     // collides indica si colisiona con el enemigo
-    public screenObject getAnimation(boolean collides){
+    public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         this.x = this.player.getX();
         this.y = this.player.getY();
         String mov = keyBinding.getMove();
-        return player.getFrame(mov, collides);
+        return player.getFrame(mov, pHurt, eHurt);
     }
 
     @Override
