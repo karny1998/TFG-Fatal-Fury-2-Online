@@ -29,22 +29,27 @@ public class Sound {
     private static int Music_Size = Music.values().length;
 
 
-
+    private Audio_Type tipo;
 
     public Sound(Audio_Type type){
         try {
+            tipo = type;
           this.loadAudio(type);
 
         } catch (Exception e){
             e.printStackTrace();
         }
-
     }
+    @Override
+    public void finalize(){
+        System.out.println("BORRADO");
+    }
+
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
         String routes[];
         //TODO METER RESTO SONIDOS
-        //TODO Load from folder instead ºfrom route
+        //TODO Load from folder instead from route
         switch ( type ){
             case Terry_audio:
                 routes = new String[Character_Voices_Size];
@@ -139,10 +144,12 @@ public class Sound {
            clips[i].open(AudioSystem.getAudioInputStream(new File(routes[i]).getAbsoluteFile()));
 
         }
-
     }
 //TODO stop, pause, reset, etc.
 //https://www.geeksforgeeks.org/play-audio-file-using-java/
+
+
+
 
     private void play(int index) {
         try {
@@ -233,22 +240,50 @@ public class Sound {
     public void playCharacterVoice(Character_Voices index){ play(index.ordinal()); }
     public void stopCharacterVoice(Character_Voices index){ stop(index.ordinal()); }
     public void resumeCharacterVoices(Character_Voices index){ resume(index.ordinal()); }
+    public void endCharacterVoices(){
+        for(int i = 0; i < Character_Voices_Size; i++){
+            if(clips[i].isOpen()) {
+                clips[i].close();
+            }
+        }
+    }
 
 
     public void playAnnouncerVoice(Announcer_voices index){ play(index.ordinal()); }
     public void stopAnnouncerVoice(Announcer_voices index){ stop(index.ordinal()); }
     public void resumeAnnouncerVoice(Announcer_voices index){ resume(index.ordinal()); }
+    public void endAnnouncerVoices(){
+        for(int i = 0; i < Announcer_Voices_Size; i++){
+            if(clips[i].isOpen()) {
+                clips[i].close();
+            }
+        }
+    }
 
 
     public void playMusic(Music index){ play(index.ordinal()); }
     public void loopMusic(Music index){ loop(index.ordinal()); }
     public void stopMusic(Music index){ stop(index.ordinal()); }
     public void resumeMusic(Music index){ resume(index.ordinal()); }
-
+    public void endMusic(){
+        for(int i = 0; i < Music_Size; i++){
+            if(clips[i].isOpen()) {
+                clips[i].close();
+            }
+        }
+    }
 
 
     public void playSfx(Character_Voices index){ play(index.ordinal()); }
     public void stopSfx(Character_Voices index){ stop(index.ordinal()); }
     public void resumeSfx(Character_Voices index){ resume(index.ordinal()); }
+    public void endSfx(){
+        for(int i = 0; i < Special_Effects_Size; i++){
+            if(clips[i].isOpen()) {
+                clips[i].close();
+            }
+        }
+    }
+
 
 }

@@ -129,6 +129,7 @@ public class fight_controller implements roundListener {
             // Uno de los dos ha ganado
             if (Math.abs(playerScore - enemyScore) == 2) {
                 playerWin = (playerScore == 2);
+                endAudio();
                 hasEnded = true;
             }
             // Se necesita tercera ronda
@@ -143,6 +144,7 @@ public class fight_controller implements roundListener {
             // Uno de los dos ha ganado
             if (playerScore != enemyScore) {
                 playerWin = (playerScore > enemyScore);
+                endAudio();
                 hasEnded = true;
             }
             // Se necesita ronda extra
@@ -193,4 +195,9 @@ public class fight_controller implements roundListener {
         return hasEnded;
     }
 
+
+    public void endAudio(){
+        player.getPlayer().voices.endCharacterVoices();
+        enemy.getPlayer().voices.endCharacterVoices();
+    }
 }

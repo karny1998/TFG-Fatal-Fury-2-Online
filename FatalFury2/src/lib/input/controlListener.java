@@ -12,6 +12,7 @@ public class  controlListener implements KeyListener {
     static Queue<Integer> inputQueue;
     static Queue<Integer> inputQueue_timestamps;
     static int QUEUE_SIZE = 5;
+    static int currentKey;
 
     public controlListener(){
         keyStatus = new Boolean[256];
@@ -20,13 +21,14 @@ public class  controlListener implements KeyListener {
         }
         inputQueue = new LinkedList<>();
         inputQueue_timestamps = new LinkedList<>();
+        currentKey = -1;
 
     }
 
 
     @Override
     public void keyTyped(KeyEvent e) {
-        //
+        currentKey = e.getKeyChar();
     }
 
     @Override
@@ -44,14 +46,12 @@ public class  controlListener implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         this.keyStatus[e.getKeyCode()] = false;
+        currentKey = -1;
     }
 
 
-    public static void addNullkey(){
-        inputQueue.add(-1);
-        if(inputQueue.size() > QUEUE_SIZE){
-            inputQueue.remove();
-        }
+    public static char getCurrentKey(){
+        return (char)currentKey;
     }
 
 
