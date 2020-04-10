@@ -27,6 +27,8 @@ public class game_controller {
     private GameState state = GameState.NAVIGATION;
     // Ranking
     private score ranking = new score();
+    // introducción de nombre
+    private ask_for_name askName = new ask_for_name();
 
     public game_controller() {
         new IsKeyPressed();
@@ -85,6 +87,7 @@ public class game_controller {
                             enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
                             enemy.setRival(user.getPlayer());
                             fight = new fight_controller(user, enemy);
+                            fight.setVsIa(true);
 
                             scene = new scenary();
                             scene.setAnim1(usa.generateAnimation1());
@@ -114,10 +117,11 @@ public class game_controller {
                 screenObjects.remove(Item_Type.MENU);
                 fight.getAnimation(screenObjects);
                 if (fight.getEnd()) {
+                    if(fight.isVsIa()){
+                        askName = new ask_for_name();
+                        state = GameState.TYPING;
+                    }
                     clearInterface(screenObjects);
-                    state = GameState.NAVIGATION;
-                    actualMenu = principal;
-                    actualMenu.updateTime();
                 }
                 else {
                     screenObject ply = scene.getFrame1();
@@ -159,6 +163,17 @@ public class game_controller {
         else if(state == GameState.RANKING && controlListener.isPressed(keyBinding.getEscape()) ){
             state = GameState.NAVIGATION;
         }
+        else if (state == GameState.TYPING){
+            if(controlListener.isPressed(keyBinding.getEnter())){
+                fight.getScorePlayer().writeRankScore(askName.getName());
+                actualMenu = principal;
+                actualMenu.updateTime();
+                state = GameState.NAVIGATION;
+            }
+            else{
+                screenObjects.put(Item_Type.MENU, askName.getAnimation());
+            }
+        }
     }
 
     private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
@@ -184,6 +199,9 @@ public class game_controller {
             fight.enemy.player.getHurtbox().drawHitBox(g);
             fight.drawHpBarPlayer(g);
             fight.drawHpBarEnemy(g);
+        }
+        else if(state == GameState.TYPING){
+            askName.writeName(g);
         }
     }
 

@@ -21,8 +21,12 @@ public class fight_controller implements roundListener {
     List<Round_Results> results;
     // Controlador del usuario
     character_controller player;
+    // Score p1
+    score scorePlayer = new score();
     // Controlador del enemigo
     character_controller enemy;
+    // Score p2
+    score scoreEnemy = new score();
     // Número de rondas finalizadas
     int roundCounter;
     // Puntos de ronda ganados
@@ -39,6 +43,8 @@ public class fight_controller implements roundListener {
     boolean noTimer;
     // Pelea del mismo personaje
     boolean mirrorFight;
+    // Si es contra IA
+    boolean vsIa = false;
     // Interfaz
     displayTimer timer = new displayTimer();
     Image bar_player, bar_enemy;
@@ -79,7 +85,7 @@ public class fight_controller implements roundListener {
         }
         indicator_player = new ImageIcon(path+"/1p.png").getImage();
         indicator_enemy = new ImageIcon(path+"/2p.png").getImage();
-        currentRound = new round(player,enemy,roundTime);
+        currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(true);
     }
@@ -98,7 +104,7 @@ public class fight_controller implements roundListener {
     void startNewRound(boolean hasEnd) {
         player.reset();
         enemy.reset();
-        currentRound = new round(player,enemy,roundTime);
+        currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(hasEnd);
     }
@@ -118,6 +124,14 @@ public class fight_controller implements roundListener {
     // Gestión de rondas, se llama cuando la ronda actual termina
     @Override
     public void roundEnded() {
+        // Gestión puntos
+        if(currentRound.getResult() == Round_Results.WIN){
+            scorePlayer.applyBonus(currentRound.getPlayer().getPlayer().getLife(),currentRound.getTimeLeft());
+        }
+        else if (currentRound.getResult() == Round_Results.LOSE){
+            scoreEnemy.applyBonus(currentRound.getEnemy().getPlayer().getLife(),currentRound.getTimeLeft());
+        }
+
         ++roundCounter;
         results.add(currentRound.getResult());
         // Segunda ronda
@@ -220,4 +234,199 @@ public class fight_controller implements roundListener {
         return hasEnded;
     }
 
+    public boolean isVsIa() {
+        return vsIa;
+    }
+
+    public void setVsIa(boolean vsIa) {
+        this.vsIa = vsIa;
+    }
+
+    public int getRoundTime() {
+        return roundTime;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public round getCurrentRound() {
+        return currentRound;
+    }
+
+    public void setCurrentRound(round currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public List<Round_Results> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Round_Results> results) {
+        this.results = results;
+    }
+
+    public character_controller getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(character_controller player) {
+        this.player = player;
+    }
+
+    public score getScorePlayer() {
+        return scorePlayer;
+    }
+
+    public void setScorePlayer(score scorePlayer) {
+        this.scorePlayer = scorePlayer;
+    }
+
+    public character_controller getEnemy() {
+        return enemy;
+    }
+
+    public void setEnemy(character_controller enemy) {
+        this.enemy = enemy;
+    }
+
+    public score getScoreEnemy() {
+        return scoreEnemy;
+    }
+
+    public void setScoreEnemy(score scoreEnemy) {
+        this.scoreEnemy = scoreEnemy;
+    }
+
+    public int getRoundCounter() {
+        return roundCounter;
+    }
+
+    public void setRoundCounter(int roundCounter) {
+        this.roundCounter = roundCounter;
+    }
+
+    public int getPlayerScore() {
+        return playerScore;
+    }
+
+    public void setPlayerScore(int playerScore) {
+        this.playerScore = playerScore;
+    }
+
+    public int getEnemyScore() {
+        return enemyScore;
+    }
+
+    public void setEnemyScore(int enemyScore) {
+        this.enemyScore = enemyScore;
+    }
+
+    public int getPlayerOldHp() {
+        return playerOldHp;
+    }
+
+    public void setPlayerOldHp(int playerOldHp) {
+        this.playerOldHp = playerOldHp;
+    }
+
+    public int getEnemyOldHp() {
+        return enemyOldHp;
+    }
+
+    public void setEnemyOldHp(int enemyOldHp) {
+        this.enemyOldHp = enemyOldHp;
+    }
+
+    public boolean isPlayerWin() {
+        return playerWin;
+    }
+
+    public void setPlayerWin(boolean playerWin) {
+        this.playerWin = playerWin;
+    }
+
+    public boolean isHasEnded() {
+        return hasEnded;
+    }
+
+    public void setHasEnded(boolean hasEnded) {
+        this.hasEnded = hasEnded;
+    }
+
+    public boolean isNoTimer() {
+        return noTimer;
+    }
+
+    public void setNoTimer(boolean noTimer) {
+        this.noTimer = noTimer;
+    }
+
+    public boolean isMirrorFight() {
+        return mirrorFight;
+    }
+
+    public void setMirrorFight(boolean mirrorFight) {
+        this.mirrorFight = mirrorFight;
+    }
+
+    public displayTimer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(displayTimer timer) {
+        this.timer = timer;
+    }
+
+    public Image getBar_player() {
+        return bar_player;
+    }
+
+    public void setBar_player(Image bar_player) {
+        this.bar_player = bar_player;
+    }
+
+    public Image getBar_enemy() {
+        return bar_enemy;
+    }
+
+    public void setBar_enemy(Image bar_enemy) {
+        this.bar_enemy = bar_enemy;
+    }
+
+    public Image getName_player() {
+        return name_player;
+    }
+
+    public void setName_player(Image name_player) {
+        this.name_player = name_player;
+    }
+
+    public Image getName_enemy() {
+        return name_enemy;
+    }
+
+    public void setName_enemy(Image name_enemy) {
+        this.name_enemy = name_enemy;
+    }
+
+    public Image getIndicator_player() {
+        return indicator_player;
+    }
+
+    public void setIndicator_player(Image indicator_player) {
+        this.indicator_player = indicator_player;
+    }
+
+    public Image getIndicator_enemy() {
+        return indicator_enemy;
+    }
+
+    public void setIndicator_enemy(Image indicator_enemy) {
+        this.indicator_enemy = indicator_enemy;
+    }
 }

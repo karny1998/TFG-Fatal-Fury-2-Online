@@ -4,10 +4,10 @@ import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.Enums.Round_Results;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
 
 interface roundListener {
     void roundEnded();
@@ -34,14 +34,20 @@ public class round {
     // Comprobación de parada de timers
     boolean paused1;
     boolean paused2;
+    // Score p1
+    score scorePlayer;
+    // Score p2
+    score scoreEnemy;
 
-    public round (character_controller p, character_controller e, int time) {
+    public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
         this.enemy = e;
         player_old_state = p.getPlayer().getState();
         enemy_old_state = e.getPlayer().getState();
         this.result = Round_Results.UNFINISHED;
         this.timeLeft = time;
+        this.scorePlayer = sP;
+        this.scoreEnemy = sE;
     }
 
     public void addListener(roundListener toAdd) {
@@ -133,12 +139,14 @@ public class round {
         if(!eHit.collides(pHit)){
             if(pHit.collides(eHurt) && player_old_state != player_act_state){
                 enemy.getPlayer().applyDamage(player.getPlayer().getDamage());
+                scorePlayer.addHit(player.getPlayer().getDamage()*10);
             }
             if(player_old_state != player_act_state){
                 player_old_state = player_act_state;
             }
             if(eHit.collides(pHurt) && enemy_old_state != enemy_act_state){
                 player.getPlayer().applyDamage(enemy.getPlayer().getDamage());
+                scoreEnemy.addHit(enemy.getPlayer().getDamage()*10);
             }
             if(enemy_old_state != enemy_act_state){
                 enemy_old_state = enemy_act_state;
