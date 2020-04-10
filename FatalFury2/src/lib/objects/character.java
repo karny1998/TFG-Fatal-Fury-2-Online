@@ -91,7 +91,8 @@ public class character {
 
     // Aplicar un daño recibido al personaje
     public void applyDamage(int dmg){
-        life -= dmg;
+        if(life-dmg < 0){life = 0;}
+        else{life -= dmg;}
     }
 
     //Getters y setters
