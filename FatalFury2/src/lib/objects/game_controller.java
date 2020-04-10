@@ -13,6 +13,9 @@ import java.util.Map;
 
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
+
+    boolean debug = false;
+
     // Controlador de una pelea
     private fight_controller fight;
     // Escenario (habría que meterlo en fight_controller)
@@ -198,10 +201,12 @@ public class game_controller {
             ranking.printRanking(g);
         }
         else if(state == GameState.FIGHT) {
-            fight.player.player.getHitbox().drawHitBox(g);
-            fight.player.player.getHurtbox().drawHitBox(g);
-            fight.enemy.player.getHitbox().drawHitBox(g);
-            fight.enemy.player.getHurtbox().drawHitBox(g);
+            if(debug){
+                fight.player.player.getHitbox().drawHitBox(g);
+                fight.player.player.getHurtbox().drawHitBox(g);
+                fight.enemy.player.getHitbox().drawHitBox(g);
+                fight.enemy.player.getHurtbox().drawHitBox(g);
+            }
             fight.drawHpBarPlayer(g);
             fight.drawHpBarEnemy(g);
         }

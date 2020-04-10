@@ -79,9 +79,13 @@ public class load_character {
 
                 movement mov = new movement(movId, anim);
                 mov.setDamage(dmg);
-                movs.put(movId,mov);
-                combos.put(combo, movId);
-
+                if(combos.containsKey(combo)){
+                    movs.get(combos.get(combo)).setSubMovement(mov);
+                }
+                else {
+                    movs.put(movId, mov);
+                    combos.put(combo, movId);
+                }
                 ++i;
             }
             b.close();
