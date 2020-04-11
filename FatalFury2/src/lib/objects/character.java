@@ -77,7 +77,7 @@ public class character {
             movements.get(state).start(dis);
         }
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
-                || movements.get(state).hasEnd() && movements.get(state).ended()
+                || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
             movements.get(state).getAnim().reset();
             state = combos.get(mov);
