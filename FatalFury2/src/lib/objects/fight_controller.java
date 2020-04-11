@@ -13,7 +13,7 @@ import java.util.Map;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 10;
+    final int roundTime = 90;
     // Path
     String path = "assets/sprites/fight_interface/";
     // Ronda actual de la pelea
