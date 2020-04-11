@@ -18,6 +18,8 @@ public abstract  class character_controller {
     // Para las esperas
     boolean standBy = true;
 
+    protected character rival;
+
     public character_controller(Playable_Character ch, int x, int y, int orientation){
         this.x = x; this.y = y;
         new IsKeyPressed();
@@ -104,5 +106,13 @@ public abstract  class character_controller {
 
     public void endStandBy(){
         this.standBy = false;
+    }
+
+    public character getRival() {
+        return rival;
+    }
+
+    public void setRival(character rival) {
+        this.rival = rival;
     }
 }

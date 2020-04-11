@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
@@ -335,6 +334,7 @@ public class fight_controller implements roundListener {
                     if (newRound) {
                         player.reset();
                         enemy.reset();
+                        enemy.setRival(player.getPlayer());
                         showIntro();
                     }
                     else {
@@ -350,6 +350,7 @@ public class fight_controller implements roundListener {
                 if (newRound) {
                     player.reset();
                     enemy.reset();
+                    enemy.setRival(player.getPlayer());
                     showIntro();
                 }
                 else {
