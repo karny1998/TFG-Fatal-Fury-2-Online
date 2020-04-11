@@ -48,3 +48,5 @@ cara
 0
 caracu
 0
+caraculo
+36400

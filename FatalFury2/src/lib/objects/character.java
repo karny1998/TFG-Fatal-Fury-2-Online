@@ -65,7 +65,7 @@ public class character {
         // Actualiza el estado
 
         if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
-            && combos.get(mov) != state){
+                && combos.get(mov) != state){
             Movement aux = Movement.NONE;
             switch (state){
                 case CROUCH:
@@ -90,7 +90,7 @@ public class character {
         if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
-                || orientation == -1 && pHurt.getX() > eHurt.getX()){
+                    || orientation == -1 && pHurt.getX() > eHurt.getX()){
                 increment = -orientation;
             }
             x = s.getX() + increment;
