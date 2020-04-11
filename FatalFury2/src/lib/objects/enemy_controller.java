@@ -24,17 +24,17 @@ public class enemy_controller extends character_controller{
             this.x = this.player.getX();
             this.y = this.player.getY();
 
-            controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S, controlKey.D, controlKey.W};
+            controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S};
             controlKey key =  array1[rand.nextInt(array1.length)];
 
             int rivalX = rival.getHurtbox().getX();
             int rivalW = rival.getHurtbox().getWidth();
-            if(rival.getOrientation() == 1 && Math.abs(rivalX - this.player.getHurtbox().getX()) > 100
-                || rival.getOrientation() == -1 && Math.abs(rivalX+rivalW - this.player.getHurtbox().getX()) > 100){
+            if(rival.getOrientation() == 1 && Math.abs(rivalX - this.player.getHurtbox().getX()) > 20
+                || rival.getOrientation() == -1 && Math.abs(rivalX+rivalW - this.player.getHurtbox().getX()) > 20){
                 key = controlKey.LEFT;
             }
 
-            String array2[] = {"LEFT", "RIGHT", "DOWN", "A","S", "D", "W"};
+            String array2[] = {"LEFT", "RIGHT", "DOWN", "A","S"};
             for(int i = 0; i < array1.length; ++i){
                 if(array1[i] == key){
                     return player.getFrame(array2[i], pHurt, eHurt);
