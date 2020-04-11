@@ -117,6 +117,15 @@ public class character {
         else{life -= dmg;}
     }
 
+    void reset(int x, int y, int orientation){
+        life = 100;
+        this.orientation = orientation;
+        // Coordenadas actuales del personaje
+        this.x = x;
+        this.y = y;
+        this.state = Movement.STANDING;
+    }
+
     //Getters y setters
     public Playable_Character getCharac() {
         return charac;

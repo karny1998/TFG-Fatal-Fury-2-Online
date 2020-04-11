@@ -42,11 +42,7 @@ public abstract  class character_controller {
 
     void reset(Playable_Character ch, int x, int y, int orientation) {
         this.x = x; this.y = y;
-        player.voices.endCharacterVoices();
-        player = new character(ch);
-        player.setX(x);
-        player.setY(y);
-        player.setOrientation(orientation);
+        player.reset(x,y, orientation);
     }
 
     abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
