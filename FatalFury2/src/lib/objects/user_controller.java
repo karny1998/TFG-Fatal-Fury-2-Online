@@ -16,7 +16,8 @@ public class user_controller extends character_controller{
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         this.x = this.player.getX();
         this.y = this.player.getY();
-        String mov = keyBinding.getMove();
+        String mov = "";
+        if(!standBy){mov = keyBinding.getMove();}
         return player.getFrame(mov, pHurt, eHurt);
     }
 

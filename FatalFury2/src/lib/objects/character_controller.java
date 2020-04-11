@@ -15,6 +15,8 @@ public abstract  class character_controller {
     protected int x = 0, y = 0;
     // Generador de randoms
     protected Random rand = new Random();
+    // Para las esperas
+    boolean standBy = true;
 
     public character_controller(Playable_Character ch, int x, int y, int orientation){
         this.x = x; this.y = y;
@@ -88,4 +90,19 @@ public abstract  class character_controller {
         this.rand = rand;
     }
 
+    public boolean isStandBy() {
+        return standBy;
+    }
+
+    public void setStandBy(boolean standBy) {
+        this.standBy = standBy;
+    }
+
+    public void startStandBy(){
+        this.standBy = true;
+    }
+
+    public void endStandBy(){
+        this.standBy = false;
+    }
 }
