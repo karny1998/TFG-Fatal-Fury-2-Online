@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 90;
+    final int roundTime = 10;
     // Path
     String path = "assets/sprites/fight_interface/";
     // Ronda actual de la pelea
@@ -34,9 +34,6 @@ public class fight_controller implements roundListener {
     // Puntos de ronda ganados
     int playerScore = 0;
     int enemyScore = 0;
-    // Vida antigua de los jugadores
-    int playerOldHp;
-    int enemyOldHp;
     // Resultado de la pelea (true = victoria)
     boolean playerWin;
     // Ha acabado la pelea (true = acabada)
@@ -47,9 +44,13 @@ public class fight_controller implements roundListener {
     boolean mirrorFight;
     // Si es contra IA
     boolean vsIa = false;
-    // Interfaz
     // La anterior ronda fue perfect
     boolean wasPerfect;
+    // La anterior ronda se acabó el tiempo
+    boolean wasTimedOut;
+    // Es necesaria una nueva ronda
+    boolean newRound;
+    // Interfaz
     displayTimer timer = new displayTimer();
     Image bar_player, bar_enemy;
     Image name_player, name_enemy;
@@ -58,7 +59,6 @@ public class fight_controller implements roundListener {
     announcerAnimation fightAnnouncement = new announcerAnimation();
     Image match_play, round_1, round_2, round_3, round_extra;
     Image perfect, you_win, you_lost, time_up, draw_game;
-
     // Booleanos anuncios
     boolean startedFightAnimation;
     boolean showIntro = false;
@@ -77,6 +77,7 @@ public class fight_controller implements roundListener {
         results = new ArrayList<>();
         hasEnded = false;
         wasPerfect = false;
+        wasTimedOut = false;
         noTimer = false;
         startedFightAnimation = false;
         bar_player = new ImageIcon(path+"/hp_bars/player1_frame.png").getImage();
@@ -112,10 +113,10 @@ public class fight_controller implements roundListener {
         round_2 = new ImageIcon(path+"/announcer/round2.png").getImage();
         round_3 = new ImageIcon(path+"/announcer/round3.png").getImage();
         round_extra = new ImageIcon(path+"/announcer/final_round.png").getImage();
-        showIntro();
+        player.startStandBy();
+        enemy.startStandBy();
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
-        currentRound.addListener(this);
-        currentRound.startRound(true);
+        showIntro();
     }
 
     // Enseñar la intro de la ronda
@@ -144,9 +145,6 @@ public class fight_controller implements roundListener {
 
     // Empezar ronda nueva
     void startNewRound(boolean hasEnd) {
-        player.reset();
-        enemy.reset();
-        //showIntro();
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(hasEnd);
@@ -164,6 +162,8 @@ public class fight_controller implements roundListener {
     // Gestión de rondas, se llama cuando la ronda actual termina
     @Override
     public void roundEnded() {
+        player.startStandBy();
+        enemy.startStandBy();
         // Gestión puntos
         if(currentRound.getResult() == Round_Results.WIN){
             scorePlayer.applyBonus(currentRound.getPlayer().getPlayer().getLife(),currentRound.getTimeLeft());
@@ -171,7 +171,8 @@ public class fight_controller implements roundListener {
         else if (currentRound.getResult() == Round_Results.LOSE){
             scoreEnemy.applyBonus(currentRound.getEnemy().getPlayer().getLife(),currentRound.getTimeLeft());
         }
-        wasPerfect = currentRound.isPerfect;
+        wasPerfect = currentRound.isPerfect();
+        wasTimedOut = currentRound.isTimeOut();
         ++roundCounter;
         results.add(currentRound.getResult());
         showOutro();
@@ -179,7 +180,7 @@ public class fight_controller implements roundListener {
         if (roundCounter == 1) {
             Round_Results lastResult = results.get(0);
             updateScores(lastResult);
-            startNewRound(true);
+            newRound = true;
         }
         // Se calcula si se necesita una tercera ronda
         else if (roundCounter == 2) {
@@ -188,12 +189,11 @@ public class fight_controller implements roundListener {
             // Uno de los dos ha ganado
             if (Math.abs(playerScore - enemyScore) == 2) {
                 playerWin = (playerScore == 2);
-                endAudio();
-                hasEnded = true;
+                newRound = false;
             }
             // Se necesita tercera ronda
             else {
-                startNewRound(true);
+                newRound = true;
             }
         }
         // Se calcula si se necesita ronda extra, sin tiempo límite
@@ -203,12 +203,11 @@ public class fight_controller implements roundListener {
             // Uno de los dos ha ganado
             if (playerScore != enemyScore) {
                 playerWin = (playerScore > enemyScore);
-                endAudio();
-                hasEnded = true;
+                newRound = false;
             }
             // Se necesita ronda extra
             else {
-                startNewRound(false);
+                newRound = true;
                 noTimer = true;
             }
         }
@@ -217,8 +216,7 @@ public class fight_controller implements roundListener {
             Round_Results lastResult = results.get(3);
             updateScores(lastResult);
             playerWin = (playerScore > enemyScore);
-            endAudio();
-            hasEnded = true;
+            newRound = false;
         }
     }
 
@@ -298,6 +296,9 @@ public class fight_controller implements roundListener {
                 showIntro = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 startedFightAnimation = false;
+                player.endStandBy();
+                enemy.endStandBy();
+                startNewRound(roundCounter != 3);
             }
         }
         if (showOutro) {
@@ -305,7 +306,7 @@ public class fight_controller implements roundListener {
             long timePast = date.getTime() - outroTimeStamp;
             Round_Results lastResult = results.get(results.size()-1);
             if (timePast <= 700) {
-                if (lastResult == Round_Results.TIE) {
+                if (wasTimedOut) {
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, time_up, Item_Type.ANNOUNCEMENT));
                 }
                 else if (wasPerfect) {
@@ -318,13 +319,43 @@ public class fight_controller implements roundListener {
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, you_lost, Item_Type.ANNOUNCEMENT));
                 }
             }
-            else if (timePast <= 1400 && lastResult == Round_Results.TIE) {
-                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, draw_game, Item_Type.ANNOUNCEMENT));
+            else if (timePast <= 1400) {
+                if (lastResult == Round_Results.TIE) {
+                    screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, draw_game, Item_Type.ANNOUNCEMENT));
+                }
+                else if ((wasPerfect || wasTimedOut) && lastResult == Round_Results.WIN) {
+                    screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, you_win, Item_Type.ANNOUNCEMENT));
+                }
+                else if ((wasPerfect || wasTimedOut) && lastResult == Round_Results.LOSE) {
+                    screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, you_lost, Item_Type.ANNOUNCEMENT));
+                }
+                else {
+                    showOutro = false;
+                    screenObjects.remove(Item_Type.ANNOUNCEMENT);
+                    if (newRound) {
+                        player.reset();
+                        enemy.reset();
+                        showIntro();
+                    }
+                    else {
+                        endAudio();
+                        hasEnded = true;
+                    }
+
+                }
             }
             else {
                 showOutro = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
-                showIntro();
+                if (newRound) {
+                    player.reset();
+                    enemy.reset();
+                    showIntro();
+                }
+                else {
+                    endAudio();
+                    hasEnded = true;
+                }
             }
         }
         // RONDA
@@ -450,22 +481,6 @@ public class fight_controller implements roundListener {
 
     public void setEnemyScore(int enemyScore) {
         this.enemyScore = enemyScore;
-    }
-
-    public int getPlayerOldHp() {
-        return playerOldHp;
-    }
-
-    public void setPlayerOldHp(int playerOldHp) {
-        this.playerOldHp = playerOldHp;
-    }
-
-    public int getEnemyOldHp() {
-        return enemyOldHp;
-    }
-
-    public void setEnemyOldHp(int enemyOldHp) {
-        this.enemyOldHp = enemyOldHp;
     }
 
     public boolean isPlayerWin() {

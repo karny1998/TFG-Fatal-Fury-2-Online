@@ -40,6 +40,8 @@ public class round {
     score scoreEnemy;
     // Perfect
     boolean isPerfect;
+    // Time Out
+    boolean isTimeOut;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
@@ -99,6 +101,7 @@ public class round {
                 }
                 roundTimer.stop();
                 checkLifes.stop();
+                isTimeOut = true;
                 for (roundListener l : listeners)
                     l.roundEnded();
             } else {
@@ -306,6 +309,14 @@ public class round {
 
     public void setPerfect(boolean perfect) {
         isPerfect = perfect;
+    }
+
+    public boolean isTimeOut() {
+        return isTimeOut;
+    }
+
+    public void setTimeOut(boolean TimeOut) {
+        isTimeOut = TimeOut;
     }
 }
 
