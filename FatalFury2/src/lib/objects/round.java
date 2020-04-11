@@ -29,8 +29,8 @@ public class round {
     // Listeners de la ronda
     private List<roundListener> listeners = new ArrayList<roundListener>();
     // Timers de la ronda
-    Timer checkLifes;
-    Timer roundTimer;
+    Timer checkLifes = new Timer(1000, null);;
+    Timer roundTimer = new Timer(1000, null);;
     // Comprobación de parada de timers
     boolean paused1;
     boolean paused2;

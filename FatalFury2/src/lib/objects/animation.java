@@ -126,6 +126,9 @@ public class animation {
         double elapsedTime = current - startTime;
         double elapsedTimeAux = current - auxTime;
         int incrementOnX = (int)(coords.get((state)%coords.size()).getKey()*(elapsedTimeAux/times.get(state)));
+
+        //incrementOnX *= -orientation;
+
         int incrementOnY = (int)(coords.get((state)%coords.size()).getValue()*(elapsedTimeAux/times.get(state)));
         int cX = coords.get((state)%coords.size()).getKey();
         int cY = coords.get((state)%coords.size()).getValue();

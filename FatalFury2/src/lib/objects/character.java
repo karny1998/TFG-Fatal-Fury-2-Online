@@ -63,7 +63,7 @@ public class character {
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
-
+        boolean stateChanged = false;
         if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
                 && combos.get(mov) != state){
             Movement aux = Movement.NONE;
@@ -75,16 +75,25 @@ public class character {
             movements.get(state).getAnim().reset();
             state = aux;
             movements.get(state).start(dis);
+            stateChanged = true;
         }
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
-                || movements.get(state).hasEnd() && movements.get(state).ended()  //&& combos.get(mov) != state
+                || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
+                || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
-            movements.get(state).getAnim().reset();
+            if(state != Movement.STANDING){movements.get(state).getAnim().reset();}
             state = combos.get(mov);
-            movements.get(state).start(dis);
+            if(state != Movement.STANDING){movements.get(state).start(dis);}
+            stateChanged = true;
         }
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
+
+        if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
+                movements.get(state).ended() && !stateChanged && s.getY() == y
+                && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE){
+            s =  movements.get(Movement.STANDING).getFrame(x,y, orientation);
+        }
 
         // Gestión de colisiones
         if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){

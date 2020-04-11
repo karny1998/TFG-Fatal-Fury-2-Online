@@ -141,6 +141,8 @@ public class fight_controller implements roundListener {
 
     // Retomar la pelea
     public void resumeFight() {
+        introTimeStamp = System.currentTimeMillis();
+        outroTimeStamp = System.currentTimeMillis();
         currentRound.resume();
     }
 
