@@ -38,6 +38,8 @@ public class round {
     score scorePlayer;
     // Score p2
     score scoreEnemy;
+    // Perfect
+    boolean isPerfect;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
@@ -110,11 +112,15 @@ public class round {
                 result = Round_Results.LOSE;
                 checkLifes.stop();
                 roundTimer.stop();
+                if (enemyLife == 100) { isPerfect = true; }
+                for (roundListener l : listeners)
+                    l.roundEnded();
             }
             else if (enemyLife == 0) {
                 result = Round_Results.WIN;
                 checkLifes.stop();
                 roundTimer.stop();
+                if (playerLife == 100) { isPerfect = true; }
                 for (roundListener l : listeners)
                     l.roundEnded();
             }
@@ -190,27 +196,19 @@ public class round {
     }
 
     // Getters y setters
-    public character_controller getPlayerControler() {
-        return player;
+    public int getTimeLeft() {
+        return timeLeft;
     }
 
-    public void setPlayerControler(user_controller player) {
-        this.player = player;
-    }
-
-    public character_controller getEnemyControler() {
-        return enemy;
-    }
-
-    public void setEnemyControler(enemy_controller enemy) {
-        this.enemy = enemy;
+    public void setTimeLeft(int timeLeft) {
+        this.timeLeft = timeLeft;
     }
 
     public character_controller getPlayer() {
         return player;
     }
 
-    public void setPlayer(user_controller player) {
+    public void setPlayer(character_controller player) {
         this.player = player;
     }
 
@@ -226,7 +224,7 @@ public class round {
         return enemy;
     }
 
-    public void setEnemy(enemy_controller enemy) {
+    public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
@@ -239,19 +237,75 @@ public class round {
     }
 
     public Round_Results getResult() {
-        return this.result;
+        return result;
     }
 
     public void setResult(Round_Results result) {
         this.result = result;
     }
 
-    public int getTimeLeft() {
-        return timeLeft;
+    public List<roundListener> getListeners() {
+        return listeners;
     }
 
-    public void setTimeLeft(int timeLeft) {
-        this.timeLeft = timeLeft;
+    public void setListeners(List<roundListener> listeners) {
+        this.listeners = listeners;
+    }
+
+    public Timer getCheckLifes() {
+        return checkLifes;
+    }
+
+    public void setCheckLifes(Timer checkLifes) {
+        this.checkLifes = checkLifes;
+    }
+
+    public Timer getRoundTimer() {
+        return roundTimer;
+    }
+
+    public void setRoundTimer(Timer roundTimer) {
+        this.roundTimer = roundTimer;
+    }
+
+    public boolean isPaused1() {
+        return paused1;
+    }
+
+    public void setPaused1(boolean paused1) {
+        this.paused1 = paused1;
+    }
+
+    public boolean isPaused2() {
+        return paused2;
+    }
+
+    public void setPaused2(boolean paused2) {
+        this.paused2 = paused2;
+    }
+
+    public score getScorePlayer() {
+        return scorePlayer;
+    }
+
+    public void setScorePlayer(score scorePlayer) {
+        this.scorePlayer = scorePlayer;
+    }
+
+    public score getScoreEnemy() {
+        return scoreEnemy;
+    }
+
+    public void setScoreEnemy(score scoreEnemy) {
+        this.scoreEnemy = scoreEnemy;
+    }
+
+    public boolean isPerfect() {
+        return isPerfect;
+    }
+
+    public void setPerfect(boolean perfect) {
+        isPerfect = perfect;
     }
 }
 

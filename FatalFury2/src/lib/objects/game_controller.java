@@ -194,6 +194,7 @@ public class game_controller {
         screenObjects.remove(Item_Type.BUBBLE2);
         screenObjects.remove(Item_Type.BUBBLE3);
         screenObjects.remove(Item_Type.BUBBLE4);
+        screenObjects.remove(Item_Type.ANNOUNCEMENT);
     }
 
     public void writeDirecly(Graphics2D g){
