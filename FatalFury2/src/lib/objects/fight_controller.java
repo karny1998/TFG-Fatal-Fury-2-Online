@@ -14,6 +14,8 @@ import java.util.Map;
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
     final int roundTime = 90;
+    // Milisegundos que aparecen los textos entre rondas
+    final int announcementTime = 2000;
     // Path
     String path = "assets/sprites/fight_interface/";
     // Ronda actual de la pelea
@@ -265,10 +267,10 @@ public class fight_controller implements roundListener {
         if (showIntro) {
             Date date = new Date();
             long timePast = date.getTime() - introTimeStamp;
-            if (timePast <= 700 && roundCounter == 0) {
+            if (timePast <= announcementTime && roundCounter == 0) {
                 screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,match_play, Item_Type.ANNOUNCEMENT));
             }
-            else if (timePast <= 1400 && roundCounter == 0 || timePast <= 700 && roundCounter > 0) {
+            else if (timePast <= announcementTime * 2 && roundCounter == 0 || timePast <= announcementTime && roundCounter > 0) {
                 switch (roundCounter) {
                     case 0:
                         screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,round_1, Item_Type.ANNOUNCEMENT));
@@ -284,7 +286,7 @@ public class fight_controller implements roundListener {
                         break;
                 }
             }
-            else if (timePast <= 1400 && roundCounter > 0 || timePast <= 2100 && roundCounter == 0) {
+            else if (timePast <= announcementTime + 700 && roundCounter > 0 || timePast <= announcementTime * 2 + 700 && roundCounter == 0) {
                 if (!startedFightAnimation) {
                     startedFightAnimation = true;
                     fightAnnouncement.start();
@@ -304,7 +306,7 @@ public class fight_controller implements roundListener {
             Date date = new Date();
             long timePast = date.getTime() - outroTimeStamp;
             Round_Results lastResult = results.get(results.size()-1);
-            if (timePast <= 700) {
+            if (timePast <= announcementTime) {
                 if (wasTimedOut) {
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, time_up, Item_Type.ANNOUNCEMENT));
                 }
@@ -318,7 +320,7 @@ public class fight_controller implements roundListener {
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, you_lost, Item_Type.ANNOUNCEMENT));
                 }
             }
-            else if (timePast <= 1400) {
+            else if (timePast <= announcementTime * 2) {
                 if (lastResult == Round_Results.TIE) {
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, draw_game, Item_Type.ANNOUNCEMENT));
                 }
