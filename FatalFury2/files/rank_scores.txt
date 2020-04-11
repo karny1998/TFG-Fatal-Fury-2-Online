@@ -44,3 +44,7 @@ AAAA
 10100
 SSSSSS
 800
+cara
+0
+caracu
+0
