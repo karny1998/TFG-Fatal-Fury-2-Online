@@ -12,17 +12,25 @@ public class scenary {
     animation anim1_night, anim2_night;
     animation anim1_sunset, anim2_sunset;
     // Coordenadas del escenario y su decoración
-    int x = -145, y = 0;
-    int x2 = -145, y2 = 398;
+    int x, y;
+    int x2, y2;
 
     public scenary(){}
 
     public scenary(Scenario_type type) {
         switch (type) {
             case USA:
+                x = -145;
+                y = 0;
+                x2 = -145;
+                y2 = 398;
                 loadUsa();
                 break;
             case CHINA:
+                x = -145;
+                y = 0;
+                x2 = -145;
+                y2 = 57;
                 loadChina();
                 break;
             case AUSTRALIA:
@@ -45,7 +53,13 @@ public class scenary {
 
     // Cargar animaciones de CHINA
     public void loadChina() {
-
+        china China;
+        anim1_dawn = china.generateAnimation1(Scenario_time.DAWN);
+        anim1_night = china.generateAnimation1(Scenario_time.NIGHT);
+        anim1_sunset = china.generateAnimation1(Scenario_time.SUNSET);
+        anim2_dawn = china.generateAnimation2(Scenario_time.DAWN);
+        anim2_night = china.generateAnimation2(Scenario_time.NIGHT);
+        anim2_sunset = china.generateAnimation2(Scenario_time.SUNSET);
     }
 
     // Cargar animaciones de AUSTRALIA
