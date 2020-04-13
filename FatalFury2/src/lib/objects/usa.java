@@ -41,7 +41,7 @@ public class usa {
         return a1;
     }
 
-    // Generar animación del ring
+    // Generar animación del suelo
     public static animation generateAnimation2(){
         animation a2 = new animation();
         a2.setHasEnd(false);

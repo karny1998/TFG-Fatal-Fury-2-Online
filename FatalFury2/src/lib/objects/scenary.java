@@ -34,6 +34,10 @@ public class scenary {
                 loadChina();
                 break;
             case AUSTRALIA:
+                x = -145;
+                y = 0;
+                x2 = -145;
+                y2 = 90;
                 loadAustralia();
                 break;
         }
@@ -42,7 +46,6 @@ public class scenary {
 
     // Cargar animaciones de USA
     public void loadUsa() {
-        usa Usa;
         anim1_dawn = usa.generateAnimation1(Scenario_time.DAWN);
         anim1_night = usa.generateAnimation1(Scenario_time.NIGHT);
         anim1_sunset = usa.generateAnimation1(Scenario_time.SUNSET);
@@ -53,7 +56,6 @@ public class scenary {
 
     // Cargar animaciones de CHINA
     public void loadChina() {
-        china China;
         anim1_dawn = china.generateAnimation1(Scenario_time.DAWN);
         anim1_night = china.generateAnimation1(Scenario_time.NIGHT);
         anim1_sunset = china.generateAnimation1(Scenario_time.SUNSET);
@@ -64,7 +66,12 @@ public class scenary {
 
     // Cargar animaciones de AUSTRALIA
     public void loadAustralia() {
-
+        anim1_dawn = australia.generateAnimation1(Scenario_time.DAWN);
+        anim1_night = australia.generateAnimation1(Scenario_time.NIGHT);
+        anim1_sunset = australia.generateAnimation1(Scenario_time.SUNSET);
+        anim2_dawn = australia.generateAnimation2(Scenario_time.DAWN);
+        anim2_night = australia.generateAnimation2(Scenario_time.NIGHT);
+        anim2_sunset = australia.generateAnimation2(Scenario_time.SUNSET);
     }
     // Obtener frame del escenario
     public screenObject getFrame1(){
