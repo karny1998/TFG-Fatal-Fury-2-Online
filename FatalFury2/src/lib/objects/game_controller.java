@@ -1,10 +1,7 @@
 package lib.objects;
 
 import javafx.util.Pair;
-import lib.Enums.GameState;
-import lib.Enums.Item_Type;
-import lib.Enums.Playable_Character;
-import lib.Enums.Selectionable;
+import lib.Enums.*;
 import lib.input.controlListener;
 import lib.input.keyBinding;
 
@@ -89,13 +86,9 @@ public class game_controller {
                             user_controller user = new user_controller(Playable_Character.TERRY);
                             enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
                             enemy.setRival(user.getPlayer());
-                            fight = new fight_controller(user, enemy);
+                            scene = new scenary(Scenario_type.USA);
+                            fight = new fight_controller(user,enemy,scene);
                             fight.setVsIa(true);
-
-                            scene = new scenary();
-                            scene.setAnim1(usa.generateAnimation1());
-                            scene.setAnim2(usa.generateAnimation2());
-
                             screenObjects.remove(Item_Type.MENU);
                             state = GameState.FIGHT;
                             break;
@@ -125,12 +118,6 @@ public class game_controller {
                         state = GameState.TYPING;
                     }
                     clearInterface(screenObjects);
-                }
-                else {
-                    screenObject ply = scene.getFrame1();
-                    screenObjects.put(Item_Type.SCENARY_1, ply);
-                    ply = scene.getFrame2();
-                    screenObjects.put(Item_Type.SCENARY_2, ply);
                 }
             }
         }

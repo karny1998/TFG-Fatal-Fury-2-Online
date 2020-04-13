@@ -2,6 +2,8 @@ package lib.objects;
 
 import lib.Enums.Item_Type;
 import lib.Enums.Round_Results;
+import lib.Enums.Scenario_time;
+import lib.Enums.Scenario_type;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,7 @@ import java.util.Map;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 90;
+    final int roundTime = 10;
     // Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
     // Path
@@ -24,6 +26,8 @@ public class fight_controller implements roundListener {
     List<Round_Results> results;
     // Controlador del usuario
     character_controller player;
+    // Escenario
+    scenary scene;
     // Score p1
     score scorePlayer = new score();
     // Controlador del enemigo
@@ -68,7 +72,8 @@ public class fight_controller implements roundListener {
     long outroTimeStamp;
 
     // Constructor (empieza la primera ronda)
-    public fight_controller(character_controller p, character_controller e) {
+    public fight_controller(character_controller p, character_controller e, scenary s) {
+        scene = s;
         player = p;
         enemy = e;
         mirrorFight = player.getPlayer().getCharac() == enemy.getPlayer().getCharac();
@@ -231,6 +236,9 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        // ESCENARIO DE LA PELEA
+        screenObjects.put(Item_Type.SCENARY_1, scene.getFrame1());
+        screenObjects.put(Item_Type.SCENARY_2, scene.getFrame2());
         // TIMER
         if (noTimer) {
             screenObjects.remove(Item_Type.TIMER2);
@@ -338,6 +346,12 @@ public class fight_controller implements roundListener {
                     if (newRound) {
                         player.reset();
                         enemy.reset();
+                        if (roundCounter == 1) {
+                            scene.setCurrentTime(Scenario_time.SUNSET);
+                        }
+                        else if (roundCounter >= 2) {
+                            scene.setCurrentTime(Scenario_time.NIGHT);
+                        }
                         enemy.setRival(player.getPlayer());
                         showIntro();
                     }
@@ -354,6 +368,12 @@ public class fight_controller implements roundListener {
                 if (newRound) {
                     player.reset();
                     enemy.reset();
+                    if (roundCounter == 1) {
+                        scene.setCurrentTime(Scenario_time.SUNSET);
+                    }
+                    else if (roundCounter >= 2) {
+                        scene.setCurrentTime(Scenario_time.NIGHT);
+                    }
                     enemy.setRival(player.getPlayer());
                     showIntro();
                 }
