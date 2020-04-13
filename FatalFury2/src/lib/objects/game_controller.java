@@ -86,7 +86,7 @@ public class game_controller {
                             user_controller user = new user_controller(Playable_Character.TERRY);
                             enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
                             enemy.setRival(user.getPlayer());
-                            scene = new scenary(Scenario_type.AUSTRALIA);
+                            scene = new scenary(Scenario_type.CHINA);
                             fight = new fight_controller(user,enemy,scene);
                             fight.setVsIa(true);
                             screenObjects.remove(Item_Type.MENU);
