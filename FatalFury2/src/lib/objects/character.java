@@ -50,6 +50,14 @@ public class character {
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
     public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
+
+        if(mov.equals("RIGHT") && orientation == 1){
+            mov = "LEFT";
+        }
+        else if(mov.equals("LEFT") && orientation == 1){
+            mov = "RIGHT";
+        }
+
         boolean collides = pHurt.collides(eHurt);
 
         int dis = 0;
@@ -77,7 +85,8 @@ public class character {
             movements.get(state).start(dis);
             stateChanged = true;
         }
-        else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
+        else if (combos.containsValue(mov)
+                || (!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){

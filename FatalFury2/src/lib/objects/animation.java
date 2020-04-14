@@ -108,7 +108,7 @@ public class animation {
         }
 
         // Si no se está reprodciendo el sonido, se reproducre
-        if(!playing && hasEnd){
+        if(sound != null && !playing && hasEnd){
             sound.playCharacterVoice(soundType);
             playing = true;
         }
@@ -127,7 +127,7 @@ public class animation {
         double elapsedTimeAux = current - auxTime;
         int incrementOnX = (int)(coords.get((state)%coords.size()).getKey()*(elapsedTimeAux/times.get(state)));
 
-        //incrementOnX *= -orientation;
+        incrementOnX *= -orientation;
 
         int incrementOnY = (int)(coords.get((state)%coords.size()).getValue()*(elapsedTimeAux/times.get(state)));
         int cX = coords.get((state)%coords.size()).getKey();
