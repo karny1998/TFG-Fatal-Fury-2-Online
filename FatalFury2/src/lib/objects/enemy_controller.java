@@ -19,7 +19,7 @@ public class enemy_controller extends character_controller{
     // En esta función se llamaría a la IA
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
-        if(!standBy){
+        if(false){
             this.x = this.player.getX();
             this.y = this.player.getY();
 
