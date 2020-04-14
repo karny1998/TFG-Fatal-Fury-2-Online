@@ -3,7 +3,6 @@ package lib.objects;
 import javafx.util.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
-import lib.input.keyBinding;
 
 import java.awt.*;
 import java.util.Map;
@@ -64,12 +63,12 @@ public class game_controller {
                 actualMenu.updateTime();
             }
             // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            else if( controlListener.isPressed(keyBinding.getEscape())){
+            else if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
                 //actualMenu = actualMenu.getFather();
                 actualMenu.updateTime();
             }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
-            else if(controlListener.isPressed(keyBinding.getEnter()) && p.getValue() != Selectionable.NONE){
+            else if( controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
                 // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
                 if(p.getKey() == null) {
                     switch (p.getValue()) {
@@ -105,7 +104,7 @@ public class game_controller {
         // Si se está peleando
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
-            if(controlListener.isPressed(keyBinding.getEscape())){
+            if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
                 state = GameState.ESCAPE;
             }
             // Si se está mostrando la pelea
@@ -128,7 +127,7 @@ public class game_controller {
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = escapeMenu.select();
             // Si se ha presionado enter para seleccionar alguna opción
-            if (controlListener.isPressed(keyBinding.getEnter())){
+            if ( controlListener.getStatus(1, controlListener.ENT_INDEX) ){
                 switch (p.getValue()){
                     // Retomar la partida
                     case ESCAPE_RESUME:
@@ -151,11 +150,11 @@ public class game_controller {
                 }
             }
         }
-        else if(state == GameState.RANKING && controlListener.isPressed(keyBinding.getEscape()) ){
+        else if(state == GameState.RANKING && controlListener.getStatus(1, controlListener.ESC_INDEX) ){
             state = GameState.NAVIGATION;
         }
         else if (state == GameState.TYPING){
-            if(controlListener.isPressed(keyBinding.getEnter())){
+            if( controlListener.getStatus(1, controlListener.ENT_INDEX) ){
                 fight.getScorePlayer().writeRankScore(askName.getName());
                 actualMenu = principal;
                 actualMenu.updateTime();

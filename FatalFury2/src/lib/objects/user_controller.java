@@ -1,7 +1,7 @@
 package lib.objects;
 
 import lib.Enums.Playable_Character;
-import lib.input.keyBinding;
+import lib.input.controlListener;
 
 // Clase que representa un controlador de interacción entre
 // el personaje y el jugador
@@ -17,7 +17,8 @@ public class user_controller extends character_controller{
         this.x = this.player.getX();
         this.y = this.player.getY();
         String mov = "";
-        if(!standBy){mov = keyBinding.getMove();}
+        if(!standBy){mov = controlListener.getMove(1);}
+        System.out.println(mov);
         return player.getFrame(mov, pHurt, eHurt);
     }
 

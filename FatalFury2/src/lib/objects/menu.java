@@ -3,7 +3,6 @@ package lib.objects;
 import javafx.util.Pair;
 import lib.Enums.Selectionable;
 import lib.input.controlListener;
-import lib.input.keyBinding;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +34,11 @@ public class menu {
     public screenObject getFrame(){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 300.0){
-            if(controlListener.isPressed(keyBinding.getUp() )&& sel > 0){
+            if(controlListener.getStatus(1, controlListener.AR_INDEX) && sel > 0){
                 sel--;
                 referenceTime = current;
             }
-            else if(controlListener.isPressed(keyBinding.getDown() ) && sel < orden.length-1){
+            else if(controlListener.getStatus(1, controlListener.AB_INDEX)&& sel < orden.length-1){
                 sel++;
                 referenceTime = current;
             }

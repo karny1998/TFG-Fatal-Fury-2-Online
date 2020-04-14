@@ -1,6 +1,6 @@
 package lib.input;
 
-public class keyBinding {
+public class keyBinding_ {
     private static int escape = 27;
     private static int enter = 10;
 
