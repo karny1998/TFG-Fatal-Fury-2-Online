@@ -10,6 +10,12 @@ public class movement {
     animation anim, throwable;
     // Daño del movimiento
     int damage = 0;
+    // Distancia para movimiento hijo
+    int distChange = 20;
+    // Distancia cuando se inicio el movimiento
+    int distance = 100;
+    // Submovimiento (solo se soporta tener hijos, no nietos)
+    movement subMovement = null;
 
     public movement(Movement type, animation anim) {
         this.type = type;
@@ -25,8 +31,14 @@ public class movement {
     }
 
     // Inicia las animaciones
-    public void start(){
-        anim.start();
+    public void start(int dist){
+        distance = dist;
+        if(dist > distChange || subMovement == null) {
+            anim.start();
+        }
+        else{
+            subMovement.start(999);
+        }
         if(type == Movement.THROW){
             //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
             //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
@@ -38,6 +50,9 @@ public class movement {
     // Termina y reinicia las animaciones
     public void reset(){
         anim.reset();
+        if(subMovement != null) {
+            subMovement.reset();
+        }
         if(type == Movement.THROW){
             //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
             //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
@@ -48,11 +63,23 @@ public class movement {
 
     // Si ha terminado o no el movimiento
     public boolean ended(){
-        return anim.getEnded();
+        if(distance > distChange || subMovement == null) {
+            return anim.getEnded();
+        }
+        else {
+            return subMovement.getAnim().getEnded();
+        }
     }
 
     // Getters y setters
-    public boolean unstoppable(){return anim.getUnstoppable();}
+    public boolean unstoppable(){
+        if(distance > distChange || subMovement == null) {
+            return anim.getUnstoppable();
+        }
+        else {
+            return subMovement.getAnim().getUnstoppable();
+        }
+    }
 
     public Movement getType() {
         return type;
@@ -63,7 +90,12 @@ public class movement {
     }
 
     public animation getAnim() {
-        return anim;
+        if(distance > distChange || subMovement == null) {
+            return anim;
+        }
+        else {
+            return subMovement.getAnim();
+        }
     }
 
     public void setAnim(animation anim) {
@@ -79,7 +111,12 @@ public class movement {
     }
 
     public int getDamage() {
-        return damage;
+        if(distance > distChange || subMovement == null) {
+            return damage;
+        }
+        else {
+            return subMovement.getDamage();
+        }
     }
 
     public void setDamage(int damage) {
@@ -91,14 +128,45 @@ public class movement {
     }
 
     public screenObject getFrame(int x, int y, int orientation) {
-        return anim.getFrame(x,y, orientation);
+        if(distance > distChange || subMovement == null) {
+            return anim.getFrame(x,y, orientation);
+        }
+        else {
+            return subMovement.getAnim().getFrame(x,y, orientation);
+        }
     }
 
     public hitBox getHitbox(){
-        return anim.getHitbox();
+        if(distance > distChange || subMovement == null) {
+            return anim.getHitbox();
+        }
+        else {
+            return subMovement.getAnim().getHitbox();
+        }
     }
 
     public hitBox getHurtbox(){
-        return anim.getHurtBox();
+        if(distance > distChange || subMovement == null) {
+            return anim.getHurtBox();
+        }
+        else {
+            return subMovement.getAnim().getHurtBox();
+        }
+    }
+
+    public animation getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(animation throwable) {
+        this.throwable = throwable;
+    }
+
+    public movement getSubMovement() {
+        return subMovement;
+    }
+
+    public void setSubMovement(movement subMovement) {
+        this.subMovement = subMovement;
     }
 }

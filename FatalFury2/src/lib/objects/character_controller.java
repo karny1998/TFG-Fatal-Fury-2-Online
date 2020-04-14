@@ -15,6 +15,10 @@ public abstract  class character_controller {
     protected int x = 0, y = 0;
     // Generador de randoms
     protected Random rand = new Random();
+    // Para las esperas
+    boolean standBy = true;
+
+    protected character rival;
 
     public character_controller(Playable_Character ch, int x, int y, int orientation){
         this.x = x; this.y = y;
@@ -38,14 +42,10 @@ public abstract  class character_controller {
 
     void reset(Playable_Character ch, int x, int y, int orientation) {
         this.x = x; this.y = y;
-        player.voices.endCharacterVoices();
-        player = new character(ch);
-        player.setX(x);
-        player.setY(y);
-        player.setOrientation(orientation);
+        player.reset(x,y, orientation);
     }
 
-    abstract screenObject getAnimation(boolean collides);
+    abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
 
     // GETTERS Y SETTERS
     public String getCharac() {
@@ -88,4 +88,27 @@ public abstract  class character_controller {
         this.rand = rand;
     }
 
+    public boolean isStandBy() {
+        return standBy;
+    }
+
+    public void setStandBy(boolean standBy) {
+        this.standBy = standBy;
+    }
+
+    public void startStandBy(){
+        this.standBy = true;
+    }
+
+    public void endStandBy(){
+        this.standBy = false;
+    }
+
+    public character getRival() {
+        return rival;
+    }
+
+    public void setRival(character rival) {
+        this.rival = rival;
+    }
 }

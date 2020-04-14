@@ -43,19 +43,37 @@ public class character {
             new load_character().generateMovs("terry", combos, movements, voices, 0.8);
         }
         // Por defecto está en STANDING
-        movements.get(Movement.STANDING).start();
+        movements.get(Movement.STANDING).start(999);
     }
 
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
-    public screenObject getFrame(String mov, boolean collides){
+    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
+
+        if(mov.equals("RIGHT") && orientation == 1){
+            mov = "LEFT";
+        }
+        else if(mov.equals("LEFT") && orientation == 1){
+            mov = "RIGHT";
+        }
+
+        boolean collides = pHurt.collides(eHurt);
+
+        int dis = 0;
+        if (pHurt.getX() > eHurt.getX()){
+            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+        }
+        else if(pHurt.getX() < eHurt.getX()){
+            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
-
+        boolean stateChanged = false;
         if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
-            && combos.get(mov) != state){
+                && combos.get(mov) != state){
             Movement aux = Movement.NONE;
             switch (state){
                 case CROUCH:
@@ -64,20 +82,42 @@ public class character {
             }
             movements.get(state).getAnim().reset();
             state = aux;
-            movements.get(state).start();
+            movements.get(state).start(dis);
+            stateChanged = true;
         }
-        else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
-                || movements.get(state).hasEnd() && movements.get(state).ended()){
-            movements.get(state).getAnim().reset();
+        else if (combos.containsValue(mov)
+                || (!movements.get(state).hasEnd() && combos.get(mov) != state)
+                || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
+                || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
+                || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
+            if(state != Movement.STANDING){movements.get(state).getAnim().reset();}
             state = combos.get(mov);
-            movements.get(state).start();
+            if(state != Movement.STANDING){movements.get(state).start(dis);}
+            stateChanged = true;
         }
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
+
+        if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
+                movements.get(state).ended() && !stateChanged && s.getY() == y
+                && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE){
+            s =  movements.get(Movement.STANDING).getFrame(x,y, orientation);
+        }
+
+        // Gestión de colisiones
+        if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+            int increment = orientation;
+            if(orientation == 1 && pHurt.getX() < eHurt.getX()
+                    || orientation == -1 && pHurt.getX() > eHurt.getX()){
+                increment = -orientation;
+            }
+            x = s.getX() + increment;
+            s.setX(x);
+        }
         // Si no colisiona, o está andando hacia atrás mirando a la izquierda
         // o está andando hacia adelante mirando hacia la derecha (ambos casos
         // se aleja del enemigo), se actualizan las coordenadas del personaje
-        if(!collides || state == Movement.WALKING_BACK && orientation == 1
+        else if(!collides || state == Movement.WALKING_BACK && orientation == 1
                 || state == Movement.WALKING && orientation == -1) {
             x = s.getX();
         }
@@ -93,6 +133,15 @@ public class character {
     public void applyDamage(int dmg){
         if(life-dmg < 0){life = 0;}
         else{life -= dmg;}
+    }
+
+    void reset(int x, int y, int orientation){
+        life = 100;
+        this.orientation = orientation;
+        // Coordenadas actuales del personaje
+        this.x = x;
+        this.y = y;
+        this.state = Movement.STANDING;
     }
 
     //Getters y setters
@@ -176,6 +225,10 @@ public class character {
             auxX = x - aux.getX() - aux.getWidth();
         }
         return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), false);
+    }
+
+    public boolean endedMovement(){
+        return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
     }
 
     public Sound getVoices() {

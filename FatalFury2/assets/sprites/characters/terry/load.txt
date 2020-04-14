@@ -270,7 +270,7 @@ false
 false
 attack_poke
 ATTACK_POKE
-D
+A
 Hit_3
 true
 ENDABLE
@@ -392,7 +392,7 @@ false
 -1
 false
 jump_roll_right
-NORMAL_JUMP
+JUMP_ROLL_RIGHT
 UP
 Hurt_2
 true
@@ -409,8 +409,8 @@ false
 500
 500
 300
-130
--244
+200
+-444
 -1
 -1
 false
@@ -460,7 +460,7 @@ false
 500
 300
 150
-400
+600
 -1
 -1
 false

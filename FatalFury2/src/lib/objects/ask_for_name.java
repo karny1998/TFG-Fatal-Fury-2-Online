@@ -5,17 +5,30 @@ import lib.Enums.Item_Type;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class ask_for_name {
     private String name = "";
     private animation anim;
     private Font f = new Font("Orbitron", Font.ROMAN_BASELINE, 60);
-    private long timeReference = 0;
+    private long timeReference = System.currentTimeMillis();
 
     public  ask_for_name(){
         timeReference = System.currentTimeMillis();
         loadAnim();
         new IsKeyPressed();
+        String path = "files/last_name.txt";
+        try {
+            FileReader f = new FileReader(path);
+            BufferedReader b = new BufferedReader(f);
+            String aux = "";
+            if ((aux = b.readLine()) != null) {
+                name = aux;
+            }
+            b.close();
+        }
+        catch (Exception e){}
     }
 
     private void loadAnim(){
@@ -43,7 +56,7 @@ public class ask_for_name {
             timeReference = current;
         }
         if(cK == controlKey.ESCAPE){
-            name = name.substring(0, name.length()-2);
+            name = name.substring(0, name.length()-1);
         }
         else if(cK != controlKey.NONE && name.length() < 10){
             name += cK.toString();

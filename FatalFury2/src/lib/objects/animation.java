@@ -108,7 +108,7 @@ public class animation {
         }
 
         // Si no se está reprodciendo el sonido, se reproducre
-        if(!playing && hasEnd){
+        if(sound != null && !playing && hasEnd){
             sound.playCharacterVoice(soundType);
             playing = true;
         }
@@ -126,6 +126,9 @@ public class animation {
         double elapsedTime = current - startTime;
         double elapsedTimeAux = current - auxTime;
         int incrementOnX = (int)(coords.get((state)%coords.size()).getKey()*(elapsedTimeAux/times.get(state)));
+
+        incrementOnX *= -orientation;
+
         int incrementOnY = (int)(coords.get((state)%coords.size()).getValue()*(elapsedTimeAux/times.get(state)));
         int cX = coords.get((state)%coords.size()).getKey();
         int cY = coords.get((state)%coords.size()).getValue();
@@ -202,6 +205,10 @@ public class animation {
         // Ajusta el ancho según la orientación para que mire a un lado y a otro
         result.setWidth(result.getWidth()*orientation);
         return result;
+    }
+
+    screenObject getFrame(){
+        return getFrame(frames.get(state).getX(),frames.get(state).getY(),1);
     }
 
     //Getters y setters

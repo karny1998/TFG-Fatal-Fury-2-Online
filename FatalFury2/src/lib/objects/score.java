@@ -37,7 +37,23 @@ public class score {
 
     public int getScore(){return this.points;}
 
+    public void saveLastName(String name){
+        String path = "files/last_name.txt";
+        File f= new File(path);
+        f.delete();
+        f= new File(path);
+        try {
+            FileOutputStream fos = new FileOutputStream(f);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+            bw.write(name);
+            bw.close();
+        }
+        catch (Exception e){}
+    }
+
     public void writeRankScore(String name){
+        saveLastName(name);
+
         List<Pair<String, Integer>> list = readRankScores(false);
         File f= new File(path);
         f.delete();

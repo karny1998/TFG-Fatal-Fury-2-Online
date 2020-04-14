@@ -1,10 +1,7 @@
 package lib.objects;
 
 import javafx.util.Pair;
-import lib.Enums.GameState;
-import lib.Enums.Item_Type;
-import lib.Enums.Playable_Character;
-import lib.Enums.Selectionable;
+import lib.Enums.*;
 import lib.input.controlListener;
 import lib.input.keyBinding;
 
@@ -13,6 +10,9 @@ import java.util.Map;
 
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
+
+    boolean debug = false;
+
     // Controlador de una pelea
     private fight_controller fight;
     // Escenario (habría que meterlo en fight_controller)
@@ -86,13 +86,9 @@ public class game_controller {
                             user_controller user = new user_controller(Playable_Character.TERRY);
                             enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
                             enemy.setRival(user.getPlayer());
-                            fight = new fight_controller(user, enemy);
+                            scene = new scenary(Scenario_type.CHINA);
+                            fight = new fight_controller(user,enemy,scene);
                             fight.setVsIa(true);
-
-                            scene = new scenary();
-                            scene.setAnim1(usa.generateAnimation1());
-                            scene.setAnim2(usa.generateAnimation2());
-
                             screenObjects.remove(Item_Type.MENU);
                             state = GameState.FIGHT;
                             break;
@@ -123,12 +119,6 @@ public class game_controller {
                     }
                     clearInterface(screenObjects);
                 }
-                else {
-                    screenObject ply = scene.getFrame1();
-                    screenObjects.put(Item_Type.SCENARY_1, ply);
-                    ply = scene.getFrame2();
-                    screenObjects.put(Item_Type.SCENARY_2, ply);
-                }
             }
         }
         // Si se le ha dado a escape durante una pelea
@@ -152,6 +142,7 @@ public class game_controller {
                         actualMenu = p.getKey();
                         actualMenu.updateTime();
                         state = GameState.NAVIGATION;
+                        clearInterface(screenObjects);
                         break;
                     // Salir del juego
                     case ESCAPE_EXIT:
@@ -186,17 +177,24 @@ public class game_controller {
         screenObjects.remove(Item_Type.NAME2);
         screenObjects.remove(Item_Type.INDICATOR1);
         screenObjects.remove(Item_Type.INDICATOR2);
+        screenObjects.remove(Item_Type.BUBBLE1);
+        screenObjects.remove(Item_Type.BUBBLE2);
+        screenObjects.remove(Item_Type.BUBBLE3);
+        screenObjects.remove(Item_Type.BUBBLE4);
+        screenObjects.remove(Item_Type.ANNOUNCEMENT);
     }
 
     public void writeDirecly(Graphics2D g){
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
-        else if(state == GameState.FIGHT) {
-            fight.player.player.getHitbox().drawHitBox(g);
-            fight.player.player.getHurtbox().drawHitBox(g);
-            fight.enemy.player.getHitbox().drawHitBox(g);
-            fight.enemy.player.getHurtbox().drawHitBox(g);
+        else if(state == GameState.FIGHT || state == GameState.ESCAPE) {
+            if(debug){
+                fight.player.player.getHitbox().drawHitBox(g);
+                fight.player.player.getHurtbox().drawHitBox(g);
+                fight.enemy.player.getHitbox().drawHitBox(g);
+                fight.enemy.player.getHurtbox().drawHitBox(g);
+            }
             fight.drawHpBarPlayer(g);
             fight.drawHpBarEnemy(g);
         }

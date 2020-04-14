@@ -29,8 +29,8 @@ public class round {
     // Listeners de la ronda
     private List<roundListener> listeners = new ArrayList<roundListener>();
     // Timers de la ronda
-    Timer checkLifes;
-    Timer roundTimer;
+    Timer checkLifes = new Timer(1000, null);;
+    Timer roundTimer = new Timer(1000, null);;
     // Comprobación de parada de timers
     boolean paused1;
     boolean paused2;
@@ -38,6 +38,10 @@ public class round {
     score scorePlayer;
     // Score p2
     score scoreEnemy;
+    // Perfect
+    boolean isPerfect;
+    // Time Out
+    boolean isTimeOut;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
@@ -97,6 +101,7 @@ public class round {
                 }
                 roundTimer.stop();
                 checkLifes.stop();
+                isTimeOut = true;
                 for (roundListener l : listeners)
                     l.roundEnded();
             } else {
@@ -110,11 +115,15 @@ public class round {
                 result = Round_Results.LOSE;
                 checkLifes.stop();
                 roundTimer.stop();
+                if (enemyLife == 100) { isPerfect = true; }
+                for (roundListener l : listeners)
+                    l.roundEnded();
             }
             else if (enemyLife == 0) {
                 result = Round_Results.WIN;
                 checkLifes.stop();
                 roundTimer.stop();
+                if (playerLife == 100) { isPerfect = true; }
                 for (roundListener l : listeners)
                     l.roundEnded();
             }
@@ -152,10 +161,28 @@ public class round {
                 enemy_old_state = enemy_act_state;
             }
         }
+
+        // EL 400 ES EL ANCHO DE LA IMAGEN
+        // Si se sobrepasan
+        if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
+            && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(1);
+            player.getPlayer().setX(player.getPlayer().getX()-400);
+            enemy.getPlayer().setOrientation(-1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()+400);
+        }
+        else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
+                && pHurt.getX() < eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(-1);
+            player.getPlayer().setX(player.getPlayer().getX()+400);
+            enemy.getPlayer().setOrientation(1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
+        }
+
         // Obtención de los frames a dibujar del jugador
         screenObject ply;
         if(player.getPlayer().getLife() > 0) {
-            ply = player.getAnimation(pHurt.collides(eHurt));
+            ply = player.getAnimation(pHurt,eHurt);
             screenObjects.put(Item_Type.PLAYER, ply);
         }
         else{
@@ -163,7 +190,7 @@ public class round {
         }
         // Obtención de los frames a dibujar del enemigo
         if(enemy.getPlayer().getLife() > 0) {
-            ply = enemy.getAnimation(pHurt.collides(eHurt));
+            ply = enemy.getAnimation(eHurt,pHurt);
             screenObjects.put(Item_Type.ENEMY, ply);
         }
         else{
@@ -172,27 +199,19 @@ public class round {
     }
 
     // Getters y setters
-    public character_controller getPlayerControler() {
-        return player;
+    public int getTimeLeft() {
+        return timeLeft;
     }
 
-    public void setPlayerControler(user_controller player) {
-        this.player = player;
-    }
-
-    public character_controller getEnemyControler() {
-        return enemy;
-    }
-
-    public void setEnemyControler(enemy_controller enemy) {
-        this.enemy = enemy;
+    public void setTimeLeft(int timeLeft) {
+        this.timeLeft = timeLeft;
     }
 
     public character_controller getPlayer() {
         return player;
     }
 
-    public void setPlayer(user_controller player) {
+    public void setPlayer(character_controller player) {
         this.player = player;
     }
 
@@ -208,7 +227,7 @@ public class round {
         return enemy;
     }
 
-    public void setEnemy(enemy_controller enemy) {
+    public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
@@ -221,19 +240,83 @@ public class round {
     }
 
     public Round_Results getResult() {
-        return this.result;
+        return result;
     }
 
     public void setResult(Round_Results result) {
         this.result = result;
     }
 
-    public int getTimeLeft() {
-        return timeLeft;
+    public List<roundListener> getListeners() {
+        return listeners;
     }
 
-    public void setTimeLeft(int timeLeft) {
-        this.timeLeft = timeLeft;
+    public void setListeners(List<roundListener> listeners) {
+        this.listeners = listeners;
+    }
+
+    public Timer getCheckLifes() {
+        return checkLifes;
+    }
+
+    public void setCheckLifes(Timer checkLifes) {
+        this.checkLifes = checkLifes;
+    }
+
+    public Timer getRoundTimer() {
+        return roundTimer;
+    }
+
+    public void setRoundTimer(Timer roundTimer) {
+        this.roundTimer = roundTimer;
+    }
+
+    public boolean isPaused1() {
+        return paused1;
+    }
+
+    public void setPaused1(boolean paused1) {
+        this.paused1 = paused1;
+    }
+
+    public boolean isPaused2() {
+        return paused2;
+    }
+
+    public void setPaused2(boolean paused2) {
+        this.paused2 = paused2;
+    }
+
+    public score getScorePlayer() {
+        return scorePlayer;
+    }
+
+    public void setScorePlayer(score scorePlayer) {
+        this.scorePlayer = scorePlayer;
+    }
+
+    public score getScoreEnemy() {
+        return scoreEnemy;
+    }
+
+    public void setScoreEnemy(score scoreEnemy) {
+        this.scoreEnemy = scoreEnemy;
+    }
+
+    public boolean isPerfect() {
+        return isPerfect;
+    }
+
+    public void setPerfect(boolean perfect) {
+        isPerfect = perfect;
+    }
+
+    public boolean isTimeOut() {
+        return isTimeOut;
+    }
+
+    public void setTimeOut(boolean TimeOut) {
+        isTimeOut = TimeOut;
     }
 }
 

@@ -1,5 +1,4 @@
 -Meter más terry
--Interfaz de pelea
 -Inputs: para dos usuarios -> multiplayer
 		-Que se guarde la configuración en ficheros
 -Mecánicas de pelea: 
@@ -9,12 +8,10 @@
 					-Refinar el combate en si (colisione y tal)
 					-Ataques basados en distancia
 					-Agarres
-					-Empujar
 					-Combos
 					
 					-Ajuste de cámara?
 					-Cambio de plano?
--En combates contra IA pedir nombre
 -Que haya sonidos cuando golpee,pero no cuando no golpee
 -Más opciones de menú: -Seleccion de personajes
 						-Seleccion de mapa
