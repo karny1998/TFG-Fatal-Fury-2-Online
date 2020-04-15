@@ -22,7 +22,7 @@ public class game_controller {
     private menu actualMenu;
     // Menu al presionar escape en una pelea
     private menu escapeMenu;
-    // Menu de selección de maà
+    // Menu de selección de mapa
     private menu mapSelection;
 
     // Estado del juego
