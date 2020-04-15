@@ -22,6 +22,9 @@ public class game_controller {
     private menu actualMenu;
     // Menu al presionar escape en una pelea
     private menu escapeMenu;
+    // Menu de selección de maà
+    private menu mapSelection;
+
     // Estado del juego
     private GameState state = GameState.NAVIGATION;
     // Ranking
@@ -34,6 +37,7 @@ public class game_controller {
         this.principal = menu_generator.generate();
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
+        this.mapSelection = menu_generator.generate_map_selection();
     }
 
     public game_controller(menu principal) {
@@ -82,16 +86,54 @@ public class game_controller {
                             break;
                         // Inica una partida
                         case GAME_IA:
-                            user_controller user = new user_controller(Playable_Character.TERRY);
-                            enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-                            enemy.setRival(user.getPlayer());
-                            scene = new scenary(Scenario_type.CHINA);
-                            fight = new fight_controller(user,enemy,scene);
-                            fight.setVsIa(true);
-                            screenObjects.remove(Item_Type.MENU);
-                            state = GameState.FIGHT;
+                            actualMenu = mapSelection;
+                            actualMenu.updateTime();
+                            state = GameState.MAP;
                             break;
                     }
+                }
+                // La selección lleva a un nuevo menu (actualiza el tiempo de referencia
+                // para evitar clicks residuales)
+                else{
+                    actualMenu = p.getKey();
+                    actualMenu.updateTime();
+                }
+            }
+        } else if (state == GameState.MAP){
+            screenObject s = actualMenu.getFrame();
+            screenObjects.put(Item_Type.MENU, s);
+            Pair<menu, Selectionable> p = actualMenu.select();
+            // Si se presiona escape (hay que hacer que vuelva al menu anterior)
+            if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
+                //actualMenu = actualMenu.getFather();
+                actualMenu.updateTime();
+            }
+            // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
+            else if( controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
+                // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
+                if(p.getKey() == null) {
+                    switch (p.getValue()) {
+                        // Sale del juego
+                        case MAP_USA:
+                            scene = new scenary(Scenario_type.USA);
+                            break;
+                        case MAP_AUS:
+                            scene = new scenary(Scenario_type.AUSTRALIA);
+                            break;
+                        // Inica una partida
+                        case MAP_CHI:
+                            scene = new scenary(Scenario_type.CHINA);
+                            break;
+                    }
+                    user_controller user = new user_controller(Playable_Character.TERRY);
+                    enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+                    enemy.setRival(user.getPlayer());
+
+                    fight = new fight_controller(user,enemy,scene);
+                    fight.setVsIa(true);
+                    screenObjects.remove(Item_Type.MENU);
+                    state = GameState.FIGHT;
+
                 }
                 // La selección lleva a un nuevo menu (actualiza el tiempo de referencia
                 // para evitar clicks residuales)
