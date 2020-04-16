@@ -188,6 +188,54 @@ public class menu_generator {
         return men;
     }
 
+    //public static menu generate_character_selection(){}
+
+    public static menu generate_map_selection(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.MAP_USA, Selectionable.MAP_AUS, Selectionable.MAP_CHI});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "assets/sprites/menu/map/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_usa_ON.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_usa_OFF.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        selectionable sel = new selectionable(Selectionable.MAP_USA,a);
+        aux.put(Selectionable.MAP_USA,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_aus_ON.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_aus_OFF.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        sel = new selectionable(Selectionable.MAP_AUS,a);
+        aux.put(Selectionable.MAP_AUS,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_chi_ON.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + "map_chi_OFF.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        sel = new selectionable(Selectionable.MAP_CHI,a);
+        aux.put(Selectionable.MAP_CHI,sel);
+
+        men.setSelectionables(aux);
+        return men;
+    }
+
     public static menu generate(){
         return start();
     }
