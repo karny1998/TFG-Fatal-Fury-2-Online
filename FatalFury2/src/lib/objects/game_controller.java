@@ -4,6 +4,9 @@ import javafx.util.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
 import lib.maps.scenary;
+import lib.menus.character_menu;
+import lib.menus.menu;
+import lib.menus.menu_generator;
 
 import java.awt.*;
 import java.util.Map;
@@ -26,6 +29,10 @@ public class game_controller {
     // Menu de selección de mapa
     private menu mapSelection;
 
+    private character_menu charMenu;
+
+    private user_controller user;
+    private enemy_controller enemy;
     // Estado del juego
     private GameState state = GameState.NAVIGATION;
     // Ranking
@@ -85,7 +92,11 @@ public class game_controller {
                             ranking.reloadRanking();
                             state = GameState.RANKING;
                             break;
-                        // Inica una partida
+                        case GAME_MULTIPLAYER:
+                            actualMenu.updateTime();
+                            charMenu = new character_menu(0);
+                            state = GameState.PLAYERS;
+                            break;
                         case GAME_IA:
                             actualMenu = mapSelection;
                             actualMenu.updateTime();
@@ -100,7 +111,21 @@ public class game_controller {
                     actualMenu.updateTime();
                 }
             }
-        } else if (state == GameState.MAP){
+        } else if (state == GameState.PLAYERS){
+            screenObject s = actualMenu.getFrame();
+            screenObjects.put(Item_Type.MENU, s);
+            Boolean res = charMenu.gestionMenu(screenObjects);
+            if (res == true){
+                user = new user_controller(charMenu.getP1_ch());
+                enemy = new enemy_controller(charMenu.getP2_ch());
+                enemy.setRival(user.getPlayer());
+                actualMenu = mapSelection;
+                actualMenu.updateTime();
+                state = GameState.MAP;
+
+            }
+
+        }else if (state == GameState.MAP){
             screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
@@ -126,9 +151,9 @@ public class game_controller {
                             scene = new scenary(Scenario_type.CHINA);
                             break;
                     }
-                    user_controller user = new user_controller(Playable_Character.TERRY);
-                    enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-                    enemy.setRival(user.getPlayer());
+                    //user_controller user = new user_controller(Playable_Character.TERRY);
+                    //enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
+                    //enemy.setRival(user.getPlayer());
 
                     fight = new fight_controller(user,enemy,scene);
                     fight.setVsIa(true);
