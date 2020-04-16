@@ -33,13 +33,13 @@ public class controlListener implements KeyListener {
 
 
     public static String[] movimientos = {
-                        "UP",
-                        "DOWN",
-                        "LEFT",
-                        "RIGHT",
+                        "AR",
+                        "AB",
+                        "IZ",
+                        "DE",
                         "A",
-                        "W",
-                        "S",
+                        "B",
+                        "C",
                         "D"
                     };
 
@@ -75,16 +75,16 @@ public class controlListener implements KeyListener {
         };
 
         keyBindings2 = new int[]{
-                0,  //AR_INDEX
-                0,  //AB_INDEX
-                0,  //IZ_INDEX
-                0,  //DE_INDEX
-                0,  //A_INDEX
-                0,  //B_INDEX
-                0,  //C_INDEX
-                0,  //D_INDEX
-                0,  //ESC_INDEX
-                0   //ENT_INDEX
+                -1,  //AR_INDEX
+                -1,  //AB_INDEX
+                -1,  //IZ_INDEX
+                -1,  //DE_INDEX
+                -1,  //A_INDEX
+                -1,  //B_INDEX
+                -1,  //C_INDEX
+                -1,  //D_INDEX
+                -1,  //ESC_INDEX
+                -1   //ENT_INDEX
         };
 
         inputQueue_1 = new LinkedList<>();
