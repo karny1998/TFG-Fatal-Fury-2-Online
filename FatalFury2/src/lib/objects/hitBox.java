@@ -2,21 +2,22 @@ package lib.objects;
 
 import java.awt.*;
 
+enum box_type{HITBOX, HURTBOX, COVERBOX}
+
 public class hitBox {
     // Coordenadas dentro del sprite (suponiendo la esquina
     // del sprite como 0,0)
     private int x, y;
     // Ancho y alto de la caja
     private int width, height;
-    // Si es hitbox o hurtbox
-    private Boolean hitbox;
-
+    // Si es hitbox, hurtbox o coverbox
+    private box_type type = box_type.HURTBOX;
     public hitBox(){}
 
-    public hitBox(int originX, int originY, int width, int height, Boolean hitbox) {
+    public hitBox(int originX, int originY, int width, int height, box_type type) {
         this.x = originX;               this.y = originY;
         this.width = width;             this.height = height;
-        this.hitbox = hitbox;
+        this.type = type;
     }
 
     public void updateHitBox(int newX, int newY, int newWidth, int newHeight) {
@@ -35,9 +36,13 @@ public class hitBox {
     }
 
     public void drawHitBox(Graphics g) {
-        if (this.hitbox) {
+        if (this.type == box_type.HITBOX) {
             g.setColor(new Color(1,0,0, (float) 0.5));
-        } else {
+        }
+        else if (this.type == box_type.COVERBOX){
+            g.setColor(new Color(0,1,0, (float) 0.5));
+        }
+        else {
             g.setColor(new Color(0,0,1, (float) 0.5));
         }
         g.fillRect(this.x, this.y, this.width, this.height);
@@ -45,9 +50,11 @@ public class hitBox {
         g.drawString(""+x+" "+ y, x, y);
     }
 
-    public Boolean isHitbox() { return hitbox; }
+    public Boolean isHitbox() { return type == box_type.HITBOX; }
 
-    public Boolean isHurtbox() { return !hitbox; }
+    public Boolean isHurtbox() { return type == box_type.HURTBOX; }
+
+    public Boolean isCoverbox() { return type == box_type.COVERBOX; }
 
     public int getWidth() { return width; }
 
@@ -67,12 +74,12 @@ public class hitBox {
         this.height = height;
     }
 
-    public Boolean getHitbox() {
-        return hitbox;
+    public box_type getType() {
+        return type;
     }
 
-    public void setHitbox(Boolean hitbox) {
-        this.hitbox = hitbox;
+    public void setType(box_type type) {
+        this.type = type;
     }
 
     public int getHeight() { return height; }

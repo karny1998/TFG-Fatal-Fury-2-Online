@@ -154,6 +154,15 @@ public class movement {
         }
     }
 
+    public hitBox getCoverbox(){
+        if(distance > distChange || subMovement == null) {
+            return anim.getCoverbox();
+        }
+        else {
+            return subMovement.getAnim().getCoverbox();
+        }
+    }
+
     public animation getThrowable() {
         return throwable;
     }

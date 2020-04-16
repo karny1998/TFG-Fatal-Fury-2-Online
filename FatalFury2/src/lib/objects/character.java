@@ -155,6 +155,11 @@ public class character {
         this.state = Movement.STANDING;
     }
 
+    boolean isCrouched(){
+        return (state == Movement.CROUCH || state == Movement.CROUCH_2
+                || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING);
+    }
+
     //Getters y setters
     public Playable_Character getCharac() {
         return charac;
@@ -235,7 +240,7 @@ public class character {
         if(orientation == -1){
             auxX = x - aux.getX() - aux.getWidth();
         }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), true);
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), box_type.HITBOX);
     }
 
     public hitBox getHurtbox(){
@@ -244,7 +249,16 @@ public class character {
         if(orientation == -1){
             auxX = x - aux.getX() - aux.getWidth();
         }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), false);
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.HURTBOX);
+    }
+
+    public hitBox getCoverbox(){
+        hitBox aux = movements.get(state).getCoverbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.COVERBOX);
     }
 
     public boolean endedMovement(){

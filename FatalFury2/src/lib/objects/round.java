@@ -136,6 +136,123 @@ public class round {
         paused2 = false;
     }
 
+    void collidesManagement(hitBox pHurt, hitBox eHurt){
+        Movement player_act_state = player.getPlayer().getState();
+        Movement enemy_act_state = enemy.getPlayer().getState();
+        hitBox pHit = player.getPlayer().getHitbox();
+        hitBox eHit = enemy.getPlayer().getHitbox();
+        pHurt = player.getPlayer().getHurtbox();
+        eHurt = enemy.getPlayer().getHurtbox();
+        hitBox pCover = player.getPlayer().getCoverbox();
+        hitBox eCover = enemy.getPlayer().getCoverbox();
+
+        Movement playerState = player.getPlayer().getState(),
+                enemyState = enemy.getPlayer().getState();
+
+        Boolean hitsCollides = pHit.collides(eHit);
+        Boolean playerHits = eHurt.collides(pHit),
+                enemyHits = pHurt.collides(eHit),
+                playerCovers = pCover.collides(eHit),
+                enemyCovers = eCover.collides(pHit);
+        Boolean pStateChanged = player_old_state != player_act_state,
+                eStateChanged = enemy_old_state != enemy_act_state;
+
+        if(pStateChanged){
+            player_old_state = player_act_state;
+        }
+        if(eStateChanged){
+            enemy_old_state = enemy_act_state;
+        }
+
+        if(!hitsCollides && !playerHits && !enemyHits){
+            // TENER CUIDADO CON LO DEL STATECHANGED
+            if(playerCovers && pStateChanged){
+                // KNOCKBACK CUBIERTO
+                player_old_state = player_act_state;
+            }
+            if(enemyCovers && eStateChanged){
+                // KNOCKBACK CUBIERTO
+                enemy_old_state = enemy_act_state;
+            }
+            return;
+        }
+
+        // EN CASO DE DOBLE AGARRE HAY QUE ELEGIR UN GANADOR
+        // Control de daño provocado por el jugador 1
+        if((playerHits || hitsCollides) && pStateChanged){
+            int dmg = player.getPlayer().getDamage();
+            if(enemyCovers && playerState != Movement.THROW){
+                enemy.getPlayer().applyDamage((int) (dmg*0.5));
+                scorePlayer.addHit((int) (dmg*10*0.5));
+            }
+            else{
+                enemy.getPlayer().applyDamage(dmg);
+                scorePlayer.addHit(dmg*10);
+            }
+            if(playerState == Movement.THROW){
+                enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
+            }
+            else if(!enemy.getPlayer().isCrouched()){
+                if(dmg > 10) {
+                    enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
+                }
+                else{
+                    enemy.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
+                }
+            }
+            else{
+                enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
+            }
+        }
+        // Control de daño provocado por el jugador 2
+        if((enemyHits || hitsCollides) && eStateChanged){
+            int dmg = enemy.getPlayer().getDamage();
+            if(playerCovers && enemyState != Movement.THROW){
+                player.getPlayer().applyDamage((int) (dmg*0.5));
+                scoreEnemy.addHit((int) (dmg*10*0.5));
+            }
+            else{
+                player.getPlayer().applyDamage(dmg);
+                scoreEnemy.addHit(dmg*10);
+            }
+            if(enemyState == Movement.THROW){
+                player.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
+            }
+            else if(!player.getPlayer().isCrouched()){
+                if(dmg > 10) {
+                    player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
+                }
+                else{
+                    player.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
+                }
+            }
+            else{
+                player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
+            }
+        }
+    }
+
+    void fightManagement2(hitBox pHurt, hitBox eHurt){
+        collidesManagement(pHurt, eHurt);
+
+        // EL 400 ES EL ANCHO DE LA IMAGEN
+        // Si se sobrepasan
+        if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
+                && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(1);
+            player.getPlayer().setX(player.getPlayer().getX()-400);
+            enemy.getPlayer().setOrientation(-1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()+400);
+        }
+        else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
+                && pHurt.getX() < eHurt.getX() && player.getPlayer().endedMovement()){
+            player.getPlayer().setOrientation(-1);
+            player.getPlayer().setX(player.getPlayer().getX()+400);
+            enemy.getPlayer().setOrientation(1);
+            enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
+        }
+    }
+
     void fightManagement(hitBox pHurt, hitBox eHurt){
         // Calculo de daños y colisiones
         Movement player_act_state = player.getPlayer().getState();
@@ -151,6 +268,17 @@ public class round {
                 if(player.getPlayer().getState() == Movement.THROW){
                     enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
                 }
+                else if(!enemy.getPlayer().isCrouched()){
+                    if(player.getPlayer().getDamage() > 10) {
+                        enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
+                    }
+                    else{
+                        enemy.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
+                    }
+                }
+                else{
+                    enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
+                }
             }
             if(player_old_state != player_act_state){
                 player_old_state = player_act_state;
@@ -160,6 +288,17 @@ public class round {
                 scoreEnemy.addHit(enemy.getPlayer().getDamage()*10);
                 if(enemy.getPlayer().getState() == Movement.THROW){
                     player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
+                }
+                else if(!player.getPlayer().isCrouched()){
+                    if(enemy.getPlayer().getDamage() > 10) {
+                        player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, pHurt, eHurt);
+                    }
+                    else{
+                        player.getPlayer().setState(Movement.SOFT_KNOCKBACK, pHurt, eHurt);
+                    }
+                }
+                else{
+                    player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
                 }
             }
             if(enemy_old_state != enemy_act_state){
@@ -190,7 +329,7 @@ public class round {
         hitBox pHurt = player.getPlayer().getHurtbox();
         hitBox eHurt = enemy.getPlayer().getHurtbox();
 
-        fightManagement(pHurt,eHurt);
+        fightManagement2(pHurt,eHurt);
 
         // Obtención de los frames a dibujar del jugador
         screenObject ply;
