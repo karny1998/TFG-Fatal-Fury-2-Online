@@ -129,6 +129,7 @@ public class game_controller {
                     user_controller user = new user_controller(Playable_Character.TERRY);
                     enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
                     enemy.setRival(user.getPlayer());
+                    user.setRival(enemy.getPlayer());
 
                     fight = new fight_controller(user,enemy,scene);
                     fight.setVsIa(true);
@@ -236,6 +237,8 @@ public class game_controller {
                 fight.player.player.getHurtbox().drawHitBox(g);
                 fight.enemy.player.getHitbox().drawHitBox(g);
                 fight.enemy.player.getHurtbox().drawHitBox(g);
+                fight.player.player.getCoverbox().drawHitBox(g);
+                fight.enemy.player.getCoverbox().drawHitBox(g);
             }
             fight.drawHpBarPlayer(g);
             fight.drawHpBarEnemy(g);

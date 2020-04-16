@@ -353,6 +353,7 @@ public class fight_controller implements roundListener {
                             scene.setCurrentTime(Scenario_time.NIGHT);
                         }
                         enemy.setRival(player.getPlayer());
+                        player.setRival(enemy.getPlayer());
                         showIntro();
                     }
                     else {
@@ -375,6 +376,7 @@ public class fight_controller implements roundListener {
                         scene.setCurrentTime(Scenario_time.NIGHT);
                     }
                     enemy.setRival(player.getPlayer());
+                    player.setRival(enemy.getPlayer());
                     showIntro();
                 }
                 else {

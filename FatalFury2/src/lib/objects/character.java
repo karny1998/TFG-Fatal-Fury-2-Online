@@ -7,8 +7,7 @@ import lib.Enums.Playable_Character;
 import lib.characters.load_character;
 import lib.sound.Sound;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class character {
     Playable_Character charac;
@@ -50,7 +49,7 @@ public class character {
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
-    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
+    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt, boolean enemyAttacking){
 
         if(mov.contains("DE") && orientation == 1){
             mov = mov.replace("DE", "IZ");
@@ -98,9 +97,18 @@ public class character {
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
-            if(state != Movement.STANDING){movements.get(state).getAnim().reset();}
+            if(state != Movement.STANDING){
+                movements.get(state).getAnim().reset();
+            }
             state = combos.get(mov);
-            if(state != Movement.STANDING){movements.get(state).start(dis);}
+            if(state != Movement.STANDING){
+                if(state == Movement.WALKING && enemyAttacking){
+                    movements.get(state).start(movements.get(state).getDistChange());
+                }
+                else{
+                    movements.get(state).start(dis);
+                }
+            }
             stateChanged = true;
         }
         // Frame a mostrar
@@ -158,6 +166,14 @@ public class character {
     boolean isCrouched(){
         return (state == Movement.CROUCH || state == Movement.CROUCH_2
                 || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING);
+    }
+
+    boolean isAttacking(){
+        Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
+                Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
+                Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK};
+        List<Movement> attacks = Arrays.asList(array);
+        return attacks.contains(state);
     }
 
     //Getters y setters

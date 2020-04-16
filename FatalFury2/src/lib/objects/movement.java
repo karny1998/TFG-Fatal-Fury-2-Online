@@ -178,4 +178,20 @@ public class movement {
     public void setSubMovement(movement subMovement) {
         this.subMovement = subMovement;
     }
+
+    public int getDistChange() {
+        return distChange;
+    }
+
+    public void setDistChange(int distChange) {
+        this.distChange = distChange;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
 }

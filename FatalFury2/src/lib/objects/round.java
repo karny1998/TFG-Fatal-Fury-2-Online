@@ -193,6 +193,8 @@ public class round {
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
             else if(!enemy.getPlayer().isCrouched()){
+                // JUMPING KNOCKBACK
+                enemy.getPlayer().setY(320);
                 if(dmg > 10) {
                     enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
                 }
@@ -201,6 +203,8 @@ public class round {
                 }
             }
             else{
+                // JUMPING KNOCKBACK
+                enemy.getPlayer().setY(320);
                 enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
             }
         }
@@ -219,6 +223,8 @@ public class round {
                 player.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
             else if(!player.getPlayer().isCrouched()){
+                // JUMPING KNOCKBACK
+                player.getPlayer().setY(320);
                 if(dmg > 10) {
                     player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
                 }
@@ -227,6 +233,8 @@ public class round {
                 }
             }
             else{
+                // JUMPING KNOCKBACK
+                player.getPlayer().setY(320);
                 player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
             }
         }
@@ -253,7 +261,7 @@ public class round {
         }
     }
 
-    void fightManagement(hitBox pHurt, hitBox eHurt){
+    /*void fightManagement(hitBox pHurt, hitBox eHurt){
         // Calculo de daños y colisiones
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
@@ -322,7 +330,7 @@ public class round {
             enemy.getPlayer().setOrientation(1);
             enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
         }
-    }
+    }*/
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {

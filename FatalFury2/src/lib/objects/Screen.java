@@ -76,6 +76,8 @@ public class Screen extends JPanel {
                             Item_Type.INDICATOR1, Item_Type.INDICATOR2,
                             Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4 };
         Graphics2D g2d = (Graphics2D) g;
+        Dimension d = this.getSize();
+        g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
             if(img != null) {
@@ -83,11 +85,6 @@ public class Screen extends JPanel {
             }
         }
         game.writeDirecly(g2d);
-
-        /*game.getFight().getPlayerControler().getPlayer().getHitbox().drawHitBox(g2d);
-        game.getFight().getEnemyControler().getPlayer().getHitbox().drawHitBox(g2d);
-        game.getFight().getPlayerControler().getPlayer().getHurtbox().drawHitBox(g2d);
-        game.getFight().getEnemyControler().getPlayer().getHurtbox().drawHitBox(g2d);*/
     }
 
     @Override

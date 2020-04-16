@@ -1,4 +1,4 @@
-15
+16
 standing
 STANDING
 
@@ -681,6 +681,30 @@ false
 500
 125
 -75
+0
+-1
+-1
+false
+blocking
+STANDING_BLOCK
+IZ
+Defeat
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+1
+150
+160
+500
+500
+200
+0
 0
 -1
 -1
