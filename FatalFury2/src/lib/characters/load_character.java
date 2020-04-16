@@ -1,9 +1,12 @@
-package lib.objects;
+package lib.characters;
 
 import lib.Enums.Animation_type;
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
+import lib.objects.animation;
+import lib.objects.movement;
+import lib.objects.screenObject;
 import lib.sound.Sound;
 
 import javax.swing.*;

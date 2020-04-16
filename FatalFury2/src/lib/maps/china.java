@@ -1,14 +1,15 @@
-package lib.objects;
+package lib.maps;
 
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Scenario_time;
-import lib.Enums.Scenario_type;
+import lib.objects.animation;
+import lib.objects.screenObject;
 
 import javax.swing.*;
 
-public class australia {
-    private static String path = "assets/sprites/scenarios/australia/";
+public class china {
+    private static String path = "assets/sprites/scenarios/china/";
 
     // Generar animación del fondo
     public static animation generateAnimation1(Scenario_time time){
@@ -18,22 +19,22 @@ public class australia {
         String frame1, frame2;
         switch (time) {
             case DAWN:
-                frame1 = "sunset2_1";
-                frame2 = "sunset2_2";
+                frame1 = "dawn";
+                frame2 = "dawn";
                 break;
             case NIGHT:
-                frame1 = "sunset3_1";
-                frame2 = "sunset3_2";
+                frame1 = "night";
+                frame2 = "night";
                 break;
             case SUNSET:
-                frame1 = "sunset1_1";
-                frame2 = "sunset1_2";
+                frame1 = "sunset";
+                frame2 = "sunset";
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + time);
         }
-        s1 = new screenObject(0, 0,  1571, 368, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_1);
-        s2 = new screenObject(0, 0,  1571, 368, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_1);
+        s1 = new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_1);
+        s2 = new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_1);
         a1.addFrame(s1,250.0,0,0);
         a1.addFrame(s2,250.0,0,0);
         a1.setSound(null);
@@ -49,22 +50,22 @@ public class australia {
         String frame1, frame2;
         switch (time) {
             case DAWN:
-                frame1 = "back1_1";
-                frame2 = "back1_2";
+                frame1 = "scenario3";
+                frame2 = "scenario3";
                 break;
             case NIGHT:
-                frame1 = "back3_1";
-                frame2 = "back3_2";
+                frame1 = "scenario2_1";
+                frame2 = "scenario2_2";
                 break;
             case SUNSET:
-                frame1 = "back2_1";
-                frame2 = "back2_2";
+                frame1 = "scenario1_1";
+                frame2 = "scenario1_2";
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + time);
         }
-        s1 = new screenObject(0, 0,  1571, 640, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_2);
-        s2 = new screenObject(0, 0,  1571, 640, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_2);
+        s1 = new screenObject(0, 0,  1571, 663, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_2);
+        s2 = new screenObject(0, 0,  1571, 663, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_2);
         a2.addFrame(s1,250.0,0,0);
         a2.addFrame(s2,250.0,0,0);
         a2.setSound(null);

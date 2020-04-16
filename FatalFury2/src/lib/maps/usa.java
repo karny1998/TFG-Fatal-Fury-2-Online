@@ -1,9 +1,10 @@
-package lib.objects;
+package lib.maps;
 
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Scenario_time;
-import lib.Enums.Scenario_type;
+import lib.objects.animation;
+import lib.objects.screenObject;
 
 import javax.swing.*;
 

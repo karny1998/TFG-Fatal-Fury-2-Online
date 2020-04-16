@@ -4,6 +4,7 @@ import lib.Enums.Animation_type;
 import lib.Enums.Audio_Type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
+import lib.characters.load_character;
 import lib.sound.Sound;
 
 import java.util.HashMap;

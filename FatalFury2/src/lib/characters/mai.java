@@ -1,4 +1,4 @@
-package lib.objects;
+package lib.characters;
 
 public class mai {
 

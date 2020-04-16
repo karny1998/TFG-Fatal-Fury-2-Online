@@ -1,7 +1,9 @@
-package lib.objects;
+package lib.maps;
 
 import lib.Enums.Scenario_time;
 import lib.Enums.Scenario_type;
+import lib.objects.animation;
+import lib.objects.screenObject;
 
 // Clase que representa un escenario y su decoración
 public class scenary {

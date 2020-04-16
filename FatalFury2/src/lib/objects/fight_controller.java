@@ -3,7 +3,7 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Round_Results;
 import lib.Enums.Scenario_time;
-import lib.Enums.Scenario_type;
+import lib.maps.scenary;
 
 import javax.swing.*;
 import java.awt.*;

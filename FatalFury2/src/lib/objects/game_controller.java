@@ -3,6 +3,7 @@ package lib.objects;
 import javafx.util.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
+import lib.maps.scenary;
 
 import java.awt.*;
 import java.util.Map;
