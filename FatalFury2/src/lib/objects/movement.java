@@ -39,7 +39,7 @@ public class movement {
         else{
             subMovement.start(999);
         }
-        if(type == Movement.THROW){
+        if(type == Movement.RANGED_ATTACK){
             //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
             //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
             //EL COMIENZO DE LA ANIM Y LA SUYA

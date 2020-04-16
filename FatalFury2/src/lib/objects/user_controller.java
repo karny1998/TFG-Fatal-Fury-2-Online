@@ -18,7 +18,6 @@ public class user_controller extends character_controller{
         this.y = this.player.getY();
         String mov = "";
         if(!standBy){mov = controlListener.getMove(1);}
-        System.out.println(mov);
         return player.getFrame(mov, pHurt, eHurt);
     }
 

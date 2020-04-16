@@ -221,7 +221,7 @@ public class controlListener implements KeyListener {
                 mov += movimientos[i];
             }
         }
-        System.out.println(mov);
+        //System.out.println(mov);
         return mov;
 
     }

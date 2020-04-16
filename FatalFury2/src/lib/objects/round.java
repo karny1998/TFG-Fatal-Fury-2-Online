@@ -136,19 +136,21 @@ public class round {
         paused2 = false;
     }
 
-    // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
-    public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+    void fightManagement(hitBox pHurt, hitBox eHurt){
         // Calculo de daños y colisiones
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
         hitBox pHit = player.getPlayer().getHitbox();
         hitBox eHit = enemy.getPlayer().getHitbox();
-        hitBox pHurt = player.getPlayer().getHurtbox();
-        hitBox eHurt = enemy.getPlayer().getHurtbox();
+        pHurt = player.getPlayer().getHurtbox();
+        eHurt = enemy.getPlayer().getHurtbox();
         if(!eHit.collides(pHit)){
             if(pHit.collides(eHurt) && player_old_state != player_act_state){
                 enemy.getPlayer().applyDamage(player.getPlayer().getDamage());
                 scorePlayer.addHit(player.getPlayer().getDamage()*10);
+                if(player.getPlayer().getState() == Movement.THROW){
+                    enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
+                }
             }
             if(player_old_state != player_act_state){
                 player_old_state = player_act_state;
@@ -156,6 +158,9 @@ public class round {
             if(eHit.collides(pHurt) && enemy_old_state != enemy_act_state){
                 player.getPlayer().applyDamage(enemy.getPlayer().getDamage());
                 scoreEnemy.addHit(enemy.getPlayer().getDamage()*10);
+                if(enemy.getPlayer().getState() == Movement.THROW){
+                    player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
+                }
             }
             if(enemy_old_state != enemy_act_state){
                 enemy_old_state = enemy_act_state;
@@ -165,7 +170,7 @@ public class round {
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan
         if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
-            && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
+                && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
             player.getPlayer().setOrientation(1);
             player.getPlayer().setX(player.getPlayer().getX()-400);
             enemy.getPlayer().setOrientation(-1);
@@ -178,24 +183,22 @@ public class round {
             enemy.getPlayer().setOrientation(1);
             enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
         }
+    }
+
+    // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
+    public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        hitBox pHurt = player.getPlayer().getHurtbox();
+        hitBox eHurt = enemy.getPlayer().getHurtbox();
+
+        fightManagement(pHurt,eHurt);
 
         // Obtención de los frames a dibujar del jugador
         screenObject ply;
-        if(player.getPlayer().getLife() > 0) {
-            ply = player.getAnimation(pHurt,eHurt);
-            screenObjects.put(Item_Type.PLAYER, ply);
-        }
-        else{
-            screenObjects.remove(Item_Type.PLAYER);
-        }
+        ply = player.getAnimation(pHurt,eHurt);
+        screenObjects.put(Item_Type.PLAYER, ply);
         // Obtención de los frames a dibujar del enemigo
-        if(enemy.getPlayer().getLife() > 0) {
-            ply = enemy.getAnimation(eHurt,pHurt);
-            screenObjects.put(Item_Type.ENEMY, ply);
-        }
-        else{
-            screenObjects.remove(Item_Type.ENEMY);
-        }
+        ply = enemy.getAnimation(eHurt,pHurt);
+        screenObjects.put(Item_Type.ENEMY, ply);
     }
 
     // Getters y setters

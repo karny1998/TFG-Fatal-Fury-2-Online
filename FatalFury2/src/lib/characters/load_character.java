@@ -80,7 +80,7 @@ public class load_character {
                     ++j;
                 }
 
-                 movement mov = new movement(movId, anim);
+                movement mov = new movement(movId, anim);
                 mov.setDamage(dmg);
                 if(combos.containsKey(combo)){
                     movs.get(combos.get(combo)).setSubMovement(mov);

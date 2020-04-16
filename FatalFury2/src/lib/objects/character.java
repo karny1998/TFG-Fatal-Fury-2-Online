@@ -52,11 +52,11 @@ public class character {
     // collides indica si colisiona o no con el otro personaje
     public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
 
-        if(mov.equals("RIGHT") && orientation == 1){
-            mov = "LEFT";
+        if(mov.contains("DE") && orientation == 1){
+            mov = mov.replace("DE", "IZ");
         }
-        else if(mov.equals("LEFT") && orientation == 1){
-            mov = "RIGHT";
+        else if(mov.contains("IZ") && orientation == 1){
+            mov =  mov.replace("IZ", "DE");
         }
 
         boolean collides = pHurt.collides(eHurt);
@@ -86,6 +86,14 @@ public class character {
             movements.get(state).start(dis);
             stateChanged = true;
         }
+        else if(!combos.containsKey(mov)){
+            if (!movements.get(state).hasEnd() || movements.get(state).hasEnd() && movements.get(state).ended()){
+                movements.get(state).getAnim().reset();
+                state = Movement.STANDING;
+                movements.get(state).start(dis);
+                stateChanged = true;
+            }
+        }
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
@@ -105,7 +113,10 @@ public class character {
         }
 
         // Gestión de colisiones
-        if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+        if(state == Movement.THROWN_OUT){
+            x = s.getX();
+        }
+        else if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
                     || orientation == -1 && pHurt.getX() > eHurt.getX()){
@@ -205,8 +216,17 @@ public class character {
         return state;
     }
 
-    public void setState(Movement state) {
+    public void setState(Movement state, hitBox pHurt, hitBox eHurt) {
+        this.movements.get(state).reset();
         this.state = state;
+        int dis = 0;
+        if (pHurt.getX() > eHurt.getX()){
+            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+        }
+        else if(pHurt.getX() < eHurt.getX()){
+            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+        this.movements.get(state).start(dis);
     }
 
     public hitBox getHitbox(){
@@ -241,5 +261,13 @@ public class character {
 
     public  int getDamage(){
         return movements.get(state).getDamage();
+    }
+
+    public movement getMovement(Movement m){
+        return movements.get(m);
+    }
+
+    public movement getMovement(String c){
+        return movements.get(combos.get(c));
     }
 }
