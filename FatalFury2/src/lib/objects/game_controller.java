@@ -14,7 +14,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
 
     // Controlador de una pelea
     private fight_controller fight;
@@ -63,6 +63,17 @@ public class game_controller {
 
     // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
+
+        if(debug && state != GameState.FIGHT){
+            user = new user_controller(Playable_Character.TERRY);
+            enemy = new enemy_controller(Playable_Character.TERRY);
+            enemy.setRival(user.getPlayer());
+            user.setRival(enemy.getPlayer());
+            state = GameState.FIGHT;
+            scene = new scenary(Scenario_type.USA);
+            fight = new fight_controller(user,enemy,scene);
+        }
+
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
         if(state == GameState.NAVIGATION){

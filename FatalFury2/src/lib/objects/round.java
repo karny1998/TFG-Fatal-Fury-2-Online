@@ -193,6 +193,7 @@ public class round {
 
         // EN CASO DE DOBLE AGARRE HAY QUE ELEGIR UN GANADOR
         // Control de daño provocado por el jugador 1
+
         if((playerHits || hitsCollides) && pStateChanged){
             int dmg = player.getPlayer().getDamage();
             if(enemyCovers && playerState != Movement.THROW){
@@ -215,9 +216,10 @@ public class round {
                 }
             }
             else if(!enemy.getPlayer().isCrouched()){
-                // JUMPING KNOCKBACK
-                //enemy.getPlayer().setY(320);
-                if(dmg > 10) {
+                if(enemy.getPlayer().isJumping()){
+                    enemy.getPlayer().setState(Movement.JUMP_KNOCKBACK, pHurt, eHurt);
+                }
+                else if(dmg > 10) {
                     enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
                 }
                 else{
@@ -225,8 +227,6 @@ public class round {
                 }
             }
             else{
-                // JUMPING KNOCKBACK
-                //enemy.getPlayer().setY(320);
                 enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
             }
         }
@@ -253,9 +253,10 @@ public class round {
                 }
             }
             else if(!player.getPlayer().isCrouched()){
-                // JUMPING KNOCKBACK
-                //player.getPlayer().setY(320);
-                if(dmg > 10) {
+                if(player.getPlayer().isJumping()){
+                    player.getPlayer().setState(Movement.JUMP_KNOCKBACK, pHurt, eHurt);
+                }
+                else if(dmg > 10) {
                     player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, pHurt, eHurt);
                 }
                 else{
@@ -263,8 +264,6 @@ public class round {
                 }
             }
             else{
-                // JUMPING KNOCKBACK
-                //player.getPlayer().setY(320);
                 player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
             }
         }

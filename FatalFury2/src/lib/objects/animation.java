@@ -108,7 +108,6 @@ public class animation {
             desiredY = y + totalIncrementY;
             desiredAssigned = true;
         }
-
         // Si no se está reprodciendo el sonido, se reproducre
         if(sound != null && !playing && hasEnd){
             sound.playCharacterVoice(soundType);
@@ -118,8 +117,10 @@ public class animation {
         // Si ha terminado, devuelve el último frame
         if(ended || type == Animation_type.HOLDABLE && state == frames.size()-1){
             result = frames.get(frames.size()-1).cloneSO();
-            result.setX(x+coords.get(frames.size()-1).getKey());
-            result.setY(desiredY);
+            //result.setX(x+coords.get(frames.size()-1).getKey());
+            //result.setY(desiredY);
+            result.setX(x);
+            result.setY(y);
             result.setWidth(result.getWidth()*orientation);
             ended = true;
             return result;
@@ -141,15 +142,21 @@ public class animation {
             || cX != 0 && cY != 0 && incrementOnX != 0 && incrementOnY != 0) {
             auxTime = current;
         }
-        if(cY > 0 && yCompleted + incrementOnY > cY
-            || cY < 0 && yCompleted + incrementOnY < cY){
+
+        if(wY != -1 &&  (wY > 0 && y + incrementOnY > wY
+                || wY < 0 && y + incrementOnY < wY)){
+            incrementOnY = wY - y;
+            state = frames.size()-1;
+            yAux = true;
+            yCompleted = 0;
+        }
+        else if(cY > 0 && yCompleted + incrementOnY > cY
+                || cY < 0 && yCompleted + incrementOnY < cY){
             incrementOnY = cY - yCompleted;
-            if(state == 5){
-                yCompleted = 0;
-            }
             yCompleted = 0;
             yAux = true;
         }
+
         // Si es infinita, ha terminado y el sentido era el inverso, cambia el sentido
         if(!hasEnd && increment < 0 && state == 0 && elapsedTime >= times.get(state)){
             increment = 1;
@@ -161,10 +168,7 @@ public class animation {
         }
         // Si se ha alcanzado el último frame de de la animación
         else if(state == frames.size()-1 &&
-                (elapsedTime >= times.get(state)|| yAux ||
-                wX != -1 && wY != -1 && x == wX && y == wY
-                || wX == -1 && wY != -1 && y == wY
-                 || wX != -1 && wY == -1 && x == wX)){
+                (elapsedTime >= times.get(state) || yAux)){
             // Si tiene final devuelve el último frame
             if(hasEnd){
                 ended = true;
@@ -177,14 +181,16 @@ public class animation {
             }
             result = frames.get(state).cloneSO();
             result.setX(x + incrementOnX);
-            result.setY(desiredY);
+            if(wY == -1) {
+                result.setY(desiredY);
+            }
+            else{
+                result.setY(wY);
+            }
             yAux = false;
         }
         // Si ha pasado el tiempo requerido entre frame y frame
-        else if(elapsedTime >= times.get(state) ||
-                wX != -1 && wY != -1 && x == wX && y == wY
-                || wX == -1 && wY != -1 && y == wY
-                || wX != -1 && wY == -1 && x == wX){
+        else if(elapsedTime >= times.get(state)){
 
             if(yCompleted != 0 && yCompleted+incrementOnY != coords.get(state).getValue()){
                 incrementOnY = coords.get(state).getValue() - yCompleted;

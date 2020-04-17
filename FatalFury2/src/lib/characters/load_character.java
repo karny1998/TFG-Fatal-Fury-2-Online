@@ -83,8 +83,8 @@ public class load_character {
                     iyF = (int) (Integer.valueOf(b.readLine()) );
                     wxF = Integer.valueOf(b.readLine());
                     wyF = Integer.valueOf(b.readLine());
-                    if(wxF != -1){wxF *= multiplier;}
-                    if(wyF != -1){wyF *= multiplier;}
+                    //if(wxF != -1){wxF *= multiplier;}
+                    //if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(b.readLine());
                     s = new screenObject(xF, yF,  wF, hF, new ImageIcon(path + fold + "/" + j + ".png").getImage(), Item_Type.PLAYER);
                     anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);

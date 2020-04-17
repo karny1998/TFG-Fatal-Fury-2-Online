@@ -72,7 +72,13 @@ public class character {
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
         boolean stateChanged = false;
-        if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
+        if(mov.contains("+") && combos.containsKey(mov)){
+            movements.get(state).getAnim().reset();
+            state = combos.get(mov);
+            movements.get(state).start(dis);
+            stateChanged = true;
+        }
+        else if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
                 && combos.get(mov) != state){
             Movement aux = Movement.NONE;
             switch (state){
@@ -124,7 +130,7 @@ public class character {
         if(state == Movement.THROWN_OUT){
             x = s.getX();
         }
-        else if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+        else if(collides /*&& state == Movement.STANDING*/ && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
                     || orientation == -1 && pHurt.getX() > eHurt.getX()){
@@ -171,9 +177,17 @@ public class character {
     boolean isAttacking(){
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
-                Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK};
+                Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK,
+                Movement.JUMP_PUNCH_DOWN};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
+    }
+
+    boolean isJumping(){
+        Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
+                            Movement.JUMP_PUNCH_DOWN};
+        List<Movement> jumps = Arrays.asList(array);
+        return jumps.contains(state);
     }
 
     //Getters y setters

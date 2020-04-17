@@ -10,7 +10,7 @@ public class enemy_controller extends character_controller{
     }
 
     public enemy_controller(Playable_Character ch, character rival){
-        super(ch,750,160, 1);
+        super(ch,750,290, 1);
         this.rival = rival;
     }
 
