@@ -14,7 +14,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = false;
+    boolean debug = true;
 
     // Controlador de una pelea
     private fight_controller fight;
@@ -121,6 +121,7 @@ public class game_controller {
                 user = new user_controller(charMenu.getP1_ch());
                 enemy = new enemy_controller(charMenu.getP2_ch());
                 enemy.setRival(user.getPlayer());
+                user.setRival(enemy.getPlayer());
                 actualMenu = mapSelection;
                 actualMenu.updateTime();
                 state = GameState.MAP;
