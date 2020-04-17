@@ -48,5 +48,6 @@ cara
 0
 caracu
 0
+
 caraculo
-0
+37100
