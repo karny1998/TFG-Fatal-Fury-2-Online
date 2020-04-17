@@ -121,11 +121,12 @@ public class game_controller {
                 user = new user_controller(charMenu.getP1_ch());
                 enemy = new enemy_controller(charMenu.getP2_ch());
                 enemy.setRival(user.getPlayer());
+                user.setRival(enemy.getPlayer());
                 actualMenu = mapSelection;
                 actualMenu.updateTime();
                 state = GameState.MAP;
             }
-        }else if (state == GameState.MAP){
+        } else if (state == GameState.MAP){
 
             screenObject s = actualMenu.getFrame();
             screenObjects.remove(Item_Type.P1_SELECT);

@@ -23,7 +23,7 @@ public class character_menu {
     int pos_1, pos_2;
     int incrementos[] = {0, 173, 173+174};
     String mugs[] = { "andy/andy_mugshot.png", "mai/mai_mugshot.png", "terry/terry_mugshot.png" };
-    String names[] = { "" };
+    String names[] = { "andy/andy_name.png", "mai/mai_name.png", "terry/terry_name.png" };
     int x1 = 400, x2 = 400;
     int y1 = 426, y2 = 441;
     int w = 135, h = 134;
@@ -64,13 +64,16 @@ public class character_menu {
                 break;
         }
     }
-//TODO tiempos input
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long currentTime = System.currentTimeMillis();
         screenObjects.put(Item_Type.MENU, fondo);
         screenObjects.put(Item_Type.P1_SELECT, p1);
         screenObjects.put(Item_Type.P2_SELECT, p2);
+        screenObjects.put(Item_Type.P1_MUG, p1_mug);
+        screenObjects.put(Item_Type.P2_MUG, p2_mug);
+        screenObjects.put(Item_Type.P1_NAME, p1_name);
+        screenObjects.put(Item_Type.P2_NAME, p2_name);
         if( currentTime - referenceTime > 200){
             boolean res = gestionMenu2( screenObjects);
             referenceTime = currentTime;
@@ -81,10 +84,11 @@ public class character_menu {
     }
 
     public Boolean gestionMenu2(Map<Item_Type, screenObject> screenObjects){
-        screenObjects.put(Item_Type.MENU, fondo);
-        screenObjects.put(Item_Type.P1_SELECT, p1);
-        screenObjects.put(Item_Type.P2_SELECT, p2);
         if(actual == estados.P1_SELECT){
+
+            p1_mug =  new screenObject(0, 75,  416, 380, new ImageIcon(path  + mugs[pos_1]).getImage(), Item_Type.P1_MUG);
+            p1_name =  new screenObject(0, 400,  356, 151, new ImageIcon(path  + names[pos_1]).getImage(), Item_Type.P1_MUG);
+
             if (controlListener.getStatus(1, controlListener.IZ_INDEX) && pos_1 > 0){
                 pos_1 -- ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_off.png").getImage(), Item_Type.P1_SELECT);
@@ -109,6 +113,8 @@ public class character_menu {
             }
             return false;
         } else if(actual == estados.P2_SELECT){
+            p2_mug =  new screenObject(864, 75,  416, 380, new ImageIcon(path  + mugs[pos_2]).getImage(), Item_Type.P2_MUG);
+            p2_name =  new screenObject(924, 400,  356, 151, new ImageIcon(path  + names[pos_2]).getImage(), Item_Type.P2_MUG);
             int mando = 1;
             switch (tipo){
                 case 0:
