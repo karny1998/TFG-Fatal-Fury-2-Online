@@ -22,6 +22,8 @@ public class character_menu {
 
     int pos_1, pos_2;
     int incrementos[] = {0, 173, 173+174};
+    String mugs[] = { "andy/andy_mugshot.png", "mai/mai_mugshot.png", "terry/terry_mugshot.png" };
+    String names[] = { "" };
     int x1 = 400, x2 = 400;
     int y1 = 426, y2 = 441;
     int w = 135, h = 134;
@@ -43,6 +45,7 @@ public class character_menu {
 
     public void updateTime(){referenceTime = System.currentTimeMillis();}
 
+    private String p2_aux = "";
 
     public character_menu(int tipo_){
         tipo = tipo_;
@@ -53,12 +56,11 @@ public class character_menu {
         switch (tipo){
             case 0:
                 // VS P2
-                p2 = new screenObject(x2, -y2, w , h, new ImageIcon(path  + "p2_off.png").getImage(), Item_Type.P2_SELECT);
-
+                p2_aux = "p2_";
                 break;
             case 1:
                 // VS COM
-                p2 = new screenObject(x2, -y2, w, h, new ImageIcon(path  + "com_off.png").getImage(), Item_Type.P2_SELECT);
+                p2_aux = "com_";
                 break;
         }
     }
@@ -92,16 +94,7 @@ public class character_menu {
             } else if (controlListener.getStatus(1, controlListener.ENT_INDEX)) {
                 actual = estados.P2_SELECT;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_on.png").getImage(), Item_Type.P1_SELECT);
-                switch (tipo){
-                    case 0:
-                        // VS P2
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path  + "p2_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                    case 1:
-                        // VS COM
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w, h, new ImageIcon(path  + "com_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                }
+                p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
                 switch (pos_1){
                     case 0:
                         p1_ch = Playable_Character.ANDY;
@@ -128,40 +121,13 @@ public class character_menu {
 
             if (controlListener.getStatus(mando, controlListener.IZ_INDEX) && pos_2 > 0){
                 pos_2 -- ;
-                switch (tipo){
-                    case 0:
-                        // VS P2
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path  + "p2_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                    case 1:
-                        // VS COM
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w, h, new ImageIcon(path  + "com_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                }
+                p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.getStatus(mando, controlListener.DE_INDEX) && pos_2 < 2){
                 pos_2 ++ ;
-                switch (tipo){
-                    case 0:
-                        // VS P2
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path  + "p2_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                    case 1:
-                        // VS COM
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w, h, new ImageIcon(path  + "com_off.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                }
+                p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.getStatus(mando, controlListener.ENT_INDEX)) {
                 actual = estados.DONE;
-                switch (tipo){
-                    case 0:
-                        // VS P2
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path  + "p2_on.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                    case 1:
-                        // VS COM
-                        p2 = new screenObject(x2 + incrementos[pos_2], y2, w, h, new ImageIcon(path  + "com_on.png").getImage(), Item_Type.P2_SELECT);
-                        break;
-                }
+                p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "on.png").getImage(), Item_Type.P2_SELECT);
                 switch (pos_2){
                     case 0:
                         p2_ch = Playable_Character.ANDY;
