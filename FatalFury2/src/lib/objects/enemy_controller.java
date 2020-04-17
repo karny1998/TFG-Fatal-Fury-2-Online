@@ -19,13 +19,12 @@ public class enemy_controller extends character_controller{
     // En esta función se llamaría a la IA
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
+        String mov = "";
+        String array[] = {"A","B", "DE-A"};
+        mov = array[rand.nextInt(array.length)];
         if(false){
             this.x = this.player.getX();
             this.y = this.player.getY();
-
-            String mov = "";
-            String array[] = {"A","B", "DE-A"};
-            mov = array[rand.nextInt(array.length)];
 
             int rivalX = rival.getHurtbox().getX();
             int rivalW = rival.getHurtbox().getWidth();
@@ -40,7 +39,7 @@ public class enemy_controller extends character_controller{
             }
             return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
-        return player.getFrame("", pHurt, eHurt, rival.isAttacking());
+        return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
     }
 
     @Override

@@ -167,11 +167,25 @@ public class round {
         if(!hitsCollides && !playerHits && !enemyHits){
             // TENER CUIDADO CON LO DEL STATECHANGED
             if(playerCovers && pStateChanged){
+                int dmg = enemy.getPlayer().getDamage();
                 // KNOCKBACK CUBIERTO
+                if(dmg > 10) {
+                    player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, pHurt, eHurt);
+                }
+                else{
+                    player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, pHurt, eHurt);
+                }
                 player_old_state = player_act_state;
             }
             if(enemyCovers && eStateChanged){
+                int dmg = player.getPlayer().getDamage();
                 // KNOCKBACK CUBIERTO
+                if(dmg > 10) {
+                    enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, eHurt, pHurt);
+                }
+                else{
+                    enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, eHurt, pHurt);
+                }
                 enemy_old_state = enemy_act_state;
             }
             return;
@@ -192,9 +206,17 @@ public class round {
             if(playerState == Movement.THROW){
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
+            else if(enemyState == Movement.STANDING_BLOCK){
+                if(dmg > 10) {
+                    enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, eHurt, pHurt);
+                }
+                else{
+                    enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, eHurt, pHurt);
+                }
+            }
             else if(!enemy.getPlayer().isCrouched()){
                 // JUMPING KNOCKBACK
-                enemy.getPlayer().setY(320);
+                //enemy.getPlayer().setY(320);
                 if(dmg > 10) {
                     enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
                 }
@@ -204,7 +226,7 @@ public class round {
             }
             else{
                 // JUMPING KNOCKBACK
-                enemy.getPlayer().setY(320);
+                //enemy.getPlayer().setY(320);
                 enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
             }
         }
@@ -220,22 +242,30 @@ public class round {
                 scoreEnemy.addHit(dmg*10);
             }
             if(enemyState == Movement.THROW){
-                player.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
+                player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
+            }
+            else if(playerState == Movement.STANDING_BLOCK){
+                if(dmg > 10) {
+                    player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, pHurt, eHurt);
+                }
+                else{
+                    player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, pHurt, eHurt);
+                }
             }
             else if(!player.getPlayer().isCrouched()){
                 // JUMPING KNOCKBACK
-                player.getPlayer().setY(320);
+                //player.getPlayer().setY(320);
                 if(dmg > 10) {
-                    player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
+                    player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, pHurt, eHurt);
                 }
                 else{
-                    player.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
+                    player.getPlayer().setState(Movement.SOFT_KNOCKBACK, pHurt, eHurt);
                 }
             }
             else{
                 // JUMPING KNOCKBACK
-                player.getPlayer().setY(320);
-                player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
+                //player.getPlayer().setY(320);
+                player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
             }
         }
     }

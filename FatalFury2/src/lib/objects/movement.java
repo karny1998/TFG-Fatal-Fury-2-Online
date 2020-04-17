@@ -18,6 +18,9 @@ public class movement {
     movement subMovement = null;
 
     public movement(Movement type, animation anim) {
+        if(type == Movement.WALKING ||type == Movement.CROUCHED_WALKING){
+            distChange = -999;
+        }
         this.type = type;
         this.anim = anim;
     }
