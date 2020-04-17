@@ -99,9 +99,10 @@ public class game_controller {
                             state = GameState.PLAYERS;
                             break;
                         case GAME_IA:
-                            actualMenu = mapSelection;
                             actualMenu.updateTime();
-                            state = GameState.MAP;
+                            charMenu = new character_menu(1);
+                            charMenu.updateTime();
+                            state = GameState.PLAYERS;
                             break;
                     }
                 }
@@ -123,11 +124,16 @@ public class game_controller {
                 actualMenu = mapSelection;
                 actualMenu.updateTime();
                 state = GameState.MAP;
-
             }
-
         }else if (state == GameState.MAP){
+
             screenObject s = actualMenu.getFrame();
+            screenObjects.remove(Item_Type.P1_SELECT);
+            screenObjects.remove(Item_Type.P2_SELECT);
+            screenObjects.remove(Item_Type.P1_MUG);
+            screenObjects.remove(Item_Type.P2_MUG);
+            screenObjects.remove(Item_Type.P1_NAME);
+            screenObjects.remove(Item_Type.P2_NAME);
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
             // Si se presiona escape (hay que hacer que vuelva al menu anterior)
