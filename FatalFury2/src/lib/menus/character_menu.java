@@ -39,6 +39,11 @@ public class character_menu {
 
     Playable_Character p1_ch, p2_ch;
 
+    long referenceTime;
+
+    public void updateTime(){referenceTime = System.currentTimeMillis();}
+
+
     public character_menu(int tipo){
         tipo = tipo;
         pos_1 = 0; pos_2 = 0;
@@ -60,6 +65,19 @@ public class character_menu {
 //TODO tiempos input
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
+        long currentTime = System.currentTimeMillis();
+        screenObjects.put(Item_Type.MENU, fondo);
+        screenObjects.put(Item_Type.P1_SELECT, p1);
+        screenObjects.put(Item_Type.P2_SELECT, p2);
+        if( currentTime - referenceTime > 100){
+            gestionMenu2( screenObjects);
+            referenceTime = currentTime;
+        }
+        return false;
+
+    }
+
+    public Boolean gestionMenu2(Map<Item_Type, screenObject> screenObjects){
         screenObjects.put(Item_Type.MENU, fondo);
         screenObjects.put(Item_Type.P1_SELECT, p1);
         screenObjects.put(Item_Type.P2_SELECT, p2);
@@ -70,18 +88,21 @@ public class character_menu {
             } else if (controlListener.getStatus(1, controlListener.DE_INDEX) && pos_1 < 2){
                 pos_1 ++ ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_off.png").getImage(), Item_Type.P1_SELECT);
-            }/* else if (controlListener.getStatus(1, controlListener.ENT_INDEX)) {
+            } else if (controlListener.getStatus(1, controlListener.ENT_INDEX)) {
                 actual = estados.P2_SELECT;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_on.png").getImage(), Item_Type.P1_SELECT);
                 switch (pos_1){
                     case 0:
                         p1_ch = Playable_Character.ANDY;
+                        break;
                     case 1:
                         p1_ch = Playable_Character.MAI;
+                        break;
                     case 2:
                         p1_ch = Playable_Character.TERRY;
+                        break;
                 }
-            }*/
+            }
             return false;
         } else if(actual == estados.P2_SELECT){
             int mando = 1;
@@ -106,10 +127,13 @@ public class character_menu {
                 switch (pos_2){
                     case 0:
                         p2_ch = Playable_Character.ANDY;
+                        break;
                     case 1:
                         p2_ch = Playable_Character.MAI;
+                        break;
                     case 2:
                         p2_ch = Playable_Character.TERRY;
+                        break;
                 }
 
             }

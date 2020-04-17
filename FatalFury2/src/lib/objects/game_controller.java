@@ -95,6 +95,7 @@ public class game_controller {
                         case GAME_MULTIPLAYER:
                             actualMenu.updateTime();
                             charMenu = new character_menu(0);
+                            charMenu.updateTime();
                             state = GameState.PLAYERS;
                             break;
                         case GAME_IA:
@@ -261,6 +262,8 @@ public class game_controller {
                 fight.player.player.getHurtbox().drawHitBox(g);
                 fight.enemy.player.getHitbox().drawHitBox(g);
                 fight.enemy.player.getHurtbox().drawHitBox(g);
+                fight.player.player.getCoverbox().drawHitBox(g);
+                fight.enemy.player.getCoverbox().drawHitBox(g);
             }
             fight.drawHpBarPlayer(g);
             fight.drawHpBarEnemy(g);
