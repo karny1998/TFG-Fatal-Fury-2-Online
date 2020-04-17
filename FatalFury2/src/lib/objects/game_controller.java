@@ -126,7 +126,7 @@ public class game_controller {
                 actualMenu.updateTime();
                 state = GameState.MAP;
             }
-        }else if (state == GameState.MAP){
+        } else if (state == GameState.MAP){
 
             screenObject s = actualMenu.getFrame();
             screenObjects.remove(Item_Type.P1_SELECT);
