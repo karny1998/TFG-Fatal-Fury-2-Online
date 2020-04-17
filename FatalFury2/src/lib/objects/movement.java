@@ -39,7 +39,7 @@ public class movement {
         else{
             subMovement.start(999);
         }
-        if(type == Movement.THROW){
+        if(type == Movement.RANGED_ATTACK){
             //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
             //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
             //EL COMIENZO DE LA ANIM Y LA SUYA
@@ -154,6 +154,15 @@ public class movement {
         }
     }
 
+    public hitBox getCoverbox(){
+        if(distance > distChange || subMovement == null) {
+            return anim.getCoverbox();
+        }
+        else {
+            return subMovement.getAnim().getCoverbox();
+        }
+    }
+
     public animation getThrowable() {
         return throwable;
     }
@@ -168,5 +177,21 @@ public class movement {
 
     public void setSubMovement(movement subMovement) {
         this.subMovement = subMovement;
+    }
+
+    public int getDistChange() {
+        return distChange;
+    }
+
+    public void setDistChange(int distChange) {
+        this.distChange = distChange;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 }

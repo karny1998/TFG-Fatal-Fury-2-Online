@@ -18,7 +18,7 @@ public abstract  class character_controller {
     // Para las esperas
     boolean standBy = true;
 
-    protected character rival;
+    protected character rival = null;
 
     public character_controller(Playable_Character ch, int x, int y, int orientation){
         this.x = x; this.y = y;

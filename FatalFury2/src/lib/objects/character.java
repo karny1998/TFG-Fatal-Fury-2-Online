@@ -7,8 +7,7 @@ import lib.Enums.Playable_Character;
 import lib.characters.load_character;
 import lib.sound.Sound;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class character {
     Playable_Character charac;
@@ -50,13 +49,13 @@ public class character {
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
-    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt){
+    public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt, boolean enemyAttacking){
 
-        if(mov.equals("RIGHT") && orientation == 1){
-            mov = "LEFT";
+        if(mov.contains("DE") && orientation == 1){
+            mov = mov.replace("DE", "IZ");
         }
-        else if(mov.equals("LEFT") && orientation == 1){
-            mov = "RIGHT";
+        else if(mov.contains("IZ") && orientation == 1){
+            mov =  mov.replace("IZ", "DE");
         }
 
         boolean collides = pHurt.collides(eHurt);
@@ -86,13 +85,30 @@ public class character {
             movements.get(state).start(dis);
             stateChanged = true;
         }
+        else if(!combos.containsKey(mov)){
+            if (!movements.get(state).hasEnd() || movements.get(state).hasEnd() && movements.get(state).ended()){
+                movements.get(state).getAnim().reset();
+                state = Movement.STANDING;
+                movements.get(state).start(dis);
+                stateChanged = true;
+            }
+        }
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
-            if(state != Movement.STANDING){movements.get(state).getAnim().reset();}
+            if(state != Movement.STANDING){
+                movements.get(state).getAnim().reset();
+            }
             state = combos.get(mov);
-            if(state != Movement.STANDING){movements.get(state).start(dis);}
+            if(state != Movement.STANDING){
+                if(state == Movement.WALKING && enemyAttacking){
+                    movements.get(state).start(movements.get(state).getDistChange());
+                }
+                else{
+                    movements.get(state).start(dis);
+                }
+            }
             stateChanged = true;
         }
         // Frame a mostrar
@@ -105,7 +121,10 @@ public class character {
         }
 
         // Gestión de colisiones
-        if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+        if(state == Movement.THROWN_OUT){
+            x = s.getX();
+        }
+        else if(collides && state == Movement.STANDING && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
                     || orientation == -1 && pHurt.getX() > eHurt.getX()){
@@ -142,6 +161,19 @@ public class character {
         this.x = x;
         this.y = y;
         this.state = Movement.STANDING;
+    }
+
+    boolean isCrouched(){
+        return (state == Movement.CROUCH || state == Movement.CROUCH_2
+                || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING);
+    }
+
+    boolean isAttacking(){
+        Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
+                Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
+                Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK};
+        List<Movement> attacks = Arrays.asList(array);
+        return attacks.contains(state);
     }
 
     //Getters y setters
@@ -205,8 +237,17 @@ public class character {
         return state;
     }
 
-    public void setState(Movement state) {
+    public void setState(Movement state, hitBox pHurt, hitBox eHurt) {
+        this.movements.get(state).reset();
         this.state = state;
+        int dis = 0;
+        if (pHurt.getX() > eHurt.getX()){
+            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+        }
+        else if(pHurt.getX() < eHurt.getX()){
+            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+        this.movements.get(state).start(dis);
     }
 
     public hitBox getHitbox(){
@@ -215,7 +256,7 @@ public class character {
         if(orientation == -1){
             auxX = x - aux.getX() - aux.getWidth();
         }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), true);
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), box_type.HITBOX);
     }
 
     public hitBox getHurtbox(){
@@ -224,7 +265,16 @@ public class character {
         if(orientation == -1){
             auxX = x - aux.getX() - aux.getWidth();
         }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), false);
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.HURTBOX);
+    }
+
+    public hitBox getCoverbox(){
+        hitBox aux = movements.get(state).getCoverbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.COVERBOX);
     }
 
     public boolean endedMovement(){
@@ -241,5 +291,13 @@ public class character {
 
     public  int getDamage(){
         return movements.get(state).getDamage();
+    }
+
+    public movement getMovement(Movement m){
+        return movements.get(m);
+    }
+
+    public movement getMovement(String c){
+        return movements.get(combos.get(c));
     }
 }

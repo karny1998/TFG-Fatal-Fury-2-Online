@@ -38,9 +38,11 @@ public class animation {
     // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
-    hitBox hitbox = new hitBox(-10000,-10000,1,1,true);
+    hitBox hitbox = new hitBox(-10000,-10000,1,1, box_type.HITBOX);
     // Hurtbox asociada
-    hitBox hurtBox = new hitBox(-10000,-10000,1,1,false);
+    hitBox hurtBox = new hitBox(-10000,-10000,1,1, box_type.HURTBOX);
+    // Cover asociada
+    hitBox coverbox = new hitBox(-10000,-10000,1,1, box_type.COVERBOX);
 
     int yCompleted = 0;
     boolean yAux = false;
@@ -293,7 +295,7 @@ public class animation {
     }
 
     public void setHitbox(int originX, int originY, int width, int height) {
-        this.hitbox = new hitBox(originX, originY, width, height, true);
+        this.hitbox = new hitBox(originX, originY, width, height, box_type.HITBOX);
     }
 
     public hitBox getHurtBox() {
@@ -305,7 +307,15 @@ public class animation {
     }
 
     public void setHurtBox(int originX, int originY, int width, int height) {
-        this.hurtBox = new hitBox(originX, originY, width, height, false);
+        this.hurtBox = new hitBox(originX, originY, width, height, box_type.HURTBOX);
+    }
+
+    public void setCoverbox(int originX, int originY, int width, int height) {
+        this.coverbox = new hitBox(originX, originY, width, height, box_type.COVERBOX);
+    }
+
+    public hitBox getCoverbox() {
+        return coverbox;
     }
 
     public Character_Voices getSoundType() {

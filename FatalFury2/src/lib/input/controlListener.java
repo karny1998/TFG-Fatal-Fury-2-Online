@@ -139,8 +139,8 @@ public class controlListener implements KeyListener {
     }
 
 
-    public static char getCurrentKey(){
-        return (char)currentKey;
+    public static int getCurrentKey(){
+        return (int)currentKey;
     }
 
 
@@ -221,7 +221,7 @@ public class controlListener implements KeyListener {
                 mov += movimientos[i];
             }
         }
-        System.out.println(mov);
+        //System.out.println(mov);
         return mov;
 
     }
