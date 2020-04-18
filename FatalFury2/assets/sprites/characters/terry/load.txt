@@ -575,7 +575,7 @@ true
 true
 throw
 THROW
-DE-A
+DE-B
 Defeat
 true
 ENDABLE

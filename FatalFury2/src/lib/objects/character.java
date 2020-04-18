@@ -111,6 +111,12 @@ public class character {
                 if(state == Movement.WALKING && enemyAttacking){
                     movements.get(state).start(movements.get(state).getDistChange());
                 }
+                else if(state == Movement.THROW){
+                    if(dis >= 10 || eHurt.getY() != pHurt.getY()){
+                        state = Movement.HARD_PUNCH;
+                    }
+                    movements.get(state).start(dis);
+                }
                 else{
                     movements.get(state).start(dis);
                 }
