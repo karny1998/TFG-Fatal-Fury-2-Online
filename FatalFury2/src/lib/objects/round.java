@@ -24,6 +24,9 @@ public class round {
     character_controller enemy;
     // Anterior movimiento del enemigo
     Movement enemy_old_state = Movement.STANDING;
+
+    Boolean playerHit = false;
+    Boolean enemyHit = false;
     // Resultado de la ronda
     Round_Results result;
     // Listeners de la ronda
@@ -159,9 +162,11 @@ public class round {
 
         if(pStateChanged){
             player_old_state = player_act_state;
+            playerHit = false;
         }
         if(eStateChanged){
             enemy_old_state = enemy_act_state;
+            enemyHit = false;
         }
 
         if(!hitsCollides && !playerHits && !enemyHits){
@@ -176,6 +181,7 @@ public class round {
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, pHurt, eHurt);
                 }
                 player_old_state = player_act_state;
+                playerHit = true;
             }
             if(enemyCovers && eStateChanged){
                 int dmg = player.getPlayer().getDamage();
@@ -187,14 +193,15 @@ public class round {
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, eHurt, pHurt);
                 }
                 enemy_old_state = enemy_act_state;
+                enemyHit = true;
             }
             return;
         }
 
         // EN CASO DE DOBLE AGARRE HAY QUE ELEGIR UN GANADOR
         // Control de daño provocado por el jugador 1
-
-        if((playerHits || hitsCollides) && pStateChanged){
+        if((playerHits || hitsCollides) && (pStateChanged || !playerHit)){
+            playerHit = true;
             int dmg = player.getPlayer().getDamage();
             if(enemyCovers && playerState != Movement.THROW){
                 enemy.getPlayer().applyDamage((int) (dmg*0.5));
@@ -231,7 +238,8 @@ public class round {
             }
         }
         // Control de daño provocado por el jugador 2
-        if((enemyHits || hitsCollides) && eStateChanged){
+        if((enemyHits || hitsCollides) && (eStateChanged || !enemyHit)){
+            enemyHit = true;
             int dmg = enemy.getPlayer().getDamage();
             if(playerCovers && enemyState != Movement.THROW){
                 player.getPlayer().applyDamage((int) (dmg*0.5));
