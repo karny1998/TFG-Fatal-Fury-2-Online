@@ -48,6 +48,7 @@ public class character_menu {
     private String p2_aux = "";
 
     public character_menu(int tipo_){
+        referenceTime = System.currentTimeMillis();
         tipo = tipo_;
         pos_1 = 0; pos_2 = 0;
         actual = estados.P1_SELECT;

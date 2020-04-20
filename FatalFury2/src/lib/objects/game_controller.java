@@ -7,6 +7,7 @@ import lib.maps.scenary;
 import lib.menus.character_menu;
 import lib.menus.menu;
 import lib.menus.menu_generator;
+import lib.menus.options;
 
 import java.awt.*;
 import java.util.Map;
@@ -31,6 +32,8 @@ public class game_controller {
 
     private character_menu charMenu;
 
+    private options optionsMenu;
+
     private user_controller user;
     private enemy_controller enemy;
     // Estado del juego
@@ -46,6 +49,7 @@ public class game_controller {
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
+        this.optionsMenu = new options();
     }
 
     public game_controller(menu principal) {
@@ -65,13 +69,14 @@ public class game_controller {
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
 
         if(debug && state != GameState.FIGHT){
-            user = new user_controller(Playable_Character.TERRY);
+            /*user = new user_controller(Playable_Character.TERRY);
             enemy = new enemy_controller(Playable_Character.TERRY);
             enemy.setRival(user.getPlayer());
             user.setRival(enemy.getPlayer());
             state = GameState.FIGHT;
             scene = new scenary(Scenario_type.USA);
-            fight = new fight_controller(user,enemy,scene);
+            fight = new fight_controller(user,enemy,scene);*/
+            state = GameState.OPTIONS;
         }
 
         // Teecla presionada por el usuario
@@ -98,6 +103,11 @@ public class game_controller {
                         // Sale del juego
                         case PRINCIPAL_EXIT:
                             System.exit(0);
+                            break;
+                        case PRINCIPAL_OPTIONS:
+                            actualMenu.updateTime();
+                            optionsMenu.updateTime();
+                            state = GameState.OPTIONS;
                             break;
                         case PRINCIPAL_RANK:
                             ranking.reloadRanking();
@@ -136,6 +146,14 @@ public class game_controller {
                 actualMenu = mapSelection;
                 actualMenu.updateTime();
                 state = GameState.MAP;
+            }
+        } else if (state == GameState.OPTIONS){
+            screenObject s = actualMenu.getFrame();
+            screenObjects.put(Item_Type.MENU, s);
+            Boolean res = optionsMenu.gestionMenu(screenObjects);
+            if (res == true){
+                //Escribir resultados en disco
+
             }
         } else if (state == GameState.MAP){
 
@@ -288,6 +306,8 @@ public class game_controller {
         }
         else if(state == GameState.TYPING){
             askName.writeName(g);
+        } else if(state == GameState.OPTIONS){
+                optionsMenu.printOptions(g);
         }
     }
 

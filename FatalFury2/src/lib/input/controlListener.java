@@ -60,10 +60,10 @@ public class controlListener implements KeyListener {
             mando1[i] = false;  mando2[i] = false;
         }
 
-
+        //TODO LEER DE FICHERO
         keyBindings1 = new int[]{
-                38, //AR_INDEX - ABAJO
-                40, //AB_INDEX - ARRIBA
+                38, //AR_INDEX - ARRIBA
+                40, //AB_INDEX - ABAJO
                 37, //IZ_INDEX - IZQUIERDA
                 39, //DE_INDEX - DERECHA
                 65, //A_INDEX - A
