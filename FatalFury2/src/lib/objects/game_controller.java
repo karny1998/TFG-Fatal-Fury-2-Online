@@ -15,7 +15,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
 
     // Controlador de una pelea
     private fight_controller fight;
@@ -49,7 +49,7 @@ public class game_controller {
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
-        this.optionsMenu = new options();
+
     }
 
     public game_controller(menu principal) {
@@ -105,6 +105,7 @@ public class game_controller {
                             System.exit(0);
                             break;
                         case PRINCIPAL_OPTIONS:
+                            optionsMenu = new options();
                             actualMenu.updateTime();
                             optionsMenu.updateTime();
                             state = GameState.OPTIONS;
@@ -150,10 +151,9 @@ public class game_controller {
         } else if (state == GameState.OPTIONS){
             screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
-            Boolean res = optionsMenu.gestionMenu(screenObjects);
-            if (res == true){
-                //Escribir resultados en disco
 
+            if (optionsMenu.gestionMenu(screenObjects)){
+                state = GameState.NAVIGATION;
             }
         } else if (state == GameState.MAP){
 
