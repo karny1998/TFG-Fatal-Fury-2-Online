@@ -10,7 +10,7 @@ public class enemy_controller extends character_controller{
     }
 
     public enemy_controller(Playable_Character ch, character rival){
-        super(ch,750,160, 1);
+        super(ch,750,290, 1);
         this.rival = rival;
     }
 
@@ -19,33 +19,27 @@ public class enemy_controller extends character_controller{
     // En esta función se llamaría a la IA
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
+        String mov = "";
+        String array[] = {"A","B", "DE-A"};
+        mov = array[rand.nextInt(array.length)];
         if(false){
             this.x = this.player.getX();
             this.y = this.player.getY();
-
-            controlKey array1[] = {controlKey.LEFT, controlKey.RIGHT, controlKey.DOWN, controlKey.A, controlKey.S};
-            controlKey key =  array1[rand.nextInt(array1.length)];
 
             int rivalX = rival.getHurtbox().getX();
             int rivalW = rival.getHurtbox().getWidth();
             if(rival.getOrientation() == 1 && Math.abs(rivalX - this.player.getHurtbox().getX()-this.player.getHurtbox().getWidth()) > 20
                 || rival.getOrientation() == -1 && Math.abs(this.player.getHurtbox().getX() -rivalX-rivalW) > 20){
                 if(rival.getOrientation() == 1) {
-                    key = controlKey.RIGHT;
+                    mov = "DE";
                 }
                 else{
-                    key = controlKey.LEFT;
+                    mov = "IZ";
                 }
             }
-
-            String array2[] = {"LEFT", "RIGHT", "DOWN", "A","S"};
-            for(int i = 0; i < array1.length; ++i){
-                if(array1[i] == key){
-                    return player.getFrame(array2[i], pHurt, eHurt);
-                }
-            }
+            return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
-        return player.getFrame("", pHurt, eHurt);
+        return player.getFrame("", pHurt, eHurt, rival.isAttacking());
     }
 
     @Override

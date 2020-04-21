@@ -1,8 +1,11 @@
-package lib.objects;
+package lib.menus;
 
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Selectionable;
+import lib.objects.animation;
+import lib.objects.screenObject;
+import lib.objects.selectionable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -188,7 +191,6 @@ public class menu_generator {
         return men;
     }
 
-    //public static menu generate_character_selection(){}
 
     public static menu generate_map_selection(){
         menu men = new menu();

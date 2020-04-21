@@ -6,11 +6,16 @@ sonido
 tipo de animación
 daño
 tiene final (true o false)
-tiene hitbox?
-x hitbox
-y hitbox
-anchura hitbox
-altura hitbox
+tiene hitbox? (los siguientes solo si true)
+	x hitbox
+	y hitbox
+	anchura hitbox
+	altura hitbox
+tiene coverbox? (los siguientes solo si true)
+	x coverbox
+	y coverbox
+	anchura coverbox
+	altura coverbox
 x hurtbox
 y hurtbox
 anchura hitbox

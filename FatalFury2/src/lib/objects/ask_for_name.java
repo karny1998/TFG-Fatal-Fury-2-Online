@@ -2,6 +2,7 @@ package lib.objects;
 
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
+import lib.input.controlListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,17 +50,17 @@ public class ask_for_name {
 
     public  void writeName(Graphics2D g){
         long current = System.currentTimeMillis();
-        String readed = "";
-        controlKey cK = controlKey.NONE;
-        if(current - timeReference > 100.0){
-            cK = IsKeyPressed.keyPressed();
+        boolean ok = false;
+       if(current - timeReference > 150.0){
             timeReference = current;
+            ok = true;
         }
-        if(cK == controlKey.ESCAPE){
+        int aux = controlListener.getCurrentKey();
+        if(ok && controlListener.isPressed(8) && name.length() > 0){
             name = name.substring(0, name.length()-1);
         }
-        else if(cK != controlKey.NONE && name.length() < 10){
-            name += cK.toString();
+        else if(ok && name.length() < 10 && aux != -1) {
+                name += (char)aux;
         }
         g.setFont(f);
         g.setColor(Color.YELLOW);

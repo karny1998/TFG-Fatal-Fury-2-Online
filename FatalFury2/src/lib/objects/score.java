@@ -118,7 +118,6 @@ public class score {
         }
         long current = System.currentTimeMillis();
         if(current - timeReference > 100.0){
-            controlKey cK = IsKeyPressed.keyPressed();
             if(controlListener.getStatus(1, controlListener.AR_INDEX) && pointer > 0){
                 --pointer;
             }

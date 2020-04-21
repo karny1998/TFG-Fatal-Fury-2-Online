@@ -29,6 +29,8 @@ public class Sound {
     private static int Music_Size = Music.values().length;
 
 
+    //TODO LEER DE FICHERO EL AUDIO
+
     private Audio_Type tipo;
 
     public Sound(Audio_Type type){

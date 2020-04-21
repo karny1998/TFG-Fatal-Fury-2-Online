@@ -31,14 +31,21 @@ public class load_character {
                 Animation_type aType = Animation_type.valueOf(b.readLine());
                 int dmg = Integer.valueOf(b.readLine());
                 Boolean hasHit = Boolean.valueOf(b.readLine());
-                int xHit = 0, yHit = 0, xHurt = 0, yHurt = 0,
-                        wHit = 0, hHit = 0, wHurt = 0, hHurt = 0,
+                int xHit = 0, yHit = 0, xHurt = 0, yHurt = 0, xCover = 0, yCover = 0,
+                        wHit = 0, hHit = 0, wHurt = 0, hHurt = 0, wCover = 0, hCover = 0,
                         nFrames = 0;
                 if (hasHit){
                     xHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     yHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     wHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
                     hHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                }
+                Boolean hasCover = Boolean.valueOf(b.readLine());
+                if (hasCover){
+                    xCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    yCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    wCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    hCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
                 }
                 xHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
                 yHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
@@ -52,8 +59,12 @@ public class load_character {
                 anim.setSound(sounds);
                 anim.setSoundType(sound);
                 anim.setHurtBox(xHurt,yHurt,wHurt,hHurt);
+
                 if(hasHit){
                     anim.setHitbox(xHit,yHit,wHit,hHit);
+                }
+                if(hasCover){
+                    anim.setCoverbox(xCover,yCover,wCover,hCover);
                 }
 
                 int j = 1;
@@ -72,8 +83,8 @@ public class load_character {
                     iyF = (int) (Integer.valueOf(b.readLine()) );
                     wxF = Integer.valueOf(b.readLine());
                     wyF = Integer.valueOf(b.readLine());
-                    if(wxF != -1){wxF *= multiplier;}
-                    if(wyF != -1){wyF *= multiplier;}
+                    //if(wxF != -1){wxF *= multiplier;}
+                    //if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(b.readLine());
                     s = new screenObject(xF, yF,  wF, hF, new ImageIcon(path + fold + "/" + j + ".png").getImage(), Item_Type.PLAYER);
                     anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);

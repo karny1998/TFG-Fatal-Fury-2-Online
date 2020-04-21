@@ -1,6 +1,7 @@
 package lib.objects;
 
 import lib.Enums.Selectionable;
+import lib.menus.menu;
 
 // Una de las opciones seleccionables de un menú
 public class selectionable{

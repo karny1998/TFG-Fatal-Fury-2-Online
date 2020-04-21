@@ -1,8 +1,10 @@
-package lib.objects;
+package lib.menus;
 
 import javafx.util.Pair;
 import lib.Enums.Selectionable;
 import lib.input.controlListener;
+import lib.objects.screenObject;
+import lib.objects.selectionable;
 
 import java.util.HashMap;
 import java.util.Map;

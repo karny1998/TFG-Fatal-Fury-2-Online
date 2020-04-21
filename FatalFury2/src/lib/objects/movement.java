@@ -18,6 +18,9 @@ public class movement {
     movement subMovement = null;
 
     public movement(Movement type, animation anim) {
+        if(type == Movement.WALKING ||type == Movement.CROUCHED_WALKING){
+            distChange = -999;
+        }
         this.type = type;
         this.anim = anim;
     }
@@ -154,6 +157,15 @@ public class movement {
         }
     }
 
+    public hitBox getCoverbox(){
+        if(distance > distChange || subMovement == null) {
+            return anim.getCoverbox();
+        }
+        else {
+            return subMovement.getAnim().getCoverbox();
+        }
+    }
+
     public animation getThrowable() {
         return throwable;
     }
@@ -168,5 +180,21 @@ public class movement {
 
     public void setSubMovement(movement subMovement) {
         this.subMovement = subMovement;
+    }
+
+    public int getDistChange() {
+        return distChange;
+    }
+
+    public void setDistChange(int distChange) {
+        this.distChange = distChange;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 }
