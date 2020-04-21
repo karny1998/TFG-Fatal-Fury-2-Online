@@ -1,7 +1,14 @@
 package lib.input;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,9 +21,11 @@ import java.util.Queue;
 public class controlListener implements KeyListener {
 
     static Boolean[] keyStatus;
-    static Queue<Integer> inputQueue_1, inputQueue_2;
+    static Queue<Integer> inputQueue_1, inputQueue_2, general;
     static int QUEUE_SIZE = 10;
-    static int currentKey;
+    static int BUTTONS = 10;
+    private static String filePath = "files/options.xml";
+    static int currentKey, lastKey;
 
     public static Boolean[] mando1, mando2;
 
@@ -28,8 +37,8 @@ public class controlListener implements KeyListener {
     public static final int B_INDEX = 5;
     public static final int C_INDEX = 6;
     public static final int D_INDEX = 7;
-    public static final int ESC_INDEX = 8;
-    public static final int ENT_INDEX = 9;
+    public static final int ENT_INDEX = 8;
+    public static final int ESC_INDEX = 9;
 
 
     public static String[] movimientos = {
@@ -53,42 +62,21 @@ public class controlListener implements KeyListener {
         for(int i = 0; i < keyStatus.length; i++){
             keyStatus[i] = false;
         }
-        mando1 = new Boolean[10];
-        mando2 = new Boolean[10];
+        mando1 = new Boolean[BUTTONS];
+        mando2 = new Boolean[BUTTONS];
 
         for(int i = 0; i < mando1.length; i++){
             mando1[i] = false;  mando2[i] = false;
         }
 
-        //TODO LEER DE FICHERO
-        keyBindings1 = new int[]{
-                38, //AR_INDEX - ARRIBA
-                40, //AB_INDEX - ABAJO
-                37, //IZ_INDEX - IZQUIERDA
-                39, //DE_INDEX - DERECHA
-                65, //A_INDEX - A
-                81, //B_INDEX - Q
-                83, //C_INDEX - S
-                87, //D_INDEX - W
-                27, //ESC_INDEX - ESCAPE
-                10  //ENT_INDEX - ENTER
-        };
+        keyBindings1 = new int[BUTTONS];
+        keyBindings2 = new int[BUTTONS];
 
-        keyBindings2 = new int[]{
-                -1,  //AR_INDEX
-                -1,  //AB_INDEX
-                -1,  //IZ_INDEX
-                -1,  //DE_INDEX
-                -1,  //A_INDEX
-                -1,  //B_INDEX
-                -1,  //C_INDEX
-                -1,  //D_INDEX
-                -1,  //ESC_INDEX
-                -1   //ENT_INDEX
-        };
+        update();
 
         inputQueue_1 = new LinkedList<>();
         inputQueue_2 = new LinkedList<>();
+        lastKey = -1;
         currentKey = -1;
 
     }
@@ -102,7 +90,7 @@ public class controlListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         this.keyStatus[e.getKeyCode()] = true;
-
+        lastKey = e.getKeyCode();
         for(int i = 0; i < keyBindings1.length; i++){
             if(e.getKeyCode() == keyBindings1[i]){
                 mando1[i] = true;
@@ -135,6 +123,7 @@ public class controlListener implements KeyListener {
                 mando2[i] = false;
             }
         }
+        lastKey = -1;
         currentKey = -1;
     }
 
@@ -147,6 +136,8 @@ public class controlListener implements KeyListener {
     public static int getLastKey(int player){
 
         switch (player){
+            case 0:
+                return lastKey;
             case 1:
                 if(inputQueue_1.size() == 0){
                     return  -1;
@@ -221,10 +212,47 @@ public class controlListener implements KeyListener {
                 mov += movimientos[i];
             }
         }
-        //System.out.println(mov);
         return mov;
+    }
+
+    public static void update(){
+        try {
+            File input = new File(filePath);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(input);
+            doc.getDocumentElement().normalize();
+
+            Node opciones = doc.getChildNodes().item(0);
+            NodeList p1 = doc.getElementsByTagName("controles_jugador_1").item(0).getChildNodes();
+            NodeList p2 = doc.getElementsByTagName("controles_jugador_2").item(0).getChildNodes();
+
+            int indice = 0;
+            for (int i = 0; i < p1.getLength(); i++) {
+                Node node = p1.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    keyBindings1[indice] = Integer.parseInt(node.getTextContent());
+                    indice++;
+                }
+            }
+            indice = 0;
+            for (int i = 0; i < p2.getLength(); i++) {
+                Node node = p2.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    keyBindings2[indice] = Integer.parseInt(node.getTextContent());
+                    indice++;
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
+
+
 
 
 
