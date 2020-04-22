@@ -34,14 +34,16 @@ public class game_controller {
 
     private options optionsMenu;
 
-    private user_controller user;
-    private enemy_controller enemy;
+    private character_controller user;
+    private character_controller enemy;
     // Estado del juego
     private GameState state = GameState.NAVIGATION;
     // Ranking
     private score ranking = new score();
     // introducción de nombre
     private ask_for_name askName = new ask_for_name();
+    // Si es JvJ
+    private boolean pvp = false;
 
     public game_controller() {
         new IsKeyPressed();
@@ -69,14 +71,14 @@ public class game_controller {
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
 
         if(debug && state != GameState.FIGHT){
-            /*user = new user_controller(Playable_Character.TERRY);
+            user = new user_controller(Playable_Character.TERRY);
             enemy = new enemy_controller(Playable_Character.TERRY);
             enemy.setRival(user.getPlayer());
             user.setRival(enemy.getPlayer());
             state = GameState.FIGHT;
             scene = new scenary(Scenario_type.USA);
-            fight = new fight_controller(user,enemy,scene);*/
-            state = GameState.OPTIONS;
+            fight = new fight_controller(user,enemy,scene);
+            //state = GameState.OPTIONS;
         }
 
         // Teecla presionada por el usuario
@@ -119,12 +121,14 @@ public class game_controller {
                             charMenu = new character_menu(0);
                             charMenu.updateTime();
                             state = GameState.PLAYERS;
+                            pvp = true;
                             break;
                         case GAME_IA:
                             actualMenu.updateTime();
                             charMenu = new character_menu(1);
                             charMenu.updateTime();
                             state = GameState.PLAYERS;
+                            pvp = false;
                             break;
                     }
                 }
@@ -141,7 +145,13 @@ public class game_controller {
             Boolean res = charMenu.gestionMenu(screenObjects);
             if (res == true){
                 user = new user_controller(charMenu.getP1_ch());
-                enemy = new enemy_controller(charMenu.getP2_ch());
+                if(pvp) {
+                    enemy = new user_controller(charMenu.getP2_ch());
+                    enemy.setPlayerNum(2);
+                }
+                else {
+                    enemy = new enemy_controller(charMenu.getP2_ch());
+                }
                 enemy.setRival(user.getPlayer());
                 user.setRival(enemy.getPlayer());
                 actualMenu = mapSelection;

@@ -36,11 +36,17 @@ public class menu {
     public screenObject getFrame(){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 300.0){
-            if(( controlListener.getStatus(1, controlListener.AR_INDEX) || controlListener.getStatus(1, controlListener.IZ_INDEX) ) && sel > 0){
+            if(( controlListener.getStatus(1, controlListener.AR_INDEX)
+                    || controlListener.getStatus(1, controlListener.AR_INDEX)
+                    || controlListener.getStatus(2, controlListener.IZ_INDEX)
+                    || controlListener.getStatus(2, controlListener.IZ_INDEX)) && sel > 0){
                 sel--;
                 referenceTime = current;
             }
-            else if(( controlListener.getStatus(1, controlListener.AB_INDEX) || controlListener.getStatus(1, controlListener.DE_INDEX) )&& sel < orden.length-1){
+            else if(( controlListener.getStatus(1, controlListener.AB_INDEX)
+                    || controlListener.getStatus(1, controlListener.AB_INDEX)
+                    || controlListener.getStatus(2, controlListener.DE_INDEX)
+                    || controlListener.getStatus(2, controlListener.DE_INDEX))&& sel < orden.length-1){
                 sel++;
                 referenceTime = current;
             }

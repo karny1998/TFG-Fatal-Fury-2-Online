@@ -17,6 +17,8 @@ public abstract  class character_controller {
     protected Random rand = new Random();
     // Para las esperas
     boolean standBy = true;
+    // Número de jugador en JVJ
+    protected int playerNum = 1;
 
     protected character rival = null;
 
@@ -110,5 +112,18 @@ public abstract  class character_controller {
 
     public void setRival(character rival) {
         this.rival = rival;
+    }
+
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    void setPlayerNum(int playerNum) {
+        this.playerNum = playerNum;
+        if(playerNum == 2){
+            player.setX(750);
+            player.setY(290);
+            player.setOrientation(1);
+        }
     }
 }

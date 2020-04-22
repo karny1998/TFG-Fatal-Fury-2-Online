@@ -21,7 +21,7 @@ public class user_controller extends character_controller{
     }
 
     void inputsGestion(){
-        mov = controlListener.getMove(1);
+        mov = controlListener.getMove(playerNum);
         long current = System.currentTimeMillis();
         if(!mov.equals(lastKey) && current - timeReference > 100.0){
             if(!mov.equals("")) {
@@ -86,7 +86,48 @@ public class user_controller extends character_controller{
 
     @Override
     void reset() {
-        reset(this.player.getCharac(),500,290, -1);
+        if(playerNum == 1){reset(this.player.getCharac(),500,290, -1);}
+        else{reset(this.player.getCharac(),750,290, 1);}
+    }
+
+    public List<String> getInputs() {
+        return inputs;
+    }
+
+    public void setInputs(List<String> inputs) {
+        this.inputs = inputs;
+    }
+
+    public List<Long> getTimes() {
+        return times;
+    }
+
+    public void setTimes(List<Long> times) {
+        this.times = times;
+    }
+
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
+    }
+
+    public String getLastKey() {
+        return lastKey;
+    }
+
+    public void setLastKey(String lastKey) {
+        this.lastKey = lastKey;
+    }
+
+    public String getMov() {
+        return mov;
+    }
+
+    public void setMov(String mov) {
+        this.mov = mov;
     }
 }
 

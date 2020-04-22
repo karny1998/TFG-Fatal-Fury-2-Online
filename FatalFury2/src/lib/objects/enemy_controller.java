@@ -39,7 +39,7 @@ public class enemy_controller extends character_controller{
             }
             return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
-        return player.getFrame("", pHurt, eHurt, rival.isAttacking());
+        return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
     }
 
     @Override
