@@ -44,6 +44,8 @@ public class game_controller {
     private ask_for_name askName = new ask_for_name();
     // Si es JvJ
     private boolean pvp = false;
+    // Limnites del mapa
+    hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
 
     public game_controller() {
         new IsKeyPressed();
@@ -74,7 +76,9 @@ public class game_controller {
             user = new user_controller(Playable_Character.TERRY);
             enemy = new enemy_controller(Playable_Character.TERRY);
             enemy.setRival(user.getPlayer());
+            enemy.getPlayer().setMapLimit(mapLimit);
             user.setRival(enemy.getPlayer());
+            user.getPlayer().setMapLimit(mapLimit);
             state = GameState.FIGHT;
             scene = new scenary(Scenario_type.USA);
             fight = new fight_controller(user,enemy,scene);
@@ -153,7 +157,9 @@ public class game_controller {
                     enemy = new enemy_controller(charMenu.getP2_ch());
                 }
                 enemy.setRival(user.getPlayer());
+                enemy.getPlayer().setMapLimit(mapLimit);
                 user.setRival(enemy.getPlayer());
+                user.getPlayer().setMapLimit(mapLimit);
                 actualMenu = mapSelection;
                 actualMenu.updateTime();
                 state = GameState.MAP;

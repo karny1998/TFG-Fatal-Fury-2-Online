@@ -28,6 +28,8 @@ public class fight_controller implements roundListener {
     character_controller player;
     // Escenario
     scenary scene;
+    // Para gestión de límites de mapa
+    hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
     // Score p1
     score scorePlayer = new score();
     // Controlador del enemigo
@@ -353,7 +355,9 @@ public class fight_controller implements roundListener {
                             scene.setCurrentTime(Scenario_time.NIGHT);
                         }
                         enemy.setRival(player.getPlayer());
+                        enemy.getPlayer().setMapLimit(mapLimit);
                         player.setRival(enemy.getPlayer());
+                        player.getPlayer().setMapLimit(mapLimit);
                         showIntro();
                     }
                     else {
@@ -376,7 +380,9 @@ public class fight_controller implements roundListener {
                         scene.setCurrentTime(Scenario_time.NIGHT);
                     }
                     enemy.setRival(player.getPlayer());
+                    enemy.getPlayer().setMapLimit(mapLimit);
                     player.setRival(enemy.getPlayer());
+                    player.getPlayer().setMapLimit(mapLimit);
                     showIntro();
                 }
                 else {

@@ -27,6 +27,10 @@ public class character {
     Movement state = Movement.STANDING;
     // Reproductor de voces del personaje
     Sound voices;
+    // Para gestión de límites de mapa
+    hitBox mapLimit;
+    // Rival
+    character rival;
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c){
@@ -50,15 +54,9 @@ public class character {
     // en caso de no estar en un estado que no se pueda interrumpir
     // collides indica si colisiona o no con el otro personaje
     public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt, boolean enemyAttacking){
-
-        if(mov.contains("DE") && orientation == 1){
-            mov = mov.replace("DE", "IZ");
-        }
-        else if(mov.contains("IZ") && orientation == 1){
-            mov =  mov.replace("IZ", "DE");
-        }
-
         boolean collides = pHurt.collides(eHurt);
+        boolean collidesLimitLeft = pHurt.getX() <= mapLimit.getX();
+        boolean collidesLimitRight = pHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
 
         int dis = 0;
         if (pHurt.getX() > eHurt.getX()){
@@ -68,15 +66,62 @@ public class character {
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
         }
 
+        if (mov.length() == 4 && (mov.contains("DE-") || mov.contains("IZ-"))
+            && !(mov.equals("DE-B") && dis < 10)) {
+            mov = String.valueOf(mov.charAt(mov.length() - 1));
+        }
+
         // Si el movimiento es infinito y el movimiento es diferente del actual
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
         boolean stateChanged = false;
-        if(mov.contains("+") && combos.containsKey(mov)){
+        if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
+                && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
+                && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
             movements.get(state).getAnim().reset();
-            state = combos.get(mov);
+            if(state == Movement.JUMP_PUNCH_DOWN){
+                state = Movement.JUMP_FALL;
+            }
+            else if(state == Movement.JUMP_ROLL_PUNCH_DOWN){
+                state = Movement.JUMP_ROLL_FALL;
+            }
             movements.get(state).start(dis);
             stateChanged = true;
+        }
+        else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended()
+                && (mov.endsWith("-A") ||  mov.endsWith("-B") ||  mov.endsWith("-C") ||  mov.endsWith("-D")
+                    || mov.equals("A") || mov.equals("B") || mov.equals("C") || mov.equals("D"))){
+            movements.get(state).getAnim().reset();
+            if(state == Movement.NORMAL_JUMP){
+                if(mov.endsWith("-A") || mov.endsWith("-B")
+                    || mov.equals("A") || mov.equals("B")){
+                    state = Movement.JUMP_PUNCH_DOWN;
+                }
+                else if(mov.endsWith("-C") || mov.endsWith("-D")
+                        || mov.equals("C") || mov.equals("D")){
+                    state = Movement.JUMP_PUNCH_DOWN;
+                }
+            }
+            else{
+                if(mov.endsWith("-A") || mov.endsWith("-B")
+                        || mov.equals("A") || mov.equals("B")){
+                    state = Movement.JUMP_ROLL_PUNCH_DOWN;
+                }
+                else if(mov.endsWith("-C") || mov.endsWith("-D")
+                        || mov.equals("C") || mov.equals("D")){
+                    state = Movement.JUMP_ROLL_PUNCH_DOWN;
+                }
+            }
+            movements.get(state).start(dis);
+            stateChanged = true;
+        }
+        else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state){
+            if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL) {
+                movements.get(state).getAnim().reset();
+                state = combos.get(mov);
+                movements.get(state).start(dis);
+                stateChanged = true;
+            }
         }
         else if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
                 && combos.get(mov) != state){
@@ -123,6 +168,7 @@ public class character {
             }
             stateChanged = true;
         }
+
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
@@ -133,10 +179,28 @@ public class character {
         }
 
         // Gestión de colisiones
-        if(state == Movement.THROWN_OUT){
+        if(collidesLimitLeft && (s.getX() < x || collides)
+                || collidesLimitRight && (s.getX() > x || collides)){
+            if(inKnockback() && !rival.inKnockback()){
+                rival.returnKnockback(Math.abs(x - s.getX()));
+            }
+            if(collides){
+                int increment = -orientation;
+                if(orientation == 1 && pHurt.getX() < eHurt.getX()
+                        || orientation == -1 && pHurt.getX() > eHurt.getX()){
+                    increment = -orientation;
+                }
+                x = s.getX() + increment;
+                s.setX(x);
+            }
+            else{
+                s.setX(x);
+            }
+        }
+        else if(state == Movement.THROWN_OUT){
             x = s.getX();
         }
-        else if(collides /*&& state == Movement.STANDING*/ && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+        else if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
                     || orientation == -1 && pHurt.getX() > eHurt.getX()){
@@ -166,6 +230,15 @@ public class character {
         else{life -= dmg;}
     }
 
+    public void returnKnockback(int k){
+        if(rival.getState() != Movement.THROWN_OUT) {
+            this.x = x + orientation * k;
+        }
+        else{
+            this.x = x - orientation * k;
+        }
+    }
+
     void reset(int x, int y, int orientation){
         life = 100;
         this.orientation = orientation;
@@ -184,16 +257,25 @@ public class character {
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
                 Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK,
-                Movement.JUMP_PUNCH_DOWN};
+                Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
     }
 
     boolean isJumping(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
-                            Movement.JUMP_PUNCH_DOWN};
+                            Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
+                            Movement.JUMP_FALL};
         List<Movement> jumps = Arrays.asList(array);
         return jumps.contains(state);
+    }
+
+    boolean inKnockback(){
+        Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
+                Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
+                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT};
+        List<Movement> knock = Arrays.asList(array);
+        return knock.contains(state);
     }
 
     //Getters y setters
@@ -319,5 +401,25 @@ public class character {
 
     public movement getMovement(String c){
         return movements.get(combos.get(c));
+    }
+
+    public void setState(Movement state) {
+        this.state = state;
+    }
+
+    public hitBox getMapLimit() {
+        return mapLimit;
+    }
+
+    public void setMapLimit(hitBox mapLimit) {
+        this.mapLimit = mapLimit;
+    }
+
+    public character getRival() {
+        return rival;
+    }
+
+    public void setRival(character rival) {
+        this.rival = rival;
     }
 }

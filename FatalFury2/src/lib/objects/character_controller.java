@@ -111,6 +111,7 @@ public abstract  class character_controller {
     }
 
     public void setRival(character rival) {
+        this.player.setRival(rival);
         this.rival = rival;
     }
 
