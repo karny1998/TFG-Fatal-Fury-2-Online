@@ -5,12 +5,12 @@ import lib.Enums.Playable_Character;
 // Clase que representa el control de un personaje por IA
 public class enemy_controller extends character_controller{
 
-    public enemy_controller(Playable_Character ch){
-        super(ch,750,290, 1);
+    public enemy_controller(Playable_Character ch, int pN){
+        super(ch, pN,750,290, 1);
     }
 
-    public enemy_controller(Playable_Character ch, character rival){
-        super(ch,750,290, 1);
+    public enemy_controller(Playable_Character ch, int pN, character rival){
+        super(ch,pN,750,290, 1);
         this.rival = rival;
     }
 

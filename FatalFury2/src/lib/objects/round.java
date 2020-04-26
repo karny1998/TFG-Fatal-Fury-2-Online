@@ -224,7 +224,7 @@ public class round {
             }
             else if(!enemy.getPlayer().isCrouched()){
                 if(enemy.getPlayer().isJumping()){
-                    enemy.getPlayer().setState(Movement.JUMP_KNOCKBACK, pHurt, eHurt);
+                    enemy.getPlayer().setState(Movement.JUMP_KNOCKBACK, eHurt, pHurt);
                 }
                 else if(dmg > 10) {
                     enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
@@ -282,92 +282,55 @@ public class round {
 
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan
-        if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
-                && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
-            player.getPlayer().setOrientation(1);
-            player.getPlayer().setX(player.getPlayer().getX()-400);
-            enemy.getPlayer().setOrientation(-1);
-            enemy.getPlayer().setX(enemy.getPlayer().getX()+400);
+        if(player.getPlayer().getOrientation() == enemy.getPlayer().getOrientation()
+            && player.getPlayer().getState() != Movement.THROWN_OUT
+            && enemy.getPlayer().getState() != Movement.THROWN_OUT
+            && player.getPlayer().endedMovement() && enemy.getPlayer().endedMovement()){
+            int o =  player.getPlayer().getOrientation();
+            if(pHurt.getX() > eHurt.getX() && o == 1){
+                enemy.getPlayer().setOrientation(-1);
+                enemy.getPlayer().setX(enemy.getPlayer().getX() + 400);
+            }
+            else if(pHurt.getX() > eHurt.getX() && o == -1){
+                player.getPlayer().setOrientation(1);
+                player.getPlayer().setX(player.getPlayer().getX() - 400);
+            }
+            else if(pHurt.getX() < eHurt.getX() && o == 1){
+                player.getPlayer().setOrientation(-1);
+                player.getPlayer().setX(player.getPlayer().getX() + 400);
+            }
+            else if(pHurt.getX() < eHurt.getX() && o == -1){
+                enemy.getPlayer().setOrientation(1);
+                enemy.getPlayer().setX(enemy.getPlayer().getX() - 400);
+            }
+        }
+        else if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
+                && pHurt.getX() > eHurt.getX()
+                && (player.getPlayer().endedMovement() || player.getPlayer().getState() == Movement.THROWN_OUT)
+                && (enemy.getPlayer().endedMovement() || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
+            if(player.getPlayer().getState() != Movement.THROWN_OUT) {
+                player.getPlayer().setOrientation(1);
+                player.getPlayer().setX(player.getPlayer().getX() - 400);
+            }
+            if(enemy.getPlayer().getState() != Movement.THROWN_OUT) {
+                enemy.getPlayer().setOrientation(-1);
+                enemy.getPlayer().setX(enemy.getPlayer().getX() + 400);
+            }
         }
         else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
-                && pHurt.getX() < eHurt.getX() && player.getPlayer().endedMovement()){
-            player.getPlayer().setOrientation(-1);
-            player.getPlayer().setX(player.getPlayer().getX()+400);
-            enemy.getPlayer().setOrientation(1);
-            enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
+                && pHurt.getX() < eHurt.getX()
+                && (player.getPlayer().endedMovement() || player.getPlayer().getState() == Movement.THROWN_OUT)
+                && (enemy.getPlayer().endedMovement() || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
+            if(player.getPlayer().getState() != Movement.THROWN_OUT) {
+                player.getPlayer().setOrientation(-1);
+                player.getPlayer().setX(player.getPlayer().getX() + 400);
+            }
+            if(enemy.getPlayer().getState() != Movement.THROWN_OUT) {
+                enemy.getPlayer().setOrientation(1);
+                enemy.getPlayer().setX(enemy.getPlayer().getX() - 400);
+            }
         }
     }
-
-    /*void fightManagement(hitBox pHurt, hitBox eHurt){
-        // Calculo de daños y colisiones
-        Movement player_act_state = player.getPlayer().getState();
-        Movement enemy_act_state = enemy.getPlayer().getState();
-        hitBox pHit = player.getPlayer().getHitbox();
-        hitBox eHit = enemy.getPlayer().getHitbox();
-        pHurt = player.getPlayer().getHurtbox();
-        eHurt = enemy.getPlayer().getHurtbox();
-        if(!eHit.collides(pHit)){
-            if(pHit.collides(eHurt) && player_old_state != player_act_state){
-                enemy.getPlayer().applyDamage(player.getPlayer().getDamage());
-                scorePlayer.addHit(player.getPlayer().getDamage()*10);
-                if(player.getPlayer().getState() == Movement.THROW){
-                    enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
-                }
-                else if(!enemy.getPlayer().isCrouched()){
-                    if(player.getPlayer().getDamage() > 10) {
-                        enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
-                    }
-                    else{
-                        enemy.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
-                    }
-                }
-                else{
-                    enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
-                }
-            }
-            if(player_old_state != player_act_state){
-                player_old_state = player_act_state;
-            }
-            if(eHit.collides(pHurt) && enemy_old_state != enemy_act_state){
-                player.getPlayer().applyDamage(enemy.getPlayer().getDamage());
-                scoreEnemy.addHit(enemy.getPlayer().getDamage()*10);
-                if(enemy.getPlayer().getState() == Movement.THROW){
-                    player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
-                }
-                else if(!player.getPlayer().isCrouched()){
-                    if(enemy.getPlayer().getDamage() > 10) {
-                        player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, pHurt, eHurt);
-                    }
-                    else{
-                        player.getPlayer().setState(Movement.SOFT_KNOCKBACK, pHurt, eHurt);
-                    }
-                }
-                else{
-                    player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
-                }
-            }
-            if(enemy_old_state != enemy_act_state){
-                enemy_old_state = enemy_act_state;
-            }
-        }
-
-        // EL 400 ES EL ANCHO DE LA IMAGEN
-        // Si se sobrepasan
-        if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
-                && pHurt.getX() > eHurt.getX() && player.getPlayer().endedMovement()){
-            player.getPlayer().setOrientation(1);
-            player.getPlayer().setX(player.getPlayer().getX()-400);
-            enemy.getPlayer().setOrientation(-1);
-            enemy.getPlayer().setX(enemy.getPlayer().getX()+400);
-        }
-        else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
-                && pHurt.getX() < eHurt.getX() && player.getPlayer().endedMovement()){
-            player.getPlayer().setOrientation(-1);
-            player.getPlayer().setX(player.getPlayer().getX()+400);
-            enemy.getPlayer().setOrientation(1);
-            enemy.getPlayer().setX(enemy.getPlayer().getX()-400);
-        }
-    }*/
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
