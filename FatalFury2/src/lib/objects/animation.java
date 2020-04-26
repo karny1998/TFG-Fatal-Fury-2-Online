@@ -371,4 +371,56 @@ public class animation {
     public void setUnstoppable(List<Boolean> unstoppableVector) {
         this.unstoppable = unstoppableVector;
     }
+
+    public long getAuxTime() {
+        return auxTime;
+    }
+
+    public void setAuxTime(long auxTime) {
+        this.auxTime = auxTime;
+    }
+
+    public void setCoverbox(hitBox coverbox) {
+        this.coverbox = coverbox;
+    }
+
+    public int getyCompleted() {
+        return yCompleted;
+    }
+
+    public void setyCompleted(int yCompleted) {
+        this.yCompleted = yCompleted;
+    }
+
+    public boolean isyAux() {
+        return yAux;
+    }
+
+    public void setyAux(boolean yAux) {
+        this.yAux = yAux;
+    }
+
+    public int getTotalIncrementY() {
+        return totalIncrementY;
+    }
+
+    public void setTotalIncrementY(int totalIncrementY) {
+        this.totalIncrementY = totalIncrementY;
+    }
+
+    public int getDesiredY() {
+        return desiredY;
+    }
+
+    public void setDesiredY(int desiredY) {
+        this.desiredY = desiredY;
+    }
+
+    public boolean isDesiredAssigned() {
+        return desiredAssigned;
+    }
+
+    public void setDesiredAssigned(boolean desiredAssigned) {
+        this.desiredAssigned = desiredAssigned;
+    }
 }
