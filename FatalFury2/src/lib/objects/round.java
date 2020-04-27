@@ -45,6 +45,8 @@ public class round {
     boolean isPerfect;
     // Time Out
     boolean isTimeOut;
+    // Double KO
+    boolean isDoubleKO;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
@@ -100,6 +102,9 @@ public class round {
                 } else if (enemyLife > playerLife) {
                     result = Round_Results.LOSE;
                 } else {
+                    if (playerLife == 0) {
+                        isDoubleKO = true;
+                    }
                     result = Round_Results.TIE;
                 }
                 roundTimer.stop();
@@ -453,9 +458,7 @@ public class round {
         this.scoreEnemy = scoreEnemy;
     }
 
-    public boolean isPerfect() {
-        return isPerfect;
-    }
+    public boolean isPerfect() { return isPerfect; }
 
     public void setPerfect(boolean perfect) {
         isPerfect = perfect;
@@ -467,6 +470,14 @@ public class round {
 
     public void setTimeOut(boolean TimeOut) {
         isTimeOut = TimeOut;
+    }
+
+    public boolean isDoubleKO() {
+        return isDoubleKO;
+    }
+
+    public void setDoubleKO(boolean doubleKO) {
+        isDoubleKO = doubleKO;
     }
 }
 
