@@ -105,9 +105,6 @@ public class round {
                 } else if (enemyLife > playerLife) {
                     result = Round_Results.LOSE;
                 } else {
-                    if (playerLife == 0) {
-                        isDoubleKO = true;
-                    }
                     result = Round_Results.TIE;
                 }
                 roundTimer.stop();
@@ -122,7 +119,15 @@ public class round {
         checkLifes.addActionListener(e -> {
             int playerLife = player.getPlayer().getLife();
             int enemyLife = enemy.getPlayer().getLife();
-            if (playerLife == 0) {
+            if (playerLife == 0 && enemyLife == 0) {
+                isDoubleKO = true;
+                result = Round_Results.TIE;
+                checkLifes.stop();
+                roundTimer.stop();
+                for (roundListener l : listeners)
+                    l.roundEnded();
+            }
+            else if (playerLife == 0) {
                 result = Round_Results.LOSE;
                 checkLifes.stop();
                 roundTimer.stop();
