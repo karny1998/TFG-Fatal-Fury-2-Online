@@ -22,7 +22,7 @@ public abstract  class character_controller {
 
     protected character rival = null;
 
-    public character_controller(Playable_Character ch, int x, int y, int orientation){
+    public character_controller(Playable_Character ch, int pN, int x, int y, int orientation){
         this.x = x; this.y = y;
         new IsKeyPressed();
         if(ch == Playable_Character.ANDY){
@@ -33,7 +33,7 @@ public abstract  class character_controller {
         }
         else{
             charac = "terry";
-            player = new character(Playable_Character.TERRY);
+            player = new character(Playable_Character.TERRY, pN);
             player.setX(x);
             player.setY(y);
             player.setOrientation(orientation);

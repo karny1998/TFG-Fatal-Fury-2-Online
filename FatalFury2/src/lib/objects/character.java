@@ -33,7 +33,7 @@ public class character {
     character rival;
 
     // Genera los movimientos en base al personaje deseado
-    public character(Playable_Character c){
+    public character(Playable_Character c, int pN){
         charac = c;
         if(c == Playable_Character.MAI){
             //generar movimientos de mai
@@ -44,7 +44,7 @@ public class character {
         else{
             voices = new Sound(Audio_Type.Andy_audio);
             //new terry().generateMovs(combos, movements, voices);
-            new load_character().generateMovs("terry", combos, movements, voices, 0.8);
+            new load_character().generateMovs("terry", pN, combos, movements, voices, 0.8);
         }
         // Por defecto está en STANDING
         movements.get(Movement.STANDING).start(999);
@@ -184,7 +184,7 @@ public class character {
             if(inKnockback() && !rival.inKnockback()){
                 rival.returnKnockback(Math.abs(x - s.getX()));
             }
-            if(collides){
+            if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
                 int increment = -orientation;
                 if(orientation == 1 && pHurt.getX() < eHurt.getX()
                         || orientation == -1 && pHurt.getX() > eHurt.getX()){

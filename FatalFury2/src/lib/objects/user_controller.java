@@ -19,8 +19,8 @@ public class user_controller extends character_controller{
     private String lastKey = "";
     private String mov = "";
 
-    public user_controller(Playable_Character ch){
-        super(ch,500,290, -1);
+    public user_controller(Playable_Character ch, int pN){
+        super(ch, pN,500,290, -1);
         Timer inptut_control = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
