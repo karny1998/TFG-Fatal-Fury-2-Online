@@ -56,7 +56,7 @@ public class load_character {
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
 
-    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement, movement> movs, Sound sounds, double multiplier) {
+    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, Sound sounds, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
         try {
             String value;
@@ -147,6 +147,7 @@ public class load_character {
                 else {
                     movs.put(movId, mov);
                     combos.put(combo, movId);
+                    combosInverse.put(movId,combo);
                 }
                 ++i;
             }

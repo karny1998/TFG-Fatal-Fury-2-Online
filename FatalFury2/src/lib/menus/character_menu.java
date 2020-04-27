@@ -75,7 +75,7 @@ public class character_menu {
         screenObjects.put(Item_Type.P2_MUG, p2_mug);
         screenObjects.put(Item_Type.P1_NAME, p1_name);
         screenObjects.put(Item_Type.P2_NAME, p2_name);
-        if( currentTime - referenceTime > 200){
+        if( currentTime - referenceTime > 125.0){
             boolean res = gestionMenu2( screenObjects);
             referenceTime = currentTime;
             return res;

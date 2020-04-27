@@ -42,6 +42,8 @@ public abstract  class character_controller {
 
     abstract void reset();
 
+    public void stopIA(){};
+
     void reset(Playable_Character ch, int x, int y, int orientation) {
         this.x = x; this.y = y;
         player.reset(x,y, orientation);

@@ -259,8 +259,8 @@ public class fight_controller implements roundListener {
 
     // Reset del audio
     private void endAudio() {
-        player.getPlayer().voices.endCharacterVoices();
-        enemy.getPlayer().voices.endCharacterVoices();
+        player.getPlayer().getVoices().endCharacterVoices();
+        enemy.getPlayer().getVoices().endCharacterVoices();
     }
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea

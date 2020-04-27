@@ -209,7 +209,7 @@ public class game_controller {
                     //enemy.setRival(user.getPlayer());
 
                     fight = new fight_controller(user,enemy,scene);
-                    fight.setVsIa(true);
+                    fight.setVsIa(!pvp);
                     screenObjects.remove(Item_Type.MENU);
                     state = GameState.FIGHT;
 

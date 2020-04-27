@@ -10,27 +10,29 @@ import lib.sound.Sound;
 import java.util.*;
 
 public class character {
-    Playable_Character charac;
+    private Playable_Character charac;
     // String que representa el combo para usar un tipo de ataque
-    Map<String, Movement> combos = new HashMap<String, Movement>();
+    private Map<String, Movement> combos = new HashMap<String, Movement>();
     // Movimiento asociando a un tipo de ataque
-    Map<Movement, movement> movements = new HashMap<Movement, movement>();
+    private Map<Movement, movement> movements = new HashMap<Movement, movement>();
+    // Inverso del primero para la ia
+    private Map<Movement, String> movementsKeys = new HashMap<>();;
     // Podría haberse puesto en un único mapa, pero fue para independizar
     // el movimiento en sí del combo necesario
     // Vida del personaje
-    int life = 100;
+    private int life = 100;
     // Orientación del personaje (1 mira hacia la izquierda, -1 hacia la derecha)
-    int orientation = 1;
+    private int orientation = 1;
     // Coordenadas actuales del personaje
-    int x = 150, y = 160;
+    private int x = 150, y = 160;
     // Estado del personaje en cuanto a movimientos
-    Movement state = Movement.STANDING;
+    private Movement state = Movement.STANDING;
     // Reproductor de voces del personaje
-    Sound voices;
+    private Sound voices;
     // Para gestión de límites de mapa
-    hitBox mapLimit;
+    private hitBox mapLimit;
     // Rival
-    character rival;
+    private character rival;
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
@@ -44,7 +46,7 @@ public class character {
         else{
             voices = new Sound(Audio_Type.Andy_audio);
             //new terry().generateMovs(combos, movements, voices);
-            new load_character().generateMovs("terry", pN, combos, movements, voices, 0.8);
+            new load_character().generateMovs("terry", pN, combos, movementsKeys, movements, voices, 0.8);
         }
         // Por defecto está en STANDING
         movements.get(Movement.STANDING).start(999);
@@ -421,5 +423,13 @@ public class character {
 
     public void setRival(character rival) {
         this.rival = rival;
+    }
+
+    public Map<Movement, String> getMovementsKeys() {
+        return movementsKeys;
+    }
+
+    public void setMovementsKeys(Map<Movement, String> movementsKeys) {
+        this.movementsKeys = movementsKeys;
     }
 }

@@ -20,10 +20,13 @@ public class round {
     character_controller player;
     // Anterior movimiento del jugador
     Movement player_old_state = Movement.STANDING;
+    Movement player_old_aux = Movement.STANDING;
     // Controlador del enemigo
     character_controller enemy;
     // Anterior movimiento del enemigo
     Movement enemy_old_state = Movement.STANDING;
+    Movement enemy_old_aux = Movement.STANDING;
+
 
     Boolean playerHit = false;
     Boolean enemyHit = false;
@@ -174,6 +177,9 @@ public class round {
             enemyHit = false;
         }
 
+        int dmgP = player.getPlayer().getDamage();
+        int dmgE = enemy.getPlayer().getDamage();
+
         if(!hitsCollides && !playerHits && !enemyHits){
             // TENER CUIDADO CON LO DEL STATECHANGED
             if(playerCovers && pStateChanged){
@@ -207,20 +213,19 @@ public class round {
         // Control de daño provocado por el jugador 1
         if((playerHits || hitsCollides) && (pStateChanged || !playerHit)){
             playerHit = true;
-            int dmg = player.getPlayer().getDamage();
             if(enemyCovers && playerState != Movement.THROW){
-                enemy.getPlayer().applyDamage((int) (dmg*0.5));
-                scorePlayer.addHit((int) (dmg*10*0.5));
+                enemy.getPlayer().applyDamage((int) (dmgP*0.5));
+                scorePlayer.addHit((int) (dmgP*10*0.5));
             }
             else{
-                enemy.getPlayer().applyDamage(dmg);
-                scorePlayer.addHit(dmg*10);
+                enemy.getPlayer().applyDamage(dmgP);
+                scorePlayer.addHit(dmgP*10);
             }
             if(playerState == Movement.THROW){
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
             else if(enemyState == Movement.STANDING_BLOCK){
-                if(dmg > 10) {
+                if(dmgP > 10) {
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, eHurt, pHurt);
                 }
                 else{
@@ -231,7 +236,7 @@ public class round {
                 if(enemy.getPlayer().isJumping()){
                     enemy.getPlayer().setState(Movement.JUMP_KNOCKBACK, eHurt, pHurt);
                 }
-                else if(dmg > 10) {
+                else if(dmgP > 10) {
                     enemy.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, eHurt, pHurt);
                 }
                 else{
@@ -245,20 +250,19 @@ public class round {
         // Control de daño provocado por el jugador 2
         if((enemyHits || hitsCollides) && (eStateChanged || !enemyHit)){
             enemyHit = true;
-            int dmg = enemy.getPlayer().getDamage();
             if(playerCovers && enemyState != Movement.THROW){
-                player.getPlayer().applyDamage((int) (dmg*0.5));
-                scoreEnemy.addHit((int) (dmg*10*0.5));
+                player.getPlayer().applyDamage((int) (dmgE*0.5));
+                scoreEnemy.addHit((int) (dmgE*10*0.5));
             }
             else{
-                player.getPlayer().applyDamage(dmg);
-                scoreEnemy.addHit(dmg*10);
+                player.getPlayer().applyDamage(dmgE);
+                scoreEnemy.addHit(dmgE*10);
             }
             if(enemyState == Movement.THROW){
                 player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
             }
             else if(playerState == Movement.STANDING_BLOCK){
-                if(dmg > 10) {
+                if(dmgE > 10) {
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, pHurt, eHurt);
                 }
                 else{
@@ -269,7 +273,7 @@ public class round {
                 if(player.getPlayer().isJumping()){
                     player.getPlayer().setState(Movement.JUMP_KNOCKBACK, pHurt, eHurt);
                 }
-                else if(dmg > 10) {
+                else if(dmgE > 10) {
                     player.getPlayer().setState(Movement.MEDIUM_KNOCKBACK, pHurt, eHurt);
                 }
                 else{
@@ -284,7 +288,6 @@ public class round {
 
     void fightManagement2(hitBox pHurt, hitBox eHurt){
         collidesManagement(pHurt, eHurt);
-
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan
         if(player.getPlayer().getOrientation() == enemy.getPlayer().getOrientation()

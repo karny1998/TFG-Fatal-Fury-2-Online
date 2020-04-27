@@ -5,6 +5,8 @@ import lib.Enums.Playable_Character;
 // Clase que representa el control de un personaje por IA
 public class enemy_controller extends character_controller{
 
+    ia_controller ia = new ia_controller();
+
     public enemy_controller(Playable_Character ch, int pN){
         super(ch, pN,750,290, 1);
     }
@@ -22,8 +24,9 @@ public class enemy_controller extends character_controller{
         String mov = "";
         String array[] = {"A","B", "DE-A"};
         mov = array[rand.nextInt(array.length)];
-        if(false){
-            this.x = this.player.getX();
+        if(!standBy){
+            return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
+            /*this.x = this.player.getX();
             this.y = this.player.getY();
 
             int rivalX = rival.getHurtbox().getX();
@@ -37,7 +40,7 @@ public class enemy_controller extends character_controller{
                     mov = "IZ";
                 }
             }
-            return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
+            return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());*/
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
     }
@@ -45,5 +48,15 @@ public class enemy_controller extends character_controller{
     @Override
     void reset() {
         reset(this.player.getCharac(),750,290, 1);
+    }
+
+    @Override
+    public void stopIA(){ia.stopIA();}
+
+    @Override
+    public void setRival(character rival) {
+        this.player.setRival(rival);
+        this.rival = rival;
+        ia = new ia_controller(rival,this.player,0);
     }
 }
