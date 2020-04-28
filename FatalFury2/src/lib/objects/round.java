@@ -291,7 +291,7 @@ public class round {
         }
     }
 
-    void fightManagement2(hitBox pHurt, hitBox eHurt){
+    void fightManagement(hitBox pHurt, hitBox eHurt){
         collidesManagement(pHurt, eHurt);
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan
@@ -350,7 +350,7 @@ public class round {
         hitBox pHurt = player.getPlayer().getHurtbox();
         hitBox eHurt = enemy.getPlayer().getHurtbox();
 
-        fightManagement2(pHurt,eHurt);
+        fightManagement(pHurt,eHurt);
 
         // Obtención de los frames a dibujar del jugador
         screenObject ply;

@@ -129,4 +129,8 @@ public abstract  class character_controller {
             player.setOrientation(1);
         }
     }
+    public ia_controller getIa() {
+        return new ia_controller();
+    }
+
 }

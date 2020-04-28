@@ -76,6 +76,7 @@ public class fight_controller implements roundListener {
     long introTimeStamp;
     boolean showOutro = false;
     long outroTimeStamp;
+    int iaLvl = 4;
 
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e, scenary s) {
@@ -265,6 +266,15 @@ public class fight_controller implements roundListener {
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        // Actualizar valores de la ia
+        if(!vsIa){
+            ia_controller iaAux = enemy.getIa();
+            iaAux.setLvl(iaLvl);
+            iaAux.setRound(roundCounter+1);
+            iaAux.setTime(currentRound.getTimeLeft());
+            iaAux.setpWins(playerScore);
+        }
+
         // ESCENARIO DE LA PELEA
         screenObjects.put(Item_Type.SCENARY_1, scene.getFrame1());
         screenObjects.put(Item_Type.SCENARY_2, scene.getFrame2());
@@ -686,5 +696,13 @@ public class fight_controller implements roundListener {
 
     public void setFight_result(Fight_Results fight_result) {
         this.fight_result = fight_result;
+    }
+
+    public int getIaLvl() {
+        return iaLvl;
+    }
+
+    public void setIaLvl(int iaLvl) {
+        this.iaLvl = iaLvl;
     }
 }

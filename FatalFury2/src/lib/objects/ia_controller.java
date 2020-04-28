@@ -2,7 +2,7 @@ package lib.objects;
 
 import javafx.util.Pair;
 import lib.Enums.Movement;
-import lib.Enums.moods;
+import lib.Enums.ia_type;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +12,8 @@ import java.util.Map;
 public class ia_controller {
     private character player;
     private character enemy;
-    private moods mood[];
+    private ia_type mood[] = new ia_type[4];
+    private Double weights[][] = new Double[4][5];
     private russian_roulette roulette;
     private ia_processor processor;
     private Timer control;
@@ -20,6 +21,8 @@ public class ia_controller {
     private String move = "";
     private int lvl = 1;
     private int round = 1;
+    private int pWins = 0;
+    private int time = 90;
     private long timeReference = System.currentTimeMillis();
 
     public  ia_controller(){}
@@ -28,13 +31,13 @@ public class ia_controller {
         this.movementsKeys = e.getMovementsKeys();
         this.round = 1;
         this.lvl = lvl;
-        moods mod[] = new moods[4];
         this.player = p;
         this.enemy = e;
-        Pair<ia_processor, russian_roulette> aux = ia_loader.loadIA(enemy.getCharac(), mod);
-        this.processor = aux.getKey();
-        this.roulette = aux.getValue();
-        this.mood = mod;
+        Pair<Pair<ia_processor,russian_roulette>, Pair<ia_type[], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac());
+        this.processor = aux.getKey().getKey();
+        this.roulette = aux.getKey().getValue();
+        this.mood = aux.getValue().getKey();
+        this.weights = aux.getValue().getValue();
         Timer ia_control = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,7 +53,7 @@ public class ia_controller {
     }
 
     private void ia_gestion(){
-        processor.updateRoulette(roulette, lvl, player, enemy, 90, round);
+        processor.updateRoulette(roulette, mood[round-1], weights[round-1], lvl, player, enemy, time, round, pWins);
         long current = System.currentTimeMillis();
         boolean timeOk = current - timeReference > 200.0;
         if(timeOk){timeReference = current;}
@@ -81,11 +84,11 @@ public class ia_controller {
         this.enemy = enemy;
     }
 
-    public moods[] getMood() {
+    public ia_type[] getMood() {
         return mood;
     }
 
-    public void setMood(moods[] mood) {
+    public void setMood(ia_type[] mood) {
         this.mood = mood;
     }
 
@@ -143,5 +146,37 @@ public class ia_controller {
 
     public void setRound(int round) {
         this.round = round;
+    }
+
+    public Double[][] getWeights() {
+        return weights;
+    }
+
+    public void setWeights(Double[][] weights) {
+        this.weights = weights;
+    }
+
+    public int getpWins() {
+        return pWins;
+    }
+
+    public void setpWins(int pWins) {
+        this.pWins = pWins;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
     }
 }

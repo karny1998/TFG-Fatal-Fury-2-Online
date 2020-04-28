@@ -26,21 +26,6 @@ public class enemy_controller extends character_controller{
         mov = array[rand.nextInt(array.length)];
         if(!standBy){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
-            /*this.x = this.player.getX();
-            this.y = this.player.getY();
-
-            int rivalX = rival.getHurtbox().getX();
-            int rivalW = rival.getHurtbox().getWidth();
-            if(rival.getOrientation() == 1 && Math.abs(rivalX - this.player.getHurtbox().getX()-this.player.getHurtbox().getWidth()) > 20
-                || rival.getOrientation() == -1 && Math.abs(this.player.getHurtbox().getX() -rivalX-rivalW) > 20){
-                if(rival.getOrientation() == 1) {
-                    mov = "DE";
-                }
-                else{
-                    mov = "IZ";
-                }
-            }
-            return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());*/
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
     }
@@ -58,5 +43,10 @@ public class enemy_controller extends character_controller{
         this.player.setRival(rival);
         this.rival = rival;
         ia = new ia_controller(rival,this.player,0);
+    }
+
+    @Override
+    public ia_controller getIa() {
+        return ia;
     }
 }

@@ -10,6 +10,8 @@ public class russian_roulette {
     private boolean basic = true;
     private List<Pair<Double, Movement>> basicSelections = new ArrayList<>();
     private List<Pair<Double, russian_roulette>> complexSelection = new ArrayList<>();
+    private List<Pair<Double, Movement>> basicSelectionsOriginal = new ArrayList<>();
+    private List<Pair<Double, russian_roulette>> complexSelectionOriginal = new ArrayList<>();
     private double total = 0.0;
     private Movement category = Movement.GLOBAL;
 
@@ -55,6 +57,7 @@ public class russian_roulette {
 
     public void addComponent(double p, Movement m){
         if(basic) {
+            basicSelectionsOriginal.add(new Pair<>(p, m));
             basicSelections.add(new Pair<>(p, m));
             total += p;
         }
@@ -62,12 +65,14 @@ public class russian_roulette {
 
     public void addComponent(double p, russian_roulette r){
         if(!basic){
+            complexSelectionOriginal.add(new Pair<>(p, r));
             complexSelection.add(new Pair<>(p, r));
             total += p;
         }
     }
 
     public void fillRoulette(){
+        updateTotal();
         if(basic){
             for(int i = 0; i < basicSelections.size(); ++i){
                 Pair<Double, Movement> aux = basicSelections.get(i);
@@ -114,5 +119,44 @@ public class russian_roulette {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public void updateTotal(){
+        total = 0.0;
+        if(basic){
+            for(int i = 0; i < basicSelections.size(); ++i){
+                total += basicSelections.get(i).getKey();
+            }
+        }
+        else{
+            for(int i = 0; i < complexSelection.size(); ++i){
+                total += complexSelection.get(i).getKey();
+                complexSelection.get(i).getValue().updateTotal();
+            }
+        }
+    }
+
+    public List<Pair<Double, Movement>> getBasicSelectionsOriginal() {
+        return basicSelectionsOriginal;
+    }
+
+    public void setBasicSelectionsOriginal(List<Pair<Double, Movement>> basicSelectionsOriginal) {
+        this.basicSelectionsOriginal = basicSelectionsOriginal;
+    }
+
+    public List<Pair<Double, russian_roulette>> getComplexSelectionOriginal() {
+        return complexSelectionOriginal;
+    }
+
+    public void setComplexSelectionOriginal(List<Pair<Double, russian_roulette>> complexSelectionOriginal) {
+        this.complexSelectionOriginal = complexSelectionOriginal;
+    }
+
+    public Movement getCategory() {
+        return category;
+    }
+
+    public void setCategory(Movement category) {
+        this.category = category;
     }
 }
