@@ -61,11 +61,18 @@ public class processor_life_round_based extends ia_processor {
     }
 
     @Override
-    public void updateRoulette(russian_roulette roulette, ia_type type, Double weights[], int lvl, character player,
+    public void updateRoulette(russian_roulette roulette, ia_type type[], Double weights[], int lvl, character player,
                                character enemy, int time, int round, int playerWins) {
+        int ind = -1;
+        for(int i = type.length-1; i > -1 && ind == -1; --i){
+            if((i+1)*100.0/(double)type.length >= (double)enemy.getLife() && i*100.0/(double)type.length <= (double)enemy.getLife()){
+                ind = type.length - 1 - i;
+            }
+        }
+        ia_type iat = type[ind];
         if(lvl == lastLvl && player.getLife() == lastPlayerLife && lastTime == time
                 && enemy.getLife() == lastIaLife && round == lastRound && lastWins == playerWins
-            || type == ia_type.BALANCED){
+            || iat == ia_type.BALANCED){
             return;
         }
 
@@ -101,7 +108,7 @@ public class processor_life_round_based extends ia_processor {
                 + Math.abs(weights[2]) * varEnemyLife + Math.abs(weights[3]) * varRound
                 + Math.abs(weights[4]) * varWins) / (4/lvl);
 
-        updateProbs(roulette, type, empowerment);
+        updateProbs(roulette, iat, empowerment);
         roulette.fillRoulette();
     }
 }

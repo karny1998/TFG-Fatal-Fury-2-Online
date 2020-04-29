@@ -89,6 +89,22 @@ public class russian_roulette {
         }
     }
 
+    public  russian_roulette clone(){
+        russian_roulette r = new russian_roulette();
+        if(basic) {
+            for (int i = 0; i < basicSelectionsOriginal.size(); ++i) {
+                r.addComponent(basicSelectionsOriginal.get(i).getKey(),basicSelectionsOriginal.get(i).getValue());
+            }
+        }
+        else{
+            for (int i = 0; i < complexSelectionOriginal.size(); ++i) {
+                r.addComponent(complexSelectionOriginal.get(i).getKey(),complexSelectionOriginal.get(i).getValue().clone());
+                r.setCategory(category);
+            }
+        }
+        return r;
+    }
+
     public boolean isBasic() {
         return basic;
     }

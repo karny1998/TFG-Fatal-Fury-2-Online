@@ -33,6 +33,8 @@ public class character {
     private hitBox mapLimit;
     // Rival
     private character rival;
+    // Lista de movimientos realizados
+    private List<Movement> executedMoves = new ArrayList<>();
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
@@ -88,6 +90,7 @@ public class character {
                 state = Movement.JUMP_ROLL_FALL;
             }
             movements.get(state).start(dis);
+            executedMoves.add(state);
             stateChanged = true;
         }
         else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended()
@@ -115,6 +118,7 @@ public class character {
                 }
             }
             movements.get(state).start(dis);
+            executedMoves.add(state);
             stateChanged = true;
         }
         else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state){
@@ -122,6 +126,7 @@ public class character {
                 movements.get(state).getAnim().reset();
                 state = combos.get(mov);
                 movements.get(state).start(dis);
+                executedMoves.add(state);
                 stateChanged = true;
             }
         }
@@ -168,6 +173,7 @@ public class character {
                     movements.get(state).start(dis);
                 }
             }
+            executedMoves.add(state);
             stateChanged = true;
         }
 
@@ -431,5 +437,13 @@ public class character {
 
     public void setMovementsKeys(Map<Movement, String> movementsKeys) {
         this.movementsKeys = movementsKeys;
+    }
+
+    public List<Movement> getExecutedMoves() {
+        return executedMoves;
+    }
+
+    public void setExecutedMoves(List<Movement> executedMoves) {
+        this.executedMoves = executedMoves;
     }
 }

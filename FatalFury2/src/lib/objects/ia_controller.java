@@ -12,10 +12,10 @@ import java.util.Map;
 public class ia_controller {
     private character player;
     private character enemy;
-    private ia_type mood[] = new ia_type[4];
+    private ia_type mood[][] = new ia_type[4][];
     private Double weights[][] = new Double[4][5];
     private russian_roulette roulette;
-    private ia_processor processor;
+    private ia_processor processor[];
     private Timer control;
     private Map<Movement, String> movementsKeys;
     private String move = "";
@@ -33,7 +33,7 @@ public class ia_controller {
         this.lvl = lvl;
         this.player = p;
         this.enemy = e;
-        Pair<Pair<ia_processor,russian_roulette>, Pair<ia_type[], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac());
+        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac());
         this.processor = aux.getKey().getKey();
         this.roulette = aux.getKey().getValue();
         this.mood = aux.getValue().getKey();
@@ -53,11 +53,15 @@ public class ia_controller {
     }
 
     private void ia_gestion(){
-        processor.updateRoulette(roulette, mood[round-1], weights[round-1], lvl, player, enemy, time, round, pWins);
+        for(int i = 0; i < processor.length; ++i) {
+            processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], lvl, player, enemy, time, round, pWins);
+        }
         long current = System.currentTimeMillis();
         boolean timeOk = current - timeReference > 200.0;
+        boolean timeOk2 = current - timeReference > 800.0;
         if(timeOk){timeReference = current;}
         if(enemy.endedMovement() || timeOk && enemy.getState() == Movement.WALKING || timeOk && enemy.getState() == Movement.WALKING_BACK
+                || timeOk && enemy.getState() == Movement.CROUCHED_WALKING || enemy.isJumping() && timeOk2
                 || !enemy.getMovements().get(enemy.getState()).hasEnd()){
             Movement m = roulette.spinRoulette();
             move = movementsKeys.get(m);
@@ -84,11 +88,11 @@ public class ia_controller {
         this.enemy = enemy;
     }
 
-    public ia_type[] getMood() {
+    public ia_type[][] getMood() {
         return mood;
     }
 
-    public void setMood(ia_type[] mood) {
+    public void setMood(ia_type[][] mood) {
         this.mood = mood;
     }
 
@@ -100,11 +104,11 @@ public class ia_controller {
         this.roulette = roulette;
     }
 
-    public ia_processor getProcessor() {
+    public ia_processor[] getProcessor() {
         return processor;
     }
 
-    public void setProcessor(ia_processor processor) {
+    public void setProcessor(ia_processor processor[]) {
         this.processor = processor;
     }
 
