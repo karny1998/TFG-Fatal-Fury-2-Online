@@ -12,12 +12,6 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
-//TODO  eliminar por completo la clase keybinding
-
-//TODO crear 2 vectores de booleanos que seran los mandos
-
-//TODO hacer los keybindings aqui
 public class controlListener implements KeyListener {
 
     static Boolean[] keyStatus;

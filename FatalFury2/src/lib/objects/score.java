@@ -5,6 +5,8 @@ import lib.Enums.Animation_type;
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,9 +121,11 @@ public class score {
         long current = System.currentTimeMillis();
         if(current - timeReference > 100.0){
             if(controlListener.getStatus(1, controlListener.AR_INDEX) && pointer > 0){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 --pointer;
             }
             else if(controlListener.getStatus(1, controlListener.AB_INDEX) && pointer < rank.size()-1){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 ++pointer;
             }
             timeReference = current;

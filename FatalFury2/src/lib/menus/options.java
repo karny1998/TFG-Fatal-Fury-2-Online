@@ -4,6 +4,8 @@ package lib.menus;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
 import lib.objects.screenObject;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -24,7 +26,6 @@ import java.util.Map;
 
 public class options {
 
-//TODO METER MAQUINA DE ESTADOS, CAMBIAR UN POCO ORGANIZACIÓN DE LA FUNCIÓN PRINCIPAL
 
     private String[] elementos = {
             "Volumen", "Volumen general", "Volumen musica", "Volumen voces", "Volumen efectos especiales",
@@ -271,7 +272,7 @@ public class options {
 
     private void updateValues() {
         controlListener.update();
-        //volumen.update
+        audio_manager.update();
     }
 
     public options(){
@@ -310,6 +311,11 @@ public class options {
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         screenObjects.put(Item_Type.MENU, fondo);
+        if(controlListener.getStatus(1, controlListener.ESC_INDEX)){
+            audio_manager.menu.play(menu_audio.indexes.back);
+            estado = estado_options.SALIR;
+
+        }
         //dependiendo del estado devolver una cosa u otra
         return exit;
     }
@@ -323,6 +329,7 @@ public class options {
             switch (estado){
                 case NAVEGACION_PRINCIPAL:
                     if(controlListener.getStatus(1, controlListener.AR_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         if(posicion > 0){
                             posicion--;
                             mostrando[posicion] = true;
@@ -337,6 +344,7 @@ public class options {
                             }
                         }
                     } else if(controlListener.getStatus(1, controlListener.AB_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         if(posicion + maxElementos < elementos.length){
                             mostrando[posicion] = false;
                             mostrando[posicion + maxElementos] = true;
@@ -349,12 +357,15 @@ public class options {
                             }
                         }
                     } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         estado = estado_options.NAVEGACION_SECUNDARIA;
                         opcion = estado_options.OPCION_SALIR;
                     } else if(controlListener.getStatus(1, controlListener.DE_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         estado = estado_options.NAVEGACION_SECUNDARIA;
                         opcion = estado_options.OPCION_GUARDAR;
                     } else if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
                         if(actual < 5){
                             estado = estado_options.CAMBIO_VOLUMEN;
                         } else {
@@ -364,23 +375,30 @@ public class options {
                     break;
                 case NAVEGACION_SECUNDARIA:
                     if(controlListener.getStatus(1, controlListener.AR_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         estado = estado_options.NAVEGACION_PRINCIPAL;
                     } else if(controlListener.getStatus(1, controlListener.AB_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         estado = estado_options.NAVEGACION_PRINCIPAL;
                     } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         opcion = estado_options.OPCION_SALIR;
                     } else if(controlListener.getStatus(1, controlListener.DE_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         opcion = estado_options.OPCION_GUARDAR;
                     } else if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
                         if(opcion == estado_options.OPCION_GUARDAR){
+                            audio_manager.menu.play(menu_audio.indexes.option_selected);
                             estado = estado_options.GUARDAR;
                         } else if(opcion == estado_options.OPCION_SALIR){
+                            audio_manager.menu.play(menu_audio.indexes.back);
                             estado = estado_options.SALIR;
                         }
                     }
                     break;
                 case MAPEO_TECLA:
                     if(controlListener.anyKeyPressed()){
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
                         int tecla = controlListener.getLastKey(0);
                         valores[actual] = String.valueOf(tecla);
                         estado = estado_options.NAVEGACION_PRINCIPAL;
@@ -389,10 +407,13 @@ public class options {
                 case CAMBIO_VOLUMEN:
                     int aux = Integer.parseInt(valores[actual]);
                     if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
                         estado = estado_options.NAVEGACION_PRINCIPAL;
                     } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         aux--;
                     } else if(controlListener.getStatus(1, controlListener.DE_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         aux++;
                     }
                     if (aux > 100) { aux = 100; }

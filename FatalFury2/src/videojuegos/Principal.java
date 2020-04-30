@@ -2,6 +2,7 @@ package videojuegos;
 
 import lib.input.controlListener;
 import lib.objects.Screen;
+import lib.sound.audio_manager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +12,8 @@ public class Principal extends JFrame {
 
     public Principal() {
         controlListener control = new controlListener();
+
+        audio_manager audio = new audio_manager();
 
         addKeyListener(control);
 

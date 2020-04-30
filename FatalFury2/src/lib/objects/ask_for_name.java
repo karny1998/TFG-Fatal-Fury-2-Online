@@ -3,6 +3,8 @@ package lib.objects;
 import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +59,7 @@ public class ask_for_name {
         }
         int aux = controlListener.getCurrentKey();
         if(ok && controlListener.isPressed(8) && name.length() > 0){
+            audio_manager.menu.play(menu_audio.indexes.move_cursor);
             name = name.substring(0, name.length()-1);
         }
         else if(ok && name.length() < 10 && aux != -1) {

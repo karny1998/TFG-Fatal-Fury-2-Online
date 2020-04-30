@@ -4,6 +4,8 @@ import lib.Enums.Item_Type;
 import lib.Enums.Playable_Character;
 import lib.input.controlListener;
 import lib.objects.screenObject;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.util.Map;
@@ -91,12 +93,15 @@ public class character_menu {
             p1_name =  new screenObject(0, 400,  356, 151, new ImageIcon(path  + names[pos_1]).getImage(), Item_Type.P1_MUG);
 
             if (controlListener.getStatus(1, controlListener.IZ_INDEX) && pos_1 > 0){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_1 -- ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_off.png").getImage(), Item_Type.P1_SELECT);
             } else if (controlListener.getStatus(1, controlListener.DE_INDEX) && pos_1 < 2){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_1 ++ ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_off.png").getImage(), Item_Type.P1_SELECT);
             } else if (controlListener.getStatus(1, controlListener.ENT_INDEX)) {
+                audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 actual = estados.P2_SELECT;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon(path  + "p1_on.png").getImage(), Item_Type.P1_SELECT);
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
@@ -127,12 +132,15 @@ public class character_menu {
             }
 
             if (controlListener.getStatus(mando, controlListener.IZ_INDEX) && pos_2 > 0){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_2 -- ;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.getStatus(mando, controlListener.DE_INDEX) && pos_2 < 2){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_2 ++ ;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "off.png").getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.getStatus(mando, controlListener.ENT_INDEX)) {
+                audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 actual = estados.DONE;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon(path + p2_aux + "on.png").getImage(), Item_Type.P2_SELECT);
                 switch (pos_2){

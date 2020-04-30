@@ -1,0 +1,316 @@
+private static String Voice_Route = "assets/sound/voice/";
+private static String Music_Route = "assets/sound/music/";
+private static String Special_Effects_Route = "assets/sound/special_effects/";
+
+private static float volumen_general = 1.0f;
+private static float volumen_musica = 1.0f;
+private static float volumen_voces = 1.0f;
+private static float volumen_sfx = 1.0f;
+
+private static List<Clip[]> clips;
+
+private static String optionsFilePath = "files/options.xml";
+
+private static int Character_Voices_Size = Character_Voices.values().length;
+private static int Announcer_Voices_Size = Announcer_voices.values().length;
+private static int Special_Effects_Size = Special_Effects.values().length;
+private static int Crowd_Voices_Size = Crowd_Voices.values().length;
+private static int Music_Size = Music.values().length;
+
+
+//TODO rehacer, cargar audios x fases
+//MENUS, LUCHA(DEPENDE DE LOS PJS)
+
+private Audio_Type tipo;
+
+public audioManager(){}
+
+public static void  loadMenus()throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        }
+
+private void loadAudio() throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
+        clips = new ArrayList<Clip[]>();
+        Clip[] terry_audio = new Clip[Character_Voices_Size];
+        Clip[] andy_audio = new Clip[Character_Voices_Size];
+        Clip[] mai_audio = new Clip[Character_Voices_Size];
+        Clip[] sfx_audio = new Clip[Special_Effects_Size];
+        Clip[] announcer_audio = new Clip[Announcer_Voices_Size];
+        Clip[] crowd_audio = new Clip[Crowd_Voices_Size];
+        Clip[] music_audio = new Clip[Music_Size];
+
+        System.out.println(Character_Voices_Size +Character_Voices_Size +Character_Voices_Size + Special_Effects_Size);
+
+        for(int i = 0; i < Character_Voices_Size; i++){
+        String ruta = Voice_Route + "Terry/" + Character_Voices.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        terry_audio[i] = AudioSystem.getClip();
+        terry_audio[i].open(audioInputStream);
+        }
+        clips.add(terry_audio);
+
+        for(int i = 0; i < Character_Voices_Size; i++){
+        String ruta = Voice_Route + "Andy/" + Character_Voices.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        andy_audio[i] = AudioSystem.getClip();
+        andy_audio[i].open(audioInputStream);
+        }
+        clips.add(andy_audio);
+
+        for(int i = 0; i < Character_Voices_Size; i++){
+        String ruta = Voice_Route + "Mai/" + Character_Voices.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        mai_audio[i] = AudioSystem.getClip();
+        mai_audio[i].open(audioInputStream);
+        }
+        clips.add(mai_audio);
+
+        for(int i = 0; i < Special_Effects_Size; i++){
+        String ruta = Special_Effects_Route + Special_Effects.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        sfx_audio[i] = AudioSystem.getClip();
+        sfx_audio[i].open(audioInputStream);
+        }
+        clips.add(sfx_audio);
+
+        for(int i = 0; i < Announcer_Voices_Size; i++){
+        String ruta = Voice_Route + "Announcer/" + Announcer_voices.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        System.out.println(i);
+        announcer_audio[i] = AudioSystem.getClip();
+        announcer_audio[i].open(audioInputStream);
+        }
+        clips.add(announcer_audio);
+
+        for(int i = 0; i < Crowd_Voices_Size; i++){
+        String ruta = Voice_Route + "Crowd/" + Crowd_Voices.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        crowd_audio[i] = AudioSystem.getClip();
+        crowd_audio[i].open(audioInputStream);
+        }
+        clips.add(crowd_audio);
+
+        for(int i = 0; i < Music_Size; i++){
+        String ruta = Music_Route + Music.values()[i].name() +".wav";
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(ruta).getAbsoluteFile());
+        music_audio[i] = AudioSystem.getClip();
+        music_audio[i].open(audioInputStream);
+        }
+        clips.add(music_audio);
+
+        }
+
+        public static void update(){
+        try {
+        File input = new File(optionsFilePath);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(input);
+        doc.getDocumentElement().normalize();
+
+        NodeList p1 = doc.getElementsByTagName("volumen").item(0).getChildNodes();
+
+
+        int vols[] = new int[4];
+        int indice = 0;
+        for (int i = 0; i < p1.getLength(); i++) {
+        Node node = p1.item(i);
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        vols[indice] = Integer.parseInt(node.getTextContent());
+        indice++;
+        }
+        }
+        volumen_general = (float) ((float)vols[0] / 100.0);
+        volumen_musica = (float) ((float)vols[1] / 100.0);
+        volumen_voces = (float) ((float)vols[2] / 100.0);
+        volumen_sfx = (float) ((float)vols[3] / 100.0);
+
+        setGeneralVolume();
+            /*setMusicVolume();
+            setVoicesVolume();
+            setSfxVolume();*/
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+        }
+
+        private static void play(int i, int j){
+        try {
+        clips.get(i)[j].setFramePosition(0);
+        clips.get(i)[j].start();
+        } catch (Exception e) {
+        System.err.println(e.getMessage());
+        }
+        }
+        public static void play(Audio_Type i, Character_Voices j){
+        play(i.ordinal(), j.ordinal());
+        }
+        public static void play(Audio_Type i, Special_Effects j){
+        play(i.ordinal(), j.ordinal());
+        }
+        public static void play(Audio_Type i, Announcer_voices j){
+        play(i.ordinal(), j.ordinal());
+        }
+        public static void play(Audio_Type i, Crowd_Voices j){
+        play(i.ordinal(), j.ordinal());
+        }
+        public static void play(Audio_Type i, Music j){
+        play(i.ordinal(), j.ordinal());
+        }
+
+        private static void loop(int i, int j){
+        try {
+        clips.get(i)[j].setFramePosition(0);
+        clips.get(i)[j].loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+        System.err.println(e.getMessage());
+        }
+        }
+        public static void loop(Audio_Type i, Character_Voices j){
+        loop(i.ordinal(), j.ordinal());
+        }
+        public static void loop(Audio_Type i, Special_Effects j){
+        loop(i.ordinal(), j.ordinal());
+        }
+        public static void loop(Audio_Type i, Announcer_voices j){
+        loop(i.ordinal(), j.ordinal());
+        }
+        public static void loop(Audio_Type i, Crowd_Voices j){
+        loop(i.ordinal(), j.ordinal());
+        }
+        public static void loop(Audio_Type i, Music j){
+        loop(i.ordinal(), j.ordinal());
+        }
+
+        private static void stop(int i, int j){
+        if( clips.get(i)[j].isRunning()){
+        clips.get(i)[j].stop();
+        }
+        }
+        public static void stopAll(Audio_Type at){
+        switch (at){
+        case Terry_audio:
+        case Andy_audio:
+        case Mai_audio:
+        for(int i = 0; i < Character_Voices_Size; i++){
+        stop(at.ordinal(), i);
+        }
+        break;
+        case Special_Effects_Audio:
+        for(int i = 0; i < Special_Effects_Size; i++){
+        stop(at.ordinal(), i);
+        }
+        break;
+        case Announcer_Audio:
+        for(int i = 0; i < Announcer_Voices_Size; i++){
+        stop(at.ordinal(), i);
+        }
+        break;
+        case Crowd_Audio:
+        for(int i = 0; i < Crowd_Voices_Size; i++){
+        stop(at.ordinal(), i);
+        }
+        break;
+        case Music_Audio:
+        for(int i = 0; i < Music_Size; i++){
+        stop(at.ordinal(), i);
+        }
+        break;
+        }
+
+        }
+        public static void stop(Audio_Type i, Character_Voices j){
+        stop(i.ordinal(), j.ordinal());
+        }
+        public static void stop(Audio_Type i, Special_Effects j){
+        stop(i.ordinal(), j.ordinal());
+        }
+        public static void stop(Audio_Type i, Announcer_voices j){
+        stop(i.ordinal(), j.ordinal());
+        }
+        public static void stop(Audio_Type i, Crowd_Voices j){
+        stop(i.ordinal(), j.ordinal());
+        }
+        public static void stop(Audio_Type i, Music j){
+        stop(i.ordinal(), j.ordinal());
+        }
+
+        private static void resume(int i, int j){
+        if(!clips.get(i)[j].isRunning() && clips.get(i)[j].getFramePosition() != 0){
+        clips.get(i)[j].start();
+        }
+        }
+        public static void resume(Audio_Type i, Character_Voices j){
+        resume(i.ordinal(), j.ordinal());
+        }
+        public static void resume(Audio_Type i, Special_Effects j){
+        resume(i.ordinal(), j.ordinal());
+        }
+        public static void resume(Audio_Type i, Announcer_voices j){
+        resume(i.ordinal(), j.ordinal());
+        }
+        public static void resume(Audio_Type i, Crowd_Voices j){
+        resume(i.ordinal(), j.ordinal());
+        }
+        public static void resume(Audio_Type i, Music j){
+        resume(i.ordinal(), j.ordinal());
+        }
+
+
+        private static void setGeneralVolume(){
+        volumen_musica *= volumen_general;
+        volumen_voces *= volumen_general;
+        volumen_sfx *= volumen_general;
+        setMusicVolume();
+        setVoicesVolume();
+        setSfxVolume();
+        }
+        private static void setMusicVolume(){
+        //music
+        Audio_Type actual = Audio_Type.Music_Audio;
+        for(int i = 0; i < Music_Size; i++){
+        setVolume(volumen_musica, actual.ordinal(), i);
+        }
+        }
+        private static void setVoicesVolume(){
+        //terry
+        Audio_Type actual = Audio_Type.Terry_audio;
+        for(int i = 0; i < Character_Voices_Size; i++){
+        setVolume(volumen_voces, actual.ordinal(), i);
+        }
+        //andy
+        actual = Audio_Type.Andy_audio;
+        for(int i = 0; i < Character_Voices_Size; i++){
+        setVolume(volumen_voces, actual.ordinal(), i);
+        }
+        //mai
+        actual = Audio_Type.Mai_audio;
+        for(int i = 0; i < Character_Voices_Size; i++){
+        setVolume(volumen_voces, actual.ordinal(), i);
+        }
+        //announcer
+        actual = Audio_Type.Announcer_Audio;
+        for(int i = 0; i < Announcer_Voices_Size; i++){
+        setVolume(volumen_voces, actual.ordinal(), i);
+        }
+        //crowd
+        actual = Audio_Type.Crowd_Audio;
+        for(int i = 0; i < Crowd_Voices_Size; i++){
+        setVolume(volumen_voces, actual.ordinal(), i);
+        }
+        }
+        private static void setSfxVolume(){
+        //sfx
+        Audio_Type actual = Audio_Type.Special_Effects_Audio;
+        for(int i = 0; i < Special_Effects_Size; i++){
+        setVolume(volumen_sfx, actual.ordinal(), i);
+        }
+        }
+
+        private static void setVolume(float Vol, int i, int j){
+        FloatControl gainControl = (FloatControl) clips.get(i)[j].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(Vol));
+        }
+
+
