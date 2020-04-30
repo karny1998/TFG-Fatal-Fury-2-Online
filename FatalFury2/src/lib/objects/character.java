@@ -192,14 +192,14 @@ public class character {
             if(inKnockback() && !rival.inKnockback()){
                 rival.returnKnockback(Math.abs(x - s.getX()));
             }
-            if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
+            if(collides && pHurt.getY() < eHurt.getY()+eHurt.getHeight()){
                 int increment = -orientation;
-                if(orientation == 1 && pHurt.getX() < eHurt.getX()
+                if(orientation == 1 && pHurt.getX() <= eHurt.getX()
                         || orientation == -1 && pHurt.getX() > eHurt.getX()){
                     increment = -orientation;
                 }
-                x = s.getX() + increment;
-                s.setX(x);
+                 x += increment;
+                 s.setX(x);
             }
             else{
                 s.setX(x);
@@ -214,7 +214,13 @@ public class character {
                     || orientation == -1 && pHurt.getX() > eHurt.getX()){
                 increment = -orientation;
             }
-            x = s.getX() + increment;
+            if(eHurt.getX() <= mapLimit.getX() && s.getX() < x
+                || eHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth()){
+                x += increment;
+            }
+            else{
+                x = s.getX() + increment;
+            }
             s.setX(x);
         }
         // Si no colisiona, o está andando hacia atrás mirando a la izquierda
@@ -282,6 +288,14 @@ public class character {
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT};
+        List<Movement> knock = Arrays.asList(array);
+        return knock.contains(state);
+    }
+
+    boolean inDisplacement(){
+        Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
+                Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
+                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT};
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
     }

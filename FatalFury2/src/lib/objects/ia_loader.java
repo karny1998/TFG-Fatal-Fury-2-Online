@@ -4,7 +4,7 @@ import javafx.util.Pair;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
 import lib.Enums.ia_type;
-import lib.objects.ia_processors.processor_tendencies_player_based;
+import lib.objects.ia_processors.processor_life_round_based;
 
 public class ia_loader {
     public ia_loader(){}
@@ -24,8 +24,8 @@ public class ia_loader {
         rr.fillRoulette();
         ia_type m[][] = {{ia_type.AGRESSIVE, ia_type.DEFENSIVE}, {ia_type.DEFENSIVE, ia_type.AGRESSIVE}, {ia_type.AGRESSIVE, ia_type.DEFENSIVE}, {ia_type.DEFENSIVE,ia_type.AGRESSIVE}};
         Double aux[][]  = {{0.35, 0.15, 0.15, 0.25, 0.2}, {0.35, 0.15, 0.15, 0.25, 0.2},{0.35, 0.15, 0.15, 0.25, 0.2},{0.35, 0.15, 0.15, 0.25, 0.2}};
-        //ia_processor ips[] = {new processor_life_round_based()};
-        ia_processor ips[] = {new processor_tendencies_player_based()};
+        ia_processor ips[] = {new processor_life_round_based()};
+        //ia_processor ips[] = {new processor_tendencies_player_based()};
         return new Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>>(new Pair<>(ips, rr), new Pair<ia_type[][], Double[][]>(m, aux));
     }
 }

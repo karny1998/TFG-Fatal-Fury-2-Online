@@ -15,45 +15,50 @@ interface roundListener {
 
 public class round {
     // Tiempo restante hasta final de ronda
-    int timeLeft;
+    private int timeLeft;
     // Controlador del usuario
-    character_controller player;
+    private character_controller player;
     // Anterior movimiento del jugador
-    Movement player_old_state = Movement.STANDING;
-    Movement player_old_aux = Movement.STANDING;
+    private Movement player_old_state = Movement.STANDING;
     // Controlador del enemigo
-    character_controller enemy;
+    private character_controller enemy;
     // Anterior movimiento del enemigo
-    Movement enemy_old_state = Movement.STANDING;
-    Movement enemy_old_aux = Movement.STANDING;
+    private Movement enemy_old_state = Movement.STANDING;
 
-
-    Boolean playerHit = false;
-    Boolean enemyHit = false;
+    private Boolean playerHit = false;
+    private Boolean enemyHit = false;
     // Resultado de la ronda
-    Round_Results result;
+    private Round_Results result;
     // Listeners de la ronda
     private List<roundListener> listeners = new ArrayList<roundListener>();
     // Timers de la ronda
-    Timer checkLifes = new Timer(1000, null);;
-    Timer roundTimer = new Timer(1000, null);;
+    private Timer checkLifes = new Timer(1000, null);;
+    private Timer roundTimer = new Timer(1000, null);;
     // Comprobación de parada de timers
-    boolean paused1;
-    boolean paused2;
+    private boolean paused1;
+    private boolean paused2;
     // Score p1
-    score scorePlayer;
+    private score scorePlayer;
     // Score p2
-    score scoreEnemy;
+    private  score scoreEnemy;
     // Perfect
-    boolean isPerfect;
+    private boolean isPerfect;
     // Time Out
-    boolean isTimeOut;
+    private boolean isTimeOut;
     // Double KO
     boolean isDoubleKO;
+    private boolean enemyEnded = false;
+    private boolean playerEnded = false;
+
+    private hitBox mapLimit = new hitBox(-145,0,1571,720,box_type.HURTBOX);
+    private hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
+    private int scenaryOffset = 0;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
         this.enemy = e;
+        p.getPlayer().setMapLimit(cameraLimit);
+        e.getPlayer().setMapLimit(cameraLimit);
         player_old_state = p.getPlayer().getState();
         enemy_old_state = e.getPlayer().getState();
         this.result = Round_Results.UNFINISHED;
@@ -295,10 +300,24 @@ public class round {
         collidesManagement(pHurt, eHurt);
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan
+        if((player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
+           && pHurt.getX() > eHurt.getX() || player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
+                && pHurt.getX() < eHurt.getX())
+            /*&& player.getPlayer().getState() != Movement.THROWN_OUT
+            && player.getPlayer().getState() != Movement.THROW && enemy.getPlayer().getState() != Movement.THROWN_OUT
+                && enemy.getPlayer().getState() != Movement.THROW*/){
+            if(enemy.getPlayer().endedMovement() && !player.getPlayer().endedMovement()){
+                enemyEnded = true;
+            }
+            else if(!enemy.getPlayer().endedMovement() && player.getPlayer().endedMovement()){
+                playerEnded = true;
+            }
+        }
+
         if(player.getPlayer().getOrientation() == enemy.getPlayer().getOrientation()
             && player.getPlayer().getState() != Movement.THROWN_OUT
             && enemy.getPlayer().getState() != Movement.THROWN_OUT
-            && player.getPlayer().endedMovement() && enemy.getPlayer().endedMovement()){
+            && (player.getPlayer().endedMovement() || playerEnded) && (enemy.getPlayer().endedMovement() || enemyEnded)){
             int o =  player.getPlayer().getOrientation();
             if(pHurt.getX() > eHurt.getX() && o == 1){
                 enemy.getPlayer().setOrientation(-1);
@@ -316,11 +335,13 @@ public class round {
                 enemy.getPlayer().setOrientation(1);
                 enemy.getPlayer().setX(enemy.getPlayer().getX() - 400);
             }
+            enemyEnded = false;
+            playerEnded = false;
         }
         else if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
                 && pHurt.getX() > eHurt.getX()
-                && (player.getPlayer().endedMovement() || player.getPlayer().getState() == Movement.THROWN_OUT)
-                && (enemy.getPlayer().endedMovement() || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
+                && (player.getPlayer().endedMovement() || playerEnded || player.getPlayer().getState() == Movement.THROWN_OUT)
+                && (enemy.getPlayer().endedMovement() || enemyEnded || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
             if(player.getPlayer().getState() != Movement.THROWN_OUT) {
                 player.getPlayer().setOrientation(1);
                 player.getPlayer().setX(player.getPlayer().getX() - 400);
@@ -329,11 +350,15 @@ public class round {
                 enemy.getPlayer().setOrientation(-1);
                 enemy.getPlayer().setX(enemy.getPlayer().getX() + 400);
             }
+            if(player.getPlayer().getState() != Movement.THROWN_OUT && enemy.getPlayer().getState() != Movement.THROWN_OUT) {
+                enemyEnded = false;
+                playerEnded = false;
+            }
         }
         else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
                 && pHurt.getX() < eHurt.getX()
-                && (player.getPlayer().endedMovement() || player.getPlayer().getState() == Movement.THROWN_OUT)
-                && (enemy.getPlayer().endedMovement() || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
+                && (player.getPlayer().endedMovement() || playerEnded || player.getPlayer().getState() == Movement.THROWN_OUT)
+                && (enemy.getPlayer().endedMovement() || enemyEnded || enemy.getPlayer().getState() == Movement.THROWN_OUT)){
             if(player.getPlayer().getState() != Movement.THROWN_OUT) {
                 player.getPlayer().setOrientation(-1);
                 player.getPlayer().setX(player.getPlayer().getX() + 400);
@@ -341,6 +366,44 @@ public class round {
             if(enemy.getPlayer().getState() != Movement.THROWN_OUT) {
                 enemy.getPlayer().setOrientation(1);
                 enemy.getPlayer().setX(enemy.getPlayer().getX() - 400);
+            }
+            if(player.getPlayer().getState() != Movement.THROWN_OUT && enemy.getPlayer().getState() != Movement.THROWN_OUT) {
+                enemyEnded = false;
+                playerEnded = false;
+            }
+        }
+    }
+
+    void cameraManagement(hitBox pHurt,hitBox eHurt){
+        int xP, xE;
+        if(pHurt.getX() < eHurt.getX()){
+            xP = pHurt.getX();
+            xE = eHurt.getX()+eHurt.getWidth();
+        }
+        else{
+            xE = eHurt.getX();
+            xP = pHurt.getX()+pHurt.getWidth();
+        }
+        if(Math.min(xP,xE) > cameraLimit.getX() && Math.max(xP,xE) >= cameraLimit.getX()+cameraLimit.getWidth()
+            && cameraLimit.getX()+cameraLimit.getWidth() + 40 - scenaryOffset < mapLimit.getX()+mapLimit.getWidth()){
+            if(xP > xE && player.getPlayer().inDisplacement()){
+                --scenaryOffset;
+                enemy.getPlayer().setX(enemy.getPlayer().getX()-1);
+            }
+            else if(xP < xE && enemy.getPlayer().inDisplacement()) {
+                player.getPlayer().setX(player.getPlayer().getX()-1);
+                --scenaryOffset;
+            }
+        }
+        else if(Math.min(xP,xE) <= cameraLimit.getX() && Math.max(xP,xE) < cameraLimit.getX()+cameraLimit.getWidth()
+                && cameraLimit.getX() - 40 - scenaryOffset > mapLimit.getX()){
+            if(xP > xE && enemy.getPlayer().inDisplacement()){
+                player.getPlayer().setX(player.getPlayer().getX()+1);
+                ++scenaryOffset;
+            }
+            else if( xP < xE && player.getPlayer().inDisplacement()) {
+                enemy.getPlayer().setX(enemy.getPlayer().getX()+1);
+                ++scenaryOffset;
             }
         }
     }
@@ -351,6 +414,7 @@ public class round {
         hitBox eHurt = enemy.getPlayer().getHurtbox();
 
         fightManagement(pHurt,eHurt);
+        cameraManagement(pHurt,eHurt);
 
         // Obtención de los frames a dibujar del jugador
         screenObject ply;
@@ -486,6 +550,14 @@ public class round {
 
     public void setDoubleKO(boolean doubleKO) {
         isDoubleKO = doubleKO;
+    }
+
+    public int getScenaryOffset() {
+        return scenaryOffset;
+    }
+
+    public void setScenaryOffset(int scenaryOffset) {
+        this.scenaryOffset = scenaryOffset;
     }
 }
 

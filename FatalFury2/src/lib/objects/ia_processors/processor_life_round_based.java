@@ -106,7 +106,7 @@ public class processor_life_round_based extends ia_processor {
         }
         double empowerment = (Math.abs(weights[0]) * varTime + Math.abs(weights[1]) * varPlayerLife
                 + Math.abs(weights[2]) * varEnemyLife + Math.abs(weights[3]) * varRound
-                + Math.abs(weights[4]) * varWins) / (4/lvl);
+                + Math.abs(weights[4]) * varWins) / (4.0/(double)lvl);
 
         updateProbs(roulette, iat, empowerment);
         roulette.fillRoulette();

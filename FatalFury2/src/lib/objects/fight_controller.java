@@ -276,8 +276,12 @@ public class fight_controller implements roundListener {
         }
 
         // ESCENARIO DE LA PELEA
-        screenObjects.put(Item_Type.SCENARY_1, scene.getFrame1());
-        screenObjects.put(Item_Type.SCENARY_2, scene.getFrame2());
+        screenObject s1 = scene.getFrame1().cloneSO();
+        s1.setX(s1.getX()+currentRound.getScenaryOffset());
+        screenObject s2 = scene.getFrame2().cloneSO();
+        s2.setX(s2.getX()+currentRound.getScenaryOffset());
+        screenObjects.put(Item_Type.SCENARY_1, s1);
+        screenObjects.put(Item_Type.SCENARY_2, s2);
         // TIMER
         if (noTimer) {
             screenObjects.remove(Item_Type.TIMER2);
@@ -704,5 +708,13 @@ public class fight_controller implements roundListener {
 
     public void setIaLvl(int iaLvl) {
         this.iaLvl = iaLvl;
+    }
+
+    public hitBox getMapLimit() {
+        return mapLimit;
+    }
+
+    public void setMapLimit(hitBox mapLimit) {
+        this.mapLimit = mapLimit;
     }
 }
