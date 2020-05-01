@@ -34,7 +34,7 @@ public class audio_manager {
     public audio_manager(){
         update();
         menu = new menu_audio();
-        menu.update(volumen_musica, volumen_sfx);
+        menu.update(volumen_musica, volumen_sfx, volumen_voces);
         actual = estado.MENUS;
     }
 
@@ -50,7 +50,7 @@ public class audio_manager {
     public static void endFight(){
         if (actual == estado.PELEA){
             menu = new menu_audio();
-            menu.update(volumen_musica, volumen_sfx);
+            menu.update(volumen_musica, volumen_sfx, volumen_voces);
             fight.close();
             actual = estado.MENUS;
         }
@@ -61,7 +61,7 @@ public class audio_manager {
         if (actual == estado.PELEA){
             fight.update(volumen_musica, volumen_sfx, volumen_voces);
         } else if (actual == estado.MENUS){
-            menu.update(volumen_musica, volumen_sfx);
+            menu.update(volumen_musica, volumen_sfx, volumen_voces);
         }
     }
 

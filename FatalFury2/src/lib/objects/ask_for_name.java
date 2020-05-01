@@ -1,9 +1,9 @@
 package lib.objects;
 
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
 import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import javax.swing.*;
@@ -20,7 +20,6 @@ public class ask_for_name {
     public  ask_for_name(){
         timeReference = System.currentTimeMillis();
         loadAnim();
-        new IsKeyPressed();
         String path = "files/last_name.txt";
         try {
             FileReader f = new FileReader(path);
@@ -42,8 +41,8 @@ public class ask_for_name {
         anim.addFrame(s,250.0,0,0);
         s = new screenObject(191, 186,  897, 347, new ImageIcon(path  + "rank_register_2.png").getImage(), Item_Type.MENU);
         anim.addFrame(s,250.0,0,0);
-        anim.setSound(null);
-        anim.setSoundType(Character_Voices.Win);
+        anim.setHasSound(false);
+        anim.setSoundType(fight_audio.voice_indexes.Win);
     }
 
     public  screenObject getAnimation(){

@@ -5,13 +5,15 @@ import lib.Enums.Item_Type;
 import lib.Enums.Round_Results;
 import lib.Enums.Scenario_time;
 import lib.maps.scenary;
+import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.lang.Math.abs;
 
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
@@ -78,6 +80,10 @@ public class fight_controller implements roundListener {
     long outroTimeStamp;
     int iaLvl = 4;
 
+
+    boolean audio_ready = false, audio_round = false, audio_fight = false;
+    boolean audio_timeOut = false, audio_perfect = false, audio_double_ko = false, audio_draw_game = false;
+    boolean audio_crowd_1 = false, audio_crowd_2 = false;
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e, scenary s) {
         scene = s;
@@ -177,10 +183,11 @@ public class fight_controller implements roundListener {
             ++enemyScore;
         }
     }
-
+    Random random = new Random();
     // Gestión de rondas, se llama cuando la ronda actual termina
     @Override
     public void roundEnded() {
+
         player.startStandBy();
         enemy.startStandBy();
         // Gestión puntos
@@ -192,12 +199,29 @@ public class fight_controller implements roundListener {
         }
         wasPerfect = currentRound.isPerfect();
         wasTimedOut = currentRound.isTimeOut();
+        if(!wasTimedOut){
+            int sonido = abs(random.nextInt() % 3);
+            switch (sonido){
+                case 0:
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Final_hit_1);
+                    break;
+                case 1:
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Final_hit_2);
+                    break;
+                case 2:
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Final_hit_3);
+                    break;
+            }
+
+        }
+
         wasDoubleKO = currentRound.isDoubleKO;
         ++roundCounter;
         results.add(currentRound.getResult());
         showOutro();
         // Segunda ronda
         if (roundCounter == 1) {
+
             Round_Results lastResult = results.get(0);
             updateScores(lastResult);
             newRound = true;
@@ -207,7 +231,7 @@ public class fight_controller implements roundListener {
             Round_Results lastResult = results.get(1);
             updateScores(lastResult);
             // Uno de los dos ha ganado
-            if (Math.abs(playerScore - enemyScore) == 2) {
+            if (abs(playerScore - enemyScore) == 2) {
                 if (playerScore == 2) {
                     fight_result = Fight_Results.PLAYER1_WIN;
                 }
@@ -259,9 +283,11 @@ public class fight_controller implements roundListener {
     }
 
     // Reset del audio
-    private void endAudio() {
-        player.getPlayer().getVoices().endCharacterVoices();
-        enemy.getPlayer().getVoices().endCharacterVoices();
+    private void endAudio()
+    {
+        //TODO REMAKE
+        //player.getPlayer().getVoices().endCharacterVoices();
+        //enemy.getPlayer().getVoices().endCharacterVoices();
     }
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
@@ -318,28 +344,58 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.BUBBLE4,enemyBubbles.get(1));
         // ANUNCIOS ENTRE RONDAS
         if (showIntro) {
+            if(!audio_crowd_1){
+                audio_manager.fight.playCrowd(fight_audio.crowd_indexes.Cheer_1);
+                audio_crowd_1 = true;
+            }
             Date date = new Date();
             long timePast = date.getTime() - introTimeStamp;
             if (timePast <= announcementTime && roundCounter == 0) {
+                if(!audio_ready){
+                    audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Ready);
+                    audio_ready = true;
+                }
+                //match play
                 screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,match_play, Item_Type.ANNOUNCEMENT));
             }
             else if (timePast <= announcementTime * 2 && roundCounter == 0 || timePast <= announcementTime && roundCounter > 0) {
+                //round number
                 switch (roundCounter) {
                     case 0:
+                        if(!audio_round){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Round_One);
+                            audio_round = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,round_1, Item_Type.ANNOUNCEMENT));
                         break;
                     case 1:
+                        if(!audio_round){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Round_Two);
+                            audio_round = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,round_2, Item_Type.ANNOUNCEMENT));
                         break;
                     case 2:
+                        if(!audio_round){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Round_Three);
+                            audio_round = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,round_3, Item_Type.ANNOUNCEMENT));
                         break;
                     case 3:
+                        if(!audio_round){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Final_Round);
+                            audio_round = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT,new screenObject(440,345,400,40,round_extra, Item_Type.ANNOUNCEMENT));
                         break;
                 }
             }
             else if (timePast <= announcementTime + 700 && roundCounter > 0 || timePast <= announcementTime * 2 + 700 && roundCounter == 0) {
+                if(!audio_fight){
+                    audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Fight);
+                    audio_fight = true;
+                }
                 if (!startedFightAnimation) {
                     startedFightAnimation = true;
                     fightAnnouncement.start();
@@ -347,7 +403,11 @@ public class fight_controller implements roundListener {
                 screenObjects.put(Item_Type.ANNOUNCEMENT,fightAnnouncement.getFrame());
             }
             else {
+                audio_ready = false;
+                audio_round = false;
+                audio_fight = false;
                 showIntro = false;
+                audio_crowd_1 = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 startedFightAnimation = false;
                 player.endStandBy();
@@ -356,14 +416,27 @@ public class fight_controller implements roundListener {
             }
         }
         if (showOutro) {
+            if(!audio_crowd_2){
+                audio_manager.fight.playCrowd(fight_audio.crowd_indexes.Cheer_2);
+                audio_crowd_2 = true;
+            }
+
             Date date = new Date();
             long timePast = date.getTime() - outroTimeStamp;
             Round_Results lastResult = results.get(results.size()-1);
             if (timePast <= announcementTime) {
                 if (wasTimedOut) {
+                    if(!audio_timeOut){
+                        audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Time_Up);
+                        audio_timeOut = true;
+                    }
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, time_up, Item_Type.ANNOUNCEMENT));
                 }
                 else if (wasPerfect) {
+                    if(!audio_perfect) {
+                        audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Perfect);
+                        audio_perfect = true;
+                    }
                     screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, perfect, Item_Type.ANNOUNCEMENT));
                 }
                 else if (lastResult == Round_Results.WIN) {
@@ -402,9 +475,17 @@ public class fight_controller implements roundListener {
             else if (timePast <= announcementTime * 2) {
                 if (lastResult == Round_Results.TIE) {
                     if (wasDoubleKO) {
+                        if (!audio_double_ko){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Double_KO);
+                            audio_double_ko = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, double_ko, Item_Type.ANNOUNCEMENT));
                     }
                     else {
+                        if(!audio_draw_game){
+                            audio_manager.fight.playAnnouncer(fight_audio.announcer_indexes.Draw_Game);
+                            audio_draw_game = true;
+                        }
                         screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, draw_game, Item_Type.ANNOUNCEMENT));
                     }
                 }
@@ -467,6 +548,11 @@ public class fight_controller implements roundListener {
             }
             else {
                 showOutro = false;
+                audio_timeOut = false;
+                audio_perfect = false;
+                audio_double_ko = false;
+                audio_draw_game = false;
+                audio_crowd_2 = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 if (newRound) {
                     player.reset();

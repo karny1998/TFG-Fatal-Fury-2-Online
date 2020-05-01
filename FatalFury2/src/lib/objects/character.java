@@ -1,11 +1,9 @@
 package lib.objects;
 
 import lib.Enums.Animation_type;
-import lib.Enums.Audio_Type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
 import lib.characters.load_character;
-import lib.sound.Sound;
 
 import java.util.*;
 
@@ -27,8 +25,6 @@ public class character {
     private int x = 150, y = 160;
     // Estado del personaje en cuanto a movimientos
     private Movement state = Movement.STANDING;
-    // Reproductor de voces del personaje
-    private Sound voices;
     // Para gestión de límites de mapa
     private hitBox mapLimit;
     // Rival
@@ -46,9 +42,9 @@ public class character {
             //generar movimientos de andy
         }
         else{
-            voices = new Sound(Audio_Type.Andy_audio);
+            //TODO
             //new terry().generateMovs(combos, movements, voices);
-            new load_character().generateMovs("terry", pN, combos, movementsKeys, movements, voices, 0.8);
+            new load_character().generateMovs("terry", pN, combos, movementsKeys, movements, 0.8);
         }
         // Por defecto está en STANDING
         movements.get(Movement.STANDING).start(999);
@@ -403,14 +399,6 @@ public class character {
 
     public boolean endedMovement(){
         return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
-    }
-
-    public Sound getVoices() {
-        return voices;
-    }
-
-    public void setVoices(Sound voices) {
-        this.voices = voices;
     }
 
     public  int getDamage(){

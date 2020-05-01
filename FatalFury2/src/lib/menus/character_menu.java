@@ -15,7 +15,7 @@ public class character_menu {
     private String path = "assets/sprites/menu/character/";
     private enum estados { P1_SELECT, P2_SELECT, DONE };
     estados actual;
-
+    menu_audio.indexes p1_sound, p2_sound;
 
 
     Map<Item_Type, screenObject> screenObjects;
@@ -89,6 +89,7 @@ public class character_menu {
     public Boolean gestionMenu2(Map<Item_Type, screenObject> screenObjects){
         if(actual == estados.P1_SELECT){
 
+
             p1_mug =  new screenObject(0, 75,  416, 380, new ImageIcon(path  + mugs[pos_1]).getImage(), Item_Type.P1_MUG);
             p1_name =  new screenObject(0, 400,  356, 151, new ImageIcon(path  + names[pos_1]).getImage(), Item_Type.P1_MUG);
 
@@ -108,12 +109,15 @@ public class character_menu {
                 switch (pos_1){
                     case 0:
                         p1_ch = Playable_Character.ANDY;
+                        p1_sound = menu_audio.indexes.Andy;
                         break;
                     case 1:
                         p1_ch = Playable_Character.MAI;
+                        p1_sound = menu_audio.indexes.Mai;
                         break;
                     case 2:
                         p1_ch = Playable_Character.TERRY;
+                        p1_sound = menu_audio.indexes.Terry;
                         break;
                 }
             }
@@ -146,18 +150,31 @@ public class character_menu {
                 switch (pos_2){
                     case 0:
                         p2_ch = Playable_Character.ANDY;
+                        p2_sound = menu_audio.indexes.Andy;
                         break;
                     case 1:
                         p2_ch = Playable_Character.MAI;
+                        p2_sound = menu_audio.indexes.Mai;
                         break;
                     case 2:
                         p2_ch = Playable_Character.TERRY;
+                        p2_sound = menu_audio.indexes.Terry;
                         break;
                 }
 
             }
             return false;
         } else if(actual == estados.DONE){
+            audio_manager.menu.play(p1_sound);
+            try {
+            Thread.sleep(1000);
+            audio_manager.menu.play(menu_audio.indexes.Versus);
+            Thread.sleep(1000);
+            audio_manager.menu.play(p2_sound);
+            Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;

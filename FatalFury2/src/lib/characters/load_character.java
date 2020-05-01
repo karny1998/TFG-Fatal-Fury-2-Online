@@ -1,17 +1,19 @@
 package lib.characters;
 
 import lib.Enums.Animation_type;
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.objects.animation;
 import lib.objects.movement;
 import lib.objects.screenObject;
-import lib.sound.Sound;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Map;
@@ -55,8 +57,8 @@ public class load_character {
         final ImageProducer ip = new FilteredImageSource(img.getSource(), filter);
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
-
-    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, Sound sounds, double multiplier) {
+//TODO METER SONIDOS AQUI
+    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
         try {
             String value;
@@ -70,7 +72,7 @@ public class load_character {
                 String fold = value;
                 Movement movId = Movement.valueOf(b.readLine());
                 String combo = b.readLine();
-                Character_Voices sound = Character_Voices.valueOf(b.readLine());
+                fight_audio.voice_indexes sound = fight_audio.voice_indexes.valueOf(b.readLine());
                 Boolean hasEnd = Boolean.valueOf(b.readLine());
                 Animation_type aType = Animation_type.valueOf(b.readLine());
                 int dmg = Integer.valueOf(b.readLine());
@@ -100,7 +102,7 @@ public class load_character {
                 animation anim = new animation();
                 anim.setType(aType);
                 anim.setHasEnd(hasEnd);
-                anim.setSound(sounds);
+                anim.setHasSound(true);
                 anim.setSoundType(sound);
                 anim.setHurtBox(xHurt,yHurt,wHurt,hHurt);
 
