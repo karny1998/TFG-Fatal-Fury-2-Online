@@ -9,6 +9,7 @@ import lib.menus.menu;
 import lib.menus.menu_generator;
 import lib.menus.options;
 import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import java.awt.*;

@@ -1,7 +1,6 @@
 package lib.characters;
 
 import lib.Enums.Animation_type;
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.objects.animation;
@@ -58,6 +57,18 @@ public class load_character {
         final ImageProducer ip = new FilteredImageSource(img.getSource(), filter);
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
+
+    public String readAux(BufferedReader b) {
+        String lineaBuena = "";
+        try {
+            while ((lineaBuena = b.readLine()) != null) {
+                if (lineaBuena.charAt(0) != '#') { break; }
+            }
+        }
+        catch (Exception ignored) { }
+        return lineaBuena;
+    }
+
 //TODO METER SONIDOS AQUI
     public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
