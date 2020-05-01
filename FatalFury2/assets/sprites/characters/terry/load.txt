@@ -1,4 +1,4 @@
-31
+33
 standing
 STANDING
 
@@ -1533,7 +1533,7 @@ true
 #	Y hitbox
 255
 #	Anchura hitbox
-54
+109
 #	Altura hitbox
 54
 # ¿Tiene coverbox? (true / false), siguientes solo si true
@@ -1695,6 +1695,135 @@ false
 50
 # Incremento X
 0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 32 ------------------------------------
+# Carpeta de los frames
+blocking_crouch
+# Nombre del movimiento (Enum)
+CROUCHED_BLOCK
+# Combinación de teclas
+AB-IZ
+# Sonido asociado
+Defeat
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+HOLDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+true
+# X coverbox
+183
+# Y coverbox
+254
+# Anchura coverbox
+200
+# Altura coverbox
+125
+# X hurtbox
+210
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+0
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 33 ------------------------------------
+# Carpeta de los frames
+crouching_knockback
+# Nombre del movimiento (Enum)
+CROUCHED_KNOCKBACK
+# Combinación de teclas
+OMITIR13
+# Sonido asociado
+Defeat
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+-75
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+-75
 # Incremento Y
 0
 # X esperada (-1 si no se necesita)

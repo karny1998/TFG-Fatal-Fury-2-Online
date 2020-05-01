@@ -24,7 +24,7 @@ public class enemy_controller extends character_controller{
         String mov = "";
         String array[] = {"A","B", "DE-A"};
         mov = array[rand.nextInt(array.length)];
-        if(false){
+        if(!standBy){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
