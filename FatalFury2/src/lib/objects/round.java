@@ -386,22 +386,26 @@ public class round {
         }
         if(Math.min(xP,xE) > cameraLimit.getX() && Math.max(xP,xE) >= cameraLimit.getX()+cameraLimit.getWidth()
             && cameraLimit.getX()+cameraLimit.getWidth() + 40 - scenaryOffset < mapLimit.getX()+mapLimit.getWidth()){
-            if(xP > xE && player.getPlayer().inDisplacement()){
+            if(xP > xE && player.getPlayer().inDisplacement()
+                || pHurt.collides(eHurt) && enemy.getPlayer().inDisplacement()){
                 --scenaryOffset;
                 enemy.getPlayer().setX(enemy.getPlayer().getX()-1);
             }
-            else if(xP < xE && enemy.getPlayer().inDisplacement()) {
+            else if(xP < xE && enemy.getPlayer().inDisplacement()
+                    || pHurt.collides(eHurt) && player.getPlayer().inDisplacement()) {
                 player.getPlayer().setX(player.getPlayer().getX()-1);
                 --scenaryOffset;
             }
         }
         else if(Math.min(xP,xE) <= cameraLimit.getX() && Math.max(xP,xE) < cameraLimit.getX()+cameraLimit.getWidth()
                 && cameraLimit.getX() - 40 - scenaryOffset > mapLimit.getX()){
-            if(xP > xE && enemy.getPlayer().inDisplacement()){
+            if(xP > xE && enemy.getPlayer().inDisplacement()
+                    || pHurt.collides(eHurt) && enemy.getPlayer().inDisplacement()){
                 player.getPlayer().setX(player.getPlayer().getX()+1);
                 ++scenaryOffset;
             }
-            else if( xP < xE && player.getPlayer().inDisplacement()) {
+            else if( xP < xE && player.getPlayer().inDisplacement()
+                    || pHurt.collides(eHurt) && player.getPlayer().inDisplacement()) {
                 enemy.getPlayer().setX(enemy.getPlayer().getX()+1);
                 ++scenaryOffset;
             }
