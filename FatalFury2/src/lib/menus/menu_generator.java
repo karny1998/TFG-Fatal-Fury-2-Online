@@ -192,6 +192,78 @@ public class menu_generator {
     }
 
 
+    public static menu generate_story_win(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.WIN_SAVE, Selectionable.WIN_CONTINUE});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "assets/sprites/menu/story/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "win_menu_save.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "win_menu.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        selectionable sel = new selectionable(Selectionable.WIN_SAVE,a);
+        aux.put(Selectionable.WIN_SAVE,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "win_menu_continue.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "win_menu.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        sel = new selectionable(Selectionable.WIN_CONTINUE,a);
+        sel.setMen(game());
+        aux.put(Selectionable.WIN_CONTINUE,sel);
+
+        men.setSelectionables(aux);
+
+        return men;
+    }
+
+    public static menu generate_story_lose(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.LOSE_RETRY, Selectionable.LOSE_EXIT});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "assets/sprites/menu/story/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "lose_menu_retry.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "lose_menu.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        selectionable sel = new selectionable(Selectionable.LOSE_RETRY,a);
+        aux.put(Selectionable.LOSE_RETRY,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "lose_menu_exit.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(path  + "lose_menu.png").getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setSound(null);
+        a.setSoundType(Character_Voices.Win);
+
+        sel = new selectionable(Selectionable.LOSE_EXIT,a);
+        sel.setMen(game());
+        aux.put(Selectionable.LOSE_EXIT,sel);
+
+        men.setSelectionables(aux);
+
+        return men;
+    }
+
     public static menu generate_map_selection(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.MAP_USA, Selectionable.MAP_AUS, Selectionable.MAP_CHI});

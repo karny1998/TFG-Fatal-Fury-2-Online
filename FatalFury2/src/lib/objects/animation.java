@@ -38,11 +38,11 @@ public class animation {
     // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
-    hitBox hitbox = new hitBox(-10000,-10000,1,1, box_type.HITBOX);
+    hitBox hitbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);
     // Hurtbox asociada
-    hitBox hurtBox = new hitBox(-10000,-10000,1,1, box_type.HURTBOX);
+    hitBox hurtBox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HURTBOX);
     // Cover asociada
-    hitBox coverbox = new hitBox(-10000,-10000,1,1, box_type.COVERBOX);
+    hitBox coverbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.COVERBOX);
 
     int yCompleted = 0;
     boolean yAux = false;
@@ -79,6 +79,19 @@ public class animation {
         increment = 1;
         startTime = System.currentTimeMillis();
         auxTime = System.currentTimeMillis();
+        yCompleted = 0;
+        yAux = false;
+        desiredY = 0;
+        desiredAssigned = false;
+    }
+
+    public  void end(){
+        playing = true;
+        ended = true;
+        state = frames.size()-1;
+        increment = 1;
+        startTime = 0;
+        auxTime = 0;
         yCompleted = 0;
         yAux = false;
         desiredY = 0;
@@ -293,6 +306,9 @@ public class animation {
     }
 
     public hitBox getHitbox() {
+        if(ended){
+            return new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);
+        }
         return hitbox;
     }
 
