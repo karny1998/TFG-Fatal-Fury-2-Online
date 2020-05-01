@@ -29,7 +29,7 @@ public class Sound {
     private static int Music_Size = Music.values().length;
 
 
-    //TODO LEER DE FICHERO EL AUDIO
+
 
     private Audio_Type tipo;
 
@@ -47,8 +47,7 @@ public class Sound {
 
     private void loadAudio(Audio_Type type) throws IllegalStateException, IOException, UnsupportedAudioFileException, LineUnavailableException {
         String routes[];
-        //TODO METER RESTO SONIDOS
-        //TODO Load from folder instead from route
+
         switch ( type ){
             case Terry_audio:
                 routes = new String[Character_Voices_Size];
@@ -144,7 +143,7 @@ public class Sound {
 
         }
     }
-//TODO stop, pause, reset, etc.
+
 //https://www.geeksforgeeks.org/play-audio-file-using-java/
 
 

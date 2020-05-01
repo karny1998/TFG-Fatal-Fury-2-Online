@@ -5,6 +5,8 @@ import lib.Enums.Selectionable;
 import lib.input.controlListener;
 import lib.objects.screenObject;
 import lib.objects.selectionable;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,16 +39,19 @@ public class menu {
         long current = System.currentTimeMillis();
         if(current - referenceTime > 300.0){
             if(( controlListener.getStatus(1, controlListener.AR_INDEX)
-                    || controlListener.getStatus(1, controlListener.AR_INDEX)
-                    || controlListener.getStatus(2, controlListener.IZ_INDEX)
+                    || controlListener.getStatus(2, controlListener.AR_INDEX)
+                    || controlListener.getStatus(1, controlListener.IZ_INDEX)
                     || controlListener.getStatus(2, controlListener.IZ_INDEX)) && sel > 0){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 sel--;
                 referenceTime = current;
             }
             else if(( controlListener.getStatus(1, controlListener.AB_INDEX)
-                    || controlListener.getStatus(1, controlListener.AB_INDEX)
-                    || controlListener.getStatus(2, controlListener.DE_INDEX)
+                    || controlListener.getStatus(2, controlListener.AB_INDEX)
+                    || controlListener.getStatus(1, controlListener.DE_INDEX)
                     || controlListener.getStatus(2, controlListener.DE_INDEX))&& sel < orden.length-1){
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
+
                 sel++;
                 referenceTime = current;
             }
