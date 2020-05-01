@@ -85,13 +85,13 @@ public class load_character {
                     continue;
                 }
                 String fold = value;
-                Movement movId = Movement.valueOf(b.readLine());
-                String combo = b.readLine();
-                fight_audio.voice_indexes sound = fight_audio.voice_indexes.valueOf(b.readLine());
-                Boolean hasEnd = Boolean.valueOf(b.readLine());
-                Animation_type aType = Animation_type.valueOf(b.readLine());
-                int dmg = Integer.valueOf(b.readLine());
-                Boolean hasHit = Boolean.valueOf(b.readLine());
+                Movement movId = Movement.valueOf(readAux(b));
+                String combo = readAux(b);
+                fight_audio.voice_indexes sound = fight_audio.voice_indexes.valueOf(readAux(b));
+                Boolean hasEnd = Boolean.valueOf(readAux(b));
+                Animation_type aType = Animation_type.valueOf(readAux(b));
+                int dmg = Integer.valueOf(readAux(b));
+                Boolean hasHit = Boolean.valueOf(readAux(b));
                 int xHit = 0, yHit = 0, xHurt = 0, yHurt = 0, xCover = 0, yCover = 0,
                         wHit = 0, hHit = 0, wHurt = 0, hHurt = 0, wCover = 0, hCover = 0,
                         nFrames = 0;
