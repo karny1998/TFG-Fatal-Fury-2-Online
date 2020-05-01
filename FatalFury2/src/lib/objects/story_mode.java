@@ -23,13 +23,18 @@ public class story_mode {
     private character_controller player, enemy;
     private GameState state = GameState.NAVIGATION;
     private scenary scene = new scenary(Scenario_type.USA);;
-    private hitBox mapLimit;
+    private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
+    private long timeReference = System.currentTimeMillis();
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
     private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
+
+    public story_mode(int lvl){
+        this.lvlIa = lvl;
+    }
 
     void loadGame(){}
 
@@ -43,7 +48,7 @@ public class story_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         state = GameState.FIGHT;
-        scene = new scenary(Scenario_type.USA);
+        scene = new scenary(scenarys[stage]);
         fight = new fight_controller(player,enemy,scene);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(true);
@@ -51,7 +56,7 @@ public class story_mode {
 
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
-
+        //while(ti)
 
         return new Pair<>(exit, state);
     }
