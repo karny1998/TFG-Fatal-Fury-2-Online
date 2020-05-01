@@ -117,6 +117,14 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
+        else if(isCrouched() && mov.equals("AB") && state != Movement.CROUCH && movements.get(state).ended()){
+            movements.get(state).getAnim().reset();
+            state = combos.get(mov);
+            movements.get(state).start(dis);
+            movements.get(state).getAnim().end();
+            executedMoves.add(state);
+            stateChanged = true;
+        }
         else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state){
             if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL) {
                 movements.get(state).getAnim().reset();
@@ -126,8 +134,9 @@ public class character {
                 stateChanged = true;
             }
         }
+
         else if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
-                && combos.get(mov) != state){
+                && combos.get(mov) != state && !mov.startsWith("AB")){
             Movement aux = Movement.NONE;
             switch (state){
                 case CROUCH:
@@ -179,7 +188,12 @@ public class character {
         if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
                 movements.get(state).ended() && !stateChanged && s.getY() == y
                 && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE){
-            s =  movements.get(Movement.STANDING).getFrame(x,y, orientation);
+            if(isCrouched()){
+                s =  movements.get(Movement.CROUCH).getFrame(x,y, orientation);
+            }
+            else {
+                s = movements.get(Movement.STANDING).getFrame(x, y, orientation);
+            }
         }
 
         // Gestión de colisiones
@@ -260,7 +274,9 @@ public class character {
 
     boolean isCrouched(){
         return (state == Movement.CROUCH || state == Movement.CROUCH_2
-                || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING);
+                || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING
+                || state == Movement.CROUCHING_HARD_PUNCH || state == Movement.CROUCHING_SOFT_PUNCH
+                || state == Movement.CROUCHING_HARD_KICK || state == Movement.CROUCHING_SOFT_KICK);
     }
 
     boolean isAttacking(){
@@ -275,7 +291,7 @@ public class character {
     boolean isJumping(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
                             Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
-                            Movement.JUMP_FALL};
+                            Movement.JUMP_FALL, Movement.DASH};
         List<Movement> jumps = Arrays.asList(array);
         return jumps.contains(state);
     }
@@ -291,7 +307,8 @@ public class character {
     boolean inDisplacement(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
-                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT};
+                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
+                Movement.DASH};
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
     }

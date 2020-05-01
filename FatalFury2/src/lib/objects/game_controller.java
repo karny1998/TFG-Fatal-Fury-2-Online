@@ -9,7 +9,6 @@ import lib.menus.menu;
 import lib.menus.menu_generator;
 import lib.menus.options;
 import lib.sound.audio_manager;
-import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import java.awt.*;
@@ -85,6 +84,8 @@ public class game_controller {
             scene = new scenary(Scenario_type.USA);
             audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
             fight = new fight_controller(user,enemy,scene);
+            fight.setMapLimit(mapLimit);
+            fight.setVsIa(true);
             //state = GameState.OPTIONS;
         }
 

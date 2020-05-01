@@ -1,6 +1,7 @@
 package lib.characters;
 
 import lib.Enums.Animation_type;
+import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.objects.animation;
@@ -69,6 +70,9 @@ public class load_character {
             int filterMethod = 1 + Math.abs(random.nextInt()) % 4;
 
             while((value = b.readLine())!=null && i < nMovs) {
+                if (value.charAt(0) == '#') {
+                    continue;
+                }
                 String fold = value;
                 Movement movId = Movement.valueOf(b.readLine());
                 String combo = b.readLine();
@@ -81,23 +85,23 @@ public class load_character {
                         wHit = 0, hHit = 0, wHurt = 0, hHurt = 0, wCover = 0, hCover = 0,
                         nFrames = 0;
                 if (hasHit){
-                    xHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    yHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    wHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    hHit = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    xHit = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    yHit = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    wHit = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    hHit = (int) (Integer.valueOf(readAux(b)) * multiplier);
                 }
-                Boolean hasCover = Boolean.valueOf(b.readLine());
+                Boolean hasCover = Boolean.valueOf(readAux(b));
                 if (hasCover){
-                    xCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    yCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    wCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    hCover = (int) (Integer.valueOf(b.readLine()) * multiplier);
+                    xCover = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    yCover = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    wCover = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    hCover = (int) (Integer.valueOf(readAux(b)) * multiplier);
                 }
-                xHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                yHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                wHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                hHurt = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                nFrames = Integer.valueOf(b.readLine());
+                xHurt = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                yHurt = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                wHurt = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                hHurt = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                nFrames = Integer.valueOf(readAux(b));
 
                 animation anim = new animation();
                 anim.setType(aType);
@@ -120,18 +124,18 @@ public class load_character {
                 double tF = 0.0;
                 Boolean stop = false;
                 while(j <= nFrames){
-                    xF = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    yF = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    wF = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    hF = (int) (Integer.valueOf(b.readLine()) * multiplier);
-                    tF = Double.valueOf(b.readLine());
-                    ixF = (int) (Integer.valueOf(b.readLine()) );
-                    iyF = (int) (Integer.valueOf(b.readLine()) );
-                    wxF = Integer.valueOf(b.readLine());
-                    wyF = Integer.valueOf(b.readLine());
+                    xF = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    yF = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    wF = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    hF = (int) (Integer.valueOf(readAux(b)) * multiplier);
+                    tF = Double.valueOf(readAux(b));
+                    ixF = (int) (Integer.valueOf(readAux(b)) );
+                    iyF = (int) (Integer.valueOf(readAux(b)) );
+                    wxF = Integer.valueOf(readAux(b));
+                    wyF = Integer.valueOf(readAux(b));
                     //if(wxF != -1){wxF *= multiplier;}
                     //if(wyF != -1){wyF *= multiplier;}
-                    stop = Boolean.valueOf(b.readLine());
+                    stop = Boolean.valueOf(readAux(b));
                     Image img = new ImageIcon(path + fold + "/" + j + ".png").getImage();
                     if(nJ == 2) {
                         img = filterImage(img, charac, filterMethod);
