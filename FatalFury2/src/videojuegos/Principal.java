@@ -11,6 +11,8 @@ import java.awt.*;
 public class Principal extends JFrame {
 
     public Principal() {
+        //TODO -> CREAR DIRECTORIO OCULTO CON LOS FICHEROS A ESCRIBIR
+
         controlListener control = new controlListener();
 
         audio_manager audio = new audio_manager();
