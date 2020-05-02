@@ -1,6 +1,5 @@
 package lib.objects;
 
-import lib.utils.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
 import lib.maps.scenary;
@@ -11,6 +10,7 @@ import lib.menus.options;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
+import lib.utils.Pair;
 
 import java.awt.*;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
