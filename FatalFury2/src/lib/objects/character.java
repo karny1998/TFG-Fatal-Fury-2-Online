@@ -135,14 +135,17 @@ public class character {
             }
         }
 
-        else if (movements.get(state).getAnim().getType() == Animation_type.HOLDABLE && movements.get(state).ended()
+        else if ((movements.get(state).getAnim().getType() == Animation_type.HOLDABLE || isCrouched()) && movements.get(state).ended()
                 && combos.get(mov) != state && !mov.startsWith("AB")){
-            Movement aux = Movement.NONE;
-            switch (state){
+            Movement aux = Movement.UNDO_CROUCH;//NONE;
+            /*switch (state){
                 case CROUCH:
                     aux = Movement.UNDO_CROUCH;
                     break;
-            }
+                case CROUCHED_BLOCK:
+                    aux = Movement.UNDO_CROUCH;
+                    break;
+            }*/
             movements.get(state).getAnim().reset();
             state = aux;
             movements.get(state).start(dis);
@@ -158,8 +161,8 @@ public class character {
         }
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
-                || (state == Movement.WALKING || state == Movement.WALKING_BACK) && movements.get(state).ended()
-                || (state == Movement.WALKING || state == Movement.WALKING_BACK) && combos.get(mov) != state){
+                || (state == Movement.WALKING || state == Movement.WALKING_BACK || state == Movement.CROUCHED_WALKING) && movements.get(state).ended()
+                || (state == Movement.WALKING || state == Movement.WALKING_BACK || state == Movement.CROUCHED_WALKING) && combos.get(mov) != state){
             if(state != Movement.STANDING){
                 movements.get(state).getAnim().reset();
             }
@@ -237,7 +240,8 @@ public class character {
         // o está andando hacia adelante mirando hacia la derecha (ambos casos
         // se aleja del enemigo), se actualizan las coordenadas del personaje
         else if(!collides || state == Movement.WALKING_BACK && orientation == 1
-                || state == Movement.WALKING && orientation == -1) {
+                || state == Movement.WALKING && orientation == -1
+                || state == Movement.CROUCHED_WALKING && orientation == -1) {
             x = s.getX();
         }
         // En caso contrario, las coordenadas del objeto son las sin actualizar del personaje

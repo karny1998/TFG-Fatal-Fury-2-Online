@@ -258,7 +258,12 @@ public class round {
                 }
             }
             else{
-                enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, eHurt, pHurt);
+                if(player.getPlayer().getState() == Movement.CROUCHED_BLOCK){
+                    enemy.getPlayer().setState(Movement.CROUCHED_BLOCK_KNOCKBACK, pHurt, eHurt);
+                }
+                else {
+                    enemy.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
+                }
             }
         }
         // Control de daño provocado por el jugador 2
@@ -297,7 +302,12 @@ public class round {
                 }
             }
             else{
-                player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
+                if(player.getPlayer().getState() == Movement.CROUCHED_BLOCK){
+                    player.getPlayer().setState(Movement.CROUCHED_BLOCK_KNOCKBACK, pHurt, eHurt);
+                }
+                else {
+                    player.getPlayer().setState(Movement.CROUCHED_KNOCKBACK, pHurt, eHurt);
+                }
             }
         }
     }

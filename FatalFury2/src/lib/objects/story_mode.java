@@ -9,6 +9,7 @@ import lib.maps.scenary;
 import lib.menus.menu;
 import lib.menus.menu_generator;
 
+import javax.swing.*;
 import java.util.Map;
 
 public class story_mode {
@@ -39,6 +40,13 @@ public class story_mode {
     void loadGame(){}
 
     void saveGame(){}
+
+    void loadLoadScreens(){
+        String path =  "assets/sprites/menu/story/story_";
+        for(int i = 1; i < 10; ++i){
+            loads[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + i + ".png").getImage(), Item_Type.MENU);
+        }
+    }
 
     void generateFight(){
         player = new user_controller(charac, 1);
