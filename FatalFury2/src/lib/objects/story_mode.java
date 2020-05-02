@@ -22,7 +22,7 @@ public class story_mode {
     private Playable_Character charac = Playable_Character.TERRY;
     private fight_controller fight;
     private character_controller player, enemy;
-    private GameState state = GameState.NAVIGATION;
+    private GameState state = GameState.STORY_LOADING;
     private scenary scene = new scenary(Scenario_type.USA);;
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
     private long timeReference = System.currentTimeMillis();
@@ -33,8 +33,14 @@ public class story_mode {
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
 
+    public story_mode(){
+        loadGame();
+        loadLoadScreens();
+    }
+
     public story_mode(int lvl){
         this.lvlIa = lvl;
+        loadLoadScreens();
     }
 
     void loadGame(){}
@@ -64,7 +70,21 @@ public class story_mode {
 
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
-        //while(ti)
+        if(state == GameState.STORY_LOADING){
+            long current = System.currentTimeMillis();
+            if(current - timeReference < 2000.0){
+                screenObjects.put(Item_Type.MENU, loads[stage]);
+            }
+            else{
+                state = GameState.STORY_FIGHT;
+                generateFight();
+                screenObjects.remove(Item_Type.MENU);
+                fight.getAnimation(screenObjects);
+            }
+        }
+        else if(state == GameState.STORY_FIGHT){
+
+        }
 
         return new Pair<>(exit, state);
     }
