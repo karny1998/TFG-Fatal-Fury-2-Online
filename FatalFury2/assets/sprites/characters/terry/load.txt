@@ -1,4 +1,4 @@
-37
+38
 standing
 STANDING
 
@@ -1961,7 +1961,7 @@ CHARGED_PUNCH_A
 # Combinación de teclas
 AB+AB-IZ+IZ-A
 # Sonido asociado
-Defeat
+Special_1
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -2074,7 +2074,7 @@ false
 -1
 # ¿Es imparable? (false)
 false
-# ------------------------------------ MOVIMIENTO NUMERO 36 ------------------------------------
+# ------------------------------------ MOVIMIENTO NUMERO 37 ------------------------------------
 # Carpeta de los frames
 charged_punch
 # Nombre del movimiento (Enum)
@@ -2082,7 +2082,7 @@ CHARGED_PUNCH_C
 # Combinación de teclas
 AB+AB-IZ+IZ-C
 # Sonido asociado
-Defeat
+Special_1
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -2193,5 +2193,63 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 38 ------------------------------------
+# Carpeta de los frames
+jumping_kick_down
+# Nombre del movimiento (Enum)
+JUMP_KICK_DOWN
+# Combinación de teclas
+OMITIR15
+# Sonido asociado
+Hit_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+20
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+79
+# Y hitbox
+163
+# Anchura hitbox
+75
+# Altura hitbox
+133
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1000
+# Incremento X
+0
+# Incremento Y
+1000
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+290
 # ¿Es imparable? (false)
 false
