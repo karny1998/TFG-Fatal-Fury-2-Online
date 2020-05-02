@@ -117,7 +117,7 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
-        else if(isCrouched() && mov.equals("AB") && state != Movement.CROUCH && movements.get(state).ended()){
+        else if(isCrouched() && mov.equals("AB") && /*state != Movement.CROUCH && */movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = combos.get(mov);
             movements.get(state).start(dis);
@@ -166,10 +166,15 @@ public class character {
             if(state != Movement.STANDING){
                 movements.get(state).getAnim().reset();
             }
+            Movement stateAnt = state;
             state = combos.get(mov);
             if(state != Movement.STANDING){
                 if(state == Movement.WALKING && enemyAttacking){
                     movements.get(state).start(movements.get(state).getDistChange());
+                }
+                else if(stateAnt == Movement.CROUCHED_WALKING && state == Movement.CROUCH){
+                    movements.get(state).start(dis);
+                    movements.get(state).getAnim().end();
                 }
                 else if(state == Movement.THROW){
                     if(dis >= 10 || eHurt.getY() != pHurt.getY()){
@@ -192,6 +197,7 @@ public class character {
                 movements.get(state).ended() && !stateChanged && s.getY() == y
                 && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE){
             if(isCrouched()){
+                movements.get(Movement.CROUCH).getAnim().end();
                 s =  movements.get(Movement.CROUCH).getFrame(x,y, orientation);
             }
             else {

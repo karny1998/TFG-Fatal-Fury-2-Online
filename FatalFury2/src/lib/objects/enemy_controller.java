@@ -22,8 +22,6 @@ public class enemy_controller extends character_controller{
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         String mov = "";
-        String array[] = {"A","B", "DE-A"};
-        mov = array[rand.nextInt(array.length)];
         if(false){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
