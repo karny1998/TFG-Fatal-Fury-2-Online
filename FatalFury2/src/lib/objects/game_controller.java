@@ -18,7 +18,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -49,6 +49,8 @@ public class game_controller {
     private boolean pvp = false;
     // Limnites del mapa
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
+    // Modo historia
+    private story_mode story;
 
     public game_controller() {
         this.principal = menu_generator.generate();
@@ -141,6 +143,10 @@ public class game_controller {
                             charMenu.updateTime();
                             state = GameState.PLAYERS;
                             pvp = false;
+                            break;
+                        case GAME_HISTORY:
+                            story = new story_mode();
+                            state = GameState.STORY;
                             break;
                     }
                 }
@@ -333,6 +339,21 @@ public class game_controller {
                 screenObjects.put(Item_Type.MENU, askName.getAnimation());
             }
         }
+        else if (state == GameState.STORY || state == GameState.STORY_FIGHT
+                || state == GameState.STORY_MENU || state == GameState.STORY_LOADING){
+            if(state == GameState.STORY_MENU || state == GameState.STORY_LOADING){
+                clearInterface(screenObjects);
+            }
+            Pair<Boolean, GameState> aux = story.getAnimation(screenObjects);
+            state = aux.getValue();
+            if(aux.getKey()){
+                clearInterface(screenObjects);
+                screenObjects.remove(Item_Type.MENU);
+                state = GameState.NAVIGATION;
+                actualMenu = principal;
+                actualMenu.updateTime();
+            }
+        }
     }
 
     private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
@@ -372,6 +393,10 @@ public class game_controller {
             askName.writeName(g);
         } else if(state == GameState.OPTIONS){
                 optionsMenu.printOptions(g);
+        }
+        else if(state == GameState.STORY_FIGHT){
+            story.getFight().drawHpBarPlayer(g);
+            story.getFight().drawHpBarEnemy(g);
         }
     }
 

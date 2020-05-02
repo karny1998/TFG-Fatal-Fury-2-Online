@@ -1,18 +1,19 @@
 package lib.objects;
 
-import lib.Enums.GameState;
-import lib.Enums.Item_Type;
-import lib.Enums.Playable_Character;
-import lib.Enums.Scenario_type;
+import lib.utils.Pair;
+import lib.Enums.*;
+import lib.input.controlListener;
 import lib.maps.scenary;
 import lib.menus.menu;
 import lib.menus.menu_generator;
-import lib.utils.Pair;
+import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.util.Map;
 
 public class story_mode {
+    private menu actualMenu;
     private menu winMenu = menu_generator.generate_story_win();
     private menu loseMenu = menu_generator.generate_story_lose();
     private screenObject loads[];
@@ -48,9 +49,10 @@ public class story_mode {
     void saveGame(){}
 
     void loadLoadScreens(){
-        String path =  "assets/sprites/menu/story/story_";
+        String path =  "/assets/sprites/menu/story/story_";
+        loads = new screenObject[9];
         for(int i = 1; i < 10; ++i){
-            loads[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(path  + i + ".png").getImage(), Item_Type.MENU);
+            loads[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource(path  + i + ".png")).getImage(), Item_Type.MENU);
         }
     }
 
@@ -61,7 +63,6 @@ public class story_mode {
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
-        state = GameState.FIGHT;
         scene = new scenary(scenarys[stage]);
         fight = new fight_controller(player,enemy,scene);
         fight.setMapLimit(mapLimit);
@@ -70,30 +71,23 @@ public class story_mode {
 
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
+        long current = System.currentTimeMillis();
         if(state == GameState.STORY_LOADING){
-            long current = System.currentTimeMillis();
             if(current - timeReference < 2000.0){
                 screenObjects.put(Item_Type.MENU, loads[stage]);
             }
             else{
+                generateFight();
+                audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
                 state = GameState.STORY_FIGHT;
                 generateFight();
                 screenObjects.remove(Item_Type.MENU);
                 fight.getAnimation(screenObjects);
             }
         }
-        /*else if(state == GameState.STORY_FIGHT){
+        else if(state == GameState.STORY_FIGHT){
             screenObjects.remove(Item_Type.MENU);
             fight.getAnimation(screenObjects);
-            if(fight.showIntro  || fight.showOutro){
-                audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
-                stopMusic = true;
-            } else if(stopMusic){
-                audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-                stopMusic = false;
-            }
-
-
             if (fight.getEnd()) {
                 Fight_Results resultado = fight.getFight_result();
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
@@ -102,16 +96,181 @@ public class story_mode {
                     case PLAYER2_WIN:
                     case TIE:
                         audio_manager.fight.loopMusic(fight_audio.music_indexes.lose_theme);
+                        actualMenu = loseMenu;
+                        actualMenu.updateTime();
                         break;
                     case PLAYER1_WIN:
                         audio_manager.fight.loopMusic(fight_audio.music_indexes.win_theme);
+                        actualMenu = winMenu;
+                        actualMenu.updateTime();
                         break;
                 }
-                askName = new ask_for_name();
                 state = GameState.STORY_MENU;
             }
-        }*/
-
+        }
+        else if(state == GameState.STORY_MENU){
+            screenObjects.put(Item_Type.MENU,actualMenu.getFrame());
+            Pair<menu, Selectionable> p = actualMenu.select();
+            if(controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
+                if (p.getKey() == null) {
+                    switch (p.getValue()) {
+                        case LOSE_EXIT:
+                            exit = true;
+                            break;
+                        case LOSE_RETRY:
+                            generateFight();
+                            break;
+                        case WIN_CONTINUE:
+                            ++stage;
+                            saveGame();
+                            state = GameState.STORY_LOADING;
+                            timeReference = current;
+                            break;
+                        case WIN_SAVE:
+                            ++stage;
+                            saveGame();
+                            exit = true;
+                            break;
+                    }
+                }
+            }
+        }
         return new Pair<>(exit, state);
+    }
+
+    public menu getActualMenu() {
+        return actualMenu;
+    }
+
+    public void setActualMenu(menu actualMenu) {
+        this.actualMenu = actualMenu;
+    }
+
+    public menu getWinMenu() {
+        return winMenu;
+    }
+
+    public void setWinMenu(menu winMenu) {
+        this.winMenu = winMenu;
+    }
+
+    public menu getLoseMenu() {
+        return loseMenu;
+    }
+
+    public void setLoseMenu(menu loseMenu) {
+        this.loseMenu = loseMenu;
+    }
+
+    public screenObject[] getLoads() {
+        return loads;
+    }
+
+    public void setLoads(screenObject[] loads) {
+        this.loads = loads;
+    }
+
+    public int getLvlIa() {
+        return lvlIa;
+    }
+
+    public void setLvlIa(int lvlIa) {
+        this.lvlIa = lvlIa;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getStage() {
+        return stage;
+    }
+
+    public void setStage(int stage) {
+        this.stage = stage;
+    }
+
+    public Playable_Character getCharac() {
+        return charac;
+    }
+
+    public void setCharac(Playable_Character charac) {
+        this.charac = charac;
+    }
+
+    public fight_controller getFight() {
+        return fight;
+    }
+
+    public void setFight(fight_controller fight) {
+        this.fight = fight;
+    }
+
+    public character_controller getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(character_controller player) {
+        this.player = player;
+    }
+
+    public character_controller getEnemy() {
+        return enemy;
+    }
+
+    public void setEnemy(character_controller enemy) {
+        this.enemy = enemy;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public scenary getScene() {
+        return scene;
+    }
+
+    public void setScene(scenary scene) {
+        this.scene = scene;
+    }
+
+    public hitBox getMapLimit() {
+        return mapLimit;
+    }
+
+    public void setMapLimit(hitBox mapLimit) {
+        this.mapLimit = mapLimit;
+    }
+
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
+    }
+
+    public Scenario_type[] getScenarys() {
+        return scenarys;
+    }
+
+    public void setScenarys(Scenario_type[] scenarys) {
+        this.scenarys = scenarys;
+    }
+
+    public Playable_Character[] getEnemies() {
+        return enemies;
+    }
+
+    public void setEnemies(Playable_Character[] enemies) {
+        this.enemies = enemies;
     }
 }

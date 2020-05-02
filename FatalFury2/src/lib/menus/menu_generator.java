@@ -200,9 +200,9 @@ public class menu_generator {
 
         animation a = new animation();
         a.setHasEnd(false);
-        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_save.png")).getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_save.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -212,15 +212,14 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_continue.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_continue.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
 
         sel = new selectionable(Selectionable.WIN_CONTINUE,a);
-        sel.setMen(game());
         aux.put(Selectionable.WIN_CONTINUE,sel);
 
         men.setSelectionables(aux);
@@ -236,9 +235,9 @@ public class menu_generator {
 
         animation a = new animation();
         a.setHasEnd(false);
-        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_retry.png")).getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_retry.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -248,15 +247,14 @@ public class menu_generator {
 
         a = new animation();
         a.setHasEnd(false);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_exit.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
 
         sel = new selectionable(Selectionable.LOSE_EXIT,a);
-        sel.setMen(game());
         aux.put(Selectionable.LOSE_EXIT,sel);
 
         men.setSelectionables(aux);
