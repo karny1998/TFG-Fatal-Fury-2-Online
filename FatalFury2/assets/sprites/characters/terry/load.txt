@@ -1,4 +1,4 @@
-34
+35
 standing
 STANDING
 
@@ -1882,7 +1882,7 @@ false
 -1
 # ¿Es imparable? (false)
 false
-# ------ FRAME 1 -------
+# ------ FRAME 2 -------
 # X (IRRELEVANTE) 
 0
 # Y (IRRELEVANTE) 
@@ -1895,6 +1895,56 @@ false
 150
 # Incremento X
 50
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 35 ------------------------------------
+# Carpeta de los frames
+blocking_crouch
+# Nombre del movimiento (Enum)
+CROUCHED_BLOCK_KNOCKBACK
+# Combinación de teclas
+OMITIR14
+# Sonido asociado
+Defeat
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+210
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+-150
 # Incremento Y
 0
 # X esperada (-1 si no se necesita)
