@@ -1,4 +1,4 @@
-38
+39
 standing
 STANDING
 
@@ -2245,6 +2245,85 @@ false
 1000
 # Incremento X
 0
+# Incremento Y
+1000
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+290
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 39 ------------------------------------
+# Carpeta de los frames
+jumping_kick
+# Nombre del movimiento (Enum)
+JUMP_KICK
+# Combinación de teclas
+OMITIR16
+# Sonido asociado
+Hit_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+20
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+0
+# Y hitbox
+438
+# Anchura hitbox
+75
+# Altura hitbox
+62
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+50
+# Incremento Y
+50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1000
+# Incremento X
+1300
 # Incremento Y
 1000
 # X esperada (-1 si no se necesita)
