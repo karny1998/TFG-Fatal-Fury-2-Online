@@ -94,23 +94,27 @@ public class character {
                     || mov.equals("A") || mov.equals("B") || mov.equals("C") || mov.equals("D"))){
             movements.get(state).getAnim().reset();
             if(state == Movement.NORMAL_JUMP){
-                if(mov.endsWith("-A") || mov.endsWith("-B")
-                    || mov.equals("A") || mov.equals("B")){
+                if(mov.endsWith("-A") || mov.equals("A")){
                     state = Movement.JUMP_PUNCH_DOWN;
                 }
-                else if(mov.endsWith("-C") || mov.endsWith("-D")
-                        || mov.equals("C") || mov.equals("D")){
-                    state = Movement.JUMP_PUNCH_DOWN;
+                else if(mov.endsWith("-B") || mov.equals("B")){
+                    state = Movement.JUMP_HARD_PUNCH_DOWN;
+                }
+                else if(mov.endsWith("-D") || mov.endsWith("D")
+                        || mov.endsWith("-C") || mov.equals("C")){
+                    state = Movement.JUMP_KICK_DOWN;
                 }
             }
             else{
-                if(mov.endsWith("-A") || mov.endsWith("-B")
-                        || mov.equals("A") || mov.equals("B")){
+                if(mov.endsWith("-A") || mov.equals("A")){
                     state = Movement.JUMP_ROLL_PUNCH_DOWN;
+                }
+                else if(mov.endsWith("-B") || mov.equals("B")){
+                    state = Movement.JUMP_ROLL_HARD_PUNCH_DOWN;
                 }
                 else if(mov.endsWith("-C") || mov.endsWith("-D")
                         || mov.equals("C") || mov.equals("D")){
-                    state = Movement.JUMP_ROLL_PUNCH_DOWN;
+                    state = Movement.JUMP_KICK;
                 }
             }
             movements.get(state).start(dis);

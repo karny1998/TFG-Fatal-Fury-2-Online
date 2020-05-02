@@ -82,9 +82,35 @@ public class story_mode {
                 fight.getAnimation(screenObjects);
             }
         }
-        else if(state == GameState.STORY_FIGHT){
+        /*else if(state == GameState.STORY_FIGHT){
+            screenObjects.remove(Item_Type.MENU);
+            fight.getAnimation(screenObjects);
+            if(fight.showIntro  || fight.showOutro){
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                stopMusic = true;
+            } else if(stopMusic){
+                audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+                stopMusic = false;
+            }
 
-        }
+
+            if (fight.getEnd()) {
+                Fight_Results resultado = fight.getFight_result();
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                switch (resultado){
+                    case UNFINISHED:
+                    case PLAYER2_WIN:
+                    case TIE:
+                        audio_manager.fight.loopMusic(fight_audio.music_indexes.lose_theme);
+                        break;
+                    case PLAYER1_WIN:
+                        audio_manager.fight.loopMusic(fight_audio.music_indexes.win_theme);
+                        break;
+                }
+                askName = new ask_for_name();
+                state = GameState.STORY_MENU;
+            }
+        }*/
 
         return new Pair<>(exit, state);
     }
