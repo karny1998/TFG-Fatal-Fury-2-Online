@@ -1,6 +1,5 @@
 package lib.objects;
 
-import javafx.util.Pair;
 import lib.Enums.GameState;
 import lib.Enums.Item_Type;
 import lib.Enums.Playable_Character;
@@ -8,6 +7,7 @@ import lib.Enums.Scenario_type;
 import lib.maps.scenary;
 import lib.menus.menu;
 import lib.menus.menu_generator;
+import lib.utils.Pair;
 
 import javax.swing.*;
 import java.util.Map;

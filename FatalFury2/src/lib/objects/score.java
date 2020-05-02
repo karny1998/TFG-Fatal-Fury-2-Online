@@ -1,12 +1,13 @@
 package lib.objects;
 
-import javafx.util.Pair;
+
 import lib.Enums.Animation_type;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
+import lib.utils.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.util.List;
 public class score {
     private int points = 0;
     private int pointer = 0;
-    private String path = "files/rank_scores.txt";
+    private String path = "/files/rank_scores.txt";
     private boolean animLoaded = false;
     private animation anim[] = {null, null, null};
     private Font f = null;
@@ -39,7 +40,8 @@ public class score {
     public int getScore(){return this.points;}
 
     public void saveLastName(String name){
-        String path = "files/last_name.txt";
+        String path = "/files/last_name.txt";
+        // TODO
         File f= new File(path);
         f.delete();
         f= new File(path);
@@ -56,6 +58,7 @@ public class score {
         saveLastName(name);
 
         List<Pair<String, Integer>> list = readRankScores(false);
+        //TODO
         File f= new File(path);
         f.delete();
         f= new File(path);
@@ -95,8 +98,8 @@ public class score {
         List<Pair<String, Integer>> list = new ArrayList<Pair<String, Integer>>();
         try {
             String name = "";
-            FileReader f = new FileReader(path);
-            BufferedReader b = new BufferedReader(f);
+            InputStream f = this.getClass().getResourceAsStream(path);
+            BufferedReader b = new BufferedReader(new InputStreamReader(f));
             while((name = b.readLine())!=null) {
                 int p = Integer.valueOf(b.readLine());
                 list.add(new Pair<>(name,p));
@@ -164,9 +167,9 @@ public class score {
         anim[0].setHasSound(false);
         anim[0].setSoundType(fight_audio.voice_indexes.Win);
 
-        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_base.png")).getImage(), Item_Type.SCENARY_2);
         anim[0].addFrame(s,250.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_down.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_down.png")).getImage(), Item_Type.SCENARY_2);
         anim[0].addFrame(s,250.0,0,0);
 
         anim[1] = new animation();
@@ -174,9 +177,9 @@ public class score {
         anim[1].setType(Animation_type.ENDLESS);
         anim[0].setHasSound(false);
         anim[1].setSoundType(fight_audio.voice_indexes.Win);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_base.png")).getImage(), Item_Type.SCENARY_2);
         anim[1].addFrame(s,250.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_both.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_both.png")).getImage(), Item_Type.SCENARY_2);
         anim[1].addFrame(s,250.0,0,0);
 
         anim[2] = new animation();
@@ -184,9 +187,9 @@ public class score {
         anim[2].setType(Animation_type.ENDLESS);
         anim[0].setHasSound(false);
         anim[2].setSoundType(fight_audio.voice_indexes.Win);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_base.png")).getImage(), Item_Type.SCENARY_2);
         anim[2].addFrame(s,250.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_up.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource("/assets/sprites/menu/ranking/ranking_up.png")).getImage(), Item_Type.SCENARY_2);
         anim[2].addFrame(s,250.0,0,0);
     }
 

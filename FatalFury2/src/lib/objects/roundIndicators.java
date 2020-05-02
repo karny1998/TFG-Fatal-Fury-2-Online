@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class roundIndicators {
-    String path = "assets/sprites/fight_interface/round_points/";
+    String path = "/assets/sprites/fight_interface/round_points/";
     private animation player1_1_no;
     private animation player1_1_point;
     private animation player1_2_no;
@@ -22,10 +22,10 @@ public class roundIndicators {
     int h = 52;
 
     public roundIndicators() {
-        round = new ImageIcon(path+"round.png").getImage();
-        round_red = new ImageIcon(path+"round_red.png").getImage();
-        round_no = new ImageIcon(path+"round_no.png").getImage();
-        round_point = new ImageIcon(path+"round_point.png").getImage();
+        round = new ImageIcon(this.getClass().getResource(path+"round.png")).getImage();
+        round_red = new ImageIcon(this.getClass().getResource(path+"round_red.png")).getImage();
+        round_no = new ImageIcon(this.getClass().getResource(path+"round_no.png")).getImage();
+        round_point = new ImageIcon(this.getClass().getResource(path+"round_point.png")).getImage();
         loadAnimations();
         startAnimations();
     }

@@ -1,10 +1,10 @@
 package lib.objects;
 
-import javafx.util.Pair;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
 import lib.Enums.ia_type;
 import lib.objects.ia_processors.processor_life_round_based;
+import lib.utils.Pair;
 
 public class ia_loader {
     public ia_loader(){}

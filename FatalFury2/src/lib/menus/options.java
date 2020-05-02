@@ -6,6 +6,7 @@ import lib.input.controlListener;
 import lib.objects.screenObject;
 import lib.sound.audio_manager;
 import lib.sound.menu_audio;
+import lib.utils.xmlReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,6 +23,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 
 public class options {
@@ -44,8 +47,9 @@ public class options {
     private int maxElementos = 8;
 
     private long referenceTime;
-    private String filePath = "files/options.xml";
-    private String imgPath = "assets/sprites/menu/options/";
+    private String filePath = "/files/options.xml";
+    private URL imgPath = this.getClass().getResource("/assets/sprites/menu/options/menu.png");
+
 
     public void updateTime() {
         referenceTime = System.currentTimeMillis();
@@ -60,11 +64,12 @@ public class options {
 
     private void readOptionsFile() {
         try {
-            File input = new File(filePath);
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(input);
+
+            InputStream is = controlListener.class.getResourceAsStream(filePath);
+            Document doc = xmlReader.open(is);
             doc.getDocumentElement().normalize();
+            is.close();
+
 
             Node opciones = doc.getChildNodes().item(0);
             NodeList vol = doc.getElementsByTagName("volumen").item(0).getChildNodes();
@@ -259,6 +264,7 @@ public class options {
 
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             DOMSource source = new DOMSource(doc);
+            //TODO
             StreamResult file = new StreamResult(new File(filePath));
 
 
@@ -278,7 +284,7 @@ public class options {
     public options(){
         exit = false;
         estado = estado_options.NAVEGACION_PRINCIPAL;
-        fondo = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath  + "menu.png").getImage(), Item_Type.MENU);
+        fondo = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath).getImage(), Item_Type.MENU);
         referenceTime = System.currentTimeMillis();
         actual = 1;
         posicion = 0;

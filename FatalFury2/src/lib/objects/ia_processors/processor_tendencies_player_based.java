@@ -1,11 +1,12 @@
 package lib.objects.ia_processors;
 
-import javafx.util.Pair;
+
 import lib.Enums.Movement;
 import lib.Enums.ia_type;
 import lib.objects.character;
 import lib.objects.ia_processor;
 import lib.objects.russian_roulette;
+import lib.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

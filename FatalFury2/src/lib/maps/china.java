@@ -9,7 +9,7 @@ import lib.sound.fight_audio;
 import javax.swing.*;
 
 public class china {
-    private static String path = "assets/sprites/scenarios/china/";
+    private static String path = "/assets/sprites/scenarios/china/";
 
     // Generar animación del fondo
     public static animation generateAnimation1(Scenario_time time){
@@ -33,8 +33,8 @@ public class china {
             default:
                 throw new IllegalStateException("Unexpected value: " + time);
         }
-        s1 = new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_1);
-        s2 = new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_1);
+        s1 = new screenObject(0, 0,  1571, 720, new ImageIcon( china.class.getResource(path+frame1+".png")).getImage(), Item_Type.SCENARY_1);
+        s2 = new screenObject(0, 0,  1571, 720, new ImageIcon( china.class.getResource(path+frame2+".png")).getImage(), Item_Type.SCENARY_1);
         a1.addFrame(s1,250.0,0,0);
         a1.addFrame(s2,250.0,0,0);
         a1.setHasSound(false);
@@ -64,8 +64,8 @@ public class china {
             default:
                 throw new IllegalStateException("Unexpected value: " + time);
         }
-        s1 = new screenObject(0, 0,  1571, 663, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_2);
-        s2 = new screenObject(0, 0,  1571, 663, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_2);
+        s1 = new screenObject(0, 0,  1571, 663, new ImageIcon( china.class.getResource(path+frame1+".png")).getImage(), Item_Type.SCENARY_2);
+        s2 = new screenObject(0, 0,  1571, 663, new ImageIcon( china.class.getResource(path+frame2+".png")).getImage(), Item_Type.SCENARY_2);
         a2.addFrame(s1,250.0,0,0);
         a2.addFrame(s2,250.0,0,0);
         a2.setHasSound(false);

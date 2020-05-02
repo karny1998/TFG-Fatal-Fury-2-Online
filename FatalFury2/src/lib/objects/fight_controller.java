@@ -22,7 +22,7 @@ public class fight_controller implements roundListener {
     // Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
     // Path
-    String path = "assets/sprites/fight_interface/";
+    String path = "/assets/sprites/fight_interface/";
     // Ronda actual de la pelea
     round currentRound;
     // Lista de resultados de todas las rondas
@@ -83,7 +83,6 @@ public class fight_controller implements roundListener {
 
     boolean audio_ready = false, audio_round = false, audio_fight = false;
     boolean audio_timeOut = false, audio_perfect = false, audio_double_ko = false, audio_draw_game = false;
-    boolean audio_crowd_1 = false, audio_crowd_2 = false;
     // Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e, scenary s) {
         scene = s;
@@ -100,12 +99,12 @@ public class fight_controller implements roundListener {
         wasDoubleKO = false;
         noTimer = false;
         startedFightAnimation = false;
-        bar_player = new ImageIcon(path+"/hp_bars/player1_frame.png").getImage();
-        bar_enemy = new ImageIcon(path+"/hp_bars/player2_frame.png").getImage();
+        bar_player = new ImageIcon(this.getClass().getResource(path+"/hp_bars/player1_frame.png")).getImage();
+        bar_enemy = new ImageIcon(this.getClass().getResource(path+"/hp_bars/player2_frame.png")).getImage();
         switch (player.getPlayer().getCharac()) {
             case TERRY:
-                name_player = new ImageIcon(path+"/char_names/terry_blue.png").getImage();
-                you_win = new ImageIcon(path+"/announcer/terry_win.png").getImage();
+                name_player = new ImageIcon(this.getClass().getResource(path+"/char_names/terry_blue.png")).getImage();
+                you_win = new ImageIcon(this.getClass().getResource(path+"/announcer/terry_win.png")).getImage();
                 break;
             case MAI:
                 break;
@@ -114,27 +113,27 @@ public class fight_controller implements roundListener {
         }
         switch (enemy.getPlayer().getCharac()) {
             case TERRY:
-                if (mirrorFight) { name_enemy = new ImageIcon(path+"/char_names/terry_red.png").getImage(); }
-                else { name_enemy = new ImageIcon(path+"/char_names/terry_blue.png").getImage(); }
+                if (mirrorFight) { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/terry_red.png")).getImage(); }
+                else { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/terry_blue.png")).getImage(); }
                 break;
             case MAI:
                 break;
             case ANDY:
                 break;
         }
-        indicator_player = new ImageIcon(path+"/1p.png").getImage();
-        indicator_enemy = new ImageIcon(path+"/2p.png").getImage();
-        you_lost = new ImageIcon(path+"/announcer/you_lost.png").getImage();
-        time_up = new ImageIcon(path+"/announcer/time_up.png").getImage();
-        draw_game = new ImageIcon(path+"/announcer/draw_game.png").getImage();
-        match_play = new ImageIcon(path+"/announcer/match_play.png").getImage();
-        perfect = new ImageIcon(path+"/announcer/perfect.png").getImage();
-        round_1 = new ImageIcon(path+"/announcer/round1.png").getImage();
-        round_2 = new ImageIcon(path+"/announcer/round2.png").getImage();
-        round_3 = new ImageIcon(path+"/announcer/round3.png").getImage();
-        round_extra = new ImageIcon(path+"/announcer/final_round.png").getImage();
-        double_ko = new ImageIcon(path+"/announcer/double_ko.png").getImage();
-        terry_win = new ImageIcon(path+"/announcer/terry_win.png").getImage();
+        indicator_player = new ImageIcon(this.getClass().getResource(path+"/1p.png")).getImage();
+        indicator_enemy = new ImageIcon(this.getClass().getResource(path+"/2p.png")).getImage();
+        you_lost = new ImageIcon(this.getClass().getResource(path+"/announcer/you_lost.png")).getImage();
+        time_up = new ImageIcon(this.getClass().getResource(path+"/announcer/time_up.png")).getImage();
+        draw_game = new ImageIcon(this.getClass().getResource(path+"/announcer/draw_game.png")).getImage();
+        match_play = new ImageIcon(this.getClass().getResource(path+"/announcer/match_play.png")).getImage();
+        perfect = new ImageIcon(this.getClass().getResource(path+"/announcer/perfect.png")).getImage();
+        round_1 = new ImageIcon(this.getClass().getResource(path+"/announcer/round1.png")).getImage();
+        round_2 = new ImageIcon(this.getClass().getResource(path+"/announcer/round2.png")).getImage();
+        round_3 = new ImageIcon(this.getClass().getResource(path+"/announcer/round3.png")).getImage();
+        round_extra = new ImageIcon(this.getClass().getResource(path+"/announcer/final_round.png")).getImage();
+        double_ko = new ImageIcon(this.getClass().getResource(path+"/announcer/double_ko.png")).getImage();
+        terry_win = new ImageIcon(this.getClass().getResource(path+"/announcer/terry_win.png")).getImage();
         player.startStandBy();
         enemy.startStandBy();
         fight_result = Fight_Results.UNFINISHED;
@@ -282,14 +281,6 @@ public class fight_controller implements roundListener {
         }
     }
 
-    // Reset del audio
-    private void endAudio()
-    {
-        //TODO REMAKE
-        //player.getPlayer().getVoices().endCharacterVoices();
-        //enemy.getPlayer().getVoices().endCharacterVoices();
-    }
-
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         // Actualizar valores de la ia
@@ -344,10 +335,6 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.BUBBLE4,enemyBubbles.get(1));
         // ANUNCIOS ENTRE RONDAS
         if (showIntro) {
-            if(!audio_crowd_1){
-                audio_manager.fight.playCrowd(fight_audio.crowd_indexes.Cheer_1);
-                audio_crowd_1 = true;
-            }
             Date date = new Date();
             long timePast = date.getTime() - introTimeStamp;
             if (timePast <= announcementTime && roundCounter == 0) {
@@ -407,7 +394,6 @@ public class fight_controller implements roundListener {
                 audio_round = false;
                 audio_fight = false;
                 showIntro = false;
-                audio_crowd_1 = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 startedFightAnimation = false;
                 player.endStandBy();
@@ -416,10 +402,6 @@ public class fight_controller implements roundListener {
             }
         }
         if (showOutro) {
-            if(!audio_crowd_2){
-                audio_manager.fight.playCrowd(fight_audio.crowd_indexes.Cheer_2);
-                audio_crowd_2 = true;
-            }
 
             Date date = new Date();
             long timePast = date.getTime() - outroTimeStamp;
@@ -540,7 +522,6 @@ public class fight_controller implements roundListener {
                         showIntro();
                     }
                     else {
-                        endAudio();
                         hasEnded = true;
                     }
 
@@ -552,7 +533,6 @@ public class fight_controller implements roundListener {
                 audio_perfect = false;
                 audio_double_ko = false;
                 audio_draw_game = false;
-                audio_crowd_2 = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 if (newRound) {
                     player.reset();
@@ -570,7 +550,6 @@ public class fight_controller implements roundListener {
                     showIntro();
                 }
                 else {
-                    endAudio();
                     hasEnded = true;
                 }
             }

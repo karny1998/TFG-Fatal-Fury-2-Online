@@ -9,7 +9,7 @@ import java.util.List;
 
 public class displayTimer {
     // Path
-    String path = "assets/sprites/fight_interface/timer/";
+    String path = "/assets/sprites/fight_interface/timer/";
     // Imágenes necesarias
     private List<Image> numbers = new ArrayList<>();
     private Image frame;
@@ -18,10 +18,10 @@ public class displayTimer {
     // Constructor por defecto
     public displayTimer() {
         for (int i = 0; i < 10; ++i) {
-            numbers.add(new ImageIcon(path+i+".png").getImage());
+            numbers.add(new ImageIcon( this.getClass().getResource(path+i+".png")).getImage());
         }
-        frame = new ImageIcon(path+"frame.png").getImage();
-        infinite = new ImageIcon(path+"infinite.png").getImage();
+        frame = new ImageIcon( this.getClass().getResource(path+"frame.png")).getImage();
+        infinite = new ImageIcon( this.getClass().getResource(path+"infinite.png")).getImage();
     }
 
     // Generar los screenObjects para un número del timer

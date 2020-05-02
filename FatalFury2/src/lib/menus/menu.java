@@ -1,6 +1,6 @@
 package lib.menus;
 
-import javafx.util.Pair;
+import lib.utils.Pair;
 import lib.Enums.Selectionable;
 import lib.input.controlListener;
 import lib.objects.screenObject;

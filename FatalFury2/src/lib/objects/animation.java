@@ -1,9 +1,9 @@
 package lib.objects;
 
-import javafx.util.Pair;
 import lib.Enums.Animation_type;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
+import lib.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

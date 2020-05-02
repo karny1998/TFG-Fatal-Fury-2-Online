@@ -15,7 +15,8 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Random;
 
@@ -71,11 +72,11 @@ public class load_character {
 
 
     public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
-        String path = "assets/sprites/characters/" + charac + "/";
+        String path = "/assets/sprites/characters/" + charac + "/";
         try {
             String value;
-            FileReader f = new FileReader(path + "load.txt");
-            BufferedReader b = new BufferedReader(f);
+            InputStream f = this.getClass().getResourceAsStream(path + "load.txt");
+            BufferedReader b = new BufferedReader(new InputStreamReader(f));
             int nMovs = Integer.valueOf(b.readLine()), i = 0;
             Random random = new Random();
             int filterMethod = 1 + Math.abs(random.nextInt()) % 4;
@@ -160,7 +161,7 @@ public class load_character {
                     //if(wxF != -1){wxF *= multiplier;}
                     //if(wyF != -1){wyF *= multiplier;}
                     stop = Boolean.valueOf(readAux(b));
-                    Image img = new ImageIcon(path + fold + "/" + j + ".png").getImage();
+                    Image img = new ImageIcon( this.getClass().getResource(path + fold + "/" + j + ".png")).getImage();
                     if(nJ == 2) {
                         img = filterImage(img, charac, filterMethod);
                     }

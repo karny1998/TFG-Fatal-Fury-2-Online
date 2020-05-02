@@ -1,7 +1,7 @@
 package lib.objects;
 
-import javafx.util.Pair;
 import lib.Enums.Movement;
+import lib.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

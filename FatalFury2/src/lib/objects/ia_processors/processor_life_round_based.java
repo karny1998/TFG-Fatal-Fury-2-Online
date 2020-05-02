@@ -1,6 +1,6 @@
 package lib.objects.ia_processors;
 
-import javafx.util.Pair;
+import lib.utils.Pair;
 import lib.Enums.Movement;
 import lib.Enums.ia_type;
 import lib.objects.character;

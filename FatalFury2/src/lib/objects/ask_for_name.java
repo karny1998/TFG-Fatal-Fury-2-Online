@@ -9,7 +9,8 @@ import lib.sound.menu_audio;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ask_for_name {
     private String name = "";
@@ -20,10 +21,10 @@ public class ask_for_name {
     public  ask_for_name(){
         timeReference = System.currentTimeMillis();
         loadAnim();
-        String path = "files/last_name.txt";
+        String path = "/files/last_name.txt";
         try {
-            FileReader f = new FileReader(path);
-            BufferedReader b = new BufferedReader(f);
+            InputStream f = this.getClass().getResourceAsStream(path);
+            BufferedReader b = new BufferedReader(new InputStreamReader(f));
             String aux = "";
             if ((aux = b.readLine()) != null) {
                 name = aux;
@@ -34,12 +35,12 @@ public class ask_for_name {
     }
 
     private void loadAnim(){
-        String path = "assets/sprites/menu/rank_register/";
+        String path = "/assets/sprites/menu/rank_register/";
         anim = new animation();
         anim.setHasEnd(false);
-        screenObject s = new screenObject(191, 186,  897, 347, new ImageIcon(path  + "rank_register_1.png").getImage(), Item_Type.MENU);
+        screenObject s = new screenObject(191, 186,  897, 347, new ImageIcon( this.getClass().getResource(path  + "rank_register_1.png")).getImage(), Item_Type.MENU);
         anim.addFrame(s,250.0,0,0);
-        s = new screenObject(191, 186,  897, 347, new ImageIcon(path  + "rank_register_2.png").getImage(), Item_Type.MENU);
+        s = new screenObject(191, 186,  897, 347, new ImageIcon( this.getClass().getResource(path  + "rank_register_2.png")).getImage(), Item_Type.MENU);
         anim.addFrame(s,250.0,0,0);
         anim.setHasSound(false);
         anim.setSoundType(fight_audio.voice_indexes.Win);

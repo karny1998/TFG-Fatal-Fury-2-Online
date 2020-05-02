@@ -1,6 +1,6 @@
 package lib.objects;
 
-import javafx.util.Pair;
+import lib.utils.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
 import lib.maps.scenary;

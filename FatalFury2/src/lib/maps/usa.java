@@ -9,7 +9,7 @@ import lib.sound.fight_audio;
 import javax.swing.*;
 
 public class usa {
-    private static String path = "assets/sprites/scenarios/usa/";
+    private static String path = "/assets/sprites/scenarios/usa/";
 
     // Generar animación del fondo
     public static animation generateAnimation1(Scenario_time time){
@@ -33,8 +33,8 @@ public class usa {
             default:
                 throw new IllegalStateException("Unexpected value: " + time);
         }
-        s1= new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame1+".png").getImage(), Item_Type.SCENARY_1);
-        s2 = new screenObject(0, 0,  1571, 720, new ImageIcon(path+frame2+".png").getImage(), Item_Type.SCENARY_1);
+        s1= new screenObject(0, 0,  1571, 720, new ImageIcon( usa.class.getResource(path+frame1+".png")).getImage(), Item_Type.SCENARY_1);
+        s2 = new screenObject(0, 0,  1571, 720, new ImageIcon( usa.class.getResource(path+frame2+".png")).getImage(), Item_Type.SCENARY_1);
         a1.addFrame(s1,250.0,0,0);
         a1.addFrame(s2,250.0,0,0);
         a1.setHasSound(false);
@@ -46,9 +46,9 @@ public class usa {
     public static animation generateAnimation2(){
         animation a2 = new animation();
         a2.setHasEnd(false);
-        screenObject s = new screenObject(0, 0,  1571, 322, new ImageIcon(path  + "ring_blue_1.png").getImage(), Item_Type.SCENARY_2);
+        screenObject s = new screenObject(0, 0,  1571, 322, new ImageIcon( usa.class.getResource(path  + "ring_blue_1.png")).getImage(), Item_Type.SCENARY_2);
         a2.addFrame(s,100.0,0,0);
-        s = new screenObject(0, 0,  1571, 322, new ImageIcon(path  + "ring_blue_2.png").getImage(), Item_Type.SCENARY_2);
+        s = new screenObject(0, 0,  1571, 322, new ImageIcon( usa.class.getResource(path  + "ring_blue_2.png")).getImage(), Item_Type.SCENARY_2);
         a2.addFrame(s,100.0,0,0);
         a2.setHasSound(false);
         a2.setSoundType(fight_audio.voice_indexes.Win);

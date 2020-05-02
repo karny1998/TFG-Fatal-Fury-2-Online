@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class announcerAnimation {
-    String path = "assets/sprites/fight_interface/announcer/";
+    String path = "/assets/sprites/fight_interface/announcer/";
     private animation fightanimation;
     Image fight_image;
     // Listas de coordenadas
@@ -16,7 +16,7 @@ public class announcerAnimation {
     int w = 540, h = 148;
 
     public announcerAnimation() {
-        fight_image = new ImageIcon(path+"fight.png").getImage();
+        fight_image = new ImageIcon(this.getClass().getResource(path+"fight.png")).getImage();
         fightanimation = generateAnimation();
     }
 

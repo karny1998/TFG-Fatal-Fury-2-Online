@@ -1,8 +1,8 @@
 package lib.objects;
 
-import javafx.util.Pair;
 import lib.Enums.Movement;
 import lib.Enums.ia_type;
+import lib.utils.Pair;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

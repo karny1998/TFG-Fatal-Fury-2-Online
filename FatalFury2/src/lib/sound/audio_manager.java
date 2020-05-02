@@ -2,13 +2,12 @@ package lib.sound;
 
 import lib.Enums.Playable_Character;
 import lib.Enums.Scenario_type;
+import lib.utils.xmlReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.InputStream;
 
 public class audio_manager {
 
@@ -21,7 +20,7 @@ public class audio_manager {
     private static double volumen_sfx;
 
 
-    private static String optionsFilePath = "files/options.xml";
+    private static String optionsFilePath = "/files/options.xml";
 
     enum estado {
         NONE,
@@ -67,11 +66,12 @@ public class audio_manager {
 
     public static void readOptions(){
         try {
-            File input = new File(optionsFilePath);
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(input);
+
+
+            InputStream is = audio_manager.class.getResourceAsStream(optionsFilePath);
+            Document doc = xmlReader.open(is);
             doc.getDocumentElement().normalize();
+            is.close();
 
             NodeList p1 = doc.getElementsByTagName("volumen").item(0).getChildNodes();
 

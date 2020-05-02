@@ -1,22 +1,21 @@
 package lib.sound;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 
 public class menu_audio {
 
     public Clip[] clips;
 
-    private static String Music_Route = "assets/sound/music/Menu.wav";
-    private static String Back_route = "assets/sound/special_effects/Back.wav";
-    private static String Move_cursor_route = "assets/sound/special_effects/Move_cursor.wav";
-    private static String Option_selected_route = "assets/sound/special_effects/Option_selected.wav";
-    private static String Fight_selected_route = "assets/sound/special_effects/Fight_selected.wav";
-    private static String Versus_route = "assets/sound/voice/Announcer/Versus.wav";
-    private static String Andy_route = "assets/sound/voice/Announcer/Andy.wav";
-    private static String Terry_route = "assets/sound/voice/Announcer/Terry.wav";
-    private static String Mai_route = "assets/sound/voice/Announcer/Mai.wav";
+    private static String Music_Route = "/assets/sound/music/Menu.wav";
+    private static String Back_route = "/assets/sound/special_effects/Back.wav";
+    private static String Move_cursor_route = "/assets/sound/special_effects/Move_cursor.wav";
+    private static String Option_selected_route = "/assets/sound/special_effects/Option_selected.wav";
+    private static String Fight_selected_route = "/assets/sound/special_effects/Fight_selected.wav";
+    private static String Versus_route = "/assets/sound/voice/Announcer/Versus.wav";
+    private static String Andy_route = "/assets/sound/voice/Announcer/Andy.wav";
+    private static String Terry_route = "/assets/sound/voice/Announcer/Terry.wav";
+    private static String Mai_route = "/assets/sound/voice/Announcer/Mai.wav";
 
     public enum indexes {
         menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai,
@@ -40,31 +39,31 @@ public class menu_audio {
         clips = new Clip[indexes.values().length];
 
         clips[indexes.menu_theme.ordinal()] = AudioSystem.getClip();
-        clips[indexes.menu_theme.ordinal()].open(AudioSystem.getAudioInputStream(new File(Music_Route).getAbsoluteFile()));
+        clips[indexes.menu_theme.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Music_Route) ));
 
         clips[indexes.back.ordinal()] = AudioSystem.getClip();
-        clips[indexes.back.ordinal()].open(AudioSystem.getAudioInputStream(new File(Back_route).getAbsoluteFile()));
+        clips[indexes.back.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Back_route) ));
 
         clips[indexes.move_cursor.ordinal()] = AudioSystem.getClip();
-        clips[indexes.move_cursor.ordinal()].open(AudioSystem.getAudioInputStream(new File(Move_cursor_route).getAbsoluteFile()));
+        clips[indexes.move_cursor.ordinal()].open(AudioSystem.getAudioInputStream(this.getClass().getResource(Move_cursor_route) ));
 
         clips[indexes.option_selected.ordinal()] = AudioSystem.getClip();
-        clips[indexes.option_selected.ordinal()].open(AudioSystem.getAudioInputStream(new File(Option_selected_route).getAbsoluteFile()));
+        clips[indexes.option_selected.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Option_selected_route) ));
 
         clips[indexes.fight_selected.ordinal()] = AudioSystem.getClip();
-        clips[indexes.fight_selected.ordinal()].open(AudioSystem.getAudioInputStream(new File(Fight_selected_route).getAbsoluteFile()));
+        clips[indexes.fight_selected.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Fight_selected_route) ));
 
         clips[indexes.Versus.ordinal()] = AudioSystem.getClip();
-        clips[indexes.Versus.ordinal()].open(AudioSystem.getAudioInputStream(new File(Versus_route).getAbsoluteFile()));
+        clips[indexes.Versus.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Versus_route) ));
 
         clips[indexes.Andy.ordinal()] = AudioSystem.getClip();
-        clips[indexes.Andy.ordinal()].open(AudioSystem.getAudioInputStream(new File(Andy_route).getAbsoluteFile()));
+        clips[indexes.Andy.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Andy_route) ));
 
         clips[indexes.Terry.ordinal()] = AudioSystem.getClip();
-        clips[indexes.Terry.ordinal()].open(AudioSystem.getAudioInputStream(new File(Terry_route).getAbsoluteFile()));
+        clips[indexes.Terry.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Terry_route) ));
 
         clips[indexes.Mai.ordinal()] = AudioSystem.getClip();
-        clips[indexes.Mai.ordinal()].open(AudioSystem.getAudioInputStream(new File(Mai_route).getAbsoluteFile()));
+        clips[indexes.Mai.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Mai_route) ));
     }
 
 
