@@ -43,10 +43,10 @@ public class user_controller extends character_controller{
             }
 
             long current = System.currentTimeMillis();
-            if(current - timeReference < 50.0){
+            if(current - timeReference < 100.0){
                 mov = lastKey;
             }
-            if (!mov.equals(lastKey) && current - timeReference > 50.0) {
+            if (!mov.equals(lastKey) && current - timeReference > 100.0) {
                 if (!mov.equals("")) {
                     inputs.add(mov);
                     times.add(current);
