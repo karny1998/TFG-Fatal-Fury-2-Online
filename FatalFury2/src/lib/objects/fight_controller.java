@@ -22,7 +22,7 @@ public class fight_controller implements roundListener {
     // Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
     // Path
-    String path = "/assets/sprites/fight_interface/";
+    String path = "/assets/sprites/fight_interface";
     // Ronda actual de la pelea
     round currentRound;
     // Lista de resultados de todas las rondas
