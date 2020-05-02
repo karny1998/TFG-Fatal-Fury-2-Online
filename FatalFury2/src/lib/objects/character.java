@@ -79,10 +79,10 @@ public class character {
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
                 && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
             movements.get(state).getAnim().reset();
-            if(state == Movement.JUMP_PUNCH_DOWN){
+            if(state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_HARD_PUNCH_DOWN || state == Movement.JUMP_KICK_DOWN){
                 state = Movement.JUMP_FALL;
             }
-            else if(state == Movement.JUMP_ROLL_PUNCH_DOWN){
+            else if(state == Movement.JUMP_ROLL_PUNCH_DOWN || state == Movement.JUMP_ROLL_HARD_PUNCH_DOWN || state == Movement.JUMP_KICK){
                 state = Movement.JUMP_ROLL_FALL;
             }
             movements.get(state).start(dis);
@@ -305,7 +305,8 @@ public class character {
     boolean isJumping(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
                             Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
-                            Movement.JUMP_FALL, Movement.DASH};
+                            Movement.JUMP_FALL, Movement.DASH, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK,
+                            Movement.JUMP_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_HARD_PUNCH_DOWN};
         List<Movement> jumps = Arrays.asList(array);
         return jumps.contains(state);
     }
