@@ -1,6 +1,5 @@
 package lib.objects;
 
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 
 import javax.swing.*;
@@ -67,8 +66,6 @@ public class roundIndicators {
         }
         anim.addFrame(s1,250.0,0,0);
         anim.addFrame(s2,250.0,0,0);
-        anim.setSound(null);
-        anim.setSoundType(Character_Voices.Win);
         return anim;
     }
 

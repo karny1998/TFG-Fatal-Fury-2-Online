@@ -2,8 +2,8 @@ package lib.objects;
 
 import javafx.util.Pair;
 import lib.Enums.Animation_type;
-import lib.Enums.Character_Voices;
-import lib.sound.Sound;
+import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,10 @@ public class animation {
     long startTime = 0;
     long auxTime = 0;
     //Sonido asignado y su tipo
-    Sound sound;
-    Character_Voices soundType;
+    fight_audio.voice_indexes soundType;
+    boolean isPlayer1;
+
+
     // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
@@ -43,6 +45,8 @@ public class animation {
     hitBox hurtBox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HURTBOX);
     // Cover asociada
     hitBox coverbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.COVERBOX);
+
+    boolean hasSound = false;
 
     int yCompleted = 0;
     boolean yAux = false;
@@ -122,8 +126,8 @@ public class animation {
             desiredAssigned = true;
         }
         // Si no se está reprodciendo el sonido, se reproducre
-        if(sound != null && !playing && hasEnd){
-            sound.playCharacterVoice(soundType);
+        if(hasSound && !playing && hasEnd){
+            audio_manager.fight.playVoice(isPlayer1, soundType);
             playing = true;
         }
         screenObject result;
@@ -293,10 +297,6 @@ public class animation {
         this.unstoppable.set(i, unstop) ;
     }
 
-    public void setSound(Sound s){sound = s;}
-
-    public Sound getSound(){return sound;}
-
     public Boolean getPlaying() {
         return playing;
     }
@@ -340,11 +340,11 @@ public class animation {
         return coverbox;
     }
 
-    public Character_Voices getSoundType() {
+    public fight_audio.voice_indexes getSoundType() {
         return soundType;
     }
 
-    public void setSoundType(Character_Voices soundType) {
+    public void setSoundType(fight_audio.voice_indexes soundType) {
         this.soundType = soundType;
     }
 
@@ -438,5 +438,22 @@ public class animation {
 
     public void setDesiredAssigned(boolean desiredAssigned) {
         this.desiredAssigned = desiredAssigned;
+    }
+
+    public boolean hasSound(){
+        return hasSound;
+    }
+
+    public void setHasSound(boolean has){
+        hasSound = has;
+    }
+
+
+    public boolean isPlayer1() {
+        return isPlayer1;
+    }
+
+    public void setPlayer1(boolean player1) {
+        isPlayer1 = player1;
     }
 }

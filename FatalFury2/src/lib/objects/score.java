@@ -2,10 +2,10 @@ package lib.objects;
 
 import javafx.util.Pair;
 import lib.Enums.Animation_type;
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
 import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ public class score {
     private List<Pair<String, Integer>> rank;
     private long timeReference = 0;
 
-    public score(){new IsKeyPressed();}
+    public score(){}
 
     public void addHit(int p){
         points += p;
@@ -160,8 +160,10 @@ public class score {
         anim[0] = new animation();
         anim[0].setHasEnd(false);
         anim[0].setType(Animation_type.ENDLESS);
-        anim[0].setSound(null);
-        anim[0].setSoundType(Character_Voices.Win);
+
+        anim[0].setHasSound(false);
+        anim[0].setSoundType(fight_audio.voice_indexes.Win);
+
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
         anim[0].addFrame(s,250.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_down.png").getImage(), Item_Type.SCENARY_2);
@@ -170,8 +172,8 @@ public class score {
         anim[1] = new animation();
         anim[1].setHasEnd(false);
         anim[1].setType(Animation_type.ENDLESS);
-        anim[1].setSound(null);
-        anim[1].setSoundType(Character_Voices.Win);
+        anim[0].setHasSound(false);
+        anim[1].setSoundType(fight_audio.voice_indexes.Win);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
         anim[1].addFrame(s,250.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_both.png").getImage(), Item_Type.SCENARY_2);
@@ -180,8 +182,8 @@ public class score {
         anim[2] = new animation();
         anim[2].setHasEnd(false);
         anim[2].setType(Animation_type.ENDLESS);
-        anim[2].setSound(null);
-        anim[2].setSoundType(Character_Voices.Win);
+        anim[0].setHasSound(false);
+        anim[2].setSoundType(fight_audio.voice_indexes.Win);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_base.png").getImage(), Item_Type.SCENARY_2);
         anim[2].addFrame(s,250.0,0,0);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon("assets/sprites/menu/ranking/ranking_up.png").getImage(), Item_Type.SCENARY_2);

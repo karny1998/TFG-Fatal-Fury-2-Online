@@ -9,6 +9,7 @@ import lib.menus.menu;
 import lib.menus.menu_generator;
 import lib.menus.options;
 import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import java.awt.*;
@@ -17,8 +18,8 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
-
+    boolean debug = false;
+    boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
     // Escenario (habría que meterlo en fight_controller)
@@ -50,7 +51,6 @@ public class game_controller {
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
 
     public game_controller() {
-        new IsKeyPressed();
         this.principal = menu_generator.generate();
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
@@ -83,6 +83,7 @@ public class game_controller {
             user.getPlayer().setMapLimit(mapLimit);
             state = GameState.FIGHT;
             scene = new scenary(Scenario_type.USA);
+            audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
             fight.setVsIa(true);
@@ -226,6 +227,7 @@ public class game_controller {
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(!pvp);
                     screenObjects.remove(Item_Type.MENU);
+
                     state = GameState.FIGHT;
 
                 }
@@ -241,15 +243,36 @@ public class game_controller {
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
             if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
-                //todo sonido de abrir menu
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Pause);
                 state = GameState.ESCAPE;
             }
             // Si se está mostrando la pelea
             else {
                 screenObjects.remove(Item_Type.MENU);
                 fight.getAnimation(screenObjects);
+                if(fight.showIntro  || fight.showOutro){
+                    audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                    stopMusic = true;
+                } else if(stopMusic){
+                    audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+                    stopMusic = false;
+                }
+
+
                 if (fight.getEnd()) {
                     if(fight.isVsIa()){
+                        Fight_Results resultado = fight.getFight_result();
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                        switch (resultado){
+                            case UNFINISHED:
+                            case PLAYER2_WIN:
+                            case TIE:
+                                audio_manager.fight.loopMusic(fight_audio.music_indexes.lose_theme);
+                                break;
+                            case PLAYER1_WIN:
+                                audio_manager.fight.loopMusic(fight_audio.music_indexes.win_theme);
+                                break;
+                        }
                         askName = new ask_for_name();
                         state = GameState.TYPING;
                     }

@@ -3,6 +3,8 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.Enums.Round_Results;
+import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -226,10 +228,12 @@ public class round {
             if(enemyCovers && playerState != Movement.THROW){
                 enemy.getPlayer().applyDamage((int) (dmgP*0.5));
                 scorePlayer.addHit((int) (dmgP*10*0.5));
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);
             }
             else{
                 enemy.getPlayer().applyDamage(dmgP);
                 scorePlayer.addHit(dmgP*10);
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_2);
             }
             if(playerState == Movement.THROW){
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
@@ -263,10 +267,12 @@ public class round {
             if(playerCovers && enemyState != Movement.THROW){
                 player.getPlayer().applyDamage((int) (dmgE*0.5));
                 scoreEnemy.addHit((int) (dmgE*10*0.5));
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);
             }
             else{
                 player.getPlayer().applyDamage(dmgE);
                 scoreEnemy.addHit(dmgE*10);
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_2);
             }
             if(enemyState == Movement.THROW){
                 player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);

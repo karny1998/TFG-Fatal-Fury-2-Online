@@ -24,7 +24,6 @@ public abstract  class character_controller {
 
     public character_controller(Playable_Character ch, int pN, int x, int y, int orientation){
         this.x = x; this.y = y;
-        new IsKeyPressed();
         if(ch == Playable_Character.ANDY){
             charac = "andy";
         }

@@ -1,17 +1,19 @@
 package lib.characters;
 
 import lib.Enums.Animation_type;
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.objects.animation;
 import lib.objects.movement;
 import lib.objects.screenObject;
-import lib.sound.Sound;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Map;
@@ -67,7 +69,8 @@ public class load_character {
         return lineaBuena;
     }
 
-    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, Sound sounds, double multiplier) {
+
+    public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
         try {
             String value;
@@ -84,7 +87,7 @@ public class load_character {
                 String fold = value;
                 Movement movId = Movement.valueOf(readAux(b));
                 String combo = readAux(b);
-                Character_Voices sound = Character_Voices.valueOf(readAux(b));
+                fight_audio.voice_indexes sound = fight_audio.voice_indexes.valueOf(readAux(b));
                 Boolean hasEnd = Boolean.valueOf(readAux(b));
                 Animation_type aType = Animation_type.valueOf(readAux(b));
                 int dmg = Integer.valueOf(readAux(b));
@@ -114,8 +117,21 @@ public class load_character {
                 animation anim = new animation();
                 anim.setType(aType);
                 anim.setHasEnd(hasEnd);
-                anim.setSound(sounds);
+                anim.setHasSound(true);
                 anim.setSoundType(sound);
+                boolean player1 = false;
+                switch (nJ){
+                    case 1:
+                        player1 = true;
+                        break;
+                    case 2:
+                        player1 = false;
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + nJ);
+                }
+
+                anim.setPlayer1(player1);
                 anim.setHurtBox(xHurt,yHurt,wHurt,hHurt);
 
                 if(hasHit){

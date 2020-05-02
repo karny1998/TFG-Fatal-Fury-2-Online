@@ -13,9 +13,13 @@ public class menu_audio {
     private static String Move_cursor_route = "assets/sound/special_effects/Move_cursor.wav";
     private static String Option_selected_route = "assets/sound/special_effects/Option_selected.wav";
     private static String Fight_selected_route = "assets/sound/special_effects/Fight_selected.wav";
+    private static String Versus_route = "assets/sound/voice/Announcer/Versus.wav";
+    private static String Andy_route = "assets/sound/voice/Announcer/Andy.wav";
+    private static String Terry_route = "assets/sound/voice/Announcer/Terry.wav";
+    private static String Mai_route = "assets/sound/voice/Announcer/Mai.wav";
 
     public enum indexes {
-        menu_theme, back, move_cursor, option_selected, fight_selected
+        menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai,
     }
 
     menu_audio(){
@@ -49,6 +53,18 @@ public class menu_audio {
 
         clips[indexes.fight_selected.ordinal()] = AudioSystem.getClip();
         clips[indexes.fight_selected.ordinal()].open(AudioSystem.getAudioInputStream(new File(Fight_selected_route).getAbsoluteFile()));
+
+        clips[indexes.Versus.ordinal()] = AudioSystem.getClip();
+        clips[indexes.Versus.ordinal()].open(AudioSystem.getAudioInputStream(new File(Versus_route).getAbsoluteFile()));
+
+        clips[indexes.Andy.ordinal()] = AudioSystem.getClip();
+        clips[indexes.Andy.ordinal()].open(AudioSystem.getAudioInputStream(new File(Andy_route).getAbsoluteFile()));
+
+        clips[indexes.Terry.ordinal()] = AudioSystem.getClip();
+        clips[indexes.Terry.ordinal()].open(AudioSystem.getAudioInputStream(new File(Terry_route).getAbsoluteFile()));
+
+        clips[indexes.Mai.ordinal()] = AudioSystem.getClip();
+        clips[indexes.Mai.ordinal()].open(AudioSystem.getAudioInputStream(new File(Mai_route).getAbsoluteFile()));
     }
 
 
@@ -58,7 +74,7 @@ public class menu_audio {
         }
     }
 
-    public void update(double mus, double sfx){
+    public void update(double mus, double sfx, double voices){
         stop(indexes.menu_theme);
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(mus));
@@ -83,6 +99,26 @@ public class menu_audio {
         gainControl = (FloatControl) clips[indexes.fight_selected.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(sfx));
         resume(indexes.fight_selected);
+
+        stop(indexes.Versus);
+        gainControl = (FloatControl) clips[indexes.Versus.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+        resume(indexes.Versus);
+
+        stop(indexes.Andy);
+        gainControl = (FloatControl) clips[indexes.Andy.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+        resume(indexes.Andy);
+
+        stop(indexes.Terry);
+        gainControl = (FloatControl) clips[indexes.Terry.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+        resume(indexes.Terry);
+
+        stop(indexes.Mai);
+        gainControl = (FloatControl) clips[indexes.Mai.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices ));
+        resume(indexes.Mai);
     }
 
     public void play(indexes i){

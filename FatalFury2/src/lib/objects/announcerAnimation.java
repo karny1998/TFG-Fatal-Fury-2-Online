@@ -1,7 +1,7 @@
 package lib.objects;
 
-import lib.Enums.Character_Voices;
 import lib.Enums.Item_Type;
+import lib.sound.fight_audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +32,8 @@ public class announcerAnimation {
             anim.addFrame(s,250.0/m,0,0);
         }
         anim.setHasEnd(false);
-        anim.setSound(null);
-        anim.setSoundType(Character_Voices.Win);
+        anim.setHasSound(false);
+        anim.setSoundType(fight_audio.voice_indexes.Win);
         return anim;
     }
 
