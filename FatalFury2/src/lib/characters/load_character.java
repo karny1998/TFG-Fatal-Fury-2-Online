@@ -69,7 +69,7 @@ public class load_character {
         return lineaBuena;
     }
 
-//TODO METER SONIDOS AQUI
+
     public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
         String path = "assets/sprites/characters/" + charac + "/";
         try {
@@ -119,6 +119,19 @@ public class load_character {
                 anim.setHasEnd(hasEnd);
                 anim.setHasSound(true);
                 anim.setSoundType(sound);
+                boolean player1 = false;
+                switch (nJ){
+                    case 1:
+                        player1 = true;
+                        break;
+                    case 2:
+                        player1 = false;
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + nJ);
+                }
+
+                anim.setPlayer1(player1);
                 anim.setHurtBox(xHurt,yHurt,wHurt,hHurt);
 
                 if(hasHit){

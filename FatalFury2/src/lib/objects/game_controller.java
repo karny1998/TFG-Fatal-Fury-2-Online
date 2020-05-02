@@ -18,7 +18,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -227,6 +227,7 @@ public class game_controller {
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(!pvp);
                     screenObjects.remove(Item_Type.MENU);
+
                     state = GameState.FIGHT;
 
                 }

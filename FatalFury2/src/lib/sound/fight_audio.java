@@ -211,7 +211,25 @@ public class fight_audio {
 
     }
 
-    public void playVoice(int player, voice_indexes i){}
+    public void playVoice(boolean isP1, voice_indexes i){
+        if(isP1){
+            try {
+                p1_voices[i.ordinal()].setFramePosition(0);
+                p1_voices[i.ordinal()].start();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            try {
+                p2_voices[i.ordinal()].setFramePosition(0);
+                p2_voices[i.ordinal()].start();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+
 
     public void playAnnouncer(announcer_indexes i){
         try {

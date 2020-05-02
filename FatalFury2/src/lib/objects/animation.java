@@ -2,6 +2,7 @@ package lib.objects;
 
 import javafx.util.Pair;
 import lib.Enums.Animation_type;
+import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class animation {
     long auxTime = 0;
     //Sonido asignado y su tipo
     fight_audio.voice_indexes soundType;
+    boolean isPlayer1;
+
+
     // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
@@ -123,8 +127,7 @@ public class animation {
         }
         // Si no se está reprodciendo el sonido, se reproducre
         if(hasSound && !playing && hasEnd){
-        //if(sound != null && !playing && hasEnd){
-            //TODO PJ HABLA
+            audio_manager.fight.playVoice(isPlayer1, soundType);
             playing = true;
         }
         screenObject result;
@@ -437,7 +440,20 @@ public class animation {
         this.desiredAssigned = desiredAssigned;
     }
 
+    public boolean hasSound(){
+        return hasSound;
+    }
+
     public void setHasSound(boolean has){
         hasSound = has;
+    }
+
+
+    public boolean isPlayer1() {
+        return isPlayer1;
+    }
+
+    public void setPlayer1(boolean player1) {
+        isPlayer1 = player1;
     }
 }
