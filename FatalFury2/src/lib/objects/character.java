@@ -42,8 +42,6 @@ public class character {
             //generar movimientos de andy
         }
         else{
-            //TODO
-            //new terry().generateMovs(combos, movements, voices);
             new load_character().generateMovs("terry", pN, combos, movementsKeys, movements, 0.8);
         }
         // Por defecto está en STANDING

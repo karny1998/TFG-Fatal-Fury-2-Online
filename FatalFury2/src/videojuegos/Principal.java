@@ -11,8 +11,10 @@ import java.awt.*;
 public class Principal extends JFrame {
 
     public Principal() {
-        //TODO -> CREAR DIRECTORIO OCULTO CON LOS FICHEROS A ESCRIBIR
-
+        // TODO -> MOSTRAR OPENING
+        // TODO -> CREAR DIRECTORIO OCULTO CON LOS FICHEROS A ESCRIBIR
+        // TODO -> LEER XML PARA EL CARGADOR DE IA
+        // TODO -> ANTIREBOTES
         controlListener control = new controlListener();
 
         audio_manager audio = new audio_manager();
