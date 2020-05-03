@@ -67,7 +67,7 @@ public class character {
         }
 
         if (mov.length() == 4 && (mov.contains("DE-") || mov.contains("IZ-"))
-            && !(mov.equals("DE-B") && dis < 10)) {
+            && !(mov.equals("DE-C") && dis < 10)) {
             mov = String.valueOf(mov.charAt(mov.length() - 1));
         }
 

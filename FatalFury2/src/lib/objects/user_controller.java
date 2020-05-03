@@ -115,12 +115,10 @@ public class user_controller extends character_controller{
             return player.getFrame(mov, pHurt, eHurt, false);
         }
         else {
-            if (mov.equals("AB+AB-IZ+IZ+AR-IZ+B") || mov.equals("AB+AB-DE+DE+AR-DE+B")) {
-                System.out.println("COMBO HECHO");
-            }
-            else if (!inputs.isEmpty()) {
+            /*
+            if (!inputs.isEmpty()) {
                 System.out.println(inputs);
-            }
+            }*/
             return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
     }

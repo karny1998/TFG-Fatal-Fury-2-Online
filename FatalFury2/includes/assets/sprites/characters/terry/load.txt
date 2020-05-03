@@ -575,7 +575,7 @@ true
 true
 throw
 THROW
-DE-B
+DE-C
 Defeat
 true
 ENDABLE
@@ -1517,7 +1517,7 @@ hook
 # Nombre del movimiento (Enum)
 HOOK
 # Combinación de teclas
-B
+C
 # Sonido asociado
 Hit_1
 # ¿Tiene final? (true / false)
