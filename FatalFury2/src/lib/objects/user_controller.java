@@ -77,8 +77,8 @@ public class user_controller extends character_controller{
                 if (this.player.getCombos().containsKey(auxComb) && auxComb.contains("+")) {
                     end = true;
                     mov = auxComb;
-                    inputs.clear();
-                    times.clear();
+                    //inputs.clear();
+                    //times.clear();
                 }
             }
 
@@ -114,7 +114,13 @@ public class user_controller extends character_controller{
         if(rival == null) {
             return player.getFrame(mov, pHurt, eHurt, false);
         }
-        else{
+        else {
+            if (mov.equals("AB+AB-IZ+IZ+AR-IZ+B") || mov.equals("AB+AB-DE+DE+AR-DE+B")) {
+                System.out.println("COMBO HECHO");
+            }
+            else if (!inputs.isEmpty()) {
+                System.out.println(inputs);
+            }
             return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
     }

@@ -345,7 +345,7 @@ public class character {
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
                             Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
                             Movement.JUMP_FALL, Movement.DASH, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK,
-                            Movement.JUMP_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_HARD_PUNCH_DOWN};
+                            Movement.JUMP_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_LEFT};
         List<Movement> jumps = Arrays.asList(array);
         return jumps.contains(state);
     }
@@ -362,7 +362,7 @@ public class character {
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
-                Movement.DASH, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK};
+                Movement.DASH, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.JUMP_ROLL_LEFT};
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
     }
