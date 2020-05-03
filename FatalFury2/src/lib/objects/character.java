@@ -127,7 +127,7 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
-        else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state){
+        else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state && !isCombing()){
             if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL) {
                 movements.get(state).getAnim().reset();
                 state = combos.get(mov);
@@ -208,7 +208,10 @@ public class character {
         }
 
         // Gestión de colisiones
-        if(collidesLimitLeft && (s.getX() < x || collides)
+        if(collides && isAttacking() && inDisplacement()){
+            s.setX(x);
+        }
+        else if(collidesLimitLeft && (s.getX() < x || collides)
                 || collidesLimitRight && (s.getX() > x || collides)){
             if(inKnockback() && !rival.inKnockback()){
                 rival.returnKnockback(Math.abs(x - s.getX()));
@@ -295,7 +298,8 @@ public class character {
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
                 Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK,
-                Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,};
+                Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.CHARGED_PUNCH_A,
+                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
     }
@@ -321,9 +325,17 @@ public class character {
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
-                Movement.DASH};
+                Movement.DASH, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK};
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
+    }
+
+    boolean isCombing(){
+        Movement array[] = {Movement.JUMP_KICK_DOWN, Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,
+                Movement.CHARGED_PUNCH_A, Movement.JUMP_HARD_PUNCH_DOWN,  Movement.JUMP_ROLL_HARD_PUNCH_DOWN,
+                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.DASH};
+        List<Movement> attacks = Arrays.asList(array);
+        return attacks.contains(state);
     }
 
     //Getters y setters
