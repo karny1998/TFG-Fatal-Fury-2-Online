@@ -119,11 +119,11 @@ public class character {
                 if(mov.endsWith("-A") || mov.equals("A")){
                     state = Movement.JUMP_PUNCH_DOWN;
                 }
-                else if(mov.endsWith("-B") || mov.equals("B")){
+                else if(mov.endsWith("-C") || mov.equals("C")){
                     state = Movement.JUMP_HARD_PUNCH_DOWN;
                 }
                 else if(mov.endsWith("-D") || mov.endsWith("D")
-                        || mov.endsWith("-C") || mov.equals("C")){
+                        || mov.endsWith("-B") || mov.equals("B")){
                     state = Movement.JUMP_KICK_DOWN;
                 }
             }
@@ -131,11 +131,11 @@ public class character {
                 if(mov.endsWith("-A") || mov.equals("A")){
                     state = Movement.JUMP_ROLL_PUNCH_DOWN;
                 }
-                else if(mov.endsWith("-B") || mov.equals("B")){
+                else if(mov.endsWith("-C") || mov.equals("C")){
                     state = Movement.JUMP_ROLL_HARD_PUNCH_DOWN;
                 }
-                else if(mov.endsWith("-C") || mov.endsWith("-D")
-                        || mov.equals("C") || mov.equals("D")){
+                else if(mov.endsWith("-B") || mov.endsWith("-D")
+                        || mov.equals("B") || mov.equals("D")){
                     state = Movement.JUMP_KICK;
                 }
             }
@@ -152,7 +152,7 @@ public class character {
             stateChanged = true;
         }
         else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state && !isCombing()){
-            if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL) {
+            if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL && !((isJumping() || state == Movement.THROW) && combos.get(mov) == Movement.DASH)) {
                 movements.get(state).getAnim().reset();
                 state = combos.get(mov);
                 movements.get(state).start(dis);

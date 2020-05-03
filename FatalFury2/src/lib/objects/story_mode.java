@@ -31,7 +31,7 @@ public class story_mode {
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
-    private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.TERRY, Playable_Character.MAI,
+    private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
 
@@ -57,7 +57,7 @@ public class story_mode {
         }
         path =  "/assets/sprites/menu/story/end_story_";
         ends = new screenObject[3];
-        for(int i = 1; i < 3; ++i){
+        for(int i = 1; i < 4; ++i){
             ends[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource(path  + i + ".png")).getImage(), Item_Type.MENU);
         }
     }
@@ -112,8 +112,9 @@ public class story_mode {
                         break;
                 }
                 state = GameState.STORY_MENU;
-                if(actualMenu == winMenu && stage == 0){
+                if(actualMenu == winMenu && stage == 8){
                     state = GameState.STORY_END;
+                    timeReference = current;
                 }
             }
         }
@@ -145,10 +146,10 @@ public class story_mode {
             }
         }
         else if(state == GameState.STORY_END){
-            if(current - timeReference < 2000.0){
+            if(current - timeReference < 4000.0){
                 screenObjects.put(Item_Type.MENU, ends[0]);
             }
-            else if(current - timeReference > 6000.0){
+            else if(current - timeReference > 12000.0){
                 exit = true;
             }
             else{
