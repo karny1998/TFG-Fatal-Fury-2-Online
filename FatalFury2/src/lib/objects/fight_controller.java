@@ -418,13 +418,18 @@ public class fight_controller implements roundListener {
                         break;
                     // Empate
                     case TIE:
-                        if (!newRound) {
-                            player.getPlayer().setVictory(2);
-                            enemy.getPlayer().setVictory(2);
+                        if (!wasDoubleKO) {
+                            if (!newRound) {
+                                player.getPlayer().setVictory(2);
+                                enemy.getPlayer().setVictory(2);
+                            } else {
+                                player.getPlayer().setVictory(1);
+                                enemy.getPlayer().setVictory(1);
+                            }
                         }
                         else {
-                            player.getPlayer().setVictory(1);
-                            enemy.getPlayer().setVictory(1);
+                                player.getPlayer().setDefeat();
+                                enemy.getPlayer().setDefeat();
                         }
                         break;
                 }
