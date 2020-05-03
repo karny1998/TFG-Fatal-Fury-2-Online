@@ -2596,7 +2596,7 @@ false
 # Altura frame (500)
 1200
 # Tiempo transición
-200
+5000
 # Incremento X
 0
 # Incremento Y
