@@ -336,7 +336,8 @@ public class character {
                 Movement.HARD_KICK, Movement.GUARD_ATTACK, Movement.THROW,
                 Movement.DESPERATION_MOVE, Movement.ATTACK_POKE, Movement.RANGED_ATTACK,
                 Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.CHARGED_PUNCH_A,
-                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D};
+                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
+                Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
     }
@@ -347,7 +348,7 @@ public class character {
                             Movement.JUMP_FALL, Movement.DASH, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK,
                             Movement.JUMP_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_ROLL_LEFT,
                             Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.CHARGED_PUNCH_A,
-                            Movement.CHARGED_PUNCH_C};
+                            Movement.CHARGED_PUNCH_C, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         List<Movement> jumps = Arrays.asList(array);
         return jumps.contains(state);
     }
@@ -355,7 +356,7 @@ public class character {
     boolean inKnockback(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
-                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT};
+                Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.CROUCHED_BLOCK_KNOCKBACK};
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
     }
@@ -365,7 +366,7 @@ public class character {
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
                 Movement.DASH, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.JUMP_ROLL_LEFT,
-                Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D
+                Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C
         };
         List<Movement> knock = Arrays.asList(array);
         return knock.contains(state);
@@ -374,7 +375,8 @@ public class character {
     boolean isCombing(){
         Movement array[] = {Movement.JUMP_KICK_DOWN, Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,
                 Movement.CHARGED_PUNCH_A, Movement.JUMP_HARD_PUNCH_DOWN,  Movement.JUMP_ROLL_HARD_PUNCH_DOWN,
-                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.DASH, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D};
+                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.DASH, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
+                Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
     }
