@@ -3171,7 +3171,7 @@ false
 # Tiempo transición
 50
 # Incremento X
-75
+35
 # Incremento Y
 -50
 # X esperada (-1 si no se necesita)
