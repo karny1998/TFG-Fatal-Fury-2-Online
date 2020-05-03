@@ -77,8 +77,8 @@ public class user_controller extends character_controller{
                 if (this.player.getCombos().containsKey(auxComb) && auxComb.contains("+")) {
                     end = true;
                     mov = auxComb;
-                    //inputs.clear();
-                    //times.clear();
+                    inputs.clear();
+                    times.clear();
                 }
             }
 
