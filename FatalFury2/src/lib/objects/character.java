@@ -77,8 +77,10 @@ public class character {
         boolean stateChanged = false;
         if(gameResult == 3){
             movements.get(state).reset();
-            state = Movement.VICTORY_ROUND;
+            state = Movement.DEFEAT;
             movements.get(state).start(999);
+            gameResult = 4;
+            stateChanged = true;
         }
         else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())){
             movements.get(state).reset();
@@ -92,6 +94,7 @@ public class character {
                 state = Movement.DEFEAT;
             }
             movements.get(state).start(999);
+            stateChanged = true;
         }
         else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
@@ -228,6 +231,9 @@ public class character {
         }
 
         // Gestión de colisiones
+        if (gameResult == 2 && stateChanged) {
+            s.setY(-270);
+        }
         if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
         }

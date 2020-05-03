@@ -1,9 +1,6 @@
 package lib.objects;
 
-import lib.Enums.Fight_Results;
-import lib.Enums.Item_Type;
-import lib.Enums.Round_Results;
-import lib.Enums.Scenario_time;
+import lib.Enums.*;
 import lib.maps.scenary;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
@@ -74,6 +71,7 @@ public class fight_controller implements roundListener {
     Image terry_win, mai_win, andy_win;
     // Booleanos anuncios
     boolean startedFightAnimation;
+    boolean startedVictoryAnimation;
     boolean showIntro = false;
     long introTimeStamp;
     boolean showOutro = false;
@@ -99,6 +97,7 @@ public class fight_controller implements roundListener {
         wasDoubleKO = false;
         noTimer = false;
         startedFightAnimation = false;
+        startedVictoryAnimation = false;
         bar_player = new ImageIcon(this.getClass().getResource(path+"/hp_bars/player1_frame.png")).getImage();
         bar_enemy = new ImageIcon(this.getClass().getResource(path+"/hp_bars/player2_frame.png")).getImage();
         switch (player.getPlayer().getCharac()) {
@@ -220,7 +219,6 @@ public class fight_controller implements roundListener {
         showOutro();
         // Segunda ronda
         if (roundCounter == 1) {
-
             Round_Results lastResult = results.get(0);
             updateScores(lastResult);
             newRound = true;
@@ -396,13 +394,43 @@ public class fight_controller implements roundListener {
                 showIntro = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
                 startedFightAnimation = false;
+                startedVictoryAnimation = false;
                 player.endStandBy();
                 enemy.endStandBy();
                 startNewRound(roundCounter != 3);
             }
         }
         if (showOutro) {
-
+            // Pose de victoria de ronda
+            if (!startedVictoryAnimation) {
+                switch (results.get(roundCounter-1)) {
+                    // Ha ganado el jugador 1
+                    case WIN:
+                        if (!newRound) { player.getPlayer().setVictory(2); }
+                        else { player.getPlayer().setVictory(1); }
+                        enemy.getPlayer().setDefeat();
+                        break;
+                    // Ha ganado el jugador 2
+                    case LOSE:
+                        if (!newRound) { enemy.getPlayer().setVictory(2); }
+                        else { enemy.getPlayer().setVictory(1); }
+                        player.getPlayer().setDefeat();
+                        break;
+                    // Empate
+                    case TIE:
+                        if (!newRound) {
+                            player.getPlayer().setVictory(2);
+                            enemy.getPlayer().setVictory(2);
+                        }
+                        else {
+                            player.getPlayer().setVictory(1);
+                            enemy.getPlayer().setVictory(1);
+                        }
+                        break;
+                }
+                startedVictoryAnimation = true;
+            }
+            // Pos de victoria de pelea
             Date date = new Date();
             long timePast = date.getTime() - outroTimeStamp;
             Round_Results lastResult = results.get(results.size()-1);
@@ -537,6 +565,7 @@ public class fight_controller implements roundListener {
                 if (newRound) {
                     player.reset();
                     enemy.reset();
+                    currentRound.setScenaryOffset(0);
                     if (roundCounter == 1) {
                         scene.setCurrentTime(Scenario_time.SUNSET);
                     }
