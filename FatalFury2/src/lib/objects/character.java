@@ -457,6 +457,7 @@ public class character {
 
     public void setState(Movement state) {
         this.state = state;
+        this.movements.get(state).start(9999);
     }
 
     public hitBox getMapLimit() {
