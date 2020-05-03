@@ -26,11 +26,10 @@ public class story_mode {
     private Playable_Character charac = Playable_Character.TERRY;
     private fight_controller fight;
     private character_controller player, enemy;
-    private GameState state = GameState.STORY_LOADING;
+    private GameState state = GameState.STORY_DIFFICULTY;
     private scenary scene = new scenary(Scenario_type.USA);;
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
     private long timeReference = System.currentTimeMillis();
-    private boolean newGame = false;
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
@@ -50,6 +49,7 @@ public class story_mode {
 
     void loadGame(){
         String path = "/files/last_game.txt";
+        boolean newGame = true;
         try {
             InputStream f = this.getClass().getResourceAsStream(path);
             BufferedReader b = new BufferedReader(new InputStreamReader(f));
@@ -58,6 +58,7 @@ public class story_mode {
                 lvlIa = Integer.valueOf(aux);
                 if ((aux = b.readLine()) != null) {
                     stage = Integer.valueOf(aux);
+                    newGame = false;
                 }
                 else{
                     newGame = true;
@@ -67,14 +68,19 @@ public class story_mode {
                 newGame = true;
             }
             b.close();
-            if(newGame) {
+            if(!newGame) {
+                state = GameState.STORY_LOADING;
+            }
+            else{
                 state = GameState.STORY_DIFFICULTY;
                 actualMenu = difficulty;
                 actualMenu.updateTime();
             }
         }
         catch (Exception e){
-            newGame = true;
+            state = GameState.STORY_DIFFICULTY;
+            actualMenu = difficulty;
+            actualMenu.updateTime();
         }
     }
 
@@ -143,6 +149,7 @@ public class story_mode {
                             break;
                     }
                     state = GameState.STORY_LOADING;
+                    timeReference = current;
                 }
             }
         }
