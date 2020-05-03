@@ -83,7 +83,9 @@ public class character {
             gameResult = 4;
             stateChanged = true;
         }
-        else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())){
+        else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())
+                && state != Movement.SPIN_PUNCH_C && state != Movement.SPIN_PUNCH_A
+                && state != Movement.JUMP_ROLL_FALL){
             movements.get(state).reset();
             if(gameResult == 1){
                 state = Movement.VICTORY_ROUND;
@@ -95,6 +97,13 @@ public class character {
                 state = Movement.DEFEAT;
             }
             movements.get(state).start(999);
+            stateChanged = true;
+        }
+        else if ((state == Movement.SPIN_PUNCH_A || state == Movement.SPIN_PUNCH_C) && movements.get(state).ended()){
+            movements.get(state).getAnim().reset();
+            state = Movement.JUMP_ROLL_FALL;
+            movements.get(state).start(dis);
+            executedMoves.add(state);
             stateChanged = true;
         }
         else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)

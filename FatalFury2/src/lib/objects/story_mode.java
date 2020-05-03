@@ -10,12 +10,14 @@ import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 
 import javax.swing.*;
+import java.io.*;
 import java.util.Map;
 
 public class story_mode {
     private menu actualMenu;
     private menu winMenu = menu_generator.generate_story_win();
     private menu loseMenu = menu_generator.generate_story_lose();
+    private menu difficulty = menu_generator.generate_story_difficulty();
     private screenObject loads[];
     private screenObject ends[];
     private int lvlIa = 1;
@@ -28,6 +30,7 @@ public class story_mode {
     private scenary scene = new scenary(Scenario_type.USA);;
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
     private long timeReference = System.currentTimeMillis();
+    private boolean newGame = false;
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
@@ -45,9 +48,50 @@ public class story_mode {
         loadLoadScreens();
     }
 
-    void loadGame(){}
+    void loadGame(){
+        String path = "/files/last_game.txt";
+        try {
+            InputStream f = this.getClass().getResourceAsStream(path);
+            BufferedReader b = new BufferedReader(new InputStreamReader(f));
+            String aux = "";
+            if ((aux = b.readLine()) != null) {
+                lvlIa = Integer.valueOf(aux);
+                if ((aux = b.readLine()) != null) {
+                    stage = Integer.valueOf(aux);
+                }
+                else{
+                    newGame = true;
+                }
+            }
+            else{
+                newGame = true;
+            }
+            b.close();
+            if(newGame) {
+                state = GameState.STORY_DIFFICULTY;
+                actualMenu = difficulty;
+                actualMenu.updateTime();
+            }
+        }
+        catch (Exception e){
+            newGame = true;
+        }
+    }
 
-    void saveGame(){}
+    void saveGame(){
+        String path = "/files/last_game.txt";
+        File f= new File(path);
+        f.delete();
+        f= new File(path);
+        try {
+            FileOutputStream fos = new FileOutputStream(f);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+            bw.write(Integer.toString(lvlIa)+"\n");
+            bw.write(Integer.toString(stage));
+            bw.close();
+        }
+        catch (Exception e){}
+    }
 
     void loadLoadScreens(){
         String path =  "/assets/sprites/menu/story/story_";
@@ -65,6 +109,7 @@ public class story_mode {
     void generateFight(){
         player = new user_controller(charac, 1);
         enemy = new enemy_controller(enemies[stage], 2);
+        enemy.getIa().setLvl(lvlIa);
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
@@ -78,7 +123,30 @@ public class story_mode {
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
         long current = System.currentTimeMillis();
-        if(state == GameState.STORY_LOADING){
+        if(state == GameState.STORY_DIFFICULTY){
+            screenObjects.put(Item_Type.MENU,actualMenu.getFrame());
+            Pair<menu, Selectionable> p = actualMenu.select();
+            if(controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
+                if (p.getKey() == null) {
+                    switch (p.getValue()) {
+                        case EASY:
+                            lvlIa = 1;
+                            break;
+                        case NORMAL:
+                            lvlIa = 2;
+                            break;
+                        case HARD:
+                            lvlIa = 3;
+                            break;
+                        case VERY_HARD:
+                            lvlIa = 4;
+                            break;
+                    }
+                    state = GameState.STORY_LOADING;
+                }
+            }
+        }
+        else if(state == GameState.STORY_LOADING){
             if(current - timeReference < 2000.0){
                 screenObjects.put(Item_Type.MENU, loads[stage]);
             }

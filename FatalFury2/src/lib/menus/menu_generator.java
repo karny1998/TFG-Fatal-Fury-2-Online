@@ -262,6 +262,65 @@ public class menu_generator {
         return men;
     }
 
+    public static menu generate_story_difficulty(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.EASY, Selectionable.NORMAL, Selectionable.HARD, Selectionable.VERY_HARD});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "/assets/sprites/menu/dificulty/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_easy.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        selectionable sel = new selectionable(Selectionable.EASY,a);
+        aux.put(Selectionable.EASY,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_normal.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.NORMAL,a);
+        aux.put(Selectionable.NORMAL,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_hard.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.HARD,a);
+        aux.put(Selectionable.HARD,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_veryhard.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.VERY_HARD,a);
+        aux.put(Selectionable.VERY_HARD,sel);
+
+        men.setSelectionables(aux);
+
+        return men;
+    }
+
     public static menu generate_map_selection(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.MAP_USA, Selectionable.MAP_AUS, Selectionable.MAP_CHI});
