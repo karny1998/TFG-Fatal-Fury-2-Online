@@ -31,6 +31,8 @@ public class character {
     private character rival;
     // Lista de movimientos realizados
     private List<Movement> executedMoves = new ArrayList<>();
+    // Entero de victoria o derrota
+    private int gameResult = 0;
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
@@ -73,6 +75,19 @@ public class character {
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
         boolean stateChanged = false;
+        if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())){
+            movements.get(state).reset();
+            if(gameResult == 1){
+                state = Movement.VICTORY_ROUND;
+            }
+            else if(gameResult == 2){
+                state = Movement.VICTORY_FIGHT;
+            }
+            else{
+                state = Movement.DEFEAT;
+            }
+            movements.get(state).start(999);
+        }
         if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
                 && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
@@ -263,6 +278,14 @@ public class character {
         return s;
     }
 
+    public void setVictory(int v){
+        gameResult = v;
+    }
+
+    public void setDefeat(){
+        gameResult = 3;
+    }
+
     // Aplicar un daño recibido al personaje
     public void applyDamage(int dmg){
         if(life-dmg < 0){life = 0;}
@@ -285,6 +308,7 @@ public class character {
         this.x = x;
         this.y = y;
         this.state = Movement.STANDING;
+        this.gameResult = 0;
     }
 
     boolean isCrouched(){
