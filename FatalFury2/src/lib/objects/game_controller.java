@@ -340,8 +340,10 @@ public class game_controller {
             }
         }
         else if (state == GameState.STORY || state == GameState.STORY_FIGHT
-                || state == GameState.STORY_MENU || state == GameState.STORY_LOADING){
-            if(state == GameState.STORY_MENU || state == GameState.STORY_LOADING){
+                || state == GameState.STORY_MENU || state == GameState.STORY_LOADING
+                || state == GameState.STORY_END){
+            if(state == GameState.STORY_MENU || state == GameState.STORY_LOADING
+                    || state == GameState.STORY_END){
                 clearInterface(screenObjects);
             }
             Pair<Boolean, GameState> aux = story.getAnimation(screenObjects);

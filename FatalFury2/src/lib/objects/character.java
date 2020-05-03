@@ -75,7 +75,8 @@ public class character {
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
         boolean stateChanged = false;
-        if(gameResult == 3){
+        if(state == Movement.THROWN_OUT && gameResult == 3){}
+        else if(gameResult == 3 && state != Movement.THROWN_OUT){
             movements.get(state).reset();
             state = Movement.DEFEAT;
             movements.get(state).start(999);
@@ -220,7 +221,8 @@ public class character {
 
         if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
                 movements.get(state).ended() && !stateChanged && s.getY() == y
-                && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE){
+                && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE
+                && !(state == Movement.THROWN_OUT && gameResult == 3)){
             if(isCrouched()){
                 movements.get(Movement.CROUCH).getAnim().end();
                 s =  movements.get(Movement.CROUCH).getFrame(x,y, orientation);
@@ -234,7 +236,7 @@ public class character {
         if (gameResult == 2 && stateChanged) {
             s.setY(-270);
         }
-        if(collides && isAttacking() && inDisplacement()){
+        else if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
         }
         else if(collidesLimitLeft && (s.getX() < x || collides)

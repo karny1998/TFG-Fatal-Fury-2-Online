@@ -56,12 +56,12 @@ public class movement {
         if(subMovement != null) {
             subMovement.reset();
         }
-        if(type == Movement.THROW){
+        /*if(type == Movement.THROW){
             //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
             //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
             //EL COMIENZO DE LA ANIM Y LA SUYA
             throwable.reset();
-        }
+        }*/
     }
 
     // Si ha terminado o no el movimiento

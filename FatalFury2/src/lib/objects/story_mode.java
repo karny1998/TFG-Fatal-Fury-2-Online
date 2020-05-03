@@ -17,6 +17,7 @@ public class story_mode {
     private menu winMenu = menu_generator.generate_story_win();
     private menu loseMenu = menu_generator.generate_story_lose();
     private screenObject loads[];
+    private screenObject ends[];
     private int lvlIa = 1;
     private int score = 0;
     private int stage = 0;
@@ -30,7 +31,7 @@ public class story_mode {
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
-    private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
+    private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.TERRY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
 
@@ -53,6 +54,11 @@ public class story_mode {
         loads = new screenObject[9];
         for(int i = 1; i < 10; ++i){
             loads[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource(path  + i + ".png")).getImage(), Item_Type.MENU);
+        }
+        path =  "/assets/sprites/menu/story/end_story_";
+        ends = new screenObject[3];
+        for(int i = 1; i < 3; ++i){
+            ends[i-1] = new screenObject(0, 0,  1280, 720, new ImageIcon(this.getClass().getResource(path  + i + ".png")).getImage(), Item_Type.MENU);
         }
     }
 
@@ -106,6 +112,9 @@ public class story_mode {
                         break;
                 }
                 state = GameState.STORY_MENU;
+                if(actualMenu == winMenu && stage == 0){
+                    state = GameState.STORY_END;
+                }
             }
         }
         else if(state == GameState.STORY_MENU){
@@ -133,6 +142,19 @@ public class story_mode {
                             break;
                     }
                 }
+            }
+        }
+        else if(state == GameState.STORY_END){
+            if(current - timeReference < 2000.0){
+                screenObjects.put(Item_Type.MENU, ends[0]);
+            }
+            else if(current - timeReference > 6000.0){
+                exit = true;
+            }
+            else{
+                double aux = current - timeReference - 2000.0;
+                int aux2 = (int)(aux / 200.0) % 2;
+                screenObjects.put(Item_Type.MENU, ends[aux2+1]);
             }
         }
         return new Pair<>(exit, state);
