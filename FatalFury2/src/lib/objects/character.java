@@ -75,7 +75,12 @@ public class character {
         // o el movimiento no es infinito pero ha terminado
         // Actualiza el estado
         boolean stateChanged = false;
-        if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())){
+        if(gameResult == 3){
+            movements.get(state).reset();
+            state = Movement.VICTORY_ROUND;
+            movements.get(state).start(999);
+        }
+        else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())){
             movements.get(state).reset();
             if(gameResult == 1){
                 state = Movement.VICTORY_ROUND;
@@ -88,7 +93,7 @@ public class character {
             }
             movements.get(state).start(999);
         }
-        if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
+        else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
                 && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
             movements.get(state).getAnim().reset();
