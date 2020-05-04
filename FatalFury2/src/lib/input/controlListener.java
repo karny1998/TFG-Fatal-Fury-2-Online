@@ -21,7 +21,8 @@ public class controlListener implements KeyListener {
     private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
     static int currentKey, lastKey;
 
-    public static Boolean[] mando1, mando2;
+    public static Boolean[] mando1, mando2, menus1, menus2;
+    public static Boolean enter1, enter2;
 
     public static final int AR_INDEX = 0;
     public static final int AB_INDEX = 1;
@@ -58,9 +59,13 @@ public class controlListener implements KeyListener {
         }
         mando1 = new Boolean[BUTTONS];
         mando2 = new Boolean[BUTTONS];
+        menus1 = new Boolean[BUTTONS];
+        menus2 = new Boolean[BUTTONS];
+        enter1 = false;
+        enter2 = false;
 
         for(int i = 0; i < mando1.length; i++){
-            mando1[i] = false;  mando2[i] = false;
+            mando1[i] = false;  mando2[i] = false; menus1[i] = false; menus2[i] = false;
         }
 
         keyBindings1 = new int[BUTTONS];
@@ -88,13 +93,16 @@ public class controlListener implements KeyListener {
         for(int i = 0; i < keyBindings1.length; i++){
             if(e.getKeyCode() == keyBindings1[i]){
                 mando1[i] = true;
+                menus1[i] = true;
                 this.inputQueue_1.add(e.getKeyCode());
                 if(this.inputQueue_1.size() > this.QUEUE_SIZE){
                     this.inputQueue_1.remove();
                 }
+
             }
             if(e.getKeyCode() == keyBindings2[i]){
                 mando2[i] = true;
+                menus2[i] = true;
                 this.inputQueue_2.add(e.getKeyCode());
                 if(this.inputQueue_2.size() > this.QUEUE_SIZE){
                     this.inputQueue_2.remove();
@@ -186,6 +194,41 @@ public class controlListener implements KeyListener {
                 throw new RuntimeException("Invalid player number");
         }
     }
+
+
+    public static boolean menuInput(int player, int index){
+        switch (player){
+            case 0:
+                if(menus1[index] || menus2[index]){
+                    menus1[index] = false;
+                    menus2[index] = false;
+                    return mando1[index] || mando2[index];
+                } else {
+                    return false;
+                }
+            case 1:
+                if(menus1[index]){
+                    menus1[index] = false;
+                    return mando1[index];
+                } else {
+                    return false;
+                }
+            case 2:
+                if(menus2[index]){
+                    menus2[index] = false;
+                    return mando2[index];
+                } else {
+                    return false;
+                }
+            default:
+                throw new RuntimeException("Invalid player number");
+        }
+
+
+    }
+    //hasta que no se haya levantado el boton no se toma como nuevo input
+
+
 
     public static String getMove(int player){
         Boolean[] actual;

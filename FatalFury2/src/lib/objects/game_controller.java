@@ -105,13 +105,13 @@ public class game_controller {
                 actualMenu.updateTime();
             }
             // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            else if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
+            else if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 //actualMenu = actualMenu.getFather();
                 actualMenu.updateTime();
             }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
-            else if( controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
+            else if( controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
                 audio_manager.menu.play(menu_audio.indexes.option_selected);
                 // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
                 if(p.getKey() == null) {
@@ -133,14 +133,12 @@ public class game_controller {
                         case GAME_MULTIPLAYER:
                             actualMenu.updateTime();
                             charMenu = new character_menu(0);
-                            charMenu.updateTime();
                             state = GameState.PLAYERS;
                             pvp = true;
                             break;
                         case GAME_IA:
                             actualMenu.updateTime();
                             charMenu = new character_menu(1);
-                            charMenu.updateTime();
                             state = GameState.PLAYERS;
                             pvp = false;
                             break;
@@ -197,13 +195,13 @@ public class game_controller {
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
             // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
+            if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 //actualMenu = actualMenu.getFather();
                 actualMenu.updateTime();
             }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
-            else if( controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
+            else if( controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
                 Scenario_type map = Scenario_type.USA;
@@ -248,7 +246,7 @@ public class game_controller {
         // Si se está peleando
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
-            if( controlListener.getStatus(1, controlListener.ESC_INDEX) ){
+            if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Pause);
                 state = GameState.ESCAPE;
             }
@@ -298,7 +296,7 @@ public class game_controller {
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = escapeMenu.select();
             // Si se ha presionado enter para seleccionar alguna opción
-            if ( controlListener.getStatus(1, controlListener.ENT_INDEX) ){
+            if ( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.option_selected);
                 switch (p.getValue()){
                     // Retomar la partida
@@ -322,12 +320,12 @@ public class game_controller {
                 }
             }
         }
-        else if(state == GameState.RANKING && controlListener.getStatus(1, controlListener.ESC_INDEX) ){
+        else if(state == GameState.RANKING && controlListener.menuInput(1, controlListener.ESC_INDEX) ){
             audio_manager.menu.play(menu_audio.indexes.back);
             state = GameState.NAVIGATION;
         }
         else if (state == GameState.TYPING){
-            if( controlListener.getStatus(1, controlListener.ENT_INDEX) ){
+            if( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 fight.getScorePlayer().writeRankScore(askName.getName());
                 actualMenu = principal;

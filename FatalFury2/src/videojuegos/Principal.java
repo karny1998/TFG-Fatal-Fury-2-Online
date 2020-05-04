@@ -16,7 +16,6 @@ public class Principal extends JFrame {
     public Principal() {
         // TODO -> MOSTRAR OPENING
 
-
         String ruta =  System.getProperty("user.dir") + "/.files";
         String origen = "/files/";
         File f = new File(ruta);
@@ -85,6 +84,12 @@ public class Principal extends JFrame {
         audio_manager audio = new audio_manager();
 
         addKeyListener(control);
+
+
+
+
+
+
 
         setFocusable(true);
 

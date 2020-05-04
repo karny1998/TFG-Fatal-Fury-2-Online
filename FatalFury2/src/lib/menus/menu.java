@@ -38,7 +38,7 @@ public class menu {
     public screenObject getFrame(){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 300.0){
-            if(( controlListener.getStatus(1, controlListener.AR_INDEX)
+            if(( controlListener.getStatus(0, controlListener.AR_INDEX)
                     || controlListener.getStatus(2, controlListener.AR_INDEX)
                     || controlListener.getStatus(1, controlListener.IZ_INDEX)
                     || controlListener.getStatus(2, controlListener.IZ_INDEX)) && sel > 0){

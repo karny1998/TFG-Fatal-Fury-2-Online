@@ -43,14 +43,11 @@ public class character_menu {
 
     Playable_Character p1_ch, p2_ch;
 
-    long referenceTime;
 
-    public void updateTime(){referenceTime = System.currentTimeMillis();}
 
     private String p2_aux = "";
 
     public character_menu(int tipo_){
-        referenceTime = System.currentTimeMillis();
         tipo = tipo_;
         pos_1 = 0; pos_2 = 0;
         actual = estados.P1_SELECT;
@@ -77,12 +74,9 @@ public class character_menu {
         screenObjects.put(Item_Type.P2_MUG, p2_mug);
         screenObjects.put(Item_Type.P1_NAME, p1_name);
         screenObjects.put(Item_Type.P2_NAME, p2_name);
-        if( currentTime - referenceTime > 125.0){
-            boolean res = gestionMenu2( screenObjects);
-            referenceTime = currentTime;
-            return res;
-        }
-        return false;
+        boolean res = gestionMenu2( screenObjects);
+        return res;
+
 
     }
 
@@ -93,15 +87,15 @@ public class character_menu {
             p1_mug =  new screenObject(0, 75,  416, 380, new ImageIcon( this.getClass().getResource(path  + mugs[pos_1])).getImage(), Item_Type.P1_MUG);
             p1_name =  new screenObject(0, 400,  356, 151, new ImageIcon( this.getClass().getResource(path  + names[pos_1])).getImage(), Item_Type.P1_MUG);
 
-            if (controlListener.getStatus(1, controlListener.IZ_INDEX) && pos_1 > 0){
+            if (controlListener.menuInput(1, controlListener.IZ_INDEX) && pos_1 > 0){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_1 -- ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon( this.getClass().getResource(path  + "p1_off.png")).getImage(), Item_Type.P1_SELECT);
-            } else if (controlListener.getStatus(1, controlListener.DE_INDEX) && pos_1 < 2){
+            } else if (controlListener.menuInput(1, controlListener.DE_INDEX) && pos_1 < 2){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_1 ++ ;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon( this.getClass().getResource(path  + "p1_off.png")).getImage(), Item_Type.P1_SELECT);
-            } else if (controlListener.getStatus(1, controlListener.ENT_INDEX)) {
+            } else if (controlListener.menuInput(1, controlListener.ENT_INDEX)) {
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 actual = estados.P2_SELECT;
                 p1 = new screenObject(x1 + incrementos[pos_1], y1,  w, h, new ImageIcon( this.getClass().getResource(path  + "p1_on.png")).getImage(), Item_Type.P1_SELECT);
@@ -135,15 +129,15 @@ public class character_menu {
                     break;
             }
 
-            if (controlListener.getStatus(mando, controlListener.IZ_INDEX) && pos_2 > 0){
+            if (controlListener.menuInput(mando, controlListener.IZ_INDEX) && pos_2 > 0){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_2 -- ;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "off.png")).getImage(), Item_Type.P2_SELECT);
-            } else if (controlListener.getStatus(mando, controlListener.DE_INDEX) && pos_2 < 2){
+            } else if (controlListener.menuInput(mando, controlListener.DE_INDEX) && pos_2 < 2){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
                 pos_2 ++ ;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "off.png")).getImage(), Item_Type.P2_SELECT);
-            } else if (controlListener.getStatus(mando, controlListener.ENT_INDEX)) {
+            } else if (controlListener.menuInput(mando, controlListener.ENT_INDEX)) {
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 actual = estados.DONE;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "on.png")).getImage(), Item_Type.P2_SELECT);

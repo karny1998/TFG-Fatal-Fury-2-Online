@@ -69,6 +69,8 @@ public class Screen extends JPanel {
 
     // Muestra por pantalla los screenObjects en la lista
     private void doDrawing(Graphics g) {
+
+
         Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
                             Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
                             Item_Type.MENU, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
