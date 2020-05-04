@@ -1,5 +1,6 @@
 package lib.objects;
 
+import lib.sound.menu_audio;
 import lib.utils.Pair;
 import lib.Enums.*;
 import lib.input.controlListener;
@@ -30,12 +31,16 @@ public class story_mode {
     private scenary scene = new scenary(Scenario_type.USA);;
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
     private long timeReference = System.currentTimeMillis();
+    private boolean playing = false;
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
     private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
+    private menu_audio.indexes audioEnemies[] = { menu_audio.indexes.Terry, menu_audio.indexes.Andy,menu_audio.indexes.Mai,
+                                                    menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai,
+                                                    menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai};
 
     public story_mode(){
         loadGame();
@@ -154,12 +159,25 @@ public class story_mode {
             }
         }
         else if(state == GameState.STORY_LOADING){
-            if(current - timeReference < 2000.0){
+            if(current - timeReference < 3000.0 && !playing){
                 screenObjects.put(Item_Type.MENU, loads[stage]);
+                playing = true;
+            }
+            else if(current - timeReference < 3000.0 && playing){
+                audio_manager.menu.play(menu_audio.indexes.Terry);
+                try {
+                    Thread.sleep(1000);
+                    audio_manager.menu.play(menu_audio.indexes.Versus);
+                    Thread.sleep(1000);
+                    audio_manager.menu.play(audioEnemies[stage]);
+                    Thread.sleep(1000);
+                }catch (Exception e){}
+                playing = false;
             }
             else{
                 generateFight();
-                audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
+                audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scenarys[stage]);
+                audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                 state = GameState.STORY_FIGHT;
                 generateFight();
                 screenObjects.remove(Item_Type.MENU);
@@ -217,6 +235,7 @@ public class story_mode {
                             exit = true;
                             break;
                     }
+                    audio_manager.endFight();
                 }
             }
         }

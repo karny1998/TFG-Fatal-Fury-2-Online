@@ -26,9 +26,17 @@ public abstract  class character_controller {
         this.x = x; this.y = y;
         if(ch == Playable_Character.ANDY){
             charac = "andy";
+            player = new character(Playable_Character.ANDY, pN);
+            player.setX(x);
+            player.setY(y);
+            player.setOrientation(orientation);
         }
         else if(ch == Playable_Character.MAI){
             charac = "mai";
+            player = new character(Playable_Character.TERRY, pN);
+            player.setX(x);
+            player.setY(y);
+            player.setOrientation(orientation);
         }
         else{
             charac = "terry";

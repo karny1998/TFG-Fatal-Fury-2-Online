@@ -41,7 +41,7 @@ public class character {
             //generar movimientos de mai
         }
         else if(c == Playable_Character.ANDY){
-            //generar movimientos de andy
+            new load_character().generateMovs("andy", pN, combos, movementsKeys, movements, 0.8);
         }
         else{
             new load_character().generateMovs("terry", pN, combos, movementsKeys, movements, 0.8);
