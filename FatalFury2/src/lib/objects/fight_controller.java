@@ -106,8 +106,10 @@ public class fight_controller implements roundListener {
                 you_win = new ImageIcon(this.getClass().getResource(path+"/announcer/terry_win.png")).getImage();
                 break;
             case MAI:
+                name_player = new ImageIcon(this.getClass().getResource(path+"/char_names/mai_blue.png")).getImage();
                 break;
             case ANDY:
+                name_player = new ImageIcon(this.getClass().getResource(path+"/char_names/andy_blue.png")).getImage();
                 break;
         }
         switch (enemy.getPlayer().getCharac()) {
@@ -116,8 +118,12 @@ public class fight_controller implements roundListener {
                 else { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/terry_blue.png")).getImage(); }
                 break;
             case MAI:
+                if (mirrorFight) { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/mai_red.png")).getImage(); }
+                else { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/mai_blue.png")).getImage(); }
                 break;
             case ANDY:
+                if (mirrorFight) { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/andy_red.png")).getImage(); }
+                else { name_enemy = new ImageIcon(this.getClass().getResource(path+"/char_names/andy_blue.png")).getImage(); }
                 break;
         }
         indicator_player = new ImageIcon(this.getClass().getResource(path+"/1p.png")).getImage();
