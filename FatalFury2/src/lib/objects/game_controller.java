@@ -18,14 +18,14 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
     // Escenario (habría que meterlo en fight_controller)
     private scenary scene;
-    // Menu principal
-    private menu principal;
+    // Menus
+    private menu principal,basicMenu, gameMenu;
     // Menu actual
     private menu actualMenu;
     // Menu al presionar escape en una pelea
@@ -51,9 +51,12 @@ public class game_controller {
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
     // Modo historia
     private story_mode story;
+    private boolean storyOn;
 
     public game_controller() {
         this.principal = menu_generator.generate();
+        this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
+        this.gameMenu = basicMenu.getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
@@ -77,8 +80,8 @@ public class game_controller {
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
 
         if(debug && state != GameState.FIGHT){
-            user = new user_controller(Playable_Character.TERRY, 1);
-            enemy = new enemy_controller(Playable_Character.TERRY, 2);
+            user = new user_controller(Playable_Character.ANDY, 1);
+            enemy = new enemy_controller(Playable_Character.ANDY, 2);
             enemy.setRival(user.getPlayer());
             enemy.getPlayer().setMapLimit(mapLimit);
             user.setRival(enemy.getPlayer());
@@ -95,6 +98,15 @@ public class game_controller {
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
         if(state == GameState.NAVIGATION){
+
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+                audio_manager.menu.play(menu_audio.indexes.back);
+                if(actualMenu == gameMenu){
+                    actualMenu = basicMenu;
+                    actualMenu.updateTime();
+                }
+            }
+
             screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
@@ -156,25 +168,39 @@ public class game_controller {
                 }
             }
         } else if (state == GameState.PLAYERS){
-            screenObject s = actualMenu.getFrame();
-            screenObjects.put(Item_Type.MENU, s);
-            Boolean res = charMenu.gestionMenu(screenObjects);
-            if (res == true){
-                user = new user_controller(charMenu.getP1_ch(),1);
-                if(pvp) {
-                    enemy = new user_controller(charMenu.getP2_ch(), 2);
-                    enemy.setPlayerNum(2);
-                }
-                else {
-                    enemy = new enemy_controller(charMenu.getP2_ch(), 2);
-                }
-                enemy.setRival(user.getPlayer());
-                enemy.getPlayer().setMapLimit(mapLimit);
-                user.setRival(enemy.getPlayer());
-                user.getPlayer().setMapLimit(mapLimit);
-                actualMenu = mapSelection;
+
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+                audio_manager.menu.play(menu_audio.indexes.back);
+                actualMenu = gameMenu;
                 actualMenu.updateTime();
-                state = GameState.MAP;
+                state = GameState.NAVIGATION;
+                screenObjects.remove(Item_Type.P1_SELECT);
+                screenObjects.remove(Item_Type.P2_SELECT);
+                screenObjects.remove(Item_Type.P1_MUG);
+                screenObjects.remove(Item_Type.P2_MUG);
+                screenObjects.remove(Item_Type.P1_NAME);
+                screenObjects.remove(Item_Type.P2_NAME);
+            }
+            else {
+                screenObject s = actualMenu.getFrame();
+                screenObjects.put(Item_Type.MENU, s);
+                Boolean res = charMenu.gestionMenu(screenObjects);
+                if (res == true) {
+                    user = new user_controller(charMenu.getP1_ch(), 1);
+                    if (pvp) {
+                        enemy = new user_controller(charMenu.getP2_ch(), 2);
+                        enemy.setPlayerNum(2);
+                    } else {
+                        enemy = new enemy_controller(charMenu.getP2_ch(), 2);
+                    }
+                    enemy.setRival(user.getPlayer());
+                    enemy.getPlayer().setMapLimit(mapLimit);
+                    user.setRival(enemy.getPlayer());
+                    user.getPlayer().setMapLimit(mapLimit);
+                    actualMenu = mapSelection;
+                    actualMenu.updateTime();
+                    state = GameState.MAP;
+                }
             }
         } else if (state == GameState.OPTIONS){
             screenObject s = actualMenu.getFrame();
@@ -184,6 +210,13 @@ public class game_controller {
                 state = GameState.NAVIGATION;
             }
         } else if (state == GameState.MAP){
+
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+                audio_manager.menu.play(menu_audio.indexes.back);
+                actualMenu = gameMenu;
+                actualMenu.updateTime();
+                state = GameState.NAVIGATION;
+            }
 
             screenObject s = actualMenu.getFrame();
             screenObjects.remove(Item_Type.P1_SELECT);
@@ -222,9 +255,6 @@ public class game_controller {
                             map = Scenario_type.CHINA;
                             break;
                     }
-                    //user_controller user = new user_controller(Playable_Character.TERRY);
-                    //enemy_controller enemy = new enemy_controller(Playable_Character.TERRY);
-                    //enemy.setRival(user.getPlayer());
 
                     audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), map);
                     fight = new fight_controller(user,enemy,scene);
@@ -291,7 +321,9 @@ public class game_controller {
         }
         // Si se le ha dado a escape durante una pelea
         else if (state == GameState.ESCAPE){
-            fight.pauseFight();
+            if(!storyOn) {
+                fight.pauseFight();
+            }
             screenObject s = escapeMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = escapeMenu.select();
@@ -301,10 +333,16 @@ public class game_controller {
                 switch (p.getValue()){
                     // Retomar la partida
                     case ESCAPE_RESUME:
-                        state = GameState.FIGHT;
+                        if(!storyOn) {
+                            state = GameState.FIGHT;
+                            fight.resumeFight();
+                        }
+                        else{
+                            state = GameState.STORY_FIGHT;
+                            story.getFight().resumeFight();;
+                        }
                         screenObjects.remove(Item_Type.MENU);
                         escapeMenu.updateTime();
-                        fight.resumeFight();
                         break;
                     // Volver al menú de juego
                     case ESCAPE_BACK:
@@ -344,14 +382,31 @@ public class game_controller {
                     || state == GameState.STORY_END || state == GameState.STORY_DIFFICULTY){
                 clearInterface(screenObjects);
             }
-            Pair<Boolean, GameState> aux = story.getAnimation(screenObjects);
-            state = aux.getValue();
-            if(aux.getKey()){
-                clearInterface(screenObjects);
-                screenObjects.remove(Item_Type.MENU);
-                state = GameState.NAVIGATION;
-                actualMenu = principal;
-                actualMenu.updateTime();
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+                if(state == GameState.STORY_FIGHT) {
+                    actualMenu = escapeMenu;
+                    actualMenu.updateTime();
+                    state = GameState.ESCAPE;
+                    storyOn = true;
+                    story.getFight().pauseFight();
+                }
+                else if (state == GameState.STORY_DIFFICULTY){
+                    actualMenu = gameMenu;
+                    actualMenu.updateTime();
+                    state = GameState.NAVIGATION;
+                }
+            }
+            else {
+                Pair<Boolean, GameState> aux = story.getAnimation(screenObjects);
+                state = aux.getValue();
+                if (aux.getKey()) {
+                    clearInterface(screenObjects);
+                    screenObjects.remove(Item_Type.MENU);
+                    state = GameState.NAVIGATION;
+                    actualMenu = basicMenu;
+                    actualMenu.updateTime();
+                    storyOn = false;
+                }
             }
         }
     }
@@ -379,15 +434,21 @@ public class game_controller {
         }
         else if(state == GameState.FIGHT || state == GameState.ESCAPE) {
             if(debug){
-                fight.player.player.getHitbox().drawHitBox(g);
+                /*fight.player.player.getHitbox().drawHitBox(g);
                 fight.player.player.getHurtbox().drawHitBox(g);
                 fight.enemy.player.getHitbox().drawHitBox(g);
                 fight.enemy.player.getHurtbox().drawHitBox(g);
                 fight.player.player.getCoverbox().drawHitBox(g);
-                fight.enemy.player.getCoverbox().drawHitBox(g);
+                fight.enemy.player.getCoverbox().drawHitBox(g);*/
             }
-            fight.drawHpBarPlayer(g);
-            fight.drawHpBarEnemy(g);
+            if(!storyOn) {
+                fight.drawHpBarPlayer(g);
+                fight.drawHpBarEnemy(g);
+            }
+            else{
+                story.getFight().drawHpBarPlayer(g);
+                story.getFight().drawHpBarEnemy(g);
+            }
         }
         else if(state == GameState.TYPING){
             askName.writeName(g);

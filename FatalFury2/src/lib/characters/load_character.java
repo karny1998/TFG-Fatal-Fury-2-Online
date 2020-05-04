@@ -35,7 +35,7 @@ public class load_character {
                 }
                 if(
                         (charac.equals("terry") && ((double)currentColor.getBlue()/(double)currentColor.getRed()) < 0.5 && ((double)currentColor.getGreen()/(double)currentColor.getRed()) < 0.5)
-                    ){
+                ){
                     Color c;
                     if(method == 2) {
                         c = new Color(currentColor.getGreen(), currentColor.getRed(), currentColor.getBlue(), currentColor.getAlpha());
@@ -48,6 +48,27 @@ public class load_character {
                     }
                     else{
                         c = new Color(currentColor.getBlue(), currentColor.getGreen(), currentColor.getRed(), currentColor.getAlpha());
+                    }
+                    return c.getRGB();
+                }
+                if(charac.equals("andy") && ((double)currentColor.getBlue()/(double)currentColor.getRed()) > 0.6 && ((double)currentColor.getGreen()/(double)currentColor.getRed()) > 0.8
+                        && ((double)currentColor.getBlue()/(double)currentColor.getRed()) < 0.9){
+                    Color c;
+                    if(method == 2) {
+                        c = new Color(currentColor.getGreen(), 0, currentColor.getBlue(), currentColor.getAlpha());
+                    }
+                    else if(method == 3) {
+                        c = new Color(currentColor.getRed(), currentColor.getRed(), 0, currentColor.getAlpha());
+                    }
+                    else if(method == 4) {
+                        c = new Color(0, currentColor.getGreen(), currentColor.getRed(), currentColor.getAlpha());
+                    }
+                    else{
+                        int aux = currentColor.getBlue() + 50;
+                        if(aux > 255){
+                            aux = 255;
+                        }
+                        c = new Color(0, aux, 0, currentColor.getAlpha());
                     }
                     return c.getRGB();
                 }
@@ -80,6 +101,7 @@ public class load_character {
             int nMovs = Integer.valueOf(b.readLine()), i = 0;
             Random random = new Random();
             int filterMethod = 1 + Math.abs(random.nextInt()) % 4;
+            //System.out.println(filterMethod);
 
             while((value = b.readLine())!=null && i < nMovs) {
                 if (value.charAt(0) == '#') {

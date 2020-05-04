@@ -159,11 +159,11 @@ public class story_mode {
             }
         }
         else if(state == GameState.STORY_LOADING){
-            if(current - timeReference < 3000.0 && !playing){
+            if(current - timeReference < 3000.0 && (!playing || current - timeReference < 300.0)){
                 screenObjects.put(Item_Type.MENU, loads[stage]);
                 playing = true;
             }
-            else if(current - timeReference < 3000.0 && playing){
+            else if(current - timeReference < 3000.0 && current - timeReference > 200.0 && playing){
                 audio_manager.menu.play(menu_audio.indexes.Terry);
                 try {
                     Thread.sleep(1000);
@@ -185,7 +185,6 @@ public class story_mode {
             }
         }
         else if(state == GameState.STORY_FIGHT){
-            screenObjects.remove(Item_Type.MENU);
             fight.getAnimation(screenObjects);
             if (fight.getEnd()) {
                 Fight_Results resultado = fight.getFight_result();
@@ -227,7 +226,7 @@ public class story_mode {
                             ++stage;
                             saveGame();
                             state = GameState.STORY_LOADING;
-                            timeReference = current;
+                            timeReference = System.currentTimeMillis();
                             break;
                         case WIN_SAVE:
                             ++stage;
