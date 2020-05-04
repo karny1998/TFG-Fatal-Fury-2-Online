@@ -248,9 +248,6 @@ public class fight_audio {
         }
     }
 
-
-
-
     public void loopMusic(music_indexes i){
         try {
             music[i.ordinal()].setFramePosition(0);
@@ -272,8 +269,10 @@ public class fight_audio {
         }
     }
 
-    public void update(double mus, double sfx, double voces){
+    public void update(double mus, double sfx, double voices){
         updateMusic(mus);
+        updateSfx(sfx);
+        updateVoices(voices);
     }
 
 
@@ -293,8 +292,68 @@ public class fight_audio {
         gainControl.setValue(20f * (float) Math.log10(mus));
         resumeMusic(music_indexes.lose_theme);
     }
-    public void close(){
 
+
+    private void updateSfx(double sfx_){
+        for(int i = 0; i < sfx_indexes.values().length; i++){
+            FloatControl gainControl = (FloatControl) sfx[i].getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(sfx_));
+        }
+    }
+
+    private void updateVoices(double voices){
+
+        for(int i = 0; i < announcer_indexes.values().length; i++){
+            FloatControl gainControl = (FloatControl) announcer[i].getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(voices));
+        }
+        if(p1 == p2){
+            for(int i = 0; i < voice_indexes.values().length; i++){
+                FloatControl gainControl = (FloatControl) p1_voices[i].getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl.setValue(20f * (float) Math.log10(voices));
+
+            }
+        } else {
+            for(int i = 0; i < voice_indexes.values().length; i++){
+                FloatControl gainControl = (FloatControl) p1_voices[i].getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl.setValue(20f * (float) Math.log10(voices));
+
+                FloatControl gainControl_2 = (FloatControl) p2_voices[i].getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl_2.setValue(20f * (float) Math.log10(voices));
+
+            }
+        }
+    }
+
+
+    public void close(){
+        for(int i = 0; i < music_indexes.values().length; i++){
+            music[i].close();
+        }
+
+        for(int i = 0; i < sfx_indexes.values().length; i++){
+            sfx[i].close();
+        }
+
+        for(int i = 0; i < announcer_indexes.values().length; i++){
+            announcer[i].close();
+        }
+
+        for(int i = 0; i < crowd_indexes.values().length; i++){
+            crowd[i].close();
+        }
+
+
+        if(p1 == p2){
+            for(int i = 0; i < voice_indexes.values().length; i++){
+                p1_voices[i].close();
+            }
+        } else {
+            for(int i = 0; i < voice_indexes.values().length; i++){
+                p1_voices[i].close();
+                p2_voices[i].close();
+            }
+        }
     }
 
 }

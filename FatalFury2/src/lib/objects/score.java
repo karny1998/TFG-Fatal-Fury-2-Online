@@ -20,7 +20,7 @@ import java.util.List;
 public class score {
     private int points = 0;
     private int pointer = 0;
-    private String path = "/files/rank_scores.txt";
+    private String path = System.getProperty("user.dir") + "/.files/rank_scores.txt";
     private boolean animLoaded = false;
     private animation anim[] = {null, null, null};
     private Font f = null;
@@ -40,8 +40,7 @@ public class score {
     public int getScore(){return this.points;}
 
     public void saveLastName(String name){
-        String path = "/files/last_name.txt";
-        // TODO
+        String path = System.getProperty("user.dir") + "/.files/last_name.txt";
         File f= new File(path);
         f.delete();
         f= new File(path);
@@ -98,15 +97,17 @@ public class score {
         List<Pair<String, Integer>> list = new ArrayList<Pair<String, Integer>>();
         try {
             String name = "";
-            InputStream f = this.getClass().getResourceAsStream(path);
-            BufferedReader b = new BufferedReader(new InputStreamReader(f));
+            FileReader f = new FileReader(path);
+            BufferedReader b = new BufferedReader(f);
             while((name = b.readLine())!=null) {
                 int p = Integer.valueOf(b.readLine());
                 list.add(new Pair<>(name,p));
             }
             b.close();
         }
-        catch(Exception e){}
+        catch(Exception e){
+            e.printStackTrace();
+        }
         if(ordered) {
             Collections.sort(list, new scoreComparator());
         }

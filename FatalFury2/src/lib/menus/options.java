@@ -6,7 +6,6 @@ import lib.input.controlListener;
 import lib.objects.screenObject;
 import lib.sound.audio_manager;
 import lib.sound.menu_audio;
-import lib.utils.xmlReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,7 +22,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
@@ -47,7 +45,7 @@ public class options {
     private int maxElementos = 8;
 
     private long referenceTime;
-    private String filePath = "/files/options.xml";
+    private String filePath = System.getProperty("user.dir") + "/.files/options.xml";
     private URL imgPath = this.getClass().getResource("/assets/sprites/menu/options/menu.png");
 
 
@@ -65,10 +63,13 @@ public class options {
     private void readOptionsFile() {
         try {
 
-            InputStream is = controlListener.class.getResourceAsStream(filePath);
-            Document doc = xmlReader.open(is);
+
+            File input = new File(filePath);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(input);
             doc.getDocumentElement().normalize();
-            is.close();
+
 
 
             Node opciones = doc.getChildNodes().item(0);
@@ -264,7 +265,6 @@ public class options {
 
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             DOMSource source = new DOMSource(doc);
-            //TODO
             StreamResult file = new StreamResult(new File(filePath));
 
 

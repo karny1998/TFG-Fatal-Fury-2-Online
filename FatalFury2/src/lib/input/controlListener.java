@@ -1,13 +1,14 @@
 package lib.input;
 
-import lib.utils.xmlReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.InputStream;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -17,7 +18,7 @@ public class controlListener implements KeyListener {
     static Queue<Integer> inputQueue_1, inputQueue_2, general;
     static int QUEUE_SIZE = 10;
     static int BUTTONS = 10;
-    private static String filePath = "/files/options.xml";
+    private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
     static int currentKey, lastKey;
 
     public static Boolean[] mando1, mando2;
@@ -210,11 +211,11 @@ public class controlListener implements KeyListener {
 
     public static void update(){
         try {
-            InputStream is = controlListener.class.getResourceAsStream(filePath);
-            Document doc = xmlReader.open(is);
+            File input = new File(optionsFilePath);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(input);
             doc.getDocumentElement().normalize();
-            is.close();
-
 
             Node opciones = doc.getChildNodes().item(0);
             NodeList p1 = doc.getElementsByTagName("controles_jugador_1").item(0).getChildNodes();

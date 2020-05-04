@@ -21,7 +21,7 @@ public class ask_for_name {
     public  ask_for_name(){
         timeReference = System.currentTimeMillis();
         loadAnim();
-        String path = "/files/last_name.txt";
+        String path = System.getProperty("user.dir") + "/.files/last_name.txt";
         try {
             InputStream f = this.getClass().getResourceAsStream(path);
             BufferedReader b = new BufferedReader(new InputStreamReader(f));
