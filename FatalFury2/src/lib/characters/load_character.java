@@ -88,7 +88,12 @@ public class load_character {
                 String fold = value;
                 Movement movId = Movement.valueOf(readAux(b));
                 String combo = readAux(b);
-                fight_audio.voice_indexes sound = fight_audio.voice_indexes.valueOf(readAux(b));
+                String aux = readAux(b);
+                boolean hasSound = !aux.equals("NONE");
+                fight_audio.voice_indexes sound = fight_audio.voice_indexes.Desperation_Move;
+                if(hasSound) {
+                    sound = fight_audio.voice_indexes.valueOf(aux);
+                }
                 Boolean hasEnd = Boolean.valueOf(readAux(b));
                 Animation_type aType = Animation_type.valueOf(readAux(b));
                 int dmg = Integer.valueOf(readAux(b));
@@ -118,8 +123,10 @@ public class load_character {
                 animation anim = new animation();
                 anim.setType(aType);
                 anim.setHasEnd(hasEnd);
-                anim.setHasSound(true);
-                anim.setSoundType(sound);
+                anim.setHasSound(hasSound);
+                if(hasSound) {
+                    anim.setSoundType(sound);
+                }
                 boolean player1 = false;
                 switch (nJ){
                     case 1:

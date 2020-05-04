@@ -2,7 +2,7 @@
 standing
 STANDING
 
-Win
+NONE
 false
 ENDABLE
 0
@@ -46,7 +46,7 @@ false
 walking
 WALKING
 IZ
-Defeat
+NONE
 true
 ENDABLE
 0
@@ -94,7 +94,7 @@ false
 walking_back
 WALKING_BACK
 DE
-Defeat
+NONE
 true
 ENDABLE
 0
@@ -138,7 +138,7 @@ false
 crouch
 CROUCH
 AB
-Hurt_1
+NONE
 false
 HOLDABLE
 0
@@ -172,7 +172,7 @@ false
 crouch_undo
 UNDO_CROUCH
 OMITIR1
-Hurt_1
+NONE
 true
 ENDABLE
 0
@@ -244,7 +244,7 @@ false
 hard_punch
 HARD_PUNCH
 C
-Hit_1
+Hit_2
 true
 ENDABLE
 15
@@ -282,7 +282,7 @@ false
 attack_poke
 ATTACK_POKE
 A
-Hit_3
+Hit_2
 true
 ENDABLE
 10
@@ -320,7 +320,7 @@ false
 roll_front
 ROLL_FRONT
 OMITIR2
-Hurt_2
+NONE
 true
 ENDABLE
 0
@@ -374,7 +374,7 @@ false
 jump
 NORMAL_JUMP
 AR
-Hurt_2
+NONE
 true
 ENDABLE
 0
@@ -408,7 +408,7 @@ false
 jump_roll_right
 JUMP_ROLL_RIGHT
 AR-DE
-Hurt_2
+NONE
 true
 ENDABLE
 0
@@ -576,7 +576,7 @@ true
 throw
 THROW
 DE-C
-Defeat
+NONE
 true
 ENDABLE
 20
@@ -624,7 +624,7 @@ false
 soft_knockback
 SOFT_KNOCKBACK
 OMITIR4
-Defeat
+Hurt_2
 true
 ENDABLE
 0
@@ -658,7 +658,7 @@ false
 medium_knockback
 MEDIUM_KNOCKBACK
 OMITIR5
-Defeat
+Hurt_3
 true
 ENDABLE
 0
@@ -692,7 +692,7 @@ false
 blocking
 STANDING_BLOCK
 IZ
-Defeat
+NONE
 true
 ENDABLE
 0
@@ -720,7 +720,7 @@ false
 blocking
 STANDING_BLOCK_KNOCKBACK_SOFT
 OMITIR6
-Defeat
+Hurt_1
 true
 ENDABLE
 0
@@ -744,7 +744,7 @@ false
 blocking
 STANDING_BLOCK_KNOCKBACK_HARD
 OMITIR7
-Defeat
+Hurt_1
 true
 ENDABLE
 0
@@ -832,7 +832,7 @@ false
 jumping_punch_down
 JUMP_PUNCH_DOWN
 OMITIR12
-Defeat
+Hit_3
 true
 ENDABLE
 10
@@ -870,7 +870,7 @@ false
 jumping_punch_down
 JUMP_ROLL_PUNCH_DOWN
 OMITIR11
-Defeat
+Hit_3
 true
 ENDABLE
 10
@@ -908,7 +908,7 @@ false
 jump_fall
 JUMP_FALL
 OMITIR9
-Defeat
+NONE
 true
 ENDABLE
 0
@@ -932,7 +932,7 @@ true
 jump_fall
 JUMP_ROLL_FALL
 OMITIR10
-Defeat
+NONE
 true
 ENDABLE
 0
@@ -961,7 +961,7 @@ HARD_KICK
 # Combinación de teclas
 D
 # Sonido asociado
-Hit_3
+Hit_2
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1082,7 +1082,7 @@ SOFT_KICK
 # Combinación de teclas
 B
 # Sonido asociado
-Hit_3
+Hit_1
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1161,7 +1161,7 @@ CROUCHING_HARD_PUNCH
 # Combinación de teclas
 AB-C
 # Sonido asociado
-Hit_1
+Hit_2
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1419,7 +1419,7 @@ CROUCHING_SOFT_KICK
 # Combinación de teclas
 AB-B
 # Sonido asociado
-Hit_3
+Hit_2
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1519,7 +1519,7 @@ HOOK
 # Combinación de teclas
 C
 # Sonido asociado
-Hit_1
+Hit_3
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1598,7 +1598,7 @@ DASH
 # Combinación de teclas
 IZ+IZ
 # Sonido asociado
-Defeat
+NONE
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1711,7 +1711,7 @@ CROUCHED_BLOCK
 # Combinación de teclas
 AB-IZ
 # Sonido asociado
-Defeat
+NONE
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1769,7 +1769,7 @@ CROUCHED_KNOCKBACK
 # Combinación de teclas
 OMITIR13
 # Sonido asociado
-Defeat
+Hurt_3
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
@@ -1840,7 +1840,7 @@ CROUCHED_WALKING
 # Combinación de teclas
 AB-DE
 # Sonido asociado
-Defeat
+NONE
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -1911,7 +1911,7 @@ CROUCHED_BLOCK_KNOCKBACK
 # Combinación de teclas
 OMITIR14
 # Sonido asociado
-Defeat
+Hurt_1
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -2203,7 +2203,7 @@ JUMP_KICK_DOWN
 # Combinación de teclas
 OMITIR15
 # Sonido asociado
-Hit_1
+Hit_3
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -2261,7 +2261,7 @@ JUMP_KICK
 # Combinación de teclas
 OMITIR16
 # Sonido asociado
-Hit_1
+Hit_3
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
@@ -2336,7 +2336,7 @@ false
 jumping_punch_down
 JUMP_HARD_PUNCH_DOWN
 OMITIR17
-Defeat
+Hit_3
 true
 ENDABLE
 10
@@ -2375,7 +2375,7 @@ false
 jumping_punch_down
 JUMP_ROLL_HARD_PUNCH_DOWN
 OMITIR18
-Defeat
+Hit_3
 true
 ENDABLE
 10
@@ -2820,7 +2820,7 @@ JUMP_ROLL_LEFT
 # Combinación de teclas
 AR-IZ
 # Sonido asociado
-Hurt_2
+NONE
 # ¿Tiene final? (true / false)
 true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
