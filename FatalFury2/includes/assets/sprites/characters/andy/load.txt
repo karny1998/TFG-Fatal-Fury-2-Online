@@ -9,7 +9,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -56,9 +56,9 @@ false
 true
 150
 110
-60
 180
 180
+200
 110
 120
 390
@@ -103,7 +103,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -217,12 +217,12 @@ true
 ENDABLE
 10
 true
-42
-163
-137
-50
+58
+171
+134
+67
 false
-180
+200
 110
 120
 390
@@ -256,12 +256,12 @@ true
 ENDABLE
 15
 true
-21
-183
-121
-46
+28
+175
+133
+50
 false
-180
+200
 110
 120
 390
@@ -306,7 +306,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -341,7 +341,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -415,12 +415,12 @@ true
 ENDABLE
 20
 true
-15
-170
-130
-75
+163
+183
+44
+54
 false
-180
+200
 110
 120
 390
@@ -477,9 +477,9 @@ false
 true
 150
 110
-60
 180
 180
+200
 110
 120
 390
@@ -504,7 +504,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -529,7 +529,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -553,12 +553,12 @@ true
 ENDABLE
 10
 true
-96
-354
-46
-54
+87
+316
+80
+63
 false
-180
+200
 110
 120
 390
@@ -592,12 +592,12 @@ true
 ENDABLE
 10
 true
-96
-354
-46
-54
+87
+316
+80
+63
 false
-180
+200
 110
 120
 390
@@ -631,12 +631,12 @@ true
 ENDABLE
 10
 true
-96
-354
-46
-54
+87
+316
+80
+63
 false
-180
+200
 110
 120
 390
@@ -670,12 +670,12 @@ true
 ENDABLE
 10
 true
-96
-354
-46
-54
+87
+316
+80
+63
 false
-180
+200
 110
 120
 390
@@ -710,7 +710,7 @@ ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -728,14 +728,14 @@ true
 # ------------------------------------ MOVIMIENTO NUMERO 19 ------------------------------------
 jump_fall
 JUMP_ROLL_FALL
-OMITIR9
+OMITIR10
 NONE
 true
 ENDABLE
 0
 false
 false
-180
+200
 110
 120
 390
@@ -768,17 +768,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-0
+144
 #	Y hitbox
-196
+49
 #	Anchura hitbox
-208
+84
 #	Altura hitbox
-71
+146
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 110
 # Anchura hurtbox
@@ -847,17 +847,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-71
+84
 #	Y hitbox
-113
+225
 #	Anchura hitbox
-137
+128
 #	Altura hitbox
-108
+92
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 110
 # Anchura hurtbox
@@ -926,17 +926,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-25
+43
 #	Y hitbox
 279
 #	Anchura hitbox
-138
+85
 #	Altura hitbox
-50
+65
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 245
 # Anchura hurtbox
@@ -1005,17 +1005,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-0
-#	Y hitbox
-271
-#	Anchura hitbox
-142
-#	Altura hitbox
 54
+#	Y hitbox
+278
+#	Anchura hitbox
+125
+#	Altura hitbox
+64
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 245
 # Anchura hurtbox
@@ -1084,17 +1084,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-47
+0
 #	Y hitbox
-433
+390
 #	Anchura hitbox
-79
+225
 #	Altura hitbox
-63
+51
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 245
 # Anchura hurtbox
@@ -1184,13 +1184,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-29
+95
 #	Y hitbox
-255
+158
 #	Anchura hitbox
-109
+100
 #	Altura hitbox
-54
+63
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -1265,7 +1265,7 @@ false
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 110
 # Anchura hurtbox
@@ -1436,7 +1436,7 @@ false
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+210
 # Y hurtbox
 245
 # Anchura hurtbox
@@ -1514,7 +1514,7 @@ blocking_crouch
 # Nombre del movimiento (Enum)
 CROUCHED_BLOCK_KNOCKBACK
 # Combinación de teclas
-OMITIR10
+OMITIR11
 # Sonido asociado
 Hurt_1
 # ¿Tiene final? (true / false)
@@ -1564,7 +1564,7 @@ jumping_kick_down
 # Nombre del movimiento (Enum)
 JUMP_KICK_DOWN
 # Combinación de teclas
-OMITIR11
+OMITIR12
 # Sonido asociado
 Hit_3
 # ¿Tiene final? (true / false)
@@ -1576,17 +1576,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-79
+150
 # Y hitbox
-163
+140
 # Anchura hitbox
-75
+60
 # Altura hitbox
-133
+104
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 110
 # Anchura hurtbox
@@ -1622,7 +1622,7 @@ jumping_kick
 # Nombre del movimiento (Enum)
 JUMP_KICK
 # Combinación de teclas
-OMITIR12
+OMITIR13
 # Sonido asociado
 Hit_3
 # ¿Tiene final? (true / false)
@@ -1636,15 +1636,15 @@ true
 # X hitbox
 0
 # Y hitbox
-438
+423
 # Anchura hitbox
-75
+150
 # Altura hitbox
-62
+68
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-180
+200
 # Y hurtbox
 110
 # Anchura hurtbox
@@ -1713,13 +1713,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-0
+12
 #	Y hitbox
-250
+320
 #	Anchura hitbox
-154
+150
 #	Altura hitbox
-84
+75
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox

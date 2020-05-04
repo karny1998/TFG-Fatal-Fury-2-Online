@@ -434,12 +434,12 @@ public class game_controller {
         }
         else if(state == GameState.FIGHT || state == GameState.ESCAPE) {
             if(debug){
-                /*fight.player.player.getHitbox().drawHitBox(g);
+                fight.player.player.getHitbox().drawHitBox(g);
                 fight.player.player.getHurtbox().drawHitBox(g);
                 fight.enemy.player.getHitbox().drawHitBox(g);
                 fight.enemy.player.getHurtbox().drawHitBox(g);
                 fight.player.player.getCoverbox().drawHitBox(g);
-                fight.enemy.player.getCoverbox().drawHitBox(g);*/
+                fight.enemy.player.getCoverbox().drawHitBox(g);
             }
             if(!storyOn) {
                 fight.drawHpBarPlayer(g);
