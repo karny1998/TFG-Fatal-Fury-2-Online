@@ -145,6 +145,11 @@ public class animation {
         long current = System.currentTimeMillis();
         double elapsedTime = current - startTime;
         double elapsedTimeAux = current - auxTime;
+        /////////////////////////////////////////////////////////////////////////////////
+        if(state > 0 && coords.get(state-1).first == 0 && coords.get(state-1).second == 0 && elapsedTimeAux > elapsedTime){
+            elapsedTimeAux  = elapsedTime;
+        }
+        /////////////////////////////////////////////////////////////////////////////////
         int incrementOnX = (int)(coords.get((state)%coords.size()).getKey()*(elapsedTimeAux/times.get(state)));
 
         incrementOnX *= -orientation;
