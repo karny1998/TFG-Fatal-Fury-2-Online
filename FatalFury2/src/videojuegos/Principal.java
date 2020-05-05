@@ -84,6 +84,8 @@ public class Principal extends JFrame {
 
         setFocusable(true);
 
+
+
         initUI();
     }
 
