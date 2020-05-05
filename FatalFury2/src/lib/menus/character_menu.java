@@ -85,7 +85,7 @@ public class character_menu {
 
 
             p1_mug =  new screenObject(0, 75,  416, 380, new ImageIcon( this.getClass().getResource(path  + mugs[pos_1])).getImage(), Item_Type.P1_MUG);
-            p1_name =  new screenObject(0, 400,  356, 151, new ImageIcon( this.getClass().getResource(path  + names[pos_1])).getImage(), Item_Type.P1_MUG);
+            p1_name =  new screenObject(0, 400,  356, 299, new ImageIcon( this.getClass().getResource(path  + names[pos_1])).getImage(), Item_Type.P1_MUG);
 
             if (controlListener.menuInput(1, controlListener.IZ_INDEX) && pos_1 > 0){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
@@ -118,7 +118,7 @@ public class character_menu {
             return false;
         } else if(actual == estados.P2_SELECT){
             p2_mug =  new screenObject(864, 75,  416, 380, new ImageIcon( this.getClass().getResource(path  + mugs[pos_2])).getImage(), Item_Type.P2_MUG);
-            p2_name =  new screenObject(924, 400,  356, 151, new ImageIcon( this.getClass().getResource(path  + names[pos_2])).getImage(), Item_Type.P2_MUG);
+            p2_name =  new screenObject(924, 400,  356, 299, new ImageIcon( this.getClass().getResource(path  + names[pos_2])).getImage(), Item_Type.P2_MUG);
             int mando = 1;
             switch (tipo){
                 case 0:
