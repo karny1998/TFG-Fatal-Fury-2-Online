@@ -1,4 +1,4 @@
-46
+47
 # ------------------------------------ MOVIMIENTO NUMERO 1 ------------------------------------
 standing
 STANDING
@@ -3182,7 +3182,7 @@ flying_kick
 # Nombre del movimiento (Enum)
 REVERSE_KICK_D
 # Combinación de teclas
-AB+AB
+AB+AB+D
 # Sonido asociado
 Special_2
 # ¿Tiene final? (true / false)
@@ -3194,23 +3194,207 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-73
+124
 # Y hitbox
-76
+395
 # Anchura hitbox
-162
+139
 # Altura hitbox
-232
+106
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-200
+230
 # Y hurtbox
-110
+174
 # Anchura hurtbox
 120
 # Altura hurtbox
-390
+327
+# Número de frames de la animación
+7
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+75
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+75
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 5 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+400
+# Incremento X
+350
+# Incremento Y
+-450
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 6 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+100
+# Incremento Y
+50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 7 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1500
+# Incremento X
+2500
+# Incremento Y
+2000
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+290
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 47 ------------------------------------
+# Carpeta de los frames
+flying_kick
+# Nombre del movimiento (Enum)
+REVERSE_KICK_B
+# Combinación de teclas
+AB+AB+B
+# Sonido asociado
+Special_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+25
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+124
+# Y hitbox
+395
+# Anchura hitbox
+139
+# Altura hitbox
+106
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+230
+# Y hurtbox
+174
+# Anchura hurtbox
+120
+# Altura hurtbox
+327
 # Número de frames de la animación
 7
 # ------ FRAME 1 -------
