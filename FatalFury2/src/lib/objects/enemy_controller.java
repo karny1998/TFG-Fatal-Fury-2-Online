@@ -8,7 +8,12 @@ public class enemy_controller extends character_controller{
     ia_controller ia = new ia_controller();
 
     public enemy_controller(Playable_Character ch, int pN){
-        super(ch, pN,750,290, 1);
+        super(ch, pN, 750, 290, 1);
+        if(pN == 1){
+            this.x = 500;
+            this.player.setOrientation(-1);
+            this.player.setX(500);
+        }
     }
 
     public enemy_controller(Playable_Character ch, int pN, character rival){
@@ -22,7 +27,7 @@ public class enemy_controller extends character_controller{
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         String mov = "";
-        if(false){
+        if(!standBy){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
@@ -30,7 +35,12 @@ public class enemy_controller extends character_controller{
 
     @Override
     void reset() {
-        reset(this.player.getCharac(),750,290, 1);
+        if(this.playerNum == 1) {
+            reset(this.player.getCharac(),500,290, -1);
+        }
+        else{
+            reset(this.player.getCharac(), 750, 290, 1);
+        }
     }
 
     @Override

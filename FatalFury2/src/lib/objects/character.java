@@ -65,7 +65,9 @@ public class character {
         else if(pHurt.getX() < eHurt.getX()){
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
         }
-
+        if(mov == null){
+            mov = "";
+        }
         if (mov.length() == 4 && (mov.contains("DE-") || mov.contains("IZ-"))
             && !(mov.equals("DE-C") && dis < 10)) {
             mov = String.valueOf(mov.charAt(mov.length() - 1));
@@ -152,7 +154,7 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
-        else if(isCrouched() && mov.equals("AB") && /*state != Movement.CROUCH && */movements.get(state).ended()){
+        else if(isCrouched() && mov.equals("AB") && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = combos.get(mov);
             movements.get(state).start(dis);
@@ -160,7 +162,7 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
-        else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state && !isCombing()){
+        else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state && !isCombing()  && !isJumping()){
             if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL && !((isJumping() || state == Movement.THROW) && combos.get(mov) == Movement.DASH)) {
                 movements.get(state).getAnim().reset();
                 state = combos.get(mov);
@@ -172,15 +174,7 @@ public class character {
 
         else if ((movements.get(state).getAnim().getType() == Animation_type.HOLDABLE || isCrouched()) && movements.get(state).ended()
                 && combos.get(mov) != state && !mov.startsWith("AB")){
-            Movement aux = Movement.UNDO_CROUCH;//NONE;
-            /*switch (state){
-                case CROUCH:
-                    aux = Movement.UNDO_CROUCH;
-                    break;
-                case CROUCHED_BLOCK:
-                    aux = Movement.UNDO_CROUCH;
-                    break;
-            }*/
+            Movement aux = Movement.UNDO_CROUCH;
             movements.get(state).getAnim().reset();
             state = aux;
             movements.get(state).start(dis);
@@ -242,7 +236,7 @@ public class character {
         }
 
         // Gestión de colisiones
-        if (gameResult == 2 && stateChanged) {
+        if (gameResult == 2 && stateChanged && charac == Playable_Character.TERRY) {
             s.setY(-270);
         }
         else if(collides && isAttacking() && inDisplacement()){
@@ -305,6 +299,7 @@ public class character {
     }
 
     public void setDefeat(){
+        y = 290;
         gameResult = 3;
     }
 

@@ -23,7 +23,8 @@ public class ia_controller {
     private int round = 1;
     private int pWins = 0;
     private int time = 90;
-    private long timeReference = System.currentTimeMillis();
+    private long timeReference1 = System.currentTimeMillis();
+    private long timeReference2 = System.currentTimeMillis();
 
     public  ia_controller(){}
 
@@ -57,12 +58,16 @@ public class ia_controller {
             processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], lvl, player, enemy, time, round, pWins);
         }
         long current = System.currentTimeMillis();
-        boolean timeOk = current - timeReference > 200.0;
-        boolean timeOk2 = current - timeReference > 800.0;
-        if(timeOk){timeReference = current;}
-        if(enemy.endedMovement() || timeOk && enemy.getState() == Movement.WALKING || timeOk && enemy.getState() == Movement.WALKING_BACK
-                || timeOk && enemy.getState() == Movement.CROUCHED_WALKING || enemy.isJumping() && timeOk2
-                || !enemy.getMovements().get(enemy.getState()).hasEnd()){
+        boolean timeOk = current - timeReference2 > 200.0;
+        boolean timeOk2 = current - timeReference2 > 500.0;
+        if(timeOk){timeReference1 = current;}
+        if(timeOk2){timeReference2 = current;}
+        if(enemy.endedMovement() && timeOk2
+                || timeOk && enemy.getState() == Movement.WALKING
+                || timeOk && enemy.getState() == Movement.WALKING_BACK
+                || timeOk && enemy.getState() == Movement.CROUCHED_WALKING
+                || timeOk2 && enemy.getState() == Movement.STANDING
+                || enemy.isJumping() && timeOk2){
             Movement m = roulette.spinRoulette();
             move = movementsKeys.get(m);
         }
@@ -176,11 +181,19 @@ public class ia_controller {
         this.time = time;
     }
 
-    public long getTimeReference() {
-        return timeReference;
+    public long getTimeReference1() {
+        return timeReference1;
     }
 
-    public void setTimeReference(long timeReference) {
-        this.timeReference = timeReference;
+    public void setTimeReference1(long timeReference1) {
+        this.timeReference1 = timeReference1;
+    }
+
+    public long getTimeReference2() {
+        return timeReference2;
+    }
+
+    public void setTimeReference2(long timeReference2) {
+        this.timeReference2 = timeReference2;
     }
 }

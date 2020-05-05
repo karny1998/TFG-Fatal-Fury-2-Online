@@ -81,27 +81,6 @@ public class user_controller extends character_controller{
                     times.clear();
                 }
             }
-
-
-            /*else if (mov.contains("-") && !mov.contains("+") && !this.player.combos.containsKey(mov)) {
-                String aux = mov;
-                boolean ok2 = false;
-                for (int i = 0; i < mov.length() && !ok2; ++i) {
-                    if (aux.charAt(i) == '-') {
-                        aux = aux.substring(0, i) + '+' + aux.substring(i + 1);
-                        if (this.player.combos.containsKey(aux) && this.player.state != this.player.combos.get(aux)) {
-                            ok2 = true;
-                            inputs.clear();
-                            times.clear();
-                        } else {
-                            aux = mov;
-                        }
-                    }
-                }
-                if (ok2) {
-                    mov = aux;
-                }
-            }*/
         }
     }
 
@@ -115,10 +94,6 @@ public class user_controller extends character_controller{
             return player.getFrame(mov, pHurt, eHurt, false);
         }
         else {
-            /*
-            if (!inputs.isEmpty()) {
-                System.out.println(inputs);
-            }*/
             return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
         }
     }

@@ -35,6 +35,7 @@ public class ia_loader {
     private static russian_roulette ruleta = new russian_roulette();
 
     public static Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> loadIA(Playable_Character c){
+        ruleta = new russian_roulette();
         try {
             InputStream is = ia_loader.class.getResourceAsStream(file);
             Document doc = xmlReader.open(is);

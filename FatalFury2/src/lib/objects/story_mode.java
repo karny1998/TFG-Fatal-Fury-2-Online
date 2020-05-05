@@ -153,6 +153,8 @@ public class story_mode {
                             lvlIa = 4;
                             break;
                     }
+                    audio_manager.menu.play(menu_audio.indexes.option_selected);
+                    audio_manager.menu.stop(menu_audio.indexes.menu_theme);
                     state = GameState.STORY_LOADING;
                     timeReference = current;
                 }
@@ -204,7 +206,7 @@ public class story_mode {
                         break;
                 }
                 state = GameState.STORY_MENU;
-                if(actualMenu == winMenu && stage == 8){
+                if(actualMenu == winMenu && stage == 0){
                     state = GameState.STORY_END;
                     timeReference = current;
                 }
@@ -234,6 +236,7 @@ public class story_mode {
                             exit = true;
                             break;
                     }
+                    audio_manager.menu.stop(menu_audio.indexes.menu_theme);
                     audio_manager.endFight();
                 }
             }
@@ -244,6 +247,9 @@ public class story_mode {
             }
             else if(current - timeReference > 12000.0){
                 exit = true;
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
+                audio_manager.menu.play(menu_audio.indexes.menu_theme);
             }
             else{
                 double aux = current - timeReference - 2000.0;

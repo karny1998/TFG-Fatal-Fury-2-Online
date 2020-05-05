@@ -55,6 +55,10 @@ public class game_controller {
     private boolean storyOn;
     private String openings = "/assets/sprites/menu/opening/opening_";
     private long tiempo = System.currentTimeMillis();
+    private long timeReference = System.currentTimeMillis();
+    private boolean onDemo = false;
+    private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
+
     public game_controller() {
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
@@ -101,26 +105,71 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 2000){
+            if( actual - tiempo > 500.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
         }
-
-        if(state == GameState.OPENING_2){
+        else if(state == GameState.OPENING_2){
             screenObjects.remove(Item_Type.MENU);
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 2000){
+            if( actual - tiempo > 500.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
+                timeReference = tiempo;
+            }
+        }
+        else if(state == GameState.DEMO){
+            if(controlListener.anyKeyPressed()){
+                fight.pauseFight();
+                state = GameState.NAVIGATION;
+                timeReference = System.currentTimeMillis();
+                clearInterface(screenObjects);
+                actualMenu.updateTime();
+                onDemo = false;
+            }
+            else{
+                if(!onDemo){
+                    user = new enemy_controller(Playable_Character.TERRY, 1);
+                    enemy = new enemy_controller(Playable_Character.ANDY, 2);
+                    enemy.setRival(user.getPlayer());
+                    enemy.getPlayer().setMapLimit(mapLimit);
+                    user.setRival(enemy.getPlayer());
+                    user.getPlayer().setMapLimit(mapLimit);
+                    scene = new scenary(Scenario_type.CHINA);
+                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.CHINA);
+                    fight = new fight_controller(user,enemy,scene);
+                    fight.setMapLimit(mapLimit);
+                    fight.setVsIa(true);
+                    onDemo = true;
+                    screenObjects.remove(Item_Type.MENU);
+                    timeReference = System.currentTimeMillis();
+                }
+                else{
+                    fight.getAnimation(screenObjects);
+                    screenObjects.put(Item_Type.MENU, start);
+                    if((int)((System.currentTimeMillis() - timeReference)/500.0)%2 == 1){
+                        screenObjects.remove(Item_Type.MENU);
+                    }
+                    if(fight.getEnd()){
+                        state = GameState.NAVIGATION;
+                        fight.pauseFight();
+                        timeReference = System.currentTimeMillis();
+                        clearInterface(screenObjects);
+                        onDemo = false;
+                        actualMenu.updateTime();
+                    }
+                }
             }
         }
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
-        if(state == GameState.NAVIGATION){
-
+        else if(state == GameState.NAVIGATION){
+            if(actualMenu == principal && System.currentTimeMillis() - timeReference > 1000.0){
+                state = GameState.DEMO;
+            }
             if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 if(actualMenu == gameMenu){
@@ -454,7 +503,7 @@ public class game_controller {
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
-        else if(state == GameState.FIGHT || state == GameState.ESCAPE) {
+        else if(state == GameState.FIGHT || state == GameState.ESCAPE || state == GameState.DEMO) {
             if(debug){
                 fight.player.player.getHitbox().drawHitBox(g);
                 fight.player.player.getHurtbox().drawHitBox(g);

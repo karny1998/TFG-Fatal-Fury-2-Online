@@ -23,6 +23,7 @@ public abstract  class character_controller {
     protected character rival = null;
 
     public character_controller(Playable_Character ch, int pN, int x, int y, int orientation){
+        playerNum = pN;
         this.x = x; this.y = y;
         if(ch == Playable_Character.ANDY){
             charac = "andy";

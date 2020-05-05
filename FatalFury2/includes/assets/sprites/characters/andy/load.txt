@@ -215,7 +215,7 @@ A
 Hit_1
 true
 ENDABLE
-10
+8
 true
 58
 171
@@ -231,7 +231,7 @@ false
 160
 500
 500
-75
+100
 0
 0
 -1
@@ -241,7 +241,7 @@ false
 160
 500
 500
-175
+250
 0
 0
 -1
@@ -254,7 +254,7 @@ C
 Hit_2
 true
 ENDABLE
-15
+12
 true
 28
 175
@@ -270,7 +270,7 @@ false
 160
 500
 500
-75
+100
 0
 0
 -1
@@ -280,7 +280,7 @@ false
 160
 500
 500
-75
+100
 0
 0
 -1
@@ -290,7 +290,7 @@ false
 160
 500
 500
-250
+350
 0
 0
 -1
@@ -413,7 +413,7 @@ DE-C
 NONE
 true
 ENDABLE
-20
+15
 true
 163
 183
@@ -551,7 +551,7 @@ OMITIR4
 Hit_3
 true
 ENDABLE
-10
+9
 true
 87
 316
@@ -567,7 +567,7 @@ false
 160
 500
 500
-100
+75
 0
 0
 -1
@@ -577,7 +577,7 @@ false
 160
 500
 500
-300
+225
 0
 150
 -1
@@ -606,7 +606,7 @@ false
 160
 500
 500
-100
+75
 0
 0
 -1
@@ -618,7 +618,7 @@ false
 500
 400
 100
-300
+225
 -1
 290
 false
@@ -629,7 +629,7 @@ OMITIR6
 Hit_3
 true
 ENDABLE
-10
+13
 true
 87
 316
@@ -668,7 +668,7 @@ OMITIR7
 Hit_3
 true
 ENDABLE
-10
+13
 true
 87
 316
@@ -696,7 +696,7 @@ false
 500
 600
 150
-450
+350
 -1
 290
 false
@@ -764,7 +764,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+14
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -818,7 +818,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-250
+400
 # Incremento X
 0
 # Incremento Y
@@ -843,7 +843,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+9
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -876,7 +876,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-75
+100
 # Incremento X
 0
 # Incremento Y
@@ -897,7 +897,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-175
+275
 # Incremento X
 0
 # Incremento Y
@@ -922,7 +922,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-10
+7
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -955,7 +955,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-125
+100
 # Incremento X
 0
 # Incremento Y
@@ -976,7 +976,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-125
+250
 # Incremento X
 0
 # Incremento Y
@@ -1001,7 +1001,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-15
+10
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -1034,7 +1034,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-200
+150
 # Incremento X
 0
 # Incremento Y
@@ -1055,7 +1055,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-200
+400
 # Incremento X
 0
 # Incremento Y
@@ -1080,7 +1080,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+6
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -1134,7 +1134,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-100
+200
 # Incremento X
 0
 # Incremento Y
@@ -1180,7 +1180,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-10
+12
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -1234,7 +1234,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-200
+350
 # Incremento X
 0
 # Incremento Y
@@ -1572,7 +1572,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+14
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -1630,7 +1630,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+12
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -1709,7 +1709,7 @@ true
 # Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-20
+12
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
@@ -1763,7 +1763,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-150
+300
 # Incremento X
 0
 # Incremento Y
@@ -2580,7 +2580,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+14
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -2743,7 +2743,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+14
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -2906,7 +2906,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+15
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -3048,7 +3048,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+15
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -3190,7 +3190,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+20
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
@@ -3374,7 +3374,7 @@ true
 # Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
 ENDABLE
 # Daño que causa
-25
+20
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
