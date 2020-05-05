@@ -82,12 +82,6 @@ public class Principal extends JFrame {
 
         addKeyListener(control);
 
-
-
-
-
-
-
         setFocusable(true);
 
         initUI();

@@ -12,6 +12,7 @@ import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 import lib.utils.Pair;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class game_controller {
     private character_controller user;
     private character_controller enemy;
     // Estado del juego
-    private GameState state = GameState.NAVIGATION;
+    private GameState state = GameState.OPENING_1;
     // Ranking
     private score ranking = new score();
     // introducción de nombre
@@ -52,7 +53,8 @@ public class game_controller {
     // Modo historia
     private story_mode story;
     private boolean storyOn;
-
+    private String openings = "/assets/sprites/menu/opening/opening_";
+    private long tiempo = System.currentTimeMillis();
     public game_controller() {
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
@@ -95,6 +97,26 @@ public class game_controller {
             //state = GameState.OPTIONS;
         }
 
+        if(state == GameState.OPENING_1){
+            screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
+            screenObjects.put(Item_Type.MENU, s);
+            long actual = System.currentTimeMillis();
+            if( actual - tiempo > 2000){
+                state = GameState.OPENING_2;
+                tiempo = System.currentTimeMillis();
+            }
+        }
+
+        if(state == GameState.OPENING_2){
+            screenObjects.remove(Item_Type.MENU);
+            screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
+            screenObjects.put(Item_Type.MENU, s);
+            long actual = System.currentTimeMillis();
+            if( actual - tiempo > 2000){
+                state = GameState.NAVIGATION;
+                tiempo = System.currentTimeMillis();
+            }
+        }
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
         if(state == GameState.NAVIGATION){
