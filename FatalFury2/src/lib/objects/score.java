@@ -57,7 +57,6 @@ public class score {
         saveLastName(name);
 
         List<Pair<String, Integer>> list = readRankScores(false);
-        //TODO
         File f= new File(path);
         f.delete();
         f= new File(path);
