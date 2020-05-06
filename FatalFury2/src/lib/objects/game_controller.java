@@ -430,7 +430,7 @@ public class game_controller {
                     }
                     else{
                         state = GameState.NAVIGATION;
-                        actualMenu = basicMenu;
+                        actualMenu = gameMenu;
                         principal.updateTime();
                     }
                     timeReference = System.currentTimeMillis();
