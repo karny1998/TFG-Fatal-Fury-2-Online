@@ -274,6 +274,7 @@ public class game_controller {
                                 break;
                         }
                         audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        actualMenu.updateTime();
                         charMenu = new character_menu(1);
                         state = GameState.PLAYERS;
                     }
