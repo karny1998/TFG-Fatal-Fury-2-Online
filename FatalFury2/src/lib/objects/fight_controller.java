@@ -76,7 +76,7 @@ public class fight_controller implements roundListener {
     long introTimeStamp;
     boolean showOutro = false;
     long outroTimeStamp;
-    int iaLvl = 4;
+    ia_loader.dif iaLvl = ia_loader.dif.EASY;
 
 
     boolean audio_ready = false, audio_round = false, audio_fight = false;
@@ -292,7 +292,7 @@ public class fight_controller implements roundListener {
         // Actualizar valores de la ia
         if(!vsIa){
             ia_controller iaAux = enemy.getIa();
-            iaAux.setLvl(iaLvl);
+            iaAux.setDif(iaLvl);
             iaAux.setRound(roundCounter+1);
             iaAux.setTime(currentRound.getTimeLeft());
             iaAux.setpWins(playerScore);
@@ -831,11 +831,11 @@ public class fight_controller implements roundListener {
         this.fight_result = fight_result;
     }
 
-    public int getIaLvl() {
+    public ia_loader.dif getIaLvl() {
         return iaLvl;
     }
 
-    public void setIaLvl(int iaLvl) {
+    public void setIaLvl(ia_loader.dif iaLvl) {
         this.iaLvl = iaLvl;
     }
 

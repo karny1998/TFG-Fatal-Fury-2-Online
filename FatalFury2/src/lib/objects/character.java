@@ -237,6 +237,9 @@ public class character {
         if (gameResult == 2 && stateChanged && charac == Playable_Character.TERRY) {
             s.setY(-270);
         }
+        else if(state == Movement.THROWN_OUT){
+            x = s.getX();
+        }
         else if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
         }
@@ -258,9 +261,9 @@ public class character {
                 s.setX(x);
             }
         }
-        else if(state == Movement.THROWN_OUT){
+        /*else if(state == Movement.THROWN_OUT){
             x = s.getX();
-        }
+        }*/
         else if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()

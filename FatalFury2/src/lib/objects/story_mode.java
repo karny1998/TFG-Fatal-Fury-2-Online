@@ -21,7 +21,7 @@ public class story_mode {
     private menu difficulty = menu_generator.generate_story_difficulty();
     private screenObject loads[];
     private screenObject ends[];
-    private int lvlIa = 1;
+    private ia_loader.dif lvlIa = ia_loader.dif.EASY;
     private int score = 0;
     private int stage = 0;
     private Playable_Character charac = Playable_Character.TERRY;
@@ -47,7 +47,7 @@ public class story_mode {
         loadLoadScreens();
     }
 
-    public story_mode(int lvl){
+    public story_mode(ia_loader.dif lvl){
         this.lvlIa = lvl;
         loadLoadScreens();
     }
@@ -60,7 +60,7 @@ public class story_mode {
             BufferedReader b = new BufferedReader(new InputStreamReader(f));
             String aux = "";
             if ((aux = b.readLine()) != null) {
-                lvlIa = Integer.valueOf(aux);
+                lvlIa = ia_loader.dif.valueOf(aux);
                 if ((aux = b.readLine()) != null) {
                     stage = Integer.valueOf(aux);
                     newGame = false;
@@ -97,7 +97,7 @@ public class story_mode {
         try {
             FileOutputStream fos = new FileOutputStream(f);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-            bw.write(Integer.toString(lvlIa)+"\n");
+            bw.write(lvlIa.toString()+"\n");
             bw.write(Integer.toString(stage));
             bw.close();
         }
@@ -120,7 +120,7 @@ public class story_mode {
     void generateFight(){
         player = new user_controller(charac, 1);
         enemy = new enemy_controller(enemies[stage], 2);
-        enemy.getIa().setLvl(lvlIa);
+        enemy.getIa().setDif(lvlIa);
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
@@ -141,16 +141,16 @@ public class story_mode {
                 if (p.getKey() == null) {
                     switch (p.getValue()) {
                         case EASY:
-                            lvlIa = 1;
+                            lvlIa = ia_loader.dif.EASY;
                             break;
                         case NORMAL:
-                            lvlIa = 2;
+                            lvlIa = ia_loader.dif.NORMAL;
                             break;
                         case HARD:
-                            lvlIa = 3;
+                            lvlIa = ia_loader.dif.HARD;
                             break;
                         case VERY_HARD:
-                            lvlIa = 4;
+                            lvlIa = ia_loader.dif.VERY_HARD;
                             break;
                     }
                     audio_manager.menu.play(menu_audio.indexes.option_selected);
@@ -292,11 +292,11 @@ public class story_mode {
         this.loads = loads;
     }
 
-    public int getLvlIa() {
+    public ia_loader.dif getLvlIa() {
         return lvlIa;
     }
 
-    public void setLvlIa(int lvlIa) {
+    public void setLvlIa(ia_loader.dif lvlIa) {
         this.lvlIa = lvlIa;
     }
 

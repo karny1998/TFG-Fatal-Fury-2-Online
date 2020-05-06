@@ -27,7 +27,7 @@ public class enemy_controller extends character_controller{
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         String mov = "";
-        if(false){
+        if(!standBy){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
@@ -50,7 +50,7 @@ public class enemy_controller extends character_controller{
     public void setRival(character rival) {
         this.player.setRival(rival);
         this.rival = rival;
-        ia = new ia_controller(rival,this.player,0);
+        ia = new ia_controller(rival,this.player,ia_loader.dif.EASY);
     }
 
     @Override

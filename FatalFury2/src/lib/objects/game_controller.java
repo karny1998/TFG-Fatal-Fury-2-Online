@@ -19,7 +19,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -27,6 +27,7 @@ public class game_controller {
     private scenary scene;
     // Menus
     private menu principal,basicMenu, gameMenu;
+    private menu difficulty;
     // Menu actual
     private menu actualMenu;
     // Menu al presionar escape en una pelea
@@ -58,12 +59,14 @@ public class game_controller {
     private long timeReference = System.currentTimeMillis();
     private boolean onDemo = false;
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
+    private ia_loader.dif lvlIa;
 
     public game_controller() {
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
         this.gameMenu = basicMenu.getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
         this.actualMenu = principal;
+        this.difficulty = menu_generator.generate_story_difficulty();
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
 
@@ -73,6 +76,7 @@ public class game_controller {
         this.principal = principal;
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
+        this.difficulty = menu_generator.generate_story_difficulty();
     }
 
     public game_controller(fight_controller fight, menu principal) {
@@ -98,6 +102,7 @@ public class game_controller {
             audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
+            pvp = true;
             fight.setVsIa(false);
         }
 
@@ -138,6 +143,10 @@ public class game_controller {
                     enemy.getPlayer().setMapLimit(mapLimit);
                     user.setRival(enemy.getPlayer());
                     user.getPlayer().setMapLimit(mapLimit);
+
+                    enemy.getIa().setDif(ia_loader.dif.EASY);
+                    user.getIa().setDif(ia_loader.dif.EASY);
+
                     scene = new scenary(Scenario_type.CHINA);
                     audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.CHINA);
                     fight = new fight_controller(user,enemy,scene);
@@ -220,9 +229,9 @@ public class game_controller {
                             pvp = true;
                             break;
                         case GAME_IA:
+                            actualMenu = difficulty;
                             actualMenu.updateTime();
-                            charMenu = new character_menu(1);
-                            state = GameState.PLAYERS;
+                            state = GameState.DIFFICULTY;
                             pvp = false;
                             break;
                         case GAME_HISTORY:
@@ -238,7 +247,40 @@ public class game_controller {
                     actualMenu.updateTime();
                 }
             }
-        } else if (state == GameState.PLAYERS){
+        }
+        else if (state == GameState.DIFFICULTY){
+            if(controlListener.getStatus(1, controlListener.ESC_INDEX)){
+                actualMenu = gameMenu;
+                actualMenu.updateTime();
+                state = GameState.NAVIGATION;
+            }
+            else {
+                screenObjects.put(Item_Type.MENU, actualMenu.getFrame());
+                Pair<menu, Selectionable> p = actualMenu.select();
+                if (controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
+                    if (p.getKey() == null) {
+                        switch (p.getValue()) {
+                            case EASY:
+                                lvlIa = ia_loader.dif.EASY;
+                                break;
+                            case NORMAL:
+                                lvlIa = ia_loader.dif.NORMAL;
+                                break;
+                            case HARD:
+                                lvlIa = ia_loader.dif.HARD;
+                                break;
+                            case VERY_HARD:
+                                lvlIa = ia_loader.dif.VERY_HARD;
+                                break;
+                        }
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        charMenu = new character_menu(1);
+                        state = GameState.PLAYERS;
+                    }
+                }
+            }
+        }
+        else if (state == GameState.PLAYERS){
 
             if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.back);
@@ -263,8 +305,12 @@ public class game_controller {
                         enemy.setPlayerNum(2);
                     } else {
                         enemy = new enemy_controller(charMenu.getP2_ch(), 2);
+                        enemy.setPlayerNum(2);
                     }
                     enemy.setRival(user.getPlayer());
+                    if(!pvp){
+                        enemy.getIa().setDif(lvlIa);
+                    }
                     enemy.getPlayer().setMapLimit(mapLimit);
                     user.setRival(enemy.getPlayer());
                     user.getPlayer().setMapLimit(mapLimit);

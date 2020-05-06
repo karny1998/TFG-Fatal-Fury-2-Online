@@ -19,22 +19,22 @@ public class ia_controller {
     private Timer control;
     private Map<Movement, String> movementsKeys;
     private String move = "";
-    private int lvl = 1;
     private int round = 1;
     private int pWins = 0;
     private int time = 90;
     private long timeReference1 = System.currentTimeMillis();
     private long timeReference2 = System.currentTimeMillis();
+    private ia_loader.dif dif = ia_loader.dif.EASY;
 
     public  ia_controller(){}
 
-    public  ia_controller(character p, character e, int lvl){
+    public  ia_controller(character p, character e, ia_loader.dif lvl){
+        this.dif = lvl;
         this.movementsKeys = e.getMovementsKeys();
         this.round = 1;
-        this.lvl = lvl;
         this.player = p;
         this.enemy = e;
-        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac(), ia_loader.dif.VERY_HARD);
+        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac(), dif);
         this.processor = aux.getKey().getKey();
         this.roulette = aux.getKey().getValue();
         this.mood = aux.getValue().getKey();
@@ -55,7 +55,7 @@ public class ia_controller {
 
     private void ia_gestion(){
         for(int i = 0; i < processor.length; ++i) {
-            processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], lvl, player, enemy, time, round, pWins);
+            processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], 4, player, enemy, time, round, pWins);
         }
 
         hitBox pHurt = player.getHurtbox();
@@ -155,14 +155,6 @@ public class ia_controller {
         this.move = move;
     }
 
-    public int getLvl() {
-        return lvl;
-    }
-
-    public void setLvl(int lvl) {
-        this.lvl = lvl;
-    }
-
     public int getRound() {
         return round;
     }
@@ -209,5 +201,19 @@ public class ia_controller {
 
     public void setTimeReference2(long timeReference2) {
         this.timeReference2 = timeReference2;
+    }
+
+    public ia_loader.dif getDif() {
+        return dif;
+    }
+
+    public void setDif(ia_loader.dif dif) {
+        this.dif = dif;
+        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac(), dif);
+        this.processor = aux.getKey().getKey();
+        this.roulette = aux.getKey().getValue();
+        this.mood = aux.getValue().getKey();
+        this.weights = aux.getValue().getValue();
+
     }
 }
