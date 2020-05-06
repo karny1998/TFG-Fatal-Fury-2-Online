@@ -16,25 +16,44 @@ import java.io.InputStream;
 public class ia_loader {
     public ia_loader(){}
 
-    private static String file = "/files/ia_example.xml";
-
+    private static String path = "/files/ia/";
+    public enum dif {
+        EASY, NORMAL, HARD, VERY_HARD
+    }
 
 
 
     private enum indexes {
-        SOFT_PUNCH,SOFT_KICK,HARD_PUNCH,HARD_KICK,CROUCHED_BLOCK,NORMAL_JUMP,JUMP_ROLL_RIGHT,CROUCHED_WALKING,
-        GUARD_ATTACK,HARD_KNOCK,THROW,STANDING,WALKING,WALKING_BACK,CROUCH,ATTACK_POKE,JUMP_PUNCH_DOWN,
-        JUMP_ROLL_PUNCH_DOWN,CROUCHING_HARD_PUNCH,CROUCHING_SOFT_PUNCH,HOOK,CROUCHING_HARD_KICK,
-        CROUCHING_SOFT_KICK,DASH,CHARGED_PUNCH_A,CHARGED_PUNCH_C,JUMP_KICK_DOWN,JUMP_KICK,
-        JUMP_ROLL_HARD_PUNCH_DOWN,JUMP_HARD_PUNCH_DOWN,REVERSE_KICK_B,REVERSE_KICK_D,
-        JUMP_ROLL_LEFT,SPIN_PUNCH_A,SPIN_PUNCH_C
+        NORMAL_JUMP,
+        JUMP_ROLL_RIGHT,
+        JUMP_ROLL_LEFT,
+        STANDING,
+        WALKING,
+        WALKING_BACK,
+        SOFT_PUNCH,
+        SOFT_KICK,
+        HARD_PUNCH,
+        HARD_KICK,
+        CROUCH,
+        CROUCHED_WALKING,
+        CROUCHED_BLOCK,
+        CROUCHING_SOFT_PUNCH,
+        CROUCHING_SOFT_KICK,
+        CROUCHING_HARD_PUNCH,
+        CROUCHING_HARD_KICK,
+        THROW,
+        DASH,
+        CHARGED_PUNCH_A,
+        REVERSE_KICK_B,
+        SPIN_PUNCH_A
     }
     private static ia_type tipos[][];
     private static ia_processor procesamiento[];
     private static Double pesos[][] = new Double[4][5];
     private static russian_roulette ruleta = new russian_roulette();
 
-    public static Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> loadIA(Playable_Character c){
+    public static Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> loadIA(Playable_Character c, dif d){
+        String file = path + c.toString() + "/" + d.toString() +".xml";
         ruleta = new russian_roulette();
         try {
             InputStream is = ia_loader.class.getResourceAsStream(file);

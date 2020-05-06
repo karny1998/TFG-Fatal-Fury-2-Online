@@ -34,7 +34,7 @@ public class ia_controller {
         this.lvl = lvl;
         this.player = p;
         this.enemy = e;
-        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac());
+        Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac(), ia_loader.dif.VERY_HARD);
         this.processor = aux.getKey().getKey();
         this.roulette = aux.getKey().getValue();
         this.mood = aux.getValue().getKey();

@@ -68,6 +68,7 @@ public class Screen extends JPanel {
         setPreferredSize(d);
     }
 
+
     // Muestra por pantalla los screenObjects en la lista
     private void doDrawing(Graphics g) {
 
