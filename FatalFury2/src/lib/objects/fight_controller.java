@@ -290,7 +290,7 @@ public class fight_controller implements roundListener {
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         // Actualizar valores de la ia
-        if(!vsIa){
+        if(vsIa){
             ia_controller iaAux = enemy.getIa();
             iaAux.setDif(iaLvl);
             iaAux.setRound(roundCounter+1);
