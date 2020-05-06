@@ -1,0 +1,3387 @@
+49
+standing
+STANDING
+
+NONE
+false
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+3
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+walking
+WALKING
+IZ
+NONE
+true
+ENDABLE
+0
+false
+true
+150
+110
+60
+180
+180
+110
+120
+390
+3
+150
+160
+500
+500
+150
+-75
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+-75
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+-75
+0
+-1
+-1
+false
+walking_back
+WALKING_BACK
+DE
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+3
+150
+160
+500
+500
+150
+75
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+75
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+75
+0
+-1
+-1
+false
+crouch
+CROUCH
+AB
+NONE
+false
+HOLDABLE
+0
+false
+false
+180
+245
+120
+260
+2
+150
+160
+500
+500
+90
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+90
+0
+0
+-1
+-1
+false
+crouch_undo
+UNDO_CROUCH
+OMITIR1
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+90
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+90
+0
+0
+-1
+-1
+false
+soft_punch
+SOFT_PUNCH
+A
+Hit_1
+true
+ENDABLE
+7
+true
+42
+163
+137
+50
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+75
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+175
+0
+0
+-1
+-1
+false
+hard_punch
+HARD_PUNCH
+C
+Hit_2
+true
+ENDABLE
+10
+true
+21
+183
+121
+46
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+100
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+300
+0
+0
+-1
+-1
+false
+attack_poke
+ATTACK_POKE
+A
+Hit_2
+true
+ENDABLE
+8
+true
+15
+170
+130
+75
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+roll_front
+ROLL_FRONT
+OMITIR2
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+4
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+150
+0
+0
+-1
+-1
+false
+jump
+NORMAL_JUMP
+AR
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+250
+0
+-400
+-1
+-1
+false
+150
+160
+500
+500
+250
+0
+400
+-1
+290
+false
+jump_roll_right
+JUMP_ROLL_RIGHT
+AR-DE
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+6
+150
+160
+500
+500
+300
+200
+-444
+-1
+-1
+false
+150
+160
+500
+500
+100
+40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+300
+150
+600
+-1
+-1
+false
+thrown_out
+THROWN_OUT
+OMITIR3
+Hurt_2
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+8
+150
+160
+500
+500
+300
+50
+0
+-1
+-1
+true
+150
+160
+500
+500
+100
+150
+-125
+-1
+-1
+true
+150
+160
+500
+500
+300
+250
+125
+-1
+-1
+true
+150
+160
+500
+500
+400
+125
+-75
+-1
+-1
+true
+150
+160
+500
+500
+300
+125
+50
+-1
+-1
+true
+150
+160
+500
+500
+100
+0
+25
+-1
+-1
+true
+150
+160
+500
+500
+750
+0
+0
+-1
+-1
+true
+150
+160
+500
+500
+100
+0
+0
+-1
+-1
+true
+throw
+THROW
+DE-C
+NONE
+true
+ENDABLE
+15
+true
+15
+170
+130
+75
+false
+180
+110
+120
+390
+3
+150
+160
+500
+500
+300
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+100
+0
+0
+-1
+-1
+false
+150
+160
+500
+500
+1200
+0
+0
+-1
+-1
+false
+soft_knockback
+SOFT_KNOCKBACK
+OMITIR4
+Hurt_2
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+125
+-40
+0
+-1
+-1
+false
+150
+160
+500
+500
+125
+-40
+0
+-1
+-1
+false
+medium_knockback
+MEDIUM_KNOCKBACK
+OMITIR5
+Hurt_3
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+125
+-75
+0
+-1
+-1
+false
+150
+160
+500
+500
+125
+-75
+0
+-1
+-1
+false
+blocking
+STANDING_BLOCK
+IZ
+NONE
+true
+ENDABLE
+0
+false
+true
+150
+110
+60
+180
+180
+110
+120
+390
+1
+150
+160
+500
+500
+200
+0
+0
+-1
+-1
+false
+blocking
+STANDING_BLOCK_KNOCKBACK_SOFT
+OMITIR6
+Hurt_1
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+1
+150
+160
+500
+500
+200
+-40
+0
+-1
+-1
+false
+blocking
+STANDING_BLOCK_KNOCKBACK_HARD
+OMITIR7
+Hurt_1
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+1
+150
+160
+500
+500
+200
+-150
+0
+-1
+-1
+false
+jump_knockback
+JUMP_KNOCKBACK
+OMITIR8
+Hurt_2
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+5
+150
+160
+500
+500
+300
+-200
+-100
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+3000
+-1500
+6000
+-1
+290
+false
+jumping_punch_down
+JUMP_PUNCH_DOWN
+OMITIR12
+Hit_3
+true
+ENDABLE
+8
+true
+96
+354
+46
+54
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+100
+0
+0
+-1
+290
+false
+150
+160
+500
+500
+300
+0
+150
+-1
+290
+false
+jumping_punch_down
+JUMP_ROLL_PUNCH_DOWN
+OMITIR11
+Hit_3
+true
+ENDABLE
+8
+true
+96
+354
+46
+54
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+100
+0
+0
+-1
+290
+false
+150
+160
+500
+500
+400
+100
+300
+-1
+290
+false
+jump_fall
+JUMP_FALL
+OMITIR9
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+1
+150
+160
+500
+500
+3000
+0
+3000
+-1
+290
+true
+jump_fall
+JUMP_ROLL_FALL
+OMITIR10
+NONE
+true
+ENDABLE
+0
+false
+false
+180
+110
+120
+390
+1
+150
+160
+500
+500
+3000
+1500
+3000
+-1
+290
+true
+# ------------------------------------ MOVIMIENTO NUMERO 24 ------------------------------------
+# Carpeta de los frames
+kick1
+# Nombre del movimiento (Enum)
+HARD_KICK
+# Combinación de teclas
+D
+# Sonido asociado
+Hit_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+12
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+0
+#	Y hitbox
+196
+#	Anchura hitbox
+208
+#	Altura hitbox
+71
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+4
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+150
+# Y (IRRELEVANTE) 
+160
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+150
+# Y (IRRELEVANTE) 
+160
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+150
+# Y (IRRELEVANTE) 
+160
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 25 ------------------------------------
+# Carpeta de los frames
+kick2
+# Nombre del movimiento (Enum)
+SOFT_KICK
+# Combinación de teclas
+B
+# Sonido asociado
+Hit_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+8
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+71
+#	Y hitbox
+113
+#	Anchura hitbox
+137
+#	Altura hitbox
+108
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+150
+# Y (IRRELEVANTE) 
+160
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+75
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+150
+# Y (IRRELEVANTE) 
+160
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+200
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 26 ------------------------------------
+# Carpeta de los frames
+crouching_punch2
+# Nombre del movimiento (Enum)
+CROUCHING_HARD_PUNCH
+# Combinación de teclas
+AB-C
+# Sonido asociado
+Hit_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+15
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+0
+#	Y hitbox
+271
+#	Anchura hitbox
+142
+#	Altura hitbox
+54
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+200
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+200
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 27 ------------------------------------
+# Carpeta de los frames
+crouching_punch1
+# Nombre del movimiento (Enum)
+CROUCHING_SOFT_PUNCH
+# Combinación de teclas
+AB-A
+# Sonido asociado
+Hit_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+6
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+25
+#	Y hitbox
+279
+#	Anchura hitbox
+138
+#	Altura hitbox
+50
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 28 ------------------------------------
+# Carpeta de los frames
+crouching_kick2
+# Nombre del movimiento (Enum)
+CROUCHING_HARD_KICK
+# Combinación de teclas
+AB-D
+# Sonido asociado
+Hit_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+10
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+0
+#	Y hitbox
+250
+#	Anchura hitbox
+154
+#	Altura hitbox
+84
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+3
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 29 ------------------------------------
+# Carpeta de los frames
+crouching_kick1
+# Nombre del movimiento (Enum)
+CROUCHING_SOFT_KICK
+# Combinación de teclas
+AB-B
+# Sonido asociado
+Hit_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+5
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+47
+#	Y hitbox
+433
+#	Anchura hitbox
+79
+#	Altura hitbox
+63
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+3
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 30 ------------------------------------
+# Carpeta de los frames
+hook
+# Nombre del movimiento (Enum)
+HOOK
+# Combinación de teclas
+C
+# Sonido asociado
+Hit_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+10
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# 	X hitbox
+29
+#	Y hitbox
+255
+#	Anchura hitbox
+109
+#	Altura hitbox
+54
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+200
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+200
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 31 ------------------------------------
+# Carpeta de los frames
+dash
+# Nombre del movimiento (Enum)
+DASH
+# Combinación de teclas
+IZ+IZ
+# Sonido asociado
+NONE
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+4
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+-25
+# Incremento Y
+-30
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+-90
+# Incremento Y
+30
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 32 ------------------------------------
+# Carpeta de los frames
+blocking_crouch
+# Nombre del movimiento (Enum)
+CROUCHED_BLOCK
+# Combinación de teclas
+AB-IZ
+# Sonido asociado
+NONE
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+HOLDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+true
+# X coverbox
+183
+# Y coverbox
+254
+# Anchura coverbox
+200
+# Altura coverbox
+125
+# X hurtbox
+210
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+0
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 33 ------------------------------------
+# Carpeta de los frames
+crouching_knockback
+# Nombre del movimiento (Enum)
+CROUCHED_KNOCKBACK
+# Combinación de teclas
+OMITIR13
+# Sonido asociado
+Hurt_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+-75
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+-75
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 34 ------------------------------------
+# Carpeta de los frames
+crouch_walking
+# Nombre del movimiento (Enum)
+CROUCHED_WALKING
+# Combinación de teclas
+AB-DE
+# Sonido asociado
+NONE
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+50
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+50
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 35 ------------------------------------
+# Carpeta de los frames
+blocking_crouch
+# Nombre del movimiento (Enum)
+CROUCHED_BLOCK_KNOCKBACK
+# Combinación de teclas
+OMITIR14
+# Sonido asociado
+Hurt_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+210
+# Y hurtbox
+245
+# Anchura hurtbox
+120
+# Altura hurtbox
+260
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+-150
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 36 ------------------------------------
+# Carpeta de los frames
+charged_punch
+# Nombre del movimiento (Enum)
+CHARGED_PUNCH_A
+# Combinación de teclas
+AB+AB-IZ+IZ-A
+# Sonido asociado
+Special_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+20
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+0
+# Y hitbox
+167
+# Anchura hitbox
+146
+# Altura hitbox
+121
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+4
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+125
+# Incremento Y
+25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 37 ------------------------------------
+# Carpeta de los frames
+charged_punch
+# Nombre del movimiento (Enum)
+CHARGED_PUNCH_C
+# Combinación de teclas
+AB+AB-IZ+IZ-C
+# Sonido asociado
+Special_1
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+20
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+0
+# Y hitbox
+167
+# Anchura hitbox
+146
+# Altura hitbox
+121
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+4
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+125
+# Incremento X
+125
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+125
+# Incremento Y
+25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 38 ------------------------------------
+# Carpeta de los frames
+jumping_kick_down
+# Nombre del movimiento (Enum)
+JUMP_KICK_DOWN
+# Combinación de teclas
+OMITIR15
+# Sonido asociado
+Hit_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+13
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+79
+# Y hitbox
+163
+# Anchura hitbox
+75
+# Altura hitbox
+133
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+1
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1000
+# Incremento X
+0
+# Incremento Y
+1000
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+290
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 39 ------------------------------------
+# Carpeta de los frames
+jumping_kick
+# Nombre del movimiento (Enum)
+JUMP_KICK
+# Combinación de teclas
+OMITIR16
+# Sonido asociado
+Hit_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE / ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+11
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+0
+# Y hitbox
+438
+# Anchura hitbox
+75
+# Altura hitbox
+62
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+2
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+50
+# Incremento Y
+50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1000
+# Incremento X
+1300
+# Incremento Y
+1000
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+290
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 40 ------------------------------------
+jumping_punch_down
+JUMP_HARD_PUNCH_DOWN
+OMITIR17
+Hit_3
+true
+ENDABLE
+11
+true
+96
+354
+46
+54
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+100
+0
+0
+-1
+290
+false
+150
+160
+500
+500
+500
+0
+250
+-1
+290
+false
+# ------------------------------------ MOVIMIENTO NUMERO 41 ------------------------------------
+jumping_punch_down
+JUMP_ROLL_HARD_PUNCH_DOWN
+OMITIR18
+Hit_3
+true
+ENDABLE
+11
+true
+96
+354
+46
+54
+false
+180
+110
+120
+390
+2
+150
+160
+500
+500
+100
+0
+0
+-1
+290
+false
+150
+160
+500
+500
+600
+150
+450
+-1
+290
+false
+# ------------------------------------ MOVIMIENTO NUMERO 42 ------------------------------------
+# Carpeta de los frames
+victory2
+# Nombre del movimiento (Enum)
+VICTORY_FIGHT
+# Combinación de teclas
+OMITIR19
+# Sonido asociado
+Win
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+8
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+150
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 5 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+100
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 6 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+75
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 7 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+75
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 8 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+1200
+# Altura frame (500)
+1200
+# Tiempo transición
+5000
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 43 ------------------------------------
+# Carpeta de los frames
+victory1
+# Nombre del movimiento (Enum)
+VICTORY_ROUND
+# Combinación de teclas
+OMITIR20
+# Sonido asociado
+Win
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+3
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+120
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+120
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+5000
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 44 ------------------------------------
+# Carpeta de los frames
+knocked
+# Nombre del movimiento (Enum)
+DEFEAT
+# Combinación de teclas
+OMITIR21
+# Sonido asociado
+Defeat
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+4
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+300
+# Incremento X
+-50
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+300
+# Incremento X
+-50
+# Incremento Y
+25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+1000
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+5000
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 45 ------------------------------------
+# Carpeta de los frames
+jump_roll_left
+# Nombre del movimiento (Enum)
+JUMP_ROLL_LEFT
+# Combinación de teclas
+AR-IZ
+# Sonido asociado
+NONE
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+0
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+false
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+6
+150
+160
+500
+500
+300
+-200
+-444
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+100
+-40
+-39
+-1
+-1
+false
+150
+160
+500
+500
+300
+-150
+600
+-1
+-1
+false
+# ------------------------------------ MOVIMIENTO NUMERO 46 ------------------------------------
+# Carpeta de los frames
+reverse_kick
+# Nombre del movimiento (Enum)
+REVERSE_KICK_B
+# Combinación de teclas
+AB+AB-IZ+IZ-B
+# Sonido asociado
+Special_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+16
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+67
+# Y hitbox
+104
+# Anchura hitbox
+96
+# Altura hitbox
+179
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+3
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 47 ------------------------------------
+# Carpeta de los frames
+reverse_kick
+# Nombre del movimiento (Enum)
+REVERSE_KICK_D
+# Combinación de teclas
+AB+AB-IZ+IZ-D
+# Sonido asociado
+Special_3
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+16
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+67
+# Y hitbox
+104
+# Anchura hitbox
+96
+# Altura hitbox
+179
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+3
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+150
+# Incremento X
+75
+# Incremento Y
+25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 48 ------------------------------------
+# Carpeta de los frames
+spin_punch
+# Nombre del movimiento (Enum)
+SPIN_PUNCH_A
+# Combinación de teclas
+AB+AB+A
+# Sonido asociado
+Special_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+14
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+66
+# Y hitbox
+388
+# Anchura hitbox
+167
+# Altura hitbox
+50
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+5
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+120
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+25
+# Incremento Y
+-50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+25
+# Incremento Y
+-50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+10
+# Incremento Y
+-30
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 5 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+10
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------------------------------------ MOVIMIENTO NUMERO 49 ------------------------------------
+# Carpeta de los frames
+spin_punch
+# Nombre del movimiento (Enum)
+SPIN_PUNCH_C
+# Combinación de teclas
+AB+AB+C
+# Sonido asociado
+Special_2
+# ¿Tiene final? (true / false)
+true
+# Tipo de animación (NONE / ENDABLE,ENDLESS / HOLDABLE)
+ENDABLE
+# Daño que causa
+14
+# ¿Tiene hitbox? (true / false), siguientes solo si true
+true
+# X hitbox
+66
+# Y hitbox
+388
+# Anchura hitbox
+167
+# Altura hitbox
+50
+# ¿Tiene coverbox? (true / false), siguientes solo si true
+false
+# X hurtbox
+180
+# Y hurtbox
+110
+# Anchura hurtbox
+120
+# Altura hurtbox
+390
+# Número de frames de la animación
+5
+# ------ FRAME 1 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+120
+# Incremento X
+0
+# Incremento Y
+0
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 2 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+50
+# Incremento X
+25
+# Incremento Y
+-50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 3 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+25
+# Incremento Y
+-50
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 4 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+250
+# Incremento X
+10
+# Incremento Y
+-30
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
+# ------ FRAME 5 -------
+# X (IRRELEVANTE) 
+0
+# Y (IRRELEVANTE) 
+0
+# Anchura frame (500) 
+500
+# Altura frame (500)
+500
+# Tiempo transición
+100
+# Incremento X
+10
+# Incremento Y
+-25
+# X esperada (-1 si no se necesita)
+-1
+# Y esperada (-1 si no se necesita)
+-1
+# ¿Es imparable? (false)
+false
