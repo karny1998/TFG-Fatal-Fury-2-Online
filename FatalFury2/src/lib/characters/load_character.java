@@ -101,7 +101,6 @@ public class load_character {
             int nMovs = Integer.valueOf(b.readLine()), i = 0;
             Random random = new Random();
             int filterMethod = 1 + Math.abs(random.nextInt()) % 4;
-            //System.out.println(filterMethod);
 
             while((value = b.readLine())!=null && i < nMovs) {
                 if (value.charAt(0) == '#') {

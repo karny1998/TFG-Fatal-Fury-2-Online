@@ -89,7 +89,6 @@ public class user_controller extends character_controller{
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         this.x = this.player.getX();
         this.y = this.player.getY();
-
         if(rival == null) {
             return player.getFrame(mov, pHurt, eHurt, false);
         }

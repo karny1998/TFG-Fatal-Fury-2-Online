@@ -194,7 +194,7 @@ public class round {
 
         if(!hitsCollides && !playerHits && !enemyHits){
             // TENER CUIDADO CON LO DEL STATECHANGED
-            if(playerCovers && pStateChanged){
+            if(playerCovers){
                 int dmg = enemy.getPlayer().getDamage();
                 // KNOCKBACK CUBIERTO
                 if(dmg > 10) {
@@ -206,7 +206,7 @@ public class round {
                 player_old_state = player_act_state;
                 playerHit = true;
             }
-            if(enemyCovers && eStateChanged){
+            if(enemyCovers){
                 int dmg = player.getPlayer().getDamage();
                 // KNOCKBACK CUBIERTO
                 if(dmg > 10) {
@@ -238,7 +238,7 @@ public class round {
             if(playerState == Movement.THROW){
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
-            else if(enemyState == Movement.STANDING_BLOCK){
+            else if(enemyState == Movement.STANDING_BLOCK || enemyState == Movement.WALKING){
                 if(dmgP > 10) {
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, eHurt, pHurt);
                 }
@@ -282,7 +282,7 @@ public class round {
             if(enemyState == Movement.THROW){
                 player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
             }
-            else if(playerState == Movement.STANDING_BLOCK){
+            else if(playerState == Movement.STANDING_BLOCK || playerState == Movement.WALKING){
                 if(dmgE > 10) {
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, pHurt, eHurt);
                 }

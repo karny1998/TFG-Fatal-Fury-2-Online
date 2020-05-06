@@ -38,7 +38,7 @@ public class character {
     public character(Playable_Character c, int pN){
         charac = c;
         if(c == Playable_Character.MAI){
-            //generar movimientos de mai
+            new load_character().generateMovs("mai", pN, combos, movementsKeys, movements, 0.8);
         }
         else if(c == Playable_Character.ANDY){
             new load_character().generateMovs("andy", pN, combos, movementsKeys, movements, 0.8);
@@ -57,7 +57,6 @@ public class character {
         boolean collides = pHurt.collides(eHurt);
         boolean collidesLimitLeft = pHurt.getX() <= mapLimit.getX();
         boolean collidesLimitRight = pHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
-
         int dis = 0;
         if (pHurt.getX() > eHurt.getX()){
             dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
@@ -86,8 +85,7 @@ public class character {
             stateChanged = true;
         }
         else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())
-                && state != Movement.SPIN_PUNCH_C && state != Movement.SPIN_PUNCH_A
-                && state != Movement.JUMP_ROLL_FALL){
+                && !isSpecial(state) && state != Movement.JUMP_ROLL_FALL){
             movements.get(state).reset();
             if(gameResult == 1){
                 state = Movement.VICTORY_ROUND;
@@ -101,7 +99,7 @@ public class character {
             movements.get(state).start(999);
             stateChanged = true;
         }
-        else if ((state == Movement.SPIN_PUNCH_A || state == Movement.SPIN_PUNCH_C) && movements.get(state).ended()){
+        else if (isSpecial(state) && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = Movement.JUMP_ROLL_FALL;
             movements.get(state).start(dis);
@@ -383,6 +381,14 @@ public class character {
                 Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
+    }
+
+    boolean isSpecial(Movement m){
+        Movement array[] = {Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK,
+                Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
+                Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
+        List<Movement> attacks = Arrays.asList(array);
+        return attacks.contains(m);
     }
 
     //Getters y setters
