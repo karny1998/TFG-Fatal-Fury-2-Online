@@ -257,7 +257,7 @@ public class game_controller {
             else {
                 screenObjects.put(Item_Type.MENU, actualMenu.getFrame());
                 Pair<menu, Selectionable> p = actualMenu.select();
-                if (controlListener.getStatus(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
+                if (controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
                     if (p.getKey() == null) {
                         switch (p.getValue()) {
                             case EASY:
