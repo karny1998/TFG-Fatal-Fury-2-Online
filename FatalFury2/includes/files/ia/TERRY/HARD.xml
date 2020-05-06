@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ia>
+    <probabilidades>
+        <!--SALTOS-->
+        <NORMAL_JUMP>10</NORMAL_JUMP>
+        <JUMP_ROLL_RIGHT>20</JUMP_ROLL_RIGHT>
+        <JUMP_ROLL_LEFT>20</JUMP_ROLL_LEFT>
+        <!--DE PIE-->
+        <STANDING>40</STANDING>
+        <WALKING>30</WALKING>
+        <WALKING_BACK>250</WALKING_BACK>
+        <SOFT_PUNCH>70</SOFT_PUNCH>
+        <SOFT_KICK>40</SOFT_KICK>
+        <HARD_PUNCH>5</HARD_PUNCH>
+        <HARD_KICK>5</HARD_KICK>
+        <!--AGACHADO-->
+        <CROUCH>10</CROUCH>
+        <CROUCHED_WALKING>5</CROUCHED_WALKING>
+        <CROUCHED_BLOCK>50</CROUCHED_BLOCK>
+        <CROUCHING_SOFT_PUNCH>10</CROUCHING_SOFT_PUNCH>
+        <CROUCHING_SOFT_KICK>10</CROUCHING_SOFT_KICK>
+        <CROUCHING_HARD_PUNCH>70</CROUCHING_HARD_PUNCH>
+        <CROUCHING_HARD_KICK>40</CROUCHING_HARD_KICK>
+        <!--EXTRA-->
+        <THROW>25</THROW>
+        <DASH>50</DASH>
+        <!--ESPECIALES-->
+        <CHARGED_PUNCH_A>45</CHARGED_PUNCH_A>
+        <REVERSE_KICK_B>15</REVERSE_KICK_B>
+        <SPIN_PUNCH_A>15</SPIN_PUNCH_A>
+    </probabilidades>
+
+    <tipo_ia>
+        <caracteres> 2 </caracteres>
+        <ronda_1> B D </ronda_1>
+        <ronda_2> B D </ronda_2>
+        <ronda_3> B A  </ronda_3>
+        <ronda_4> B A </ronda_4>
+    </tipo_ia>
+
+    <tipo_procesamiento>
+        <processor_life_round_based> true </processor_life_round_based>
+        <processor_tendencies_player_based> false </processor_tendencies_player_based>
+    </tipo_procesamiento>
+
+    <pesos>
+        <!--RONDA 1-->
+        <tiempo> 0.2 </tiempo>
+        <vida_p1> 0.2 </vida_p1>
+        <vida_ia> 0.2  </vida_ia>
+        <ronda> 0.2 </ronda>
+        <victorias> 0.2 </victorias>
+        
+        <!--RONDA 2-->
+        <tiempo> 0.2 </tiempo>
+        <vida_p1> 0.2 </vida_p1>
+        <vida_ia> 0.2  </vida_ia>
+        <ronda> 0.2 </ronda>
+        <victorias> 0.2 </victorias>
+    
+        <!--RONDA 3-->
+        <tiempo> 0.2 </tiempo>
+        <vida_p1> 0.2 </vida_p1>
+        <vida_ia> 0.2  </vida_ia>
+        <ronda> 0.2 </ronda>
+        <victorias> 0.2 </victorias>
+
+        <!--RONDA 4-->
+        <tiempo> 0.2 </tiempo>
+        <vida_p1> 0.2 </vida_p1>
+        <vida_ia> 0.2  </vida_ia>
+        <ronda> 0.2 </ronda>
+        <victorias> 0.2 </victorias>
+    </pesos>
+
+
+</ia><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ia>
+    <probabilidades>
+        <!--SALTOS-->
+        <NORMAL_JUMP>40</NORMAL_JUMP>
+        <JUMP_ROLL_RIGHT>10</JUMP_ROLL_RIGHT>
+        <JUMP_ROLL_LEFT>10</JUMP_ROLL_LEFT>
+        <!--DE PIE-->
+        <STANDING>40</STANDING>
+        <WALKING>30</WALKING>
+        <WALKING_BACK>200</WALKING_BACK>
+        <SOFT_PUNCH>20</SOFT_PUNCH>
+        <SOFT_KICK>35</SOFT_KICK>
+        <HARD_PUNCH>35</HARD_PUNCH>
+        <HARD_KICK>35</HARD_KICK>
+        <!--AGACHADO-->
+        <CROUCH>30</CROUCH>
+        <CROUCHED_WALKING>25</CROUCHED_WALKING>
+        <CROUCHED_BLOCK>25</CROUCHED_BLOCK>
+        <CROUCHING_SOFT_PUNCH>20</CROUCHING_SOFT_PUNCH>
+        <CROUCHING_SOFT_KICK>30</CROUCHING_SOFT_KICK>
+        <CROUCHING_HARD_PUNCH>15</CROUCHING_HARD_PUNCH>
+        <CROUCHING_HARD_KICK>35</CROUCHING_HARD_KICK>
+        <!--EXTRA-->
+        <THROW>25</THROW>
+        <DASH>50</DASH>
+        <!--ESPECIALES-->
+        <CHARGED_PUNCH_A>20</CHARGED_PUNCH_A>
+        <REVERSE_KICK_B>20</REVERSE_KICK_B>
+        <SPIN_PUNCH_A>20</SPIN_PUNCH_A>
+    </probabilidades>
+
+    <tipo_ia>
+        <caracteres> 2 </caracteres>
+        <ronda_1> B D </ronda_1>
+        <ronda_2> A B </ronda_2>
+        <ronda_3> A B </ronda_3>
+        <ronda_4> A D </ronda_4>
+    </tipo_ia>
+
+    <tipo_procesamiento>
+        <processor_life_round_based> true </processor_life_round_based>
+        <processor_tendencies_player_based> false </processor_tendencies_player_based>
+    </tipo_procesamiento>
+
+    <pesos>
+        <!--RONDA 1-->
+        <tiempo> -0.3 </tiempo>
+        <vida_p1> 0.5 </vida_p1>
+        <vida_ia> 0.2  </vida_ia>
+        <ronda> 0 </ronda>
+        <victorias> 0 </victorias>
+        
+        <!--RONDA 2-->
+        <tiempo> -0.25 </tiempo>
+        <vida_p1> 0.5 </vida_p1>
+        <vida_ia> 0 </vida_ia>
+        <ronda> 0 </ronda>
+        <victorias> 0.25 </victorias>
+    
+        <!--RONDA 3-->
+        <tiempo> -0.4 </tiempo>
+        <vida_p1> 0.25 </vida_p1>
+        <vida_ia> 0.25 </vida_ia>
+        <ronda> 0.1 </ronda>
+        <victorias> 0 </victorias>
+
+        <!--RONDA 4-->
+        <tiempo> -0.4 </tiempo>
+        <vida_p1> 0.25 </vida_p1>
+        <vida_ia> 0.25 </vida_ia>
+        <ronda> 0.1 </ronda>
+        <victorias> 0 </victorias>
+    </pesos>
+
+
+</ia>
