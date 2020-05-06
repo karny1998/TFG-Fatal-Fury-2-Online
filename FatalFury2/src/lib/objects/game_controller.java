@@ -430,9 +430,10 @@ public class game_controller {
                     }
                     else{
                         state = GameState.NAVIGATION;
-                        actualMenu = principal;
+                        actualMenu = basicMenu;
                         principal.updateTime();
                     }
+                    timeReference = System.currentTimeMillis();
                     clearInterface(screenObjects);
                 }
             }
@@ -484,7 +485,8 @@ public class game_controller {
             if( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 fight.getScorePlayer().writeRankScore(askName.getName());
-                actualMenu = principal;
+                timeReference = System.currentTimeMillis();
+                actualMenu = gameMenu;
                 actualMenu.updateTime();
                 audio_manager.endFight();
                 state = GameState.NAVIGATION;

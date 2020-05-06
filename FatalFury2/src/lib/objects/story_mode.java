@@ -120,10 +120,10 @@ public class story_mode {
     void generateFight(){
         player = new user_controller(charac, 1);
         enemy = new enemy_controller(enemies[stage], 2);
-        enemy.getIa().setDif(lvlIa);
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
+        enemy.getIa().setDif(lvlIa);
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(scenarys[stage]);
         fight = new fight_controller(player,enemy,scene);
