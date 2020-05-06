@@ -34,7 +34,7 @@ public abstract  class character_controller {
         }
         else if(ch == Playable_Character.MAI){
             charac = "mai";
-            player = new character(Playable_Character.TERRY, pN);
+            player = new character(Playable_Character.MAI, pN);
             player.setX(x);
             player.setY(y);
             player.setOrientation(orientation);

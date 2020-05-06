@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
     // Segundos que dura una ronda
-    final int roundTime = 90;
+    final int roundTime = 10;
     // Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
     // Path
@@ -339,6 +339,12 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.BUBBLE4,enemyBubbles.get(1));
         // ANUNCIOS ENTRE RONDAS
         if (showIntro) {
+            List<screenObject> timerObjects;
+            if (noTimer) { timerObjects = timer.getTimer(); }
+            else { timerObjects = timer.getTimer(roundTime); }
+            screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
+            screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
+            screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
             Date date = new Date();
             long timePast = date.getTime() - introTimeStamp;
             if (timePast <= announcementTime && roundCounter == 0) {
@@ -403,6 +409,7 @@ public class fight_controller implements roundListener {
                 startedVictoryAnimation = false;
                 player.endStandBy();
                 enemy.endStandBy();
+                newRound = false;
                 startNewRound(roundCounter != 3);
             }
         }
@@ -544,6 +551,7 @@ public class fight_controller implements roundListener {
                 }
                 else {
                     showOutro = false;
+                    screenObjects.remove(Item_Type.ANNOUNCEMENT);
                     screenObjects.remove(Item_Type.ANNOUNCEMENT);
                     if (newRound) {
                         player.reset();
