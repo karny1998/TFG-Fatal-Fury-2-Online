@@ -57,6 +57,17 @@ public class ia_controller {
         for(int i = 0; i < processor.length; ++i) {
             processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], lvl, player, enemy, time, round, pWins);
         }
+
+        hitBox pHurt = player.getHurtbox();
+        hitBox eHurt = enemy.getHurtbox();
+        int dis = 0;
+        if (pHurt.getX() > eHurt.getX()){
+            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+        }
+        else if(pHurt.getX() < eHurt.getX()){
+            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+
         long current = System.currentTimeMillis();
         boolean timeOk = current - timeReference2 > 200.0;
         boolean timeOk2 = current - timeReference2 > 500.0;
@@ -68,7 +79,10 @@ public class ia_controller {
                 || timeOk && enemy.getState() == Movement.CROUCHED_WALKING
                 || timeOk2 && enemy.getState() == Movement.STANDING
                 || enemy.isJumping() && timeOk2){
-            Movement m = roulette.spinRoulette();
+            Movement m;
+            do {
+                m= roulette.spinRoulette();
+            }while(dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
             move = movementsKeys.get(m);
         }
     }

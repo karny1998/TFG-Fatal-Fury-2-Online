@@ -162,6 +162,11 @@ public class round {
     void collidesManagement(hitBox pHurt, hitBox eHurt){
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
+
+        if(player.getPlayer().inKnockback() || enemy.getPlayer().inKnockback()){
+            return;
+        }
+
         hitBox pHit = player.getPlayer().getHitbox();
         hitBox eHit = enemy.getPlayer().getHitbox();
         pHurt = player.getPlayer().getHurtbox();
