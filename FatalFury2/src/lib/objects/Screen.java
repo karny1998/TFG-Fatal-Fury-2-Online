@@ -48,6 +48,7 @@ public class Screen extends JPanel {
         setSurfaceSize();
         // Controlador del juego
         game = new game_controller();
+
         // Timer encargado del refresco de la pantalla
         Timer screen_refresh = new Timer(refreshDelay, new ActionListener() {
             @Override
