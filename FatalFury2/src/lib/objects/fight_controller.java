@@ -572,6 +572,7 @@ public class fight_controller implements roundListener {
                     if (newRound) {
                         player.reset();
                         enemy.reset();
+                        currentRound.setScenaryOffset(0);
                         if (roundCounter == 1) {
                             scene.setCurrentTime(Scenario_time.SUNSET);
                         }
