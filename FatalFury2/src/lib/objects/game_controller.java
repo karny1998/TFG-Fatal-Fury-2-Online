@@ -19,7 +19,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -98,7 +98,7 @@ public class game_controller {
             audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
-            fight.setVsIa(true);
+            fight.setVsIa(false);
         }
 
         if(state == GameState.OPENING_1){

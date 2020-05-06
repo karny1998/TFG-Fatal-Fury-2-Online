@@ -306,7 +306,7 @@ public class fight_controller implements roundListener {
         screenObjects.put(Item_Type.SCENARY_1, s1);
         screenObjects.put(Item_Type.SCENARY_2, s2);
         // TIMER
-        if (noTimer) {
+        if (noTimer && !showOutro) {
             screenObjects.remove(Item_Type.TIMER2);
             List<screenObject> timerObjects = timer.getTimer();
             screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
@@ -314,9 +314,9 @@ public class fight_controller implements roundListener {
         }
         else {
             List<screenObject> timerObjects = timer.getTimer(currentRound.getTimeLeft());
-            screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
-            screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
-            screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
+            screenObjects.put(Item_Type.TIMER1, timerObjects.get(0));
+            screenObjects.put(Item_Type.TIMER2, timerObjects.get(1));
+            screenObjects.put(Item_Type.TIMERFRAME, timerObjects.get(2));
         }
         // FRAMES DE BARRAS DE VIDA
         screenObjects.put(Item_Type.HPBAR1,new screenObject(136,58,414,30,bar_player, Item_Type.HPBAR1));
@@ -346,7 +346,7 @@ public class fight_controller implements roundListener {
             else { timerObjects = timer.getTimer(roundTime); }
             screenObjects.put(Item_Type.TIMER1,timerObjects.get(0));
             screenObjects.put(Item_Type.TIMER2,timerObjects.get(1));
-            screenObjects.put(Item_Type.TIMERFRAME,timerObjects.get(2));
+            if (!noTimer) { screenObjects.put(Item_Type.TIMERFRAME, timerObjects.get(2)); }
             Date date = new Date();
             long timePast = date.getTime() - introTimeStamp;
             if (timePast <= announcementTime && roundCounter == 0) {
@@ -416,6 +416,12 @@ public class fight_controller implements roundListener {
             }
         }
         if (showOutro) {
+            if (roundCounter == 4) {
+                screenObjects.remove(Item_Type.TIMER2);
+                List<screenObject> timerObjects = timer.getTimer();
+                screenObjects.put(Item_Type.TIMER1, timerObjects.get(0));
+                screenObjects.put(Item_Type.TIMERFRAME, timerObjects.get(1));
+            }
             // Pose de victoria de ronda
             if (!startedVictoryAnimation) {
                 switch (results.get(roundCounter-1)) {
