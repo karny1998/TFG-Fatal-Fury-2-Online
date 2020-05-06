@@ -139,6 +139,8 @@ public class fight_controller implements roundListener {
         round_extra = new ImageIcon(this.getClass().getResource(path+"/announcer/final_round.png")).getImage();
         double_ko = new ImageIcon(this.getClass().getResource(path+"/announcer/double_ko.png")).getImage();
         terry_win = new ImageIcon(this.getClass().getResource(path+"/announcer/terry_win.png")).getImage();
+        andy_win = new ImageIcon(this.getClass().getResource(path+"/announcer/andy_win.png")).getImage();
+        mai_win = new ImageIcon(this.getClass().getResource(path+"/announcer/mai_win.png")).getImage();
         player.startStandBy();
         enemy.startStandBy();
         fight_result = Fight_Results.UNFINISHED;
@@ -477,8 +479,10 @@ public class fight_controller implements roundListener {
                                 screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, terry_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case MAI:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, mai_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case ANDY:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, andy_win, Item_Type.ANNOUNCEMENT));
                                 break;
                         }
                     }
@@ -493,8 +497,10 @@ public class fight_controller implements roundListener {
                                 screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, terry_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case MAI:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, mai_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case ANDY:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, andy_win, Item_Type.ANNOUNCEMENT));
                                 break;
                         }
                     }
@@ -527,8 +533,10 @@ public class fight_controller implements roundListener {
                                 screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, terry_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case MAI:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, mai_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case ANDY:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, andy_win, Item_Type.ANNOUNCEMENT));
                                 break;
                         }
                     }
@@ -543,8 +551,10 @@ public class fight_controller implements roundListener {
                                 screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, terry_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case MAI:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, mai_win, Item_Type.ANNOUNCEMENT));
                                 break;
                             case ANDY:
+                                screenObjects.put(Item_Type.ANNOUNCEMENT, new screenObject(440, 345, 400, 40, andy_win, Item_Type.ANNOUNCEMENT));
                                 break;
                         }
                     }
