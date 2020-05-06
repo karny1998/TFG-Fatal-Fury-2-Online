@@ -34,7 +34,7 @@ public class load_character {
                     return rgb;
                 }
                 if(
-                        (charac.equals("terry") && ((double)currentColor.getBlue()/(double)currentColor.getRed()) < 0.5 && ((double)currentColor.getGreen()/(double)currentColor.getRed()) < 0.5)
+                        ((charac.equals("terry") || charac.equals("mai")) && ((double)currentColor.getBlue()/(double)currentColor.getRed()) < 0.5 && ((double)currentColor.getGreen()/(double)currentColor.getRed()) < 0.5)
                 ){
                     Color c;
                     if(method == 2) {

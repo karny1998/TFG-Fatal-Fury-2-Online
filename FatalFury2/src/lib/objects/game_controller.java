@@ -19,7 +19,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -87,7 +87,7 @@ public class game_controller {
 
         if(debug && state != GameState.FIGHT){
             user = new user_controller(Playable_Character.MAI, 1);
-            enemy = new user_controller(Playable_Character.ANDY, 2);
+            enemy = new user_controller(Playable_Character.MAI, 2);
             enemy.setPlayerNum(2);
             enemy.setRival(user.getPlayer());
             enemy.getPlayer().setMapLimit(mapLimit);
@@ -99,7 +99,6 @@ public class game_controller {
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
             fight.setVsIa(true);
-            //state = GameState.OPTIONS;
         }
 
         if(state == GameState.OPENING_1){
