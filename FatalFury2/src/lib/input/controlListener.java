@@ -88,45 +88,46 @@ public class controlListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        this.keyStatus[e.getKeyCode()] = true;
-        lastKey = e.getKeyCode();
-        for(int i = 0; i < keyBindings1.length; i++){
-            if(e.getKeyCode() == keyBindings1[i]){
-                mando1[i] = true;
-                menus1[i] = true;
-                this.inputQueue_1.add(e.getKeyCode());
-                if(this.inputQueue_1.size() > this.QUEUE_SIZE){
-                    this.inputQueue_1.remove();
-                }
+        if(e.getKeyCode() < keyStatus.length){
+            this.keyStatus[e.getKeyCode()] = true;
+            lastKey = e.getKeyCode();
+            for(int i = 0; i < keyBindings1.length; i++){
+                if(e.getKeyCode() == keyBindings1[i]){
+                    mando1[i] = true;
+                    menus1[i] = true;
+                    this.inputQueue_1.add(e.getKeyCode());
+                    if(this.inputQueue_1.size() > this.QUEUE_SIZE){
+                        this.inputQueue_1.remove();
+                    }
 
-            }
-            if(e.getKeyCode() == keyBindings2[i]){
-                mando2[i] = true;
-                menus2[i] = true;
-                this.inputQueue_2.add(e.getKeyCode());
-                if(this.inputQueue_2.size() > this.QUEUE_SIZE){
-                    this.inputQueue_2.remove();
+                }
+                if(e.getKeyCode() == keyBindings2[i]){
+                    mando2[i] = true;
+                    menus2[i] = true;
+                    this.inputQueue_2.add(e.getKeyCode());
+                    if(this.inputQueue_2.size() > this.QUEUE_SIZE){
+                        this.inputQueue_2.remove();
+                    }
                 }
             }
         }
-
-
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        this.keyStatus[e.getKeyCode()] = false;
-        for(int i = 0; i < keyBindings1.length; i++){
-            if(e.getKeyCode() == keyBindings1[i]){
-                mando1[i] = false;
+        if(e.getKeyCode() < keyStatus.length) {
+            this.keyStatus[e.getKeyCode()] = false;
+            for (int i = 0; i < keyBindings1.length; i++) {
+                if (e.getKeyCode() == keyBindings1[i]) {
+                    mando1[i] = false;
+                }
+                if (e.getKeyCode() == keyBindings2[i]) {
+                    mando2[i] = false;
+                }
             }
-            if(e.getKeyCode() == keyBindings2[i]){
-                mando2[i] = false;
-            }
+            lastKey = -1;
+            currentKey = -1;
         }
-        lastKey = -1;
-        currentKey = -1;
     }
 
 
