@@ -239,6 +239,11 @@ public class character {
             }
         }
 
+        if(s.getY() > 290){
+            y = 290;
+            s.setY(290);
+        }
+
         // Gestión de colisiones
         if (gameResult == 2 && stateChanged && charac == Playable_Character.TERRY) {
             s.setY(-270);
