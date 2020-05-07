@@ -274,6 +274,8 @@ public class character {
         }
         else if(state == Movement.THROWN_OUT){
             x = s.getX();
+        } else if(state == Movement.THROW){
+            s.setX(x);
         }
         else if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;

@@ -24,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
