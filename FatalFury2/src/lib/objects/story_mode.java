@@ -53,11 +53,11 @@ public class story_mode {
     }
 
     void loadGame(){
-        String path = "/files/last_game.txt";
+        String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         boolean newGame = true;
         try {
-            InputStream f = this.getClass().getResourceAsStream(path);
-            BufferedReader b = new BufferedReader(new InputStreamReader(f));
+            File f = new File(path);
+            BufferedReader b = new BufferedReader(new FileReader(f));
             String aux = "";
             if ((aux = b.readLine()) != null) {
                 lvlIa = ia_loader.dif.valueOf(aux);
@@ -90,7 +90,7 @@ public class story_mode {
     }
 
     void saveGame(){
-        String path = "/files/last_game.txt";
+        String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         File f= new File(path);
         f.delete();
         f= new File(path);
@@ -206,7 +206,7 @@ public class story_mode {
                         break;
                 }
                 state = GameState.STORY_MENU;
-                if(actualMenu == winMenu && stage == 0){
+                if(actualMenu == winMenu && stage == 8){
                     state = GameState.STORY_END;
                     timeReference = current;
                 }

@@ -8,9 +8,7 @@ import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class ask_for_name {
     private String name = "";
@@ -23,15 +21,17 @@ public class ask_for_name {
         loadAnim();
         String path = System.getProperty("user.dir") + "/.files/last_name.txt";
         try {
-            InputStream f = this.getClass().getResourceAsStream(path);
-            BufferedReader b = new BufferedReader(new InputStreamReader(f));
+            File f = new File(path);
+            BufferedReader b = new BufferedReader(new FileReader(f));
             String aux = "";
             if ((aux = b.readLine()) != null) {
                 name = aux;
             }
             b.close();
         }
-        catch (Exception e){}
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void loadAnim(){

@@ -51,6 +51,16 @@ public class Principal extends JFrame {
                 }
             }
 
+            f = new File(ruta+"/last_game.txt");
+            if(!f.exists()) {
+                // Crear copia del fichero de opciones
+                try {
+                    fileUtils.copy(origen+"last_game.txt", ruta+"/last_game.txt");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } else {
             new File(ruta).mkdirs();
             // Crear copia del fichero de opciones
@@ -70,6 +80,12 @@ public class Principal extends JFrame {
             // Crear copia del fichero de nombres
             try {
                 fileUtils.copy(origen+"last_name.txt", ruta+"/last_name.txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                fileUtils.copy(origen+"last_game.txt", ruta+"/last_game.txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }

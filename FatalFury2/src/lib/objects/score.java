@@ -50,13 +50,17 @@ public class score {
             bw.write(name);
             bw.close();
         }
-        catch (Exception e){}
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void writeRankScore(String name){
         saveLastName(name);
 
         List<Pair<String, Integer>> list = readRankScores(false);
+
+
         File f= new File(path);
         f.delete();
         f= new File(path);
