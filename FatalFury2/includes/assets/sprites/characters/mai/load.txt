@@ -44,10 +44,10 @@ ENDABLE
 0
 false
 true
-150
-110
-180
-180
+185
+192
+160
+160
 210
 187
 101
@@ -215,10 +215,10 @@ true
 ENDABLE
 6
 true
-58
-171
-134
-67
+0
+255
+173
+34
 false
 210
 187
@@ -254,10 +254,10 @@ true
 ENDABLE
 9
 true
-28
-175
-133
-50
+0
+83
+91
+101
 false
 170
 187
@@ -403,10 +403,10 @@ true
 ENDABLE
 15
 true
-163
-183
-44
-54
+0
+271
+191
+79
 false
 210
 187
@@ -463,11 +463,11 @@ ENDABLE
 0
 false
 true
-150
-110
-180
-180
-210
+200
+192
+160
+160
+230
 187
 101
 313
@@ -541,10 +541,10 @@ true
 ENDABLE
 7
 true
-87
-316
-80
-63
+38
+335
+108
+103
 false
 210
 187
@@ -580,10 +580,10 @@ true
 ENDABLE
 7
 true
-87
-316
-80
-63
+38
+335
+108
+103
 false
 210
 187
@@ -598,7 +598,7 @@ false
 200
 350
 -1
-290
+-1
 false
 150
 160
@@ -619,10 +619,10 @@ true
 ENDABLE
 10
 true
-87
-316
-80
-63
+38
+335
+108
+103
 false
 210
 187
@@ -635,17 +635,17 @@ false
 500
 350
 0
-0
+350
 -1
-290
+-1
 false
 150
 160
 500
 500
 150
-100
-225
+0
+150
 -1
 290
 false
@@ -658,10 +658,10 @@ true
 ENDABLE
 10
 true
-87
-316
-80
-63
+38
+335
+108
+103
 false
 210
 187
@@ -673,10 +673,10 @@ false
 500
 500
 350
-0
-0
+200
+350
 -1
-290
+-1
 false
 150
 160
@@ -684,7 +684,7 @@ false
 500
 150
 100
-225
+150
 -1
 290
 false
@@ -756,13 +756,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-144
+45
 #	Y hitbox
-49
+125
 #	Anchura hitbox
-84
+102
 #	Altura hitbox
-146
+90
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -835,13 +835,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-84
+0
 #	Y hitbox
-225
+233
 #	Anchura hitbox
-128
+160
 #	Altura hitbox
-92
+50
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -914,17 +914,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-43
+20
 #	Y hitbox
-279
+275
 #	Anchura hitbox
-85
+88
 #	Altura hitbox
-65
+93
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+110
 # Y hurtbox
 297
 # Anchura hurtbox
@@ -1014,17 +1014,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-54
+20
 #	Y hitbox
-278
+275
 #	Anchura hitbox
-125
+88
 #	Altura hitbox
-64
+93
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+110
 # Y hurtbox
 297
 # Anchura hurtbox
@@ -1116,15 +1116,15 @@ true
 # 	X hitbox
 0
 #	Y hitbox
-390
+380
 #	Anchura hitbox
-225
+172
 #	Altura hitbox
-51
+41
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+210
 # Y hurtbox
 297
 # Anchura hurtbox
@@ -1214,13 +1214,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-95
+3
 #	Y hitbox
-158
+239
 #	Anchura hitbox
-100
+124
 #	Altura hitbox
-63
+119
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -1471,21 +1471,21 @@ false
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 true
 # X coverbox
-183
+196
 # Y coverbox
-254
+249
 # Anchura coverbox
-200
-# Altura coverbox
-125
-# X hurtbox
 168
+# Altura coverbox
+149
+# X hurtbox
+237
 # Y hurtbox
-297
+250
 # Anchura hurtbox
 108
 # Altura hurtbox
-203
+250
 # Número de frames de la animación
 1
 # ------ FRAME 1 -------
@@ -1529,7 +1529,7 @@ false
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+198
 # Y hurtbox
 297
 # Anchura hurtbox
@@ -1600,13 +1600,13 @@ false
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+237
 # Y hurtbox
-297
+250
 # Anchura hurtbox
 108
 # Altura hurtbox
-203
+250
 # Número de frames de la animación
 1
 # ------ FRAME 1 -------
@@ -1648,13 +1648,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-150
+171
 # Y hitbox
-140
+276
 # Anchura hitbox
-60
+71
 # Altura hitbox
-104
+146
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -1706,13 +1706,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-0
+96
 # Y hitbox
-423
+414
 # Anchura hitbox
-150
+121
 # Altura hitbox
-68
+86
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -1785,17 +1785,17 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-12
+0
 #	Y hitbox
-320
+380
 #	Anchura hitbox
-150
+172
 #	Altura hitbox
-75
+41
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
-168
+210
 # Y hurtbox
 297
 # Anchura hurtbox
@@ -2672,13 +2672,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-117
+119
 # Y hitbox
-207
+285
 # Anchura hitbox
-85
+86
 # Altura hitbox
-75
+144
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -2814,13 +2814,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-117
+119
 # Y hitbox
-207
+285
 # Anchura hitbox
-85
+86
 # Altura hitbox
-75
+144
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -2956,13 +2956,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-73
+42
 # Y hitbox
-76
+248
 # Anchura hitbox
-162
+184
 # Altura hitbox
-232
+61
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -3098,13 +3098,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-73
+42
 # Y hitbox
-76
+248
 # Anchura hitbox
-162
+184
 # Altura hitbox
-232
+61
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -3240,13 +3240,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-124
+78
 # Y hitbox
-395
+264
 # Anchura hitbox
-139
+114
 # Altura hitbox
-106
+237
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -3382,13 +3382,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # X hitbox
-124
+78
 # Y hitbox
-395
+264
 # Anchura hitbox
-139
+114
 # Altura hitbox
-106
+237
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox
@@ -3524,13 +3524,13 @@ ENDABLE
 # ¿Tiene hitbox? (true / false), siguientes solo si true
 true
 # 	X hitbox
-95
+3
 #	Y hitbox
-158
+239
 #	Anchura hitbox
-100
+124
 #	Altura hitbox
-63
+119
 # ¿Tiene coverbox? (true / false), siguientes solo si true
 false
 # X hurtbox

@@ -22,7 +22,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -94,7 +94,7 @@ public class game_controller {
 
         if(debug && state != GameState.FIGHT){
             user = new user_controller(Playable_Character.MAI, 1);
-            enemy = new user_controller(Playable_Character.MAI, 2);
+            enemy = new user_controller(Playable_Character.TERRY, 2);
             enemy.setPlayerNum(2);
             enemy.setRival(user.getPlayer());
             enemy.getPlayer().setMapLimit(mapLimit);
@@ -461,17 +461,20 @@ public class game_controller {
                         // Sale del juego
                         case MAP_USA:
                             scene = new scenary(Scenario_type.USA);
+                            map = Scenario_type.USA;
                             break;
                         case MAP_AUS:
                             scene = new scenary(Scenario_type.AUSTRALIA);
+                            map = Scenario_type.AUSTRALIA;
                             break;
                         // Inica una partida
                         case MAP_CHI:
                             scene = new scenary(Scenario_type.CHINA);
+                            map = Scenario_type.CHINA;
                             break;
                     }
 
-                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
+                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), map);
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(!pvp);
