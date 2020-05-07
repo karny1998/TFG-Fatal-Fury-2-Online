@@ -76,6 +76,7 @@ public class story_mode {
             b.close();
             if(!newGame) {
                 state = GameState.STORY_LOADING;
+                audio_manager.endFight();
             }
             else{
                 state = GameState.STORY_DIFFICULTY;
@@ -167,6 +168,7 @@ public class story_mode {
                 playing = true;
             }
             else if(current - timeReference < 3000.0 && current - timeReference > 200.0 && playing){
+                audio_manager.menu.stop(menu_audio.indexes.menu_theme);
                 audio_manager.menu.play(menu_audio.indexes.Terry);
                 try {
                     Thread.sleep(1000);
@@ -229,6 +231,8 @@ public class story_mode {
                     switch (p.getValue()) {
                         case LOSE_EXIT:
                             exit = true;
+                            audio_manager.endFight();
+                            audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                             break;
                         case LOSE_RETRY:
                             generateFight();
@@ -243,10 +247,11 @@ public class story_mode {
                             ++stage;
                             saveGame();
                             exit = true;
+                            audio_manager.endFight();
+                            audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                             break;
                     }
-                    audio_manager.menu.stop(menu_audio.indexes.menu_theme);
-                    audio_manager.endFight();
+
                 }
             }
         }

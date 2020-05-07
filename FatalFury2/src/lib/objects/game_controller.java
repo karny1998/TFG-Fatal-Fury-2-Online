@@ -24,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -567,6 +567,8 @@ public class game_controller {
                         actualMenu.updateTime();
                         state = GameState.NAVIGATION;
                         clearInterface(screenObjects);
+                        audio_manager.endFight();
+                        audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                         break;
                     // Salir del juego
                     case ESCAPE_EXIT:
