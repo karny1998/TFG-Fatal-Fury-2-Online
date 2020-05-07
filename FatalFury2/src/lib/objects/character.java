@@ -126,7 +126,7 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
-        else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended()
+        else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended() && y < -90
                 && (mov.endsWith("-A") ||  mov.endsWith("-B") ||  mov.endsWith("-C") ||  mov.endsWith("-D")
                     || mov.equals("A") || mov.equals("B") || mov.equals("C") || mov.equals("D"))){
             movements.get(state).getAnim().reset();
@@ -274,9 +274,12 @@ public class character {
         }
         else if(state == Movement.THROWN_OUT){
             x = s.getX();
-        } else if(state == Movement.THROW){
+        }
+        //////////////////////////////////////////////////////////
+        else if(state == Movement.THROW){
             s.setX(x);
         }
+        //////////////////////////////////////////////////////////
         else if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
             int increment = orientation;
             if(orientation == 1 && pHurt.getX() < eHurt.getX()
