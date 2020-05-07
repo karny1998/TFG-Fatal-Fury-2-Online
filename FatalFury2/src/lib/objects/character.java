@@ -229,6 +229,11 @@ public class character {
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
+        if(state == Movement.STANDING && y != 290){
+            y = 290;
+            s.setY(290);
+        }
+
         if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
                 movements.get(state).ended() && !stateChanged && s.getY() == y
                 && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE
