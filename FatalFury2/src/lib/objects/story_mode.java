@@ -42,6 +42,7 @@ public class story_mode {
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai,
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai};
 
+    private boolean stopMusic = false;
     public story_mode(){
         loadGame();
         loadLoadScreens();
@@ -188,6 +189,14 @@ public class story_mode {
         }
         else if(state == GameState.STORY_FIGHT){
             fight.getAnimation(screenObjects);
+            if(fight.showIntro  || fight.showOutro){
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                stopMusic = true;
+            } else if(stopMusic){
+                audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+                stopMusic = false;
+            }
+
             if (fight.getEnd()) {
                 Fight_Results resultado = fight.getFight_result();
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
@@ -256,6 +265,7 @@ public class story_mode {
                 int aux2 = (int)(aux / 200.0) % 2;
                 screenObjects.put(Item_Type.MENU, ends[aux2+1]);
             }
+
         }
         return new Pair<>(exit, state);
     }

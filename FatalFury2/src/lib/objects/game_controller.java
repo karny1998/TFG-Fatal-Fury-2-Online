@@ -11,9 +11,11 @@ import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 import lib.utils.Pair;
+import lib.utils.fileUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
@@ -22,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -616,6 +618,15 @@ public class game_controller {
                 Pair<Boolean, GameState> aux = story.getAnimation(screenObjects);
                 state = aux.getValue();
                 if (aux.getKey()) {
+                    if(state == GameState.STORY_END){
+                        String ruta =  System.getProperty("user.dir") + "/.files";
+                        String origen = "/files/";
+                        try {
+                            fileUtils.copy(origen+"last_game.txt", ruta+"/last_game.txt");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     clearInterface(screenObjects);
                     screenObjects.remove(Item_Type.MENU);
                     state = GameState.NAVIGATION;

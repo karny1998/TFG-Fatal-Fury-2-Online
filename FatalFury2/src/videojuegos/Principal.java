@@ -25,7 +25,7 @@ public class Principal extends JFrame {
             if(!f.exists()) {
                 // Crear copia del fichero de opciones
                 try {
-                    fileUtils.copy(origen+"options_bak.xml", ruta+"/options.xml");
+                    fileUtils.copy(origen+"options.xml", ruta+"/options.xml");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -65,7 +65,7 @@ public class Principal extends JFrame {
             new File(ruta).mkdirs();
             // Crear copia del fichero de opciones
             try {
-                fileUtils.copy(origen+"options_bak.xml", ruta+"/options.xml");
+                fileUtils.copy(origen+"options.xml", ruta+"/options.xml");
             } catch (IOException e) {
                 e.printStackTrace();
             }

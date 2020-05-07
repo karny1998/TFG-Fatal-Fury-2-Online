@@ -131,7 +131,7 @@ public class controlListener implements KeyListener {
 
 
     public static int getCurrentKey(){
-        return (int)currentKey;
+        return (int) currentKey;
     }
 
 
@@ -223,8 +223,6 @@ public class controlListener implements KeyListener {
             default:
                 throw new RuntimeException("Invalid player number");
         }
-
-
     }
     //hasta que no se haya levantado el boton no se toma como nuevo input
 
@@ -288,6 +286,7 @@ public class controlListener implements KeyListener {
 
 
     }
+
 
 
 
