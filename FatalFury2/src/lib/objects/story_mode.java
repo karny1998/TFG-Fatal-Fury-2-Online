@@ -235,7 +235,9 @@ public class story_mode {
                             audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                             break;
                         case LOSE_RETRY:
-                            generateFight();
+                            state = GameState.STORY_LOADING;
+                            audio_manager.endFight();
+                            timeReference = System.currentTimeMillis();
                             break;
                         case WIN_CONTINUE:
                             ++stage;
