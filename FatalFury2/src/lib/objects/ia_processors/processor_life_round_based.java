@@ -17,7 +17,7 @@ public class processor_life_round_based extends ia_processor {
     private int lastRound = 0;
     private int lastWins = -1;
 
-    public processor_life_round_based(){}
+    public processor_life_round_based(){super();}
 
     private void updateProbs(russian_roulette roulette, ia_type type, double empowerment){
         if(roulette.isBasic()){
