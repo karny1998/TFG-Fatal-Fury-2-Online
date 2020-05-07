@@ -229,7 +229,15 @@ public class character {
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
-        if(state == Movement.STANDING && y != 290){
+        /*if(state == Movement.STANDING && y != 290){
+            y = 290;
+            s.setY(290);
+        }*/
+        if(state == Movement.STANDING && s.getY() < 290){
+            state = Movement.JUMP_FALL;
+            s =  movements.get(state).getFrame(x,y, orientation);
+        }
+        else if(state == Movement.STANDING && s.getY() > 290){
             y = 290;
             s.setY(290);
         }
