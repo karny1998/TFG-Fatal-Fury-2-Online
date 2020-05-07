@@ -1,2 +1,2 @@
-NORMAL
-2
+EASY
+8

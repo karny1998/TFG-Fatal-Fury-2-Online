@@ -263,6 +263,7 @@ public class story_mode {
                 exit = true;
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
+                audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.menu_theme);
             }
             else{
