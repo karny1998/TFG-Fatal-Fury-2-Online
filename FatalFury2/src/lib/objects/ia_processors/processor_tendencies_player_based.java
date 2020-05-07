@@ -14,7 +14,7 @@ import java.util.List;
 public class processor_tendencies_player_based extends ia_processor {
     private int lastSize = 0;
 
-    public  processor_tendencies_player_based(){}
+    public  processor_tendencies_player_based(){super();}
 
     private void updateProbs(russian_roulette roulette, ia_type type, double pHighAttacks, double pLowAttacks,
                              double pJump, double pSpecial, double pGetGloser, double pRunAway){
