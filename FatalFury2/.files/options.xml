@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
 <opciones>
     <volumen>
-        <vol_general>100</vol_general>
+        <vol_general>50</vol_general>
         <vol_musica>100</vol_musica>
         <vol_voces>100</vol_voces>
         <vol_efectos>100</vol_efectos>

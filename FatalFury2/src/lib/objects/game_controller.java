@@ -563,7 +563,7 @@ public class game_controller {
                         break;
                     // Volver al menú de juego
                     case ESCAPE_BACK:
-                        actualMenu = p.getKey();
+                        actualMenu = gameMenu;
                         actualMenu.updateTime();
                         state = GameState.NAVIGATION;
                         clearInterface(screenObjects);
