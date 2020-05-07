@@ -53,7 +53,7 @@ public class ask_for_name {
     public  void writeName(Graphics2D g){
         long current = System.currentTimeMillis();
         boolean ok = false;
-       if(current - timeReference > 100.0){
+       if(current - timeReference > 50.0){
             timeReference = current;
             ok = true;
         }

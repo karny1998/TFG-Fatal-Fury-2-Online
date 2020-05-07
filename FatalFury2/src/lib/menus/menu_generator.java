@@ -45,7 +45,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_game.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_game.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -58,7 +58,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_ranking.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_ranking.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -70,7 +70,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_options.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_options.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -82,7 +82,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "principal_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -105,7 +105,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_history.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_history.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -117,7 +117,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_multiplayer.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_multiplayer.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -129,7 +129,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_ia.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_ia.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -151,7 +151,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_resume.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_resume.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -163,7 +163,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_back.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_back.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -176,7 +176,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_basic.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "escape_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -202,7 +202,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_save.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_save.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -214,7 +214,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_continue.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "win_menu_continue.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -237,7 +237,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_retry.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_retry.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -249,7 +249,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "lose_menu_exit.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -272,7 +272,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_easy.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_easy.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -284,7 +284,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_normal.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_normal.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -296,7 +296,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_hard.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_hard.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -308,7 +308,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_veryhard.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_base.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "dificulty_veryhard.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -331,7 +331,7 @@ public class menu_generator {
         a.setHasEnd(false);
         screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_usa_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_usa_OFF.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_usa_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -343,7 +343,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_aus_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_aus_OFF.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_aus_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
@@ -355,7 +355,7 @@ public class menu_generator {
         a.setHasEnd(false);
         s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_chi_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.0,0,0);
-        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_chi_OFF.png")).getImage(), Item_Type.MENU);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "map_chi_ON.png")).getImage(), Item_Type.MENU);
         a.addFrame(s,500.00,0,0);
         a.setHasSound(false);
         a.setSoundType(fight_audio.voice_indexes.Win);
