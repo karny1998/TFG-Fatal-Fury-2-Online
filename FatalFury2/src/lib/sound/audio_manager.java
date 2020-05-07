@@ -49,9 +49,9 @@ public class audio_manager {
 
     public static void endFight(){
         if (actual == estado.PELEA){
-            menu = new menu_audio();
-            menu.update(volumen_musica, volumen_sfx, volumen_voces);
             fight.close();
+            menu = new menu_audio();
+            menu.update_init(volumen_musica, volumen_sfx, volumen_voces);
             actual = estado.MENUS;
         }
     }

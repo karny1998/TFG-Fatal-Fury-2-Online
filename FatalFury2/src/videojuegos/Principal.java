@@ -78,7 +78,7 @@ public class Principal extends JFrame {
 
         controlListener control = new controlListener();
 
-        audio_manager audio = new audio_manager();
+        new audio_manager();
 
         addKeyListener(control);
 

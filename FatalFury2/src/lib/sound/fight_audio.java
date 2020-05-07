@@ -277,20 +277,16 @@ public class fight_audio {
 
 
     private void updateMusic(double mus){
-        stopMusic(music_indexes.map_theme);
+
         FloatControl gainControl = (FloatControl) music[music_indexes.map_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(mus));
-        resumeMusic(music_indexes.map_theme);
 
-        stopMusic(music_indexes.win_theme);
         gainControl = (FloatControl) music[music_indexes.win_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(mus));
-        resumeMusic(music_indexes.win_theme);
 
-        stopMusic(music_indexes.lose_theme);
         gainControl = (FloatControl) music[music_indexes.lose_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(mus));
-        resumeMusic(music_indexes.lose_theme);
+
     }
 
 

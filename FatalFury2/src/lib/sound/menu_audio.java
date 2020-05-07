@@ -73,6 +73,36 @@ public class menu_audio {
         }
     }
 
+    public void update_init(double mus, double sfx, double voices){
+
+        FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(mus));
+
+        gainControl = (FloatControl) clips[indexes.back.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx));
+
+        gainControl = (FloatControl) clips[indexes.move_cursor.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx));
+
+        gainControl = (FloatControl) clips[indexes.option_selected.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx));
+
+        gainControl = (FloatControl) clips[indexes.fight_selected.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx));
+
+        gainControl = (FloatControl) clips[indexes.Versus.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+
+        gainControl = (FloatControl) clips[indexes.Andy.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+
+        gainControl = (FloatControl) clips[indexes.Terry.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices));
+
+        gainControl = (FloatControl) clips[indexes.Mai.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(voices ));
+    }
+
     public void update(double mus, double sfx, double voices){
         stop(indexes.menu_theme);
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);

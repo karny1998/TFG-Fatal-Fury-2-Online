@@ -15,10 +15,13 @@ import lib.utils.Pair;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+import java.util.Random;
+
 
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
+    Random ran = new Random();
     boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
@@ -133,22 +136,118 @@ public class game_controller {
                 timeReference = System.currentTimeMillis();
                 clearInterface(screenObjects);
                 actualMenu.updateTime();
+                if(onDemo){
+                    audio_manager.endFight();
+                }
                 onDemo = false;
             }
             else{
                 if(!onDemo){
-                    user = new enemy_controller(Playable_Character.TERRY, 1);
-                    enemy = new enemy_controller(Playable_Character.ANDY, 2);
+                    int x = ran.nextInt(3);
+                    switch (x){
+                        case 0:
+                            user = new enemy_controller(Playable_Character.TERRY, 1);
+                            System.out.println("Terry");
+                            break;
+                        case 1:
+                            user = new enemy_controller(Playable_Character.ANDY, 1);
+                            System.out.println("Andy");
+                            break;
+                        case 2:
+                            user = new enemy_controller(Playable_Character.MAI, 1);
+                            System.out.println("Mai");
+                            break;
+                    }
+                    System.out.println("vs");
+                    int y = ran.nextInt(3);
+                    switch (y){
+                        case 0:
+                            enemy = new enemy_controller(Playable_Character.TERRY, 2);
+                            System.out.println("Terry");
+                            break;
+                        case 1:
+                            enemy = new enemy_controller(Playable_Character.ANDY, 2);
+                            System.out.println("Andy");
+                            break;
+                        case 2:
+                            enemy = new enemy_controller(Playable_Character.MAI, 2);
+                            System.out.println("Mai");
+                            break;
+                    }
+
+
+
                     enemy.setRival(user.getPlayer());
                     enemy.getPlayer().setMapLimit(mapLimit);
                     user.setRival(enemy.getPlayer());
                     user.getPlayer().setMapLimit(mapLimit);
 
-                    enemy.getIa().setDif(ia_loader.dif.EASY);
-                    user.getIa().setDif(ia_loader.dif.EASY);
+                    System.out.println("in");
 
-                    scene = new scenary(Scenario_type.CHINA);
-                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.CHINA);
+                    int z = ran.nextInt(3);
+                    switch (z){
+                        case 0:
+                            scene = new scenary(Scenario_type.CHINA);
+                            System.out.println("China");
+                            break;
+                        case 1:
+                            scene = new scenary(Scenario_type.USA);
+                            System.out.println("USA");
+                            break;
+                        case 2:
+                            scene = new scenary(Scenario_type.AUSTRALIA);
+                            System.out.println("Australia");
+                            break;
+                    }
+
+
+
+                    int a = ran.nextInt(4);
+                    switch (a){
+                        case 0:
+                            user.getIa().setDif(ia_loader.dif.EASY);
+                            System.out.println("Easy");
+                            break;
+                        case 1:
+                            user.getIa().setDif(ia_loader.dif.NORMAL);
+                            System.out.println("Normal");
+                            break;
+                        case 2:
+                            user.getIa().setDif(ia_loader.dif.HARD);
+                            System.out.println("Hard");
+                            break;
+                        case 3:
+                            user.getIa().setDif(ia_loader.dif.VERY_HARD);
+                            System.out.println("Very hard");
+                            break;
+                    }
+
+                    int b = ran.nextInt(4);
+                    switch (b){
+                        case 0:
+                            enemy.getIa().setDif(ia_loader.dif.EASY);
+                            System.out.println("Easy");
+                            break;
+                        case 1:
+                            enemy.getIa().setDif(ia_loader.dif.NORMAL);
+                            System.out.println("Normal");
+                            break;
+                        case 2:
+                            enemy.getIa().setDif(ia_loader.dif.HARD);
+                            System.out.println("Hard");
+                            break;
+                        case 3:
+                            enemy.getIa().setDif(ia_loader.dif.VERY_HARD);
+                            System.out.println("Very hard");
+                            break;
+                    }
+
+
+
+
+
+                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
+                    audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(true);
@@ -169,6 +268,7 @@ public class game_controller {
                         clearInterface(screenObjects);
                         onDemo = false;
                         actualMenu.updateTime();
+                        audio_manager.endFight();
                     }
                 }
             }
@@ -361,20 +461,17 @@ public class game_controller {
                         // Sale del juego
                         case MAP_USA:
                             scene = new scenary(Scenario_type.USA);
-                            map = Scenario_type.USA;
                             break;
                         case MAP_AUS:
                             scene = new scenary(Scenario_type.AUSTRALIA);
-                            map = Scenario_type.AUSTRALIA;
                             break;
                         // Inica una partida
                         case MAP_CHI:
                             scene = new scenary(Scenario_type.CHINA);
-                            map = Scenario_type.CHINA;
                             break;
                     }
 
-                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), map);
+                    audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(!pvp);

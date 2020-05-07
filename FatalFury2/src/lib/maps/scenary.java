@@ -17,9 +17,16 @@ public class scenary {
     int x, y;
     int x2, y2;
 
+    Scenario_type scenario;
+
+    public Scenario_type getScenario(){
+        return scenario;
+    }
+
     public scenary(){}
 
     public scenary(Scenario_type type) {
+        scenario = type;
         switch (type) {
             case USA:
                 x = -145;
