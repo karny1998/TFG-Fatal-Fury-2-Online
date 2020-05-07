@@ -33,6 +33,7 @@ public class character {
     private List<Movement> executedMoves = new ArrayList<>();
     // Entero de victoria o derrota
     private int gameResult = 0;
+    private int heightRef = 0;
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
@@ -48,6 +49,11 @@ public class character {
         }
         // Por defecto está en STANDING
         movements.get(Movement.STANDING).start(999);
+        heightRef = movements.get(Movement.STANDING).getHurtbox().getY()+290;
+    }
+
+    public boolean onHeightRef(){
+        return heightRef == movements.get(state).getHurtbox().getY()+290;
     }
 
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
@@ -204,7 +210,7 @@ public class character {
                     movements.get(state).getAnim().end();
                 }
                 else if(state == Movement.THROW){
-                    if(dis >= 10 || eHurt.getY() != pHurt.getY()){
+                    if(dis >= 10 || !rival.onHeightRef()){
                         state = Movement.HARD_PUNCH;
                     }
                     movements.get(state).start(dis);

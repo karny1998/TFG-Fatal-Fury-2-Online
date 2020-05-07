@@ -19,7 +19,7 @@ import java.util.Map;
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
 
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -91,7 +91,7 @@ public class game_controller {
 
         if(debug && state != GameState.FIGHT){
             user = new user_controller(Playable_Character.MAI, 1);
-            enemy = new user_controller(Playable_Character.MAI, 2);
+            enemy = new user_controller(Playable_Character.TERRY, 2);
             enemy.setPlayerNum(2);
             enemy.setRival(user.getPlayer());
             enemy.getPlayer().setMapLimit(mapLimit);
@@ -128,6 +128,8 @@ public class game_controller {
         }
         else if(state == GameState.DEMO){
             if(controlListener.anyKeyPressed()){
+                audio_manager.endFight();
+                audio_manager.menu.play(menu_audio.indexes.menu_theme);
                 fight.pauseFight();
                 state = GameState.NAVIGATION;
                 timeReference = System.currentTimeMillis();
@@ -148,7 +150,9 @@ public class game_controller {
                     user.getIa().setDif(ia_loader.dif.EASY);
 
                     scene = new scenary(Scenario_type.CHINA);
+                    audio_manager.menu.stop(menu_audio.indexes.menu_theme);
                     audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.CHINA);
+                    audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(true);
@@ -169,6 +173,8 @@ public class game_controller {
                         clearInterface(screenObjects);
                         onDemo = false;
                         actualMenu.updateTime();
+                        audio_manager.endFight();
+                        audio_manager.menu.play(menu_audio.indexes.menu_theme);
                     }
                 }
             }
