@@ -286,7 +286,6 @@ public class game_controller {
                     actualMenu.updateTime();
                 }
             }
-
             screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
