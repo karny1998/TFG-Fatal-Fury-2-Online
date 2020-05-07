@@ -243,6 +243,7 @@ public class story_mode {
                             ++stage;
                             saveGame();
                             state = GameState.STORY_LOADING;
+                            audio_manager.endFight();
                             timeReference = System.currentTimeMillis();
                             break;
                         case WIN_SAVE:
