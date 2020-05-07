@@ -244,7 +244,7 @@ false
 0
 -1
 -1
-false
+true
 # ------------------------------------ MOVIMIENTO NUMERO 7 ------------------------------------
 hard_punch
 HARD_PUNCH
@@ -283,7 +283,7 @@ false
 0
 -1
 -1
-false
+true
 # ------------------------------------ MOVIMIENTO NUMERO 8 ------------------------------------
 jump
 NORMAL_JUMP
@@ -422,7 +422,7 @@ false
 0
 -1
 -1
-false
+true
 150
 160
 500
@@ -432,7 +432,7 @@ false
 0
 -1
 -1
-false
+true
 150
 160
 500
@@ -560,7 +560,7 @@ false
 350
 -1
 -1
-false
+true
 150
 160
 500
@@ -599,7 +599,7 @@ false
 350
 -1
 -1
-false
+true
 150
 160
 500
@@ -638,7 +638,7 @@ false
 350
 -1
 -1
-false
+true
 150
 160
 500
@@ -677,7 +677,7 @@ false
 350
 -1
 -1
-false
+true
 150
 160
 500
@@ -794,7 +794,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -815,8 +815,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 21 ------------------------------------
 # Carpeta de los frames
 kick2
@@ -873,7 +873,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -894,8 +894,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 22 ------------------------------------
 # Carpeta de los frames
 crouching_punch1
@@ -952,7 +952,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -973,8 +973,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
 0
@@ -994,7 +994,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 23 ------------------------------------
 # Carpeta de los frames
@@ -1052,7 +1052,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1073,8 +1073,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
 0
@@ -1094,7 +1094,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 24 ------------------------------------
 # Carpeta de los frames
@@ -1152,7 +1152,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1173,8 +1173,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
 0
@@ -1194,8 +1194,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 25 ------------------------------------
 # Carpeta de los frames
 hook
@@ -1252,7 +1252,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1273,7 +1273,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -1294,8 +1294,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -1315,8 +1315,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -1336,8 +1336,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 26 ------------------------------------
 # Carpeta de los frames
 dash
@@ -1386,7 +1386,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1407,7 +1407,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -1428,7 +1428,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
@@ -1449,7 +1449,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 27 ------------------------------------
 # Carpeta de los frames
@@ -1507,7 +1507,7 @@ true
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 28 ------------------------------------
 # Carpeta de los frames
@@ -1557,7 +1557,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1578,7 +1578,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 29 ------------------------------------
 # Carpeta de los frames
@@ -1628,7 +1628,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 30 ------------------------------------
 # Carpeta de los frames
@@ -1686,8 +1686,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 290
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 31 ------------------------------------
 # Carpeta de los frames
 jumping_kick
@@ -1744,7 +1744,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1765,8 +1765,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 290
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 32 ------------------------------------
 # Carpeta de los frames
 crouching_kick1
@@ -1823,7 +1823,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1844,8 +1844,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
 0
@@ -1865,8 +1865,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 33 ------------------------------------
 # Carpeta de los frames
 crouching_knockback
@@ -1915,7 +1915,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -1936,7 +1936,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 34 ------------------------------------
 jump_knockback
@@ -2144,7 +2144,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -2165,7 +2165,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -2186,7 +2186,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
@@ -2207,7 +2207,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 37 ------------------------------------
 medium_knockback
@@ -2434,7 +2434,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -2455,7 +2455,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -2476,7 +2476,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
@@ -2497,7 +2497,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
@@ -2518,7 +2518,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 6 -------
 # X (IRRELEVANTE) 
@@ -2539,7 +2539,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 41 ------------------------------------
 # Carpeta de los frames
@@ -2589,7 +2589,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -2610,7 +2610,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -2631,7 +2631,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
@@ -2652,7 +2652,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------------------------------------ MOVIMIENTO NUMERO 42 ------------------------------------
 # Carpeta de los frames
@@ -2710,7 +2710,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -2731,7 +2731,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -2752,8 +2752,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -2773,8 +2773,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -2794,8 +2794,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 43 ------------------------------------
 # Carpeta de los frames
 dash_poke
@@ -2852,7 +2852,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -2873,7 +2873,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -2894,8 +2894,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -2915,8 +2915,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -2936,8 +2936,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 44 ------------------------------------
 # Carpeta de los frames
 spin_kick
@@ -2994,7 +2994,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -3015,7 +3015,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -3036,8 +3036,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -3057,8 +3057,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -3078,8 +3078,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 45 ------------------------------------
 # Carpeta de los frames
 spin_kick
@@ -3136,7 +3136,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -3157,7 +3157,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -3178,8 +3178,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -3199,8 +3199,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -3220,8 +3220,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 46 ------------------------------------
 # Carpeta de los frames
 fire_dash
@@ -3278,7 +3278,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -3299,7 +3299,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -3320,8 +3320,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -3341,8 +3341,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -3362,8 +3362,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 47 ------------------------------------
 # Carpeta de los frames
 fire_dash
@@ -3420,7 +3420,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
@@ -3441,7 +3441,7 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
@@ -3462,8 +3462,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 4 -------
 # X (IRRELEVANTE) 
 0
@@ -3483,8 +3483,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 5 -------
 # X (IRRELEVANTE) 
 0
@@ -3504,8 +3504,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------------------------------------ MOVIMIENTO NUMERO 48 ------------------------------------
 # Carpeta de los frames
 poke
@@ -3562,8 +3562,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 2 -------
 # X (IRRELEVANTE) 
 0
@@ -3583,8 +3583,8 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
-false
+# ¿Tiene hitbox este frame en concreto?
+true
 # ------ FRAME 3 -------
 # X (IRRELEVANTE) 
 0
@@ -3604,5 +3604,5 @@ false
 -1
 # Y esperada (-1 si no se necesita)
 -1
-# ¿Es imparable? (false)
+# ¿Tiene hitbox este frame en concreto?
 false

@@ -194,7 +194,12 @@ public class load_character {
                         img = filterImage(img, charac, filterMethod);
                     }
                     s = new screenObject(xF, yF,  wF, hF, img, Item_Type.PLAYER);
-                    anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);
+                    if(hasHit) {
+                        anim.addFrame(s, tF, ixF, iyF, wxF, wyF, stop);
+                    }
+                    else{
+                        anim.addFrame(s, tF, ixF, iyF, wxF, wyF, false);
+                    }
                     ++j;
                 }
 

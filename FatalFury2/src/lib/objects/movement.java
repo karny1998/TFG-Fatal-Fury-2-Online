@@ -74,16 +74,6 @@ public class movement {
         }
     }
 
-    // Getters y setters
-    public boolean unstoppable(){
-        if(distance > distChange || subMovement == null) {
-            return anim.getUnstoppable();
-        }
-        else {
-            return subMovement.getAnim().getUnstoppable();
-        }
-    }
-
     public Movement getType() {
         return type;
     }

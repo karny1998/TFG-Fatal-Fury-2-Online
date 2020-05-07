@@ -242,10 +242,6 @@ public class game_controller {
                             break;
                     }
 
-
-
-
-
                     audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
                     audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                     fight = new fight_controller(user,enemy,scene);
@@ -269,6 +265,7 @@ public class game_controller {
                         onDemo = false;
                         actualMenu.updateTime();
                         audio_manager.endFight();
+                        audio_manager.menu.play(menu_audio.indexes.menu_theme);
                     }
                 }
             }

@@ -22,7 +22,7 @@ public class animation {
     // Coordenadas objetivo para terminar el frame
     List<Pair<Integer, Integer>> waitedCoords = new ArrayList<Pair<Integer, Integer>>();
     // Si un frame puede ser cortado o no por otra animación
-    List<Boolean> unstoppable = new ArrayList<Boolean>();
+    List<Boolean> hasHitBox = new ArrayList<Boolean>();
     //Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
     Boolean hasEnd = true, ended = false;
     //En qué frame de la animación se estaba
@@ -62,16 +62,16 @@ public class animation {
         times.add(times.size(), t);
         coords.add(coords.size(), new Pair(iX,iY));
         waitedCoords.add(waitedCoords.size(), new Pair(-1,-1));
-        unstoppable.add(unstoppable.size(), false);
+        hasHitBox.add(hasHitBox.size(), false);
         totalIncrementY += iY;
     }
 
-    public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean unstop){
+    public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean hasHit){
         frames.add(frames.size(), s);
         times.add(times.size(), t);
         coords.add(coords.size(), new Pair(iX,iY));
         waitedCoords.add(waitedCoords.size(), new Pair(wX,wY));
-        unstoppable.add(unstoppable.size(), unstop);
+        hasHitBox.add(hasHitBox.size(), hasHit);
         totalIncrementY += iY;
     }
 
@@ -294,12 +294,12 @@ public class animation {
         this.times = times;
     }
 
-    public Boolean getUnstoppable() {
-        return unstoppable.get(state);
+    public Boolean getHasHitBox() {
+        return hasHitBox.get(state);
     }
 
-    public void setUnstoppable(Boolean unstop, int i) {
-        this.unstoppable.set(i, unstop) ;
+    public void setUnstoppable(Boolean has, int i) {
+        this.hasHitBox.set(i, has) ;
     }
 
     public Boolean getPlaying() {
@@ -311,7 +311,7 @@ public class animation {
     }
 
     public hitBox getHitbox() {
-        if(ended){
+        if(ended || !hasHitBox.get(state)){
             return new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);
         }
         return hitbox;
@@ -385,12 +385,12 @@ public class animation {
         this.waitedCoords = waitedCoords;
     }
 
-    public List<Boolean> getUnstoppableVector() {
-        return unstoppable;
+    public List<Boolean> getHasHitBoxVector() {
+        return hasHitBox;
     }
 
-    public void setUnstoppable(List<Boolean> unstoppableVector) {
-        this.unstoppable = unstoppableVector;
+    public void setHasHitBox(List<Boolean> hasHitBoxVector) {
+        this.hasHitBox = hasHitBoxVector;
     }
 
     public long getAuxTime() {
