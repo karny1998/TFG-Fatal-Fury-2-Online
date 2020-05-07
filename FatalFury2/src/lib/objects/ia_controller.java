@@ -83,7 +83,7 @@ public class ia_controller {
             do {
                 m = roulette.spinRoulette();
             }while(dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m)
-                    && !(player.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH
+                    && !(enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH
             )                                   || m == Movement.HARD_KICK || m == Movement.SOFT_KICK));
             move = movementsKeys.get(m);
         }
