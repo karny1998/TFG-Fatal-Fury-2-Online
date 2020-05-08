@@ -32,6 +32,7 @@ public class game_controller {
     private scenary scene;
     // Menus
     private menu principal,basicMenu, gameMenu;
+    private menu sure;
     private menu difficulty;
     // Menu actual
     private menu actualMenu;
@@ -63,11 +64,13 @@ public class game_controller {
     private long tiempo = System.currentTimeMillis();
     private long timeReference = System.currentTimeMillis();
     private boolean onDemo = false;
+    private boolean fromEscape = false;
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
     private ia_loader.dif lvlIa;
     private screenObject how = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/how_to_play.png")).getImage(), Item_Type.MENU);;
 
     public game_controller() {
+        this.sure = menu_generator.generate_sure();
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
         this.gameMenu = basicMenu.getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
@@ -79,6 +82,7 @@ public class game_controller {
     }
 
     public game_controller(menu principal) {
+        this.sure = menu_generator.generate_sure();
         this.principal = principal;
         this.actualMenu = principal;
         this.escapeMenu = menu_generator.generate_scape();
@@ -121,7 +125,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 500.0){
+            if( actual - tiempo > 5000.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
@@ -131,7 +135,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 500.0){
+            if( actual - tiempo > 5000.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
                 timeReference = tiempo;
@@ -306,7 +310,9 @@ public class game_controller {
                     switch (p.getValue()) {
                         // Sale del juego
                         case PRINCIPAL_EXIT:
-                            System.exit(0);
+                            state = GameState.SURE;
+                            actualMenu = sure;
+                            fromEscape = false;
                             break;
                         case PRINCIPAL_OPTIONS:
                             optionsMenu = new options();
@@ -336,6 +342,7 @@ public class game_controller {
                             break;
                         case GAME_HOW:
                             state = GameState.HOW_TO_PLAY;
+                            break;
                     }
                 }
                 // La selección lleva a un nuevo menu (actualiza el tiempo de referencia
@@ -343,6 +350,37 @@ public class game_controller {
                 else{
                     actualMenu = p.getKey();
                     actualMenu.updateTime();
+                }
+            }
+        }
+        else if(state == GameState.SURE){
+            screenObject s = actualMenu.getFrame();
+            s.setX(317);
+            s.setY(217);
+            screenObjects.put(Item_Type.SURE, s);
+            Pair<menu, Selectionable> p = actualMenu.select();
+            if( controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
+                audio_manager.menu.play(menu_audio.indexes.option_selected);
+                // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
+                if(p.getKey() == null) {
+                    switch (p.getValue()) {
+                        case YES:
+                            System.exit(0);
+                            break;
+                        case NO:
+                            if(fromEscape){
+                                state = GameState.ESCAPE;
+                                actualMenu = escapeMenu;
+                            }
+                            else{
+                                state = GameState.NAVIGATION;
+                                actualMenu = basicMenu;
+                            }
+                            timeReference = System.currentTimeMillis();
+                            actualMenu.updateTime();
+                            fromEscape = false;
+                            screenObjects.remove(Item_Type.SURE);
+                    }
                 }
             }
         }
@@ -580,7 +618,10 @@ public class game_controller {
                         break;
                     // Salir del juego
                     case ESCAPE_EXIT:
-                        System.exit(0);
+                        state = GameState.SURE;
+                        fromEscape = true;
+                        actualMenu = sure;
+                        actualMenu.updateTime();
                         break;
                 }
             }
@@ -674,7 +715,8 @@ public class game_controller {
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
-        else if(state == GameState.FIGHT || state == GameState.ESCAPE || state == GameState.DEMO) {
+        else if(state == GameState.FIGHT || state == GameState.ESCAPE
+                || state == GameState.DEMO || state == GameState.SURE && fromEscape) {
             if(debug){
                 fight.player.player.getHitbox().drawHitBox(g);
                 fight.player.player.getHurtbox().drawHitBox(g);

@@ -79,7 +79,7 @@ public class Screen extends JPanel {
 
         Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
                             Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
-                            Item_Type.MENU, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
+                            Item_Type.MENU, Item_Type.SURE, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
                             Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
                             Item_Type.INDICATOR1, Item_Type.INDICATOR2,
                             Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4,

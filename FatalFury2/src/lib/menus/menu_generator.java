@@ -203,6 +203,40 @@ public class menu_generator {
         return men;
     }
 
+    public static menu generate_sure(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.YES, Selectionable.NO});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "/assets/sprites/menu/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "are_you_sure1.png")).getImage(), Item_Type.SURE);
+        a.addFrame(s,500.0,0, 0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "are_you_sure1.png")).getImage(), Item_Type.SURE);
+        a.addFrame(s,500.00,0, 0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        selectionable sel = new selectionable(Selectionable.YES,a);
+        aux.put(Selectionable.YES,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "are_you_sure2.png")).getImage(), Item_Type.SURE);
+        a.addFrame(s,500.0,0, 0);
+        s = new screenObject(317, 217,  646, 287, new ImageIcon(menu_generator.class.getResource(path  + "are_you_sure2.png")).getImage(), Item_Type.SURE);
+        a.addFrame(s,500.00,0, 0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.NO,a);
+        aux.put(Selectionable.NO,sel);
+
+        men.setSelectionables(aux);
+
+        return men;
+    }
 
     public static menu generate_story_win(){
         menu men = new menu();
