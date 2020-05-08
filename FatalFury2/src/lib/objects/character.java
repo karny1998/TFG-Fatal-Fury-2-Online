@@ -229,7 +229,7 @@ public class character {
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
-        if(state != Movement.THROWN_OUT && state != Movement.THROWN_OUT && !isJumping() && s.getY() != 290){
+        if(state != Movement.THROWN_OUT && state != Movement.DEFEAT && !isJumping() && s.getY() != 290){
             movements.get(state).getAnim().reset();
             state = Movement.JUMP_FALL;
             movements.get(state).getAnim().start();;
