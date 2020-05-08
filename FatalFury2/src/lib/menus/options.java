@@ -22,6 +22,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
@@ -47,7 +49,9 @@ public class options {
     private long referenceTime;
     private String filePath = System.getProperty("user.dir") + "/.files/options.xml";
     private URL imgPath = this.getClass().getResource("/assets/sprites/menu/options/menu.png");
-
+    private InputStream fontStream_1 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    private InputStream fontStream_2 = this.getClass().getResourceAsStream("/files/fonts/m04.TTF");
+    private InputStream fontStream_3 = this.getClass().getResourceAsStream("/files/fonts/m04.TTF");
 
     public void updateTime() {
         referenceTime = System.currentTimeMillis();
@@ -306,10 +310,29 @@ public class options {
 
         readOptionsFile();
 
+        try {
+            this.f_1 = Font.createFont(Font.TRUETYPE_FONT, fontStream_1).deriveFont(48f);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        this.f_1 = new Font("Orbitron", Font.ROMAN_BASELINE, 48);
-        this.f_2 = new Font("Orbitron", Font.ROMAN_BASELINE, 24);
-        this.f_3 = new Font("Orbitron", Font.ROMAN_BASELINE, 32);
+
+        try {
+            this.f_2 = Font.createFont(Font.ROMAN_BASELINE, fontStream_2).deriveFont(24f);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.f_3 = Font.createFont(Font.TRUETYPE_FONT, fontStream_3).deriveFont(32f);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

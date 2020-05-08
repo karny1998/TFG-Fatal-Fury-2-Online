@@ -26,6 +26,7 @@ public class score {
     private Font f = null;
     private List<Pair<String, Integer>> rank;
     private long timeReference = 0;
+    private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
 
     public score(){}
 
@@ -121,7 +122,14 @@ public class score {
         if(!animLoaded){
             loadAnim();
             timeReference = System.currentTimeMillis();
-            this.f = new Font("Orbitron", Font.ROMAN_BASELINE, 60);
+
+            try {
+                this.f =  Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(60f);
+            } catch (FontFormatException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             rank = readRankScores(true);
             animLoaded = true;
         }
