@@ -230,7 +230,7 @@ public class character {
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
         if(state != Movement.THROWN_OUT && state != Movement.DEFEAT && !isJumping() && s.getY() != 290
-        && !(gameResult == 2 && stateChanged && charac == Playable_Character.TERRY)){
+        && !(gameResult == 2 && charac == Playable_Character.TERRY)){
             movements.get(state).getAnim().reset();
             state = Movement.JUMP_FALL;
             movements.get(state).getAnim().start();;
