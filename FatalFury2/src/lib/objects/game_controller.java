@@ -24,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -420,9 +420,6 @@ public class game_controller {
                 }
             }
         } else if (state == GameState.OPTIONS){
-            screenObject s = actualMenu.getFrame();
-            screenObjects.put(Item_Type.MENU, s);
-
             if (optionsMenu.gestionMenu(screenObjects)){
                 state = GameState.NAVIGATION;
             }
@@ -531,6 +528,7 @@ public class game_controller {
                         state = GameState.TYPING;
                     }
                     else{
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                         state = GameState.NAVIGATION;
                         actualMenu = gameMenu;
                         principal.updateTime();
@@ -587,12 +585,14 @@ public class game_controller {
         }
         else if (state == GameState.TYPING){
             if( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
+                audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 fight.getScorePlayer().writeRankScore(askName.getName());
                 timeReference = System.currentTimeMillis();
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
-                audio_manager.endFight();
                 state = GameState.NAVIGATION;
             }
             else{

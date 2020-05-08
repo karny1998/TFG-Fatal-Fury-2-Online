@@ -16,9 +16,10 @@ public class menu_audio {
     private static String Andy_route = "/assets/sound/voice/Announcer/Andy.wav";
     private static String Terry_route = "/assets/sound/voice/Announcer/Terry.wav";
     private static String Mai_route = "/assets/sound/voice/Announcer/Mai.wav";
+    private static String Error_route = "/assets/sound/special_effects/Error.wav";
 
     public enum indexes {
-        menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai,
+        menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai, error
     }
 
     menu_audio(){
@@ -64,6 +65,9 @@ public class menu_audio {
 
         clips[indexes.Mai.ordinal()] = AudioSystem.getClip();
         clips[indexes.Mai.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Mai_route) ));
+
+        clips[indexes.error.ordinal()] = AudioSystem.getClip();
+        clips[indexes.error.ordinal()].open(AudioSystem.getAudioInputStream( this.getClass().getResource(Error_route) ));
     }
 
 
@@ -101,6 +105,9 @@ public class menu_audio {
 
         gainControl = (FloatControl) clips[indexes.Mai.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(voices ));
+
+        gainControl = (FloatControl) clips[indexes.error.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx ));
     }
 
     public void update(double mus, double sfx, double voices){
@@ -148,6 +155,11 @@ public class menu_audio {
         gainControl = (FloatControl) clips[indexes.Mai.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(20f * (float) Math.log10(voices ));
         resume(indexes.Mai);
+
+        stop(indexes.error);
+        gainControl = (FloatControl) clips[indexes.error.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float) Math.log10(sfx ));
+        resume(indexes.error);
     }
 
     public void play(indexes i){

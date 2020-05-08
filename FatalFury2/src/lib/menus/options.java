@@ -20,6 +20,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,21 +29,25 @@ import java.util.Map;
 
 public class options {
 
-    private String[] titulos = {"VOLUMEN", "jugador 1", "jugador 2"};
-    private int[] xTitulos = {150, 135 + 340, 135 + 340 + 360};
+    //La opcion en mayusculas representa la actual
+    private String[] titulos = {"AUDIO", "player 1", "player 2"};
+    private int[] xTitulos = {170, 150 + 340, 150 + 340 + 360};
 
     private String[] elementos_vol =  {
-            "general", "Music", "Voices", "Special effects"
+            "general", "music", "voices", "special effects"
     };
-    private String[] elementos_control ={
-            "Arriba", "Abajo", "Izquierda", "Derecha", "Puñetazo débil", "Patada débil", "Puñetazo fuerte", "Patada fuerte", "Aceptar", "Pausa/Atrás"
+    private String[] elementos_p1 ={
+            "up", "down", "left", "right", "weak punch", "weak kick", "strong punch", "strong kick", "ok", "pause/back"
+    };
+    private String[] elementos_p2 ={
+            "up", "down", "left", "right", "weak punch", "weak kick", "strong punch", "strong kick", "ok", "pause/back"
     };
 
-    private String[][] elementos = {elementos_vol, elementos_control, elementos_control};
+    private String[][] elementos = {elementos_vol, elementos_p1, elementos_p2};
 
     private int[] valores_vol = new int[elementos_vol.length];
-    private int[] valores_p1 = new int[elementos_control.length];
-    private int[] valores_p2 = new int[elementos_control.length];
+    private int[] valores_p1 = new int[elementos_p1.length];
+    private int[] valores_p2 = new int[elementos_p2.length];
     private int[][] valores = {valores_vol, valores_p1, valores_p2};
 
 
@@ -57,7 +62,7 @@ public class options {
 
 
     private InputStream fontStream_1 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
-    private InputStream fontStream_2 = this.getClass().getResourceAsStream("/files/fonts/m04.TTF");
+    private InputStream fontStream_2 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
     public void updateTime() {
         referenceTime = System.currentTimeMillis();
     }
@@ -65,7 +70,21 @@ public class options {
     private Font f_1, f_2;
     private screenObject fondo, vol, p1, p2;
 
-    private enum pag {PAGINA_VOLUMEN, PAGINA_P1, PAGINA_P2}
+    private enum pag {
+        PAGINA_VOLUMEN(0),
+        PAGINA_P1(1),
+        PAGINA_P2(2),
+        PAGINA_P1_MAPEO(1),
+        PAGINA_P2_MAPEO(2);
+
+        private int val;
+        pag(int i) {
+            this.val = i;
+        }
+        public int getVal(){
+            return val;
+        }
+    }
 
     private pag pagina;
 
@@ -315,35 +334,200 @@ public class options {
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long current = System.currentTimeMillis();
-        if(current - referenceTime > 150.0){
+        if(current - referenceTime > 125){
+            if(controlListener.getStatus(0, controlListener.ESC_INDEX)){
+                saveOptions();
+                updateValues();
+                exit = true;
+                //preguntar si quieres guardar
+            }
+
+            boolean init;
+            int index;
             switch (pagina){
                 case PAGINA_VOLUMEN:
                     if(controlListener.getStatus(0, controlListener.DE_INDEX)){
-                        pagina = pag.PAGINA_P1;
-                        fondo = p1;
-                        titulos = new String[]{"volumen", "JUGADOR 1", "jugador 2"};
+                        init = false;
+                        index = 0;
+                        for(int i = 0; i < elementos_vol.length; i++){
+                            if(Character.isUpperCase(elementos_vol[i].charAt(0))){
+                                init = true;
+                                index = i;
+                                break;
+                            }
+                        }
+                        if(init){
+                            // Subir volumen
+                            int res = valores_vol[index] + 10;
+                            if(res  > 100){
+                                res = 100;
+                            }
+                            valores_vol[index] = res;
+                        }else{
+                            pagina = pag.PAGINA_P1;
+                            fondo = p1;
+                            titulos = new String[]{"audio", "PLAYER 1", "player 2"};
+                        }
                         audio_manager.menu.play(menu_audio.indexes.move_cursor);
                     }
+                    else if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
+                        init = false;
+                        index = 0;
+                        for(int i = 0; i < elementos_vol.length; i++){
+                            if(Character.isUpperCase(elementos_vol[i].charAt(0))){
+                                init = true;
+                                index = i;
+                                break;
+                            }
+                        }
+                        if(init){
+                            // Bajar volumen
+                            int res = valores_vol[index] - 10;
+                            if(res  < 0){
+                                res = 0;
+                            }
+                            valores_vol[index] = res;
+                            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
+                    }
+                    else if(controlListener.getStatus(0, controlListener.ENT_INDEX)) {
+                        audio_manager.menu.play(menu_audio.indexes.error);
+                    }
+                    elementos_vol = moveCursor(elementos_vol);
                     break;
                 case PAGINA_P1:
                     if(controlListener.getStatus(0, controlListener.DE_INDEX)){
-                        pagina = pag.PAGINA_P2;
-                        fondo = p2;
-                        titulos = new String[]{"volumen", "jugador 1", "JUGADOR 2"};
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                    } if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
-                        pagina = pag.PAGINA_VOLUMEN;
-                        fondo = vol;
-                        titulos = new String[]{"VOLUMEN", "jugador 1", "jugador 2"};
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        init = false;
+                        for(int i = 0; i < elementos_p1.length; i++){
+                            if(Character.isUpperCase(elementos_p1[i].charAt(0))){
+                                init = true;
+                                break;
+                            }
+                        }
+                        if(!init) {
+                            pagina = pag.PAGINA_P2;
+                            fondo = p2;
+                            titulos = new String[]{"audio", "player 1", "PLAYER 2"};
+                            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
                     }
+                    else if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
+                        init = false;
+                        for(int i = 0; i < elementos_p1.length; i++){
+                            if(Character.isUpperCase(elementos_p1[i].charAt(0))){
+                                init = true;
+                                break;
+                            }
+                        }
+                        if(!init) {
+                            pagina = pag.PAGINA_VOLUMEN;
+                            fondo = vol;
+                            titulos = new String[]{"AUDIO", "player 1", "player 2"};
+                            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
+                    }
+                    else if(controlListener.getStatus(0, controlListener.ENT_INDEX)){
+                        init = false;
+                        for(int i = 0; i < elementos_p1.length; i++){
+                            if(Character.isUpperCase(elementos_p1[i].charAt(0))){
+                                init = true;
+                                break;
+                            }
+                        }
+                        if(!init){
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        } else {
+                            pagina = pag.PAGINA_P1_MAPEO;
+                            audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        }
+                    }
+                    elementos_p1 = moveCursor(elementos_p1);
                     break;
+
                 case PAGINA_P2:
                     if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
+                        init = false;
+                        for(int i = 0; i < elementos_p2.length; i++){
+                            if(Character.isUpperCase(elementos_p2[i].charAt(0))){
+                                init = true;
+                                break;
+                            }
+                        }
+                        if(!init) {
+                            pagina = pag.PAGINA_P1;
+                            fondo = p1;
+                            titulos = new String[]{"audio", "PLAYER 1", "player 2"};
+                            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
+                    }
+                    else if(controlListener.getStatus(0, controlListener.ENT_INDEX)){
+                        init = false;
+                        for(int i = 0; i < elementos_p2.length; i++){
+                            if(Character.isUpperCase(elementos_p2[i].charAt(0))){
+                                init = true;
+                                break;
+                            }
+                        }
+                        if(!init){
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        } else {
+                            pagina = pag.PAGINA_P2_MAPEO;
+                            audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        }
+                    }
+                    elementos_p2 = moveCursor(elementos_p2);
+                    break;
+                case PAGINA_P1_MAPEO:
+                    init = false;
+                    index = 0;
+                    for(int i = 0; i < elementos_p1.length; i++){
+                        if(Character.isUpperCase(elementos_p1[i].charAt(0))){
+                            init = true;
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(controlListener.anyKeyPressed()){
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        int tecla = controlListener.getLastKey(0);
+                        if(!alreadyUsed(tecla)){
+                            valores_p1[index] = tecla;
+                            audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
                         pagina = pag.PAGINA_P1;
-                        fondo = p1;
-                        titulos = new String[]{"volumen", "JUGADOR 1", "jugador 2"};
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                        audio_manager.menu.play(menu_audio.indexes.option_selected);
+                    }
+
+                    break;
+                case PAGINA_P2_MAPEO:
+                    init = false;
+                    index = 0;
+                    for(int i = 0; i < elementos_p2.length; i++){
+                        if(Character.isUpperCase(elementos_p2[i].charAt(0))){
+                            init = true;
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(controlListener.anyKeyPressed()){
+                        int tecla = controlListener.getLastKey(0);
+                        if(!alreadyUsed(tecla)){
+                            valores_p2[index] = tecla;
+                            audio_manager.menu.play(menu_audio.indexes.option_selected);
+                        } else {
+                            audio_manager.menu.play(menu_audio.indexes.error);
+                        }
+                        pagina = pag.PAGINA_P2;
                     }
                     break;
             }
@@ -354,11 +538,73 @@ public class options {
         return exit;
     }
 
+    private boolean alreadyUsed(int key){
+        for(int i = 0; i < valores_p1.length; i++){
+            if(valores_p1[i] == key || valores_p2[i] == key){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String[] moveCursor(String[] elem){
+        //Gestion de subir
+        if(controlListener.getStatus(0, controlListener.AB_INDEX)){
+            boolean init = false;
+            int index = 0;
+            for(int i = 0; i < elem.length; i++){
+                if(Character.isUpperCase(elem[i].charAt(0))){
+                    init = true;
+                    index = i;
+                    break;
+                }
+            }
+            if(init){
+                menu_audio.indexes sonido = menu_audio.indexes.move_cursor;
+                if(index + 1 >=elem.length){
+                    index--;
+                    sonido = menu_audio.indexes.error;
+                }
+                String aux = elem[index].toLowerCase();
+                elem[index] = aux;
+                aux = elem[index+1].toUpperCase();
+                elem[index+1] = aux;
+                audio_manager.menu.play(sonido);
+            } else {
+                String aux = elem[0].toUpperCase();
+                elem[0] = aux;
+                audio_manager.menu.play(menu_audio.indexes.move_cursor);
+            }
+        }
+        //Gestion de bajar
+        if(controlListener.getStatus(0, controlListener.AR_INDEX)){
+            boolean init = false;
+            int index = 0;
+            for(int i = 0; i < elem.length; i++){
+                if(Character.isUpperCase(elem[i].charAt(0))){
+                    init = true;
+                    index = i;
+                    break;
+                }
+            }
+            if(init){
+                if(index == 0){
+                    String aux = elem[index].toLowerCase();
+                    elem[index] = aux;
+                } else {
+                    String aux = elem[index].toLowerCase();
+                    elem[index] = aux;
+                    aux = elem[index-1].toUpperCase();
+                    elem[index-1] = aux;
+                }
+            }
+            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+        }
+        return elem;
+    }
 
 
     public void printOptions(Graphics2D g){
-
-
 
         g.setFont(f_1);
         for(int i = 0; i < titulos.length; i++){
@@ -370,13 +616,31 @@ public class options {
             g.drawString(titulos[i], xTitulos[i], 135);
         }
 
-
-        int y = 235;
-        String[] mostrar = elementos[pagina.ordinal()];
-        for(int i = 0; i < mostrar.length; i++){
+        int y = 215;
+        String[] elementos_mostrar = elementos[pagina.getVal()];
+        int[] valores_mostrar = valores[pagina.getVal()];
+        for(int i = 0; i < elementos_mostrar.length; i++){
             g.setFont(f_2);
-            g.drawString(mostrar[i], 150, y);
-            y+=100;
+            if(Character.isUpperCase(elementos_mostrar[i].charAt(0))){
+                if(pagina == pag.PAGINA_P1_MAPEO || pagina == pag.PAGINA_P2_MAPEO){
+                    g.setColor(new Color(100,255 , 0));
+                } else {
+
+                    g.setColor(new Color(255, 221, 0));
+                }
+            } else {
+                g.setColor(new Color(140, 120, 0));
+            }
+            g.drawString(elementos_mostrar[i], 150, y);
+
+
+            if(pagina == pag.PAGINA_VOLUMEN){
+                g.drawString(String.valueOf(valores_mostrar[i]), 650 + 4*valores_mostrar[i], y);
+                y+=100;
+            } else {
+                g.drawString(KeyEvent.getKeyText(valores_mostrar[i]), 650, y);
+                y+=45;
+            }
         }
 
     }
