@@ -52,7 +52,7 @@ public class game_controller {
     // Ranking
     private score ranking = new score(ia_loader.dif.EASY);
     // introducción de nombre
-    private ask_for_name askName = new ask_for_name();
+    private ask_for_name name = new ask_for_name();
     // Si es JvJ
     private boolean pvp = false;
     // Limnites del mapa
@@ -99,8 +99,8 @@ public class game_controller {
     // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
 
-        if(debug && state != GameState.OPTIONS){
-            /*user = new user_controller(Playable_Character.MAI, 1);
+        if(debug && state != GameState.FIGHT){
+            user = new user_controller(Playable_Character.MAI, 1);
             enemy = new user_controller(Playable_Character.TERRY, 2);
             enemy.setPlayerNum(2);
             enemy.setRival(user.getPlayer());
@@ -113,12 +113,8 @@ public class game_controller {
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
             pvp = true;
-            fight.setVsIa(false);*/
 
-            optionsMenu = new options();
-            actualMenu.updateTime();
-            optionsMenu.updateTime();
-            state = GameState.OPTIONS;
+            fight.setVsIa(false);
         }
 
         if(state == GameState.OPENING_1){
@@ -575,7 +571,7 @@ public class game_controller {
                                 audio_manager.fight.loopMusic(fight_audio.music_indexes.win_theme);
                                 break;
                         }
-                        askName = new ask_for_name();
+                        name = new ask_for_name();
                         state = GameState.TYPING;
                     }
                     else{
@@ -638,20 +634,21 @@ public class game_controller {
             state = GameState.NAVIGATION;
         }
         else if (state == GameState.TYPING){
-            if( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
+            if (name.gestionMenu(screenObjects)){
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
                 audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
-                fight.getScorePlayer().writeRankScore(askName.getName());
+                fight.getScorePlayer().writeRankScore(name.getName());
                 timeReference = System.currentTimeMillis();
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
                 state = GameState.NAVIGATION;
+                screenObjects.remove(Item_Type.P1_SELECT);
+                screenObjects.remove(Item_Type.P2_SELECT);
             }
-            else{
-                screenObjects.put(Item_Type.MENU, askName.getAnimation());
-            }
+
+
         }
         else if (state == GameState.STORY || state == GameState.STORY_FIGHT
                 || state == GameState.STORY_MENU || state == GameState.STORY_LOADING
@@ -742,7 +739,7 @@ public class game_controller {
             }
         }
         else if(state == GameState.TYPING){
-            askName.writeName(g);
+            name.writeName(g);
         } else if(state == GameState.OPTIONS){
                 optionsMenu.printOptions(g);
         }
