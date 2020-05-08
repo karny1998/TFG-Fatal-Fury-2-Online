@@ -86,6 +86,10 @@ public class controlListener implements KeyListener {
         currentKey = e.getKeyChar();
     }
 
+    public static int getCurrentKey(){
+        return (int) currentKey;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() < keyStatus.length){
@@ -131,9 +135,7 @@ public class controlListener implements KeyListener {
     }
 
 
-    public static int getCurrentKey(){
-        return (int) currentKey;
-    }
+
 
 
     public static int getLastKey(int player){
@@ -225,8 +227,6 @@ public class controlListener implements KeyListener {
                 throw new RuntimeException("Invalid player number");
         }
     }
-    //hasta que no se haya levantado el boton no se toma como nuevo input
-
 
 
     public static String getMove(int player){

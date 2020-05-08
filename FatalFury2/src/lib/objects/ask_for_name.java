@@ -53,18 +53,21 @@ public class ask_for_name {
     public  void writeName(Graphics2D g){
         long current = System.currentTimeMillis();
         boolean ok = false;
-       if(current - timeReference > 75.0){
+       if(current - timeReference > 75){
             timeReference = current;
             ok = true;
         }
         int aux = controlListener.getCurrentKey();
-        if(ok && controlListener.isPressed(8) && name.length() > 0){
+        char c = (char)aux;
+        boolean isAlphanumeric =  (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ? true : false;
+        if(ok && name.length() < 10 && aux != -1 && isAlphanumeric) {
+            name += c;
+        }
+        else if(ok && controlListener.isPressed(8) && name.length() > 0){
             audio_manager.menu.play(menu_audio.indexes.move_cursor);
             name = name.substring(0, name.length()-1);
         }
-        else if(ok && name.length() < 10 && aux != -1) {
-                name += (char)aux;
-        }
+
         g.setFont(f);
         g.setColor(Color.YELLOW);
         g.drawString(name, 271, 376);
