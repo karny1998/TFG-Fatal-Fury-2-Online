@@ -229,17 +229,11 @@ public class character {
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
-        /*if(state == Movement.STANDING && y != 290){
-            y = 290;
-            s.setY(290);
-        }*/
-        if(state == Movement.STANDING && s.getY() < 290){
+        if(state != Movement.THROWN_OUT && state != Movement.THROWN_OUT && !isJumping() && s.getY() != 290){
+            movements.get(state).getAnim().reset();
             state = Movement.JUMP_FALL;
+            movements.get(state).getAnim().start();;
             s =  movements.get(state).getFrame(x,y, orientation);
-        }
-        else if(state == Movement.STANDING && s.getY() > 290){
-            y = 290;
-            s.setY(290);
         }
 
         if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
@@ -356,6 +350,13 @@ public class character {
         this.y = y;
         this.state = Movement.STANDING;
         this.gameResult = 0;
+    }
+
+    void stop(){
+        movements.get(state).getAnim().reset();
+        state = Movement.STANDING;
+        movements.get(state).getAnim().start();
+        y = 290;
     }
 
     boolean isCrouched(){

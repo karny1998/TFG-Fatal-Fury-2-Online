@@ -115,7 +115,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
@@ -125,7 +125,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
                 timeReference = tiempo;
@@ -177,8 +177,6 @@ public class game_controller {
                             break;
                     }
 
-
-
                     enemy.setRival(user.getPlayer());
                     enemy.getPlayer().setMapLimit(mapLimit);
                     user.setRival(enemy.getPlayer());
@@ -201,8 +199,6 @@ public class game_controller {
                             System.out.println("Australia");
                             break;
                     }
-
-
 
                     int a = ran.nextInt(4);
                     switch (a){
@@ -275,7 +271,7 @@ public class game_controller {
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
         else if(state == GameState.NAVIGATION){
-            if(actualMenu == principal && System.currentTimeMillis() - timeReference > 10000.0){
+            if(actualMenu == principal && System.currentTimeMillis() - timeReference > 1000.0){
                 state = GameState.DEMO;
             }
             if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
@@ -494,6 +490,9 @@ public class game_controller {
             // Si se ha presionado escape se cambia de estado
             if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Pause);
+                fight.pauseFight();
+                fight.getPlayer().getPlayer().stop();
+                fight.getEnemy().getPlayer().stop();
                 state = GameState.ESCAPE;
             }
             // Si se está mostrando la pelea
@@ -609,6 +608,8 @@ public class game_controller {
                     state = GameState.ESCAPE;
                     storyOn = true;
                     story.getFight().pauseFight();
+                    story.getFight().getPlayer().getPlayer().stop();
+                    story.getFight().getEnemy().getPlayer().stop();
                 }
                 else if (state == GameState.STORY_DIFFICULTY){
                     actualMenu = gameMenu;
