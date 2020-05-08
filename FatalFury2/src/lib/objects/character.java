@@ -90,6 +90,12 @@ public class character {
             gameResult = 4;
             stateChanged = true;
         }
+        else if(state == Movement.THROW && movements.get(Movement.THROW).getAnim().getState() == 2 && rival.getState() != Movement.THROWN_OUT){
+            movements.get(state).reset();
+            state = Movement.STANDING;
+            movements.get(state).start(dis);
+            stateChanged = true;
+        }
         else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())
                 && !isSpecial(state) && state != Movement.JUMP_ROLL_FALL){
             movements.get(state).reset();

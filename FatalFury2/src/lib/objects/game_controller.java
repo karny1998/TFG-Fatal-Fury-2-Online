@@ -282,6 +282,13 @@ public class game_controller {
         // Teecla presionada por el usuario
         // Si se está navegando por los menús
         else if(state == GameState.NAVIGATION){
+            if(fight != null){
+                fight = null;
+                enemy = null;
+                user = null;
+                System.gc();
+            }
+
             if(actualMenu == principal && System.currentTimeMillis() - timeReference > 10000.0){
                 state = GameState.DEMO;
             }
