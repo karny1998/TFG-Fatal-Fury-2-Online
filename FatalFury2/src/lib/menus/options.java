@@ -388,6 +388,7 @@ public class options {
                             }
                             valores_vol[index] = res;
                             audio_manager.menu.play(menu_audio.indexes.move_cursor);
+
                         } else {
                             audio_manager.menu.play(menu_audio.indexes.error);
                         }

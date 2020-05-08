@@ -395,8 +395,6 @@ public class game_controller {
                 screenObjects.remove(Item_Type.P2_NAME);
             }
             else {
-                screenObject s = actualMenu.getFrame();
-                screenObjects.put(Item_Type.MENU, s);
                 Boolean res = charMenu.gestionMenu(screenObjects);
                 if (res == true) {
                     user = new user_controller(charMenu.getP1_ch(), 1);
