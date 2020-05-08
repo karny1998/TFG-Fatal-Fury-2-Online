@@ -370,6 +370,7 @@ public class options {
             g.drawString(titulos[i], xTitulos[i], 135);
         }
 
+
         int y = 235;
         String[] mostrar = elementos[pagina.ordinal()];
         for(int i = 0; i < mostrar.length; i++){
