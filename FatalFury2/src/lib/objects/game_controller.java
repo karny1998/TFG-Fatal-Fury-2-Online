@@ -483,7 +483,6 @@ public class game_controller {
                     screenObjects.remove(Item_Type.MENU);
 
                     state = GameState.FIGHT;
-
                 }
                 // La selección lleva a un nuevo menu (actualiza el tiempo de referencia
                 // para evitar clicks residuales)
