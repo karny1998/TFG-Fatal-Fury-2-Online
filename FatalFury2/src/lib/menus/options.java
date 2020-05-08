@@ -470,7 +470,11 @@ public class options {
                             }
                             g.drawString(elementos[i], x+130, y);
                             if( i > 5){
-                                g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
+                               if(Integer.parseInt(valores[i]) == 0 ){
+                                    g.drawString("Ñ", x+800, y);
+                               } else {
+                                    g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
+                               }
                             } else {
                                 g.drawString(valores[i], x+800, y);
                             }

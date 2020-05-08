@@ -19,7 +19,7 @@
         <pausa_atras>27</pausa_atras>
     </controles_jugador_1>
     <controles_jugador_2>
-        <arriba>104</arriba>
+        <arriba>0</arriba>
         <abajo>98</abajo>
         <izquierda>100</izquierda>
         <derecha>102</derecha>
