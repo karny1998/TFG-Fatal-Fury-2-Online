@@ -405,8 +405,6 @@ public class game_controller {
                 screenObjects.remove(Item_Type.P2_NAME);
             }
             else {
-                screenObject s = actualMenu.getFrame();
-                screenObjects.put(Item_Type.MENU, s);
                 Boolean res = charMenu.gestionMenu(screenObjects);
                 if (res == true) {
                     user = new user_controller(charMenu.getP1_ch(), 1);
@@ -430,9 +428,6 @@ public class game_controller {
                 }
             }
         } else if (state == GameState.OPTIONS){
-            screenObject s = actualMenu.getFrame();
-            screenObjects.put(Item_Type.MENU, s);
-
             if (optionsMenu.gestionMenu(screenObjects)){
                 state = GameState.NAVIGATION;
             }
@@ -540,6 +535,7 @@ public class game_controller {
                         state = GameState.TYPING;
                     }
                     else{
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                         state = GameState.NAVIGATION;
                         actualMenu = gameMenu;
                         principal.updateTime();
@@ -596,12 +592,14 @@ public class game_controller {
         }
         else if (state == GameState.TYPING){
             if( controlListener.menuInput(1, controlListener.ENT_INDEX) ){
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
+                audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
+                audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 fight.getScorePlayer().writeRankScore(askName.getName());
                 timeReference = System.currentTimeMillis();
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
-                audio_manager.endFight();
                 state = GameState.NAVIGATION;
             }
             else{
