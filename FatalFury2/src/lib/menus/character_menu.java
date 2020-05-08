@@ -141,6 +141,7 @@ public class character_menu {
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 actual = estados.DONE;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "on.png")).getImage(), Item_Type.P2_SELECT);
+                screenObjects.put(Item_Type.P2_SELECT, p2);
                 switch (pos_2){
                     case 0:
                         p2_ch = Playable_Character.ANDY;
