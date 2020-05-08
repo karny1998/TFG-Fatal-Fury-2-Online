@@ -24,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = false;
+    boolean debug = true;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -94,8 +94,8 @@ public class game_controller {
     // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
 
-        if(debug && state != GameState.FIGHT){
-            user = new user_controller(Playable_Character.MAI, 1);
+        if(debug && state != GameState.OPTIONS){
+            /*user = new user_controller(Playable_Character.MAI, 1);
             enemy = new user_controller(Playable_Character.TERRY, 2);
             enemy.setPlayerNum(2);
             enemy.setRival(user.getPlayer());
@@ -108,7 +108,12 @@ public class game_controller {
             fight = new fight_controller(user,enemy,scene);
             fight.setMapLimit(mapLimit);
             pvp = true;
-            fight.setVsIa(false);
+            fight.setVsIa(false);*/
+
+            optionsMenu = new options();
+            actualMenu.updateTime();
+            optionsMenu.updateTime();
+            state = GameState.OPTIONS;
         }
 
         if(state == GameState.OPENING_1){

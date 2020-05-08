@@ -20,7 +20,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,40 +28,46 @@ import java.util.Map;
 
 public class options {
 
+    private String[] titulos = {"VOLUMEN", "jugador 1", "jugador 2"};
+    private int[] xTitulos = {150, 135 + 340, 135 + 340 + 360};
 
-    private String[] elementos = {
-            "Volumen", "Volumen general", "Volumen musica", "Volumen voces", "Volumen efectos especiales",
-            "Controles jugador 1", "Arriba", "Abajo", "Izquierda", "Derecha", "Puñetazo débil", "Patada débil", "Puñetazo fuerte", "Patada fuerte", "Aceptar", "Pausa/Atrás",
-            "Controles jugador 2", "Arriba", "Abajo", "Izquierda", "Derecha", "Puñetazo débil", "Patada débil", "Puñetazo fuerte", "Patada fuerte", "Aceptar", "Pausa/Atrás"
+    private String[] elementos_vol =  {
+            "general", "Music", "Voices", "Special effects"
+    };
+    private String[] elementos_control ={
+            "Arriba", "Abajo", "Izquierda", "Derecha", "Puñetazo débil", "Patada débil", "Puñetazo fuerte", "Patada fuerte", "Aceptar", "Pausa/Atrás"
     };
 
-    private String salir = "Descartar cambios";
-    private String guardar = "Guardar cambios";
+    private String[][] elementos = {elementos_vol, elementos_control, elementos_control};
+
+    private int[] valores_vol = new int[elementos_vol.length];
+    private int[] valores_p1 = new int[elementos_control.length];
+    private int[] valores_p2 = new int[elementos_control.length];
+    private int[][] valores = {valores_vol, valores_p1, valores_p2};
 
 
     private Boolean exit;
-    private Boolean[] mostrando;
-    private String[] valores;
-    private int actual, posicion;
-    private int maxElementos = 8;
-
     private long referenceTime;
+
+
     private String filePath = System.getProperty("user.dir") + "/.files/options.xml";
-    private URL imgPath = this.getClass().getResource("/assets/sprites/menu/options/menu.png");
+    private URL imgPath_1 = this.getClass().getResource("/assets/sprites/menu/options/menu_vol.png");
+    private URL imgPath_2 = this.getClass().getResource("/assets/sprites/menu/options/menu_p1.png");
+    private URL imgPath_3 = this.getClass().getResource("/assets/sprites/menu/options/menu_p2.png");
+
+
     private InputStream fontStream_1 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
     private InputStream fontStream_2 = this.getClass().getResourceAsStream("/files/fonts/m04.TTF");
-    private InputStream fontStream_3 = this.getClass().getResourceAsStream("/files/fonts/m04.TTF");
-
     public void updateTime() {
         referenceTime = System.currentTimeMillis();
     }
 
-    private Font f_1, f_2, f_3;
-    private screenObject fondo;
+    private Font f_1, f_2;
+    private screenObject fondo, vol, p1, p2;
 
-    private enum estado_options {NAVEGACION_PRINCIPAL, NAVEGACION_SECUNDARIA, MAPEO_TECLA, CAMBIO_VOLUMEN, SALIR, GUARDAR, OPCION_SALIR, OPCION_GUARDAR}
+    private enum pag {PAGINA_VOLUMEN, PAGINA_P1, PAGINA_P2}
 
-    private estado_options estado, opcion;
+    private pag pagina;
 
     private void readOptionsFile() {
         try {
@@ -81,28 +86,30 @@ public class options {
             NodeList p1 = doc.getElementsByTagName("controles_jugador_1").item(0).getChildNodes();
             NodeList p2 = doc.getElementsByTagName("controles_jugador_2").item(0).getChildNodes();
 
-            int indice = 1;
+            int indice = 0;
 
             for (int i = 0; i < vol.getLength(); i++) {
                 Node node = vol.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    valores[indice] = node.getTextContent();
+                    valores_vol[indice] = Integer.parseInt(node.getTextContent());
                     indice++;
                 }
             }
-            indice++;
+
+            indice = 0;
             for (int i = 0; i < p1.getLength(); i++) {
                 Node node = p1.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    valores[indice] = node.getTextContent();
+                    valores_p1[indice] = Integer.parseInt(node.getTextContent());
                     indice++;
                 }
             }
-            indice++;
+
+            indice = 0;
             for (int i = 0; i < p2.getLength(); i++) {
                 Node node = p2.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    valores[indice] = node.getTextContent();
+                    valores_p2[indice] = Integer.parseInt(node.getTextContent());
                     indice++;
                 }
             }
@@ -122,141 +129,136 @@ public class options {
             Element rootElement = doc.createElement("opciones");
 
             int index = 0;
-            index++;
             doc.appendChild(rootElement);
 
                 Element vol = doc.createElement("volumen");
 
                     Element vol_general = doc.createElement("vol_general");
-                    vol_general.setTextContent(valores[index]);
+                    vol_general.setTextContent(String.valueOf(valores_vol[index]));
                     vol.appendChild(vol_general);
                     index++;
 
                     Element vol_musica = doc.createElement("vol_musica");
-                    vol_musica.setTextContent(valores[index]);
+                    vol_musica.setTextContent(String.valueOf(valores_vol[index]));
                     vol.appendChild(vol_musica);
                     index++;
 
                     Element vol_voces = doc.createElement("vol_voces");
-                    vol_voces.setTextContent(valores[index]);
+                    vol_voces.setTextContent(String.valueOf(valores_vol[index]));
                     vol.appendChild(vol_voces);
                     index++;
 
                     Element vol_efectos = doc.createElement("vol_efectos");
-                    vol_efectos.setTextContent(valores[index]);
+                    vol_efectos.setTextContent(String.valueOf(valores_vol[index]));
                     vol.appendChild(vol_efectos);
-                    index++;
 
                 rootElement.appendChild(vol);
 
-                index++;
 
+                index = 0;
                 Element p1 = doc.createElement("controles_jugador_1");
 
                     Element arriba = doc.createElement("arriba");
-                    arriba.setTextContent(valores[index]);
+                    arriba.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(arriba);
                     index++;
 
                     Element abajo = doc.createElement("abajo");
-                    abajo.setTextContent(valores[index]);
+                    abajo.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(abajo);
                     index++;
 
                     Element izquierda = doc.createElement("izquierda");
-                    izquierda.setTextContent(valores[index]);
+                    izquierda.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(izquierda);
                     index++;
 
                     Element derecha = doc.createElement("derecha");
-                    derecha.setTextContent(valores[index]);
+                    derecha.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(derecha);
                     index++;
 
                     Element punetazo_debil = doc.createElement("punetazo_debil");
-                    punetazo_debil.setTextContent(valores[index]);
+                    punetazo_debil.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(punetazo_debil);
                     index++;
 
                     Element patada_debil = doc.createElement("patada_debil");
-                    patada_debil.setTextContent(valores[index]);
+                    patada_debil.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(patada_debil);
                     index++;
 
                     Element punetazo_fuerte = doc.createElement("punetazo_fuerte");
-                    punetazo_fuerte.setTextContent(valores[index]);
+                    punetazo_fuerte.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(punetazo_fuerte);
                     index++;
 
                     Element patada_fuerte = doc.createElement("patada_fuerte");
-                    patada_fuerte.setTextContent(valores[index]);
+                    patada_fuerte.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(patada_fuerte);
                     index++;
 
                     Element aceptar = doc.createElement("aceptar");
-                    aceptar.setTextContent(valores[index]);
+                    aceptar.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(aceptar);
                     index++;
 
                     Element pausa_atras = doc.createElement("pausa_atras");
-                    pausa_atras.setTextContent(valores[index]);
+                    pausa_atras.setTextContent(String.valueOf(valores_p1[index]));
                     p1.appendChild(pausa_atras);
-                    index++;
-
 
                 rootElement.appendChild(p1);
 
-                index++;
-
+                index = 0;
                 Element p2 = doc.createElement("controles_jugador_2");
 
                     arriba = doc.createElement("arriba");
-                    arriba.setTextContent(valores[index]);
+                    arriba.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(arriba);
                     index++;
 
                     abajo = doc.createElement("abajo");
-                    abajo.setTextContent(valores[index]);
+                    abajo.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(abajo);
                     index++;
 
                     izquierda = doc.createElement("izquierda");
-                    izquierda.setTextContent(valores[index]);
+                    izquierda.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(izquierda);
                     index++;
 
                     derecha = doc.createElement("derecha");
-                    derecha.setTextContent(valores[index]);
+                    derecha.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(derecha);
                     index++;
 
                     punetazo_debil = doc.createElement("punetazo_debil");
-                    punetazo_debil.setTextContent(valores[index]);
+                    punetazo_debil.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(punetazo_debil);
                     index++;
 
                     patada_debil = doc.createElement("patada_debil");
-                    patada_debil.setTextContent(valores[index]);
+                    patada_debil.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(patada_debil);
                     index++;
 
                     punetazo_fuerte = doc.createElement("punetazo_fuerte");
-                    punetazo_fuerte.setTextContent(valores[index]);
+                    punetazo_fuerte.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(punetazo_fuerte);
                     index++;
 
                     patada_fuerte = doc.createElement("patada_fuerte");
-                    patada_fuerte.setTextContent(valores[index]);
+                    patada_fuerte.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(patada_fuerte);
                     index++;
 
                     aceptar = doc.createElement("aceptar");
-                    aceptar.setTextContent(valores[index]);
+                    aceptar.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(aceptar);
                     index++;
 
                     pausa_atras = doc.createElement("pausa_atras");
-                    pausa_atras.setTextContent(valores[index]);
+                    pausa_atras.setTextContent(String.valueOf(valores_p2[index]));
                     p2.appendChild(pausa_atras);
 
 
@@ -287,65 +289,68 @@ public class options {
 
     public options(){
         exit = false;
-        estado = estado_options.NAVEGACION_PRINCIPAL;
-        fondo = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath).getImage(), Item_Type.MENU);
+        pagina = pag.PAGINA_VOLUMEN;
+        vol = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath_1).getImage(), Item_Type.MENU);
+        p1 = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath_2).getImage(), Item_Type.MENU);
+        p2 = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath_3).getImage(), Item_Type.MENU);
+        fondo = vol;
         referenceTime = System.currentTimeMillis();
-        actual = 1;
-        posicion = 0;
-
-        mostrando = new Boolean[elementos.length];
-        for(int i = 0; i < maxElementos; i++) {
-            mostrando[i] = true;
-        }
-        for(int i = maxElementos; i < elementos.length; i++) {
-            mostrando[i] = false;
-        }
-
-        valores = new String[elementos.length];
-        valores[0] = "";
-        valores[5] = "";
-        valores[16] = "";
-
-
 
         readOptionsFile();
 
         try {
-            this.f_1 = Font.createFont(Font.TRUETYPE_FONT, fontStream_1).deriveFont(48f);
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
+            this.f_1 = Font.createFont(Font.TRUETYPE_FONT, fontStream_1).deriveFont(36f);
             this.f_2 = Font.createFont(Font.ROMAN_BASELINE, fontStream_2).deriveFont(24f);
         } catch (FontFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            this.f_3 = Font.createFont(Font.TRUETYPE_FONT, fontStream_3).deriveFont(32f);
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
 
 
     }
 
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
-        screenObjects.put(Item_Type.MENU, fondo);
-        if(controlListener.getStatus(1, controlListener.ESC_INDEX)){
-            audio_manager.menu.play(menu_audio.indexes.back);
-            estado = estado_options.SALIR;
-
+        long current = System.currentTimeMillis();
+        if(current - referenceTime > 150.0){
+            switch (pagina){
+                case PAGINA_VOLUMEN:
+                    if(controlListener.getStatus(0, controlListener.DE_INDEX)){
+                        pagina = pag.PAGINA_P1;
+                        fondo = p1;
+                        titulos = new String[]{"volumen", "JUGADOR 1", "jugador 2"};
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                    }
+                    break;
+                case PAGINA_P1:
+                    if(controlListener.getStatus(0, controlListener.DE_INDEX)){
+                        pagina = pag.PAGINA_P2;
+                        fondo = p2;
+                        titulos = new String[]{"volumen", "jugador 1", "JUGADOR 2"};
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                    } if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
+                        pagina = pag.PAGINA_VOLUMEN;
+                        fondo = vol;
+                        titulos = new String[]{"VOLUMEN", "jugador 1", "jugador 2"};
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                    }
+                    break;
+                case PAGINA_P2:
+                    if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
+                        pagina = pag.PAGINA_P1;
+                        fondo = p1;
+                        titulos = new String[]{"volumen", "JUGADOR 1", "jugador 2"};
+                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                    }
+                    break;
+            }
+            referenceTime = current;
         }
-        //dependiendo del estado devolver una cosa u otra
+
+        screenObjects.put(Item_Type.MENU, fondo);
         return exit;
     }
 
@@ -353,260 +358,25 @@ public class options {
 
     public void printOptions(Graphics2D g){
 
-        long current = System.currentTimeMillis();
-        if(current - referenceTime > 100.0){
-            switch (estado){
-                case NAVEGACION_PRINCIPAL:
-                    if(controlListener.getStatus(1, controlListener.AR_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        if(posicion > 0){
-                            posicion--;
-                            mostrando[posicion] = true;
-                            mostrando[posicion + maxElementos] = false;
-                        }
-                        if(actual > 0){
-                            actual--;
-                            if( elementos[actual].equals("Volumen")){
-                                actual++;
-                            } else if( elementos[actual].equals("Controles jugador 1") || elementos[actual].equals("Controles jugador 2") ){
-                                actual--;
-                            }
-                        }
-                    } else if(controlListener.getStatus(1, controlListener.AB_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        if(posicion + maxElementos < elementos.length){
-                            mostrando[posicion] = false;
-                            mostrando[posicion + maxElementos] = true;
-                            posicion++;
-                        }
-                        if(actual < elementos.length - 1){
-                            actual++;
-                            if( elementos[actual].equals("Volumen") || elementos[actual].equals("Controles jugador 1") || elementos[actual].equals("Controles jugador 2") ){
-                                actual++;
-                            }
-                        }
-                    } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        estado = estado_options.NAVEGACION_SECUNDARIA;
-                        opcion = estado_options.OPCION_SALIR;
-                    } else if(controlListener.getStatus(1, controlListener.DE_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        estado = estado_options.NAVEGACION_SECUNDARIA;
-                        opcion = estado_options.OPCION_GUARDAR;
-                    } else if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.option_selected);
-                        if(actual < 5){
-                            estado = estado_options.CAMBIO_VOLUMEN;
-                        } else {
-                            estado = estado_options.MAPEO_TECLA;
-                        }
-                    }
-                    break;
-                case NAVEGACION_SECUNDARIA:
-                    if(controlListener.getStatus(1, controlListener.AR_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        estado = estado_options.NAVEGACION_PRINCIPAL;
-                    } else if(controlListener.getStatus(1, controlListener.AB_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        estado = estado_options.NAVEGACION_PRINCIPAL;
-                    } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        opcion = estado_options.OPCION_SALIR;
-                    } else if(controlListener.getStatus(1, controlListener.DE_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        opcion = estado_options.OPCION_GUARDAR;
-                    } else if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
-                        if(opcion == estado_options.OPCION_GUARDAR){
-                            audio_manager.menu.play(menu_audio.indexes.option_selected);
-                            estado = estado_options.GUARDAR;
-                        } else if(opcion == estado_options.OPCION_SALIR){
-                            audio_manager.menu.play(menu_audio.indexes.back);
-                            estado = estado_options.SALIR;
-                        }
-                    }
-                    break;
-                case MAPEO_TECLA:
-                    if(controlListener.anyKeyPressed()){
-                        audio_manager.menu.play(menu_audio.indexes.option_selected);
-                        int tecla = controlListener.getLastKey(0);
-                        valores[actual] = String.valueOf(tecla);
-                        estado = estado_options.NAVEGACION_PRINCIPAL;
-                    }
-                    break;
-                case CAMBIO_VOLUMEN:
-                    int aux = Integer.parseInt(valores[actual]);
-                    if(controlListener.getStatus(1, controlListener.ENT_INDEX)){
-                        audio_manager.menu.play(menu_audio.indexes.option_selected);
-                        estado = estado_options.NAVEGACION_PRINCIPAL;
-                    } else if(controlListener.getStatus(1, controlListener.IZ_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        aux--;
-                    } else if(controlListener.getStatus(1, controlListener.DE_INDEX)) {
-                        audio_manager.menu.play(menu_audio.indexes.move_cursor);
-                        aux++;
-                    }
-                    if (aux > 100) { aux = 100; }
-                    else if (aux < 0) { aux = 0; }
-                    valores[actual] = String.valueOf(aux);
-                    break;
-                case SALIR:
-                    exit = true;
-                    break;
-                case GUARDAR:
-                    saveOptions();
-                    updateValues();
-                    estado = estado_options.SALIR;
-                    break;
+
+
+        g.setFont(f_1);
+        for(int i = 0; i < titulos.length; i++){
+            if(Character.isUpperCase(titulos[i].charAt(0))){
+                g.setColor(new Color(255, 221, 0));
+            } else {
+                g.setColor(new Color(140, 120, 0));
             }
-
-
-
-            referenceTime = current;
+            g.drawString(titulos[i], xTitulos[i], 135);
         }
 
-
-
-
-        int x = 120;
-        int y = 160;
-
-
-        switch (estado){
-            case NAVEGACION_PRINCIPAL:
-                g.setFont(f_3);
-                g.setColor(Color.GREEN);
-                g.drawString(salir, 50, 695);
-                g.drawString(guardar, 935, 695);
-
-                for(int i = 0; i < elementos.length; i++) {
-                    if( mostrando[i] ){
-                        if( elementos[i].equals("Volumen")  ||elementos[i].equals("Controles jugador 1")  || elementos[i].equals("Controles jugador 2")  ){
-                            g.setFont(f_1);
-                            g.setColor(Color.YELLOW);
-                            g.drawString(elementos[i], x, y);
-                        } else {
-                            g.setFont(f_2);
-                            if(i == actual){
-                                g.setColor(Color.RED);
-                            } else {
-                                g.setColor(Color.GREEN);
-                            }
-                            g.drawString(elementos[i], x+130, y);
-                            if( i > 5){
-                               if(Integer.parseInt(valores[i]) == 0 ){
-                                    g.drawString("Ñ", x+800, y);
-                               } else {
-                                    g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
-                               }
-                            } else {
-                                g.drawString(valores[i], x+800, y);
-                            }
-                        }
-
-                        y+=60;
-                    }
-                }
-                break;
-            case NAVEGACION_SECUNDARIA:
-                g.setFont(f_3);
-                if(opcion == estado_options.OPCION_GUARDAR) {
-                    g.setColor(Color.GREEN);
-                    g.drawString(salir, 50, 695);
-                    g.setColor(Color.RED);
-                    g.drawString(guardar, 935, 695);
-                } else if(opcion == estado_options.OPCION_SALIR) {
-                    g.setColor(Color.RED);
-                    g.drawString(salir, 50, 695);
-                    g.setColor(Color.GREEN);
-                    g.drawString(guardar, 935, 695);
-                }
-                for(int i = 0; i < elementos.length; i++) {
-                    if( mostrando[i] ){
-                        if( elementos[i].equals("Volumen")  ||elementos[i].equals("Controles jugador 1")  || elementos[i].equals("Controles jugador 2")  ){
-                            g.setFont(f_1);
-                            g.setColor(Color.YELLOW);
-                            g.drawString(elementos[i], x, y);
-                        } else {
-                            g.setFont(f_2);
-                            g.setColor(Color.GREEN);
-                            g.drawString(elementos[i], x+130, y);
-                            if( i > 5){
-                                g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
-                            } else {
-                                g.drawString(valores[i], x+800, y);
-                            }
-                        }
-                        y+=60;
-                    }
-                }
-                break;
-            case MAPEO_TECLA:
-                g.setFont(f_3);
-                g.setColor(Color.GREEN);
-                g.drawString(salir, 50, 695);
-                g.drawString(guardar, 935, 695);
-
-                for(int i = 0; i < elementos.length; i++) {
-                    if( mostrando[i] ){
-                        if( elementos[i].equals("Volumen") || elementos[i].equals("Controles jugador 1")  || elementos[i].equals("Controles jugador 2")  ){
-                            g.setFont(f_1);
-                            g.setColor(Color.YELLOW);
-                            g.drawString(elementos[i], x, y);
-                        } else {
-                            g.setFont(f_2);
-                            if(i == actual){
-                                g.setColor(Color.RED);
-                                g.drawString("...", x+800, y);
-                            } else {
-                                g.setColor(Color.GREEN);
-                                if( i > 5){
-                                    g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
-                                } else {
-                                    g.drawString(valores[i], x+800, y);
-                                }
-                            }
-                            g.drawString(elementos[i], x+130, y);
-                        }
-                        y+=60;
-                    }
-                }
-                break;
-
-            case CAMBIO_VOLUMEN:
-                g.setFont(f_3);
-                g.setColor(Color.GREEN);
-                g.drawString(salir, 50, 695);
-                g.drawString(guardar, 935, 695);
-                for(int i = 0; i < elementos.length; i++) {
-                    if( mostrando[i] ){
-                        if( elementos[i].equals("Volumen") || elementos[i].equals("Controles jugador 1")  || elementos[i].equals("Controles jugador 2")  ){
-                            g.setFont(f_1);
-                            g.setColor(Color.YELLOW);
-                            g.drawString(elementos[i], x, y);
-                        } else {
-                            g.setFont(f_2);
-                            if(i == actual){
-                                g.setColor(Color.RED);
-                                g.drawString("-  " + valores[i] + "  +", x+800, y);
-                            } else {
-                                g.setColor(Color.GREEN);
-                                if( i > 5){
-                                    g.drawString(KeyEvent.getKeyText(Integer.parseInt(valores[i])), x+800, y);
-                                } else {
-                                    g.drawString(valores[i], x+800, y);
-                                }
-                            }
-                            g.drawString(elementos[i], x+130, y);
-                        }
-                        y+=60;
-                    }
-                }
-                break;
+        int y = 235;
+        String[] mostrar = elementos[pagina.ordinal()];
+        for(int i = 0; i < mostrar.length; i++){
+            g.setFont(f_2);
+            g.drawString(mostrar[i], 150, y);
+            y+=100;
         }
-
-
-
-
 
     }
 
