@@ -68,7 +68,6 @@ public class Screen extends JPanel {
         setPreferredSize(d);
     }
 
-
     // Muestra por pantalla los screenObjects en la lista
     private void doDrawing(Graphics g) {
 
@@ -88,6 +87,7 @@ public class Screen extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = this.getSize();
         g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
+
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
             if(img != null) {

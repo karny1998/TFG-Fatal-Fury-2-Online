@@ -27,15 +27,31 @@ public class score {
     private List<Pair<String, Integer>> rank;
     private long timeReference = 0;
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    private double multiplier = 1.0;
 
-    public score(){}
+    public score(ia_loader.dif d){{
+        switch (d){
+            case EASY:
+                multiplier = 1.0;
+                break;
+            case NORMAL:
+                multiplier = 1.25;
+                break;
+            case HARD:
+                multiplier = 1.5;
+                break;
+            case VERY_HARD:
+                multiplier = 2.0;
+                break;
+        }
+    }}
 
     public void addHit(int p){
-        points += p;
+        points += (p*multiplier);
     }
 
     public void applyBonus(int lf, int secs){
-        points += (lf + secs) * 100;
+        points += (((lf + secs) * 100)*multiplier);
     }
 
     public int getScore(){return this.points;}
@@ -156,8 +172,8 @@ public class score {
         }
         g.setFont(f);
         g.setColor(Color.YELLOW);
-        int x = 200;
-        int y = 185;
+        int x = 180;
+        int y = 220;
         for(int i = pointer; i-pointer < 7 && i < rank.size(); ++i){
             g.drawString((i+1) + ". " , x, y);
             g.drawString(rank.get(i).getKey() , x+46*4, y);

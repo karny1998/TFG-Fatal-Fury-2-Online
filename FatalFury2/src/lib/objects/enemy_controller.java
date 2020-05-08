@@ -26,7 +26,6 @@ public class enemy_controller extends character_controller{
     // En esta función se llamaría a la IA
     // Por ahora se juega aleatoriamente
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
-        String mov = "";
         if(!standBy){
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }

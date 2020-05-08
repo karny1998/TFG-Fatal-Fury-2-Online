@@ -97,7 +97,7 @@ public class menu_generator {
 
     private static menu game(){
         menu men = new menu();
-        men.setOrden(new Selectionable[]{Selectionable.GAME_HISTORY, Selectionable.GAME_MULTIPLAYER, Selectionable.GAME_IA});
+        men.setOrden(new Selectionable[]{Selectionable.GAME_HISTORY, Selectionable.GAME_MULTIPLAYER, Selectionable.GAME_IA, Selectionable.GAME_HOW});
         Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
         String path = "/assets/sprites/menu/";
 
@@ -136,6 +136,18 @@ public class menu_generator {
 
         sel = new selectionable(Selectionable.GAME_IA,a);
         aux.put(Selectionable.GAME_IA,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_how.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "game_how.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.GAME_HOW,a);
+        aux.put(Selectionable.GAME_HOW,sel);
 
         men.setSelectionables(aux);
         return men;

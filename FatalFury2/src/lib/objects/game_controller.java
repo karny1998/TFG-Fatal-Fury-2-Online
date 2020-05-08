@@ -24,7 +24,7 @@ import java.util.Random;
 public class game_controller {
 
     Random ran = new Random();
-    boolean debug = true;
+    boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
@@ -49,7 +49,7 @@ public class game_controller {
     // Estado del juego
     private GameState state = GameState.OPENING_1;
     // Ranking
-    private score ranking = new score();
+    private score ranking = new score(ia_loader.dif.EASY);
     // introducción de nombre
     private ask_for_name askName = new ask_for_name();
     // Si es JvJ
@@ -65,6 +65,7 @@ public class game_controller {
     private boolean onDemo = false;
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
     private ia_loader.dif lvlIa;
+    private screenObject how = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/how_to_play.png")).getImage(), Item_Type.MENU);;
 
     public game_controller() {
         this.principal = menu_generator.generate();
@@ -120,7 +121,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
@@ -130,7 +131,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
                 timeReference = tiempo;
@@ -250,6 +251,7 @@ public class game_controller {
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(true);
+                    fight.setIaLvl(enemy.getIa().getDif());
                     onDemo = true;
                     screenObjects.remove(Item_Type.MENU);
                     timeReference = System.currentTimeMillis();
@@ -279,12 +281,13 @@ public class game_controller {
             if(actualMenu == principal && System.currentTimeMillis() - timeReference > 10000.0){
                 state = GameState.DEMO;
             }
-            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference >= 300.0){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 if(actualMenu == gameMenu){
                     actualMenu = basicMenu;
                     actualMenu.updateTime();
                 }
+                timeReference = System.currentTimeMillis();
             }
             screenObject s = actualMenu.getFrame();
             screenObjects.put(Item_Type.MENU, s);
@@ -293,12 +296,6 @@ public class game_controller {
             if(p.getValue() == Selectionable.START && controlListener.anyKeyPressed()){
                 audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                 actualMenu = p.getKey();
-                actualMenu.updateTime();
-            }
-            // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            else if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
-                audio_manager.menu.play(menu_audio.indexes.back);
-                //actualMenu = actualMenu.getFather();
                 actualMenu.updateTime();
             }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
@@ -337,6 +334,8 @@ public class game_controller {
                             story = new story_mode();
                             state = GameState.STORY;
                             break;
+                        case GAME_HOW:
+                            state = GameState.HOW_TO_PLAY;
                     }
                 }
                 // La selección lleva a un nuevo menu (actualiza el tiempo de referencia
@@ -347,8 +346,18 @@ public class game_controller {
                 }
             }
         }
+        else if(state == GameState.HOW_TO_PLAY){
+            screenObjects.put(Item_Type.MENU, how);
+            if(controlListener.getStatus(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference > 300.0){
+                timeReference = System.currentTimeMillis();
+                actualMenu = gameMenu;
+                actualMenu.updateTime();
+                state = GameState.NAVIGATION;
+            }
+        }
         else if (state == GameState.DIFFICULTY){
-            if(controlListener.getStatus(1, controlListener.ESC_INDEX)){
+            if(controlListener.getStatus(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference > 300.0){
+                timeReference = System.currentTimeMillis();
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
                 state = GameState.NAVIGATION;
@@ -382,7 +391,8 @@ public class game_controller {
         }
         else if (state == GameState.PLAYERS){
 
-            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX)){
+                timeReference = System.currentTimeMillis();
                 audio_manager.menu.play(menu_audio.indexes.back);
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
@@ -428,11 +438,12 @@ public class game_controller {
             }
         } else if (state == GameState.MAP){
 
-            if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+            if(controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis()-timeReference > 300.0){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 actualMenu = gameMenu;
                 actualMenu.updateTime();
                 state = GameState.NAVIGATION;
+                timeReference = System.currentTimeMillis();
             }
 
             screenObject s = actualMenu.getFrame();
@@ -444,14 +455,8 @@ public class game_controller {
             screenObjects.remove(Item_Type.P2_NAME);
             screenObjects.put(Item_Type.MENU, s);
             Pair<menu, Selectionable> p = actualMenu.select();
-            // Si se presiona escape (hay que hacer que vuelva al menu anterior)
-            if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
-                audio_manager.menu.play(menu_audio.indexes.back);
-                //actualMenu = actualMenu.getFather();
-                actualMenu.updateTime();
-            }
             // Si se presiona enter y ha pasado el tiempo de margen entre menu y menu
-            else if( controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
+            if( controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE){
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
                 // La selección no lleva a ningún menú nuevo (p.e. cuando se da a jugar)
                 Scenario_type map = Scenario_type.USA;
@@ -477,6 +482,9 @@ public class game_controller {
                     fight = new fight_controller(user,enemy,scene);
                     fight.setMapLimit(mapLimit);
                     fight.setVsIa(!pvp);
+                    if(!pvp){
+                        fight.setIaLvl(enemy.getIa().getDif());
+                    }
                     screenObjects.remove(Item_Type.MENU);
 
                     state = GameState.FIGHT;
@@ -493,7 +501,8 @@ public class game_controller {
         // Si se está peleando
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
-            if( controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+            if( controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis()-timeReference>300.0){
+                timeReference = System.currentTimeMillis();
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Pause);
                 fight.pauseFight();
                 fight.getPlayer().getPlayer().stop();
@@ -607,6 +616,7 @@ public class game_controller {
                 clearInterface(screenObjects);
             }
             if(controlListener.menuInput(1, controlListener.ESC_INDEX) ){
+                timeReference = System.currentTimeMillis();
                 if(state == GameState.STORY_FIGHT) {
                     actualMenu = escapeMenu;
                     actualMenu.updateTime();
@@ -676,11 +686,11 @@ public class game_controller {
                 fight.player.player.getCoverbox().drawHitBox(g);
                 fight.enemy.player.getCoverbox().drawHitBox(g);
             }
-            if(!storyOn) {
+            if(!storyOn && fight != null) {
                 fight.drawHpBarPlayer(g);
                 fight.drawHpBarEnemy(g);
             }
-            else{
+            else if(story.getFight() != null){
                 story.getFight().drawHpBarPlayer(g);
                 story.getFight().drawHpBarEnemy(g);
             }

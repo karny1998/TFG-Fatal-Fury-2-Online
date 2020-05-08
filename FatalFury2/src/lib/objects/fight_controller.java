@@ -31,11 +31,11 @@ public class fight_controller implements roundListener {
     // Para gestión de límites de mapa
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
     // Score p1
-    score scorePlayer = new score();
+    score scorePlayer = new score(ia_loader.dif.EASY);
     // Controlador del enemigo
     character_controller enemy;
     // Score p2
-    score scoreEnemy = new score();
+    score scoreEnemy = new score(ia_loader.dif.EASY);
     // Número de rondas finalizadas
     int roundCounter;
     // Puntos de ronda ganados
@@ -837,6 +837,7 @@ public class fight_controller implements roundListener {
     }
 
     public void setIaLvl(ia_loader.dif iaLvl) {
+        this.scorePlayer = new score(iaLvl);
         this.iaLvl = iaLvl;
     }
 
