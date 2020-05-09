@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import static lib.Enums.Item_Type.*;
+
 // Clase que se encarga de mostrar todo por pantalla
 public class Screen extends JPanel {
     // Resolución del juego, tiempo de actualización de los cálculos, y tiempo de refresco de la pantalla
@@ -79,6 +81,11 @@ public class Screen extends JPanel {
 
         Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.ENEMY,
                             Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
+                            SCORE_FRAME,BONUS,
+                            LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
+                            TIME_TEXT, TIMEN1, TIMEN2, TIMEN3, TIMEN4, TIMEN5,
+                            SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
+                            TOTAL_TEXT, TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5,
                             Item_Type.MENU, Item_Type.SURE, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
                             Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
                             Item_Type.INDICATOR1, Item_Type.INDICATOR2,

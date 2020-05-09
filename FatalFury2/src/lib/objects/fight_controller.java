@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.*;
 
 import static java.lang.Math.abs;
+import static lib.Enums.Item_Type.*;
+import static lib.Enums.Item_Type.TOTALN5;
 
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
@@ -18,7 +20,9 @@ public class fight_controller implements roundListener {
     final int roundTime = 90;
     // Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
-    // Path
+    // Milisegundos que aparecen los textos del score entre rondas
+    final int scoreTime = 2000;
+    // Path de sprites para la interfaz
     String path = "/assets/sprites/fight_interface";
     // Ronda actual de la pelea
     round currentRound;
@@ -69,6 +73,7 @@ public class fight_controller implements roundListener {
     Image match_play, round_1, round_2, round_3, round_extra;
     Image perfect, you_win, you_lost, time_up, draw_game, double_ko;
     Image terry_win, mai_win, andy_win;
+    displayScores displayscores = new displayScores();
     // Booleanos anuncios
     boolean startedFightAnimation;
     boolean startedVictoryAnimation;
@@ -76,6 +81,13 @@ public class fight_controller implements roundListener {
     long introTimeStamp;
     boolean showOutro = false;
     long outroTimeStamp;
+    boolean showScores = false;
+    long scoresTimestamp;
+    boolean showedScore = false;
+    boolean showedBonus = false;
+    boolean showedLife = false;
+    boolean showedTime = false;
+    // Loader ia
     ia_loader.dif iaLvl = ia_loader.dif.EASY;
 
 
@@ -162,6 +174,13 @@ public class fight_controller implements roundListener {
         showOutro = true;
     }
 
+    // Enseñar la pantalal de scores
+    public void showScores() {
+        Date date = new Date();
+        scoresTimestamp = date.getTime();
+        showScores = true;
+    }
+
     // Parar la pelea
     public void pauseFight() {
         currentRound.pause();
@@ -171,6 +190,11 @@ public class fight_controller implements roundListener {
     public void resumeFight() {
         introTimeStamp = System.currentTimeMillis();
         outroTimeStamp = System.currentTimeMillis();
+        scoresTimestamp = System.currentTimeMillis();
+        if (showedScore) { scoresTimestamp += scoreTime; }
+        if (showedBonus) { scoresTimestamp += scoreTime; }
+        if (showedLife) { scoresTimestamp += scoreTime; }
+        if (showedTime) { scoresTimestamp += scoreTime; }
         currentRound.resume();
     }
 
@@ -567,26 +591,31 @@ public class fight_controller implements roundListener {
                 }
                 else {
                     showOutro = false;
+                    audio_timeOut = false;
+                    audio_perfect = false;
+                    audio_double_ko = false;
+                    audio_draw_game = false;
                     screenObjects.remove(Item_Type.ANNOUNCEMENT);
-                    screenObjects.remove(Item_Type.ANNOUNCEMENT);
-                    if (newRound) {
-                        player.reset();
-                        enemy.reset();
-                        currentRound.setScenaryOffset(0);
-                        if (roundCounter == 1) {
-                            scene.setCurrentTime(Scenario_time.SUNSET);
+                    if (!vsIa) {
+                        if (newRound) {
+                            player.reset();
+                            enemy.reset();
+                            currentRound.setScenaryOffset(0);
+                            if (roundCounter == 1) {
+                                scene.setCurrentTime(Scenario_time.SUNSET);
+                            } else if (roundCounter >= 2) {
+                                scene.setCurrentTime(Scenario_time.NIGHT);
+                            }
+                            enemy.setRival(player.getPlayer());
+                            enemy.getPlayer().setMapLimit(mapLimit);
+                            player.setRival(enemy.getPlayer());
+                            player.getPlayer().setMapLimit(mapLimit);
+                            showIntro();
                         }
-                        else if (roundCounter >= 2) {
-                            scene.setCurrentTime(Scenario_time.NIGHT);
-                        }
-                        enemy.setRival(player.getPlayer());
-                        enemy.getPlayer().setMapLimit(mapLimit);
-                        player.setRival(enemy.getPlayer());
-                        player.getPlayer().setMapLimit(mapLimit);
-                        showIntro();
+                        else { hasEnded = true; }
                     }
                     else {
-                        hasEnded = true;
+                        showScores();
                     }
 
                 }
@@ -598,14 +627,88 @@ public class fight_controller implements roundListener {
                 audio_double_ko = false;
                 audio_draw_game = false;
                 screenObjects.remove(Item_Type.ANNOUNCEMENT);
+                if (!vsIa) {
+                    if (newRound) {
+                        player.reset();
+                        enemy.reset();
+                        currentRound.setScenaryOffset(0);
+                        if (roundCounter == 1) {
+                            scene.setCurrentTime(Scenario_time.SUNSET);
+                        } else if (roundCounter >= 2) {
+                            scene.setCurrentTime(Scenario_time.NIGHT);
+                        }
+                        enemy.setRival(player.getPlayer());
+                        enemy.getPlayer().setMapLimit(mapLimit);
+                        player.setRival(enemy.getPlayer());
+                        player.getPlayer().setMapLimit(mapLimit);
+                        showIntro();
+                    }
+                    else { hasEnded = true; }
+                }
+                else {
+                    showScores();
+                }
+            }
+        }
+        if (showScores) {
+            Round_Results lastResult = results.get(results.size()-1);
+            screenObject objectFrame = displayscores.getFrame();
+            screenObjects.put(objectFrame.getObjectType(),objectFrame);
+            Date date = new Date();
+            long timePast = date.getTime() - scoresTimestamp;
+            int lifeScore = 0;
+            int timeScore = 0;
+            if (!(lastResult == Round_Results.LOSE)) {
+                lifeScore = player.getPlayer().getLife() * 100;
+                if (!noTimer) { timeScore = currentRound.getTimeLeft() * 100; }
+            }
+            int totalScore = scorePlayer.getScore() + lifeScore + timeScore;
+            if (timePast <= scoreTime) {
+                List<screenObject> scoreObjects = displayscores.getScore(scorePlayer.getScore());
+                for (screenObject scoreObject : scoreObjects) {
+                    screenObjects.put(scoreObject.getObjectType(),scoreObject);
+                }
+            }
+            else if (timePast <= scoreTime * 2) {
+                showedScore = true;
+                screenObject bonusObject = displayscores.getBonusTitle();
+                screenObjects.put(bonusObject.getObjectType(),bonusObject);
+            }
+            else if (timePast <= scoreTime * 3) {
+                showedBonus = true;
+                List<screenObject> lifeObjects = displayscores.getLife(lifeScore);
+                for (screenObject lifeObject : lifeObjects) {
+                    screenObjects.put(lifeObject.getObjectType(),lifeObject);
+                }
+            }
+            else if (timePast <= scoreTime * 4) {
+                showedLife = true;
+                List<screenObject> timeObjects = displayscores.getTime(timeScore);
+                for (screenObject timeObject : timeObjects) {
+                    screenObjects.put(timeObject.getObjectType(),timeObject);
+                }
+            }
+            else if (timePast <= scoreTime * 5) {
+                showedTime = true;
+                List<screenObject> totalObjects = displayscores.getTotal(totalScore);
+                for (screenObject totalObject : totalObjects) {
+                    screenObjects.put(totalObject.getObjectType(),totalObject);
+                }
+            }
+            else {
+                showedScore = false;
+                showedBonus = false;
+                showedLife = false;
+                showedTime = false;
+                showScores = false;
+                clearScores(screenObjects);
                 if (newRound) {
                     player.reset();
                     enemy.reset();
                     currentRound.setScenaryOffset(0);
                     if (roundCounter == 1) {
                         scene.setCurrentTime(Scenario_time.SUNSET);
-                    }
-                    else if (roundCounter >= 2) {
+                    } else if (roundCounter >= 2) {
                         scene.setCurrentTime(Scenario_time.NIGHT);
                     }
                     enemy.setRival(player.getPlayer());
@@ -614,9 +717,7 @@ public class fight_controller implements roundListener {
                     player.getPlayer().setMapLimit(mapLimit);
                     showIntro();
                 }
-                else {
-                    hasEnded = true;
-                }
+                else { hasEnded = true; }
             }
         }
         // RONDA
@@ -644,6 +745,18 @@ public class fight_controller implements roundListener {
             int damage = 100 - actualHP;
             int w = 407 * damage / 100;
             g.fillRect(734,62,w,22);
+        }
+    }
+
+    // Borra todos los elementos de la interfaz de score
+    void clearScores(Map<Item_Type, screenObject> screenObjects) {
+        Item_Type[] types = new Item_Type[]{    SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
+                                                 LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
+                                                 TIME_TEXT, TIMEN1, TIMEN2, TIMEN3, TIMEN4, TIMEN5,
+                                                 TOTAL_TEXT, TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5,
+                                                 BONUS, SCORE_FRAME };
+        for (Item_Type i : types) {
+            screenObjects.remove(i);
         }
     }
 
