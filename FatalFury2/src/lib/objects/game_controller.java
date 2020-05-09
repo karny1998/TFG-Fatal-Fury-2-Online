@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
+import static lib.Enums.Item_Type.*;
+import static lib.Enums.Item_Type.SCORE_FRAME;
+
 
 // Clase que representa un controlador encargado de gestionar todo el juego
 public class game_controller {
@@ -713,6 +716,14 @@ public class game_controller {
         screenObjects.remove(Item_Type.BUBBLE3);
         screenObjects.remove(Item_Type.BUBBLE4);
         screenObjects.remove(Item_Type.ANNOUNCEMENT);
+        Item_Type[] types = new Item_Type[]{    SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
+                LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
+                TIME_TEXT, TIMEN1, TIMEN2, TIMEN3, TIMEN4, TIMEN5,
+                TOTAL_TEXT, TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5,
+                BONUS, SCORE_FRAME };
+        for (Item_Type i : types) {
+            screenObjects.remove(i);
+        }
     }
 
     public void writeDirecly(Graphics2D g){
