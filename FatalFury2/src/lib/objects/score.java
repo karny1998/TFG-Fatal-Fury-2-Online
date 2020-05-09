@@ -51,7 +51,6 @@ public class score {
     }
 
     public void applyBonus(int lf, int secs){
-        System.out.println("Se le ha llamado con " + lf + " pt lf y " + secs + " secs");
         points += (((lf + secs) * 100)*multiplier);
     }
 

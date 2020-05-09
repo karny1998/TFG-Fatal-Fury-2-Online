@@ -116,7 +116,7 @@ public class ia_loader {
             }
             procesamiento = new ia_processor[tam];
             int index = 0;
-            for(int i = 0; i < 2; i++){
+            for(int i = 1; i >= 0; i--){
                 if(eleccion[i]){
                     procesamiento[index] = procesadores[i];
                     index++;

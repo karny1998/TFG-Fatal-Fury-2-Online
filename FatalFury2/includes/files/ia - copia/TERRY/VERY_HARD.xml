@@ -32,10 +32,10 @@
 
     <tipo_ia>
         <caracteres> 3 </caracteres>
-        <ronda_1> A A A </ronda_1>
-        <ronda_2> A A A </ronda_2>
-        <ronda_3> A A A </ronda_3>
-        <ronda_4> A A A </ronda_4>
+        <ronda_1> B D A </ronda_1>
+        <ronda_2> B D A </ronda_2>
+        <ronda_3> B A A </ronda_3>
+        <ronda_4> B A A </ronda_4>
     </tipo_ia>
 
     <tipo_procesamiento>

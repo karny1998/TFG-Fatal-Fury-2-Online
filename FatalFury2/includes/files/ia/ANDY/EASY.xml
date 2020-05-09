@@ -6,8 +6,8 @@
         <JUMP_ROLL_RIGHT>10</JUMP_ROLL_RIGHT>
         <JUMP_ROLL_LEFT>10</JUMP_ROLL_LEFT>
         <!--DE PIE-->
-        <STANDING>40</STANDING>
-        <WALKING>30</WALKING>
+        <STANDING>130</STANDING>
+        <WALKING>90</WALKING>
         <WALKING_BACK>150</WALKING_BACK>
         <SOFT_PUNCH>20</SOFT_PUNCH>
         <SOFT_KICK>20</SOFT_KICK>
@@ -45,31 +45,31 @@
 
     <pesos>
         <!--RONDA 1-->
-        <tiempo> -0.3 </tiempo>
-        <vida_p1> 0.5 </vida_p1>
-        <vida_ia> 0.2  </vida_ia>
+        <tiempo> -0.25 </tiempo>
+        <vida_p1> 0 </vida_p1>
+        <vida_ia> 0  </vida_ia>
         <ronda> 0 </ronda>
         <victorias> 0 </victorias>
         
         <!--RONDA 2-->
         <tiempo> -0.25 </tiempo>
-        <vida_p1> 0.5 </vida_p1>
+        <vida_p1> 0 </vida_p1>
         <vida_ia> 0 </vida_ia>
         <ronda> 0 </ronda>
-        <victorias> 0.25 </victorias>
+        <victorias> 0 </victorias>
     
         <!--RONDA 3-->
-        <tiempo> -0.4 </tiempo>
-        <vida_p1> 0.25 </vida_p1>
-        <vida_ia> 0.25 </vida_ia>
-        <ronda> 0.1 </ronda>
+        <tiempo> 0.25 </tiempo>
+        <vida_p1> 0 </vida_p1>
+        <vida_ia> 0 </vida_ia>
+        <ronda> 0 </ronda>
         <victorias> 0 </victorias>
 
         <!--RONDA 4-->
-        <tiempo> -0.4 </tiempo>
-        <vida_p1> 0.25 </vida_p1>
-        <vida_ia> 0.25 </vida_ia>
-        <ronda> 0.1 </ronda>
+        <tiempo> 0.25 </tiempo>
+        <vida_p1> 0 </vida_p1>
+        <vida_ia> 0 </vida_ia>
+        <ronda> 0 </ronda>
         <victorias> 0 </victorias>
     </pesos>
 

@@ -262,7 +262,7 @@ public class character {
         }
 
         // Gestión de colisiones
-        if (gameResult == 2 && stateChanged && charac == Playable_Character.TERRY) {
+        if (gameResult == 2 && stateChanged && (state == Movement.VICTORY_FIGHT || state == Movement.VICTORY_ROUND) && charac == Playable_Character.TERRY) {
             s.setY(-270);
         }
         else if(collides && isAttacking() && inDisplacement()){
@@ -549,6 +549,7 @@ public class character {
     }
 
     public void setState(Movement state) {
+        this.movements.get(state).reset();
         this.state = state;
         this.movements.get(state).start(9999);
     }

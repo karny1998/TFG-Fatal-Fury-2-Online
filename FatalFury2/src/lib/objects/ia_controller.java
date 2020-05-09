@@ -25,6 +25,9 @@ public class ia_controller {
     private long timeReference1 = System.currentTimeMillis();
     private long timeReference2 = System.currentTimeMillis();
     private ia_loader.dif dif = ia_loader.dif.EASY;
+    private double probBlock = 0.0;
+    private int counter = 0;
+    private boolean read = false;
 
     public  ia_controller(){}
 
@@ -47,6 +50,20 @@ public class ia_controller {
         });
         ia_control.start();
         this.control = ia_control;
+        switch (lvl){
+            case EASY:
+                probBlock = 0.25;
+                break;
+            case NORMAL:
+                probBlock = 0.50;
+                break;
+            case HARD:
+                probBlock = 0.75;
+                break;
+            case VERY_HARD:
+                probBlock = 1.0;
+                break;
+        }
     }
 
     public void stopIA(){
@@ -69,7 +86,7 @@ public class ia_controller {
         }
 
         long current = System.currentTimeMillis();
-        boolean timeOk = current - timeReference2 > 200.0;
+        boolean timeOk = current - timeReference2 > 300.0;
         boolean timeOk2 = current - timeReference2 > 500.0;
         if(timeOk){timeReference1 = current;}
         if(timeOk2){timeReference2 = current;}
@@ -79,12 +96,70 @@ public class ia_controller {
                 || timeOk && enemy.getState() == Movement.CROUCHED_WALKING
                 || timeOk2 && enemy.getState() == Movement.STANDING
                 || enemy.isJumping() && timeOk2){
-            Movement m;
-            do {
+            Movement m = Movement.STANDING;
+            /*boolean normal = true;
+            if(counter == 1){
+                if(player.getMovements().get(player.getState()).ended() && timeOk2) {
+                    counter = 2;
+                    normal = false;
+                }
+                else{
+                    if(processor[0].isLowAttack(player.getState())){
+                        m = Movement.CROUCHED_BLOCK;
+                    }
+                    else{
+                        m = Movement.WALKING_BACK;
+                    }
+                }
+            }
+            else if(counter == 2){
+                if(dif == ia_loader.dif.VERY_HARD){
+                    do {
+                        m = roulette.spinRoulette();
+                    } while (!processor[0].isSpecial(m));
+                }
+                else{
+                    do {
+                        m = roulette.spinRoulette();
+                    } while (!processor[0].isAttack(m));
+                }
+                if(read){
+                    counter = 0;
+                    read = false;
+                }
+                normal = false;
+            }
+            else if(player.isAttacking() && dis < 150 && counter == 0){
+                double r = Math.random();
+                if (r <= probBlock) {
+                    if(processor[0].isLowAttack(player.getState())){
+                        m = Movement.CROUCHED_BLOCK;
+                    }
+                    else{
+                        m = Movement.WALKING_BACK;
+                    }
+                    if(read) {
+                        counter = 1;
+                        read = false;
+                    }
+                    normal = false;
+                    return;
+                }
+            }
+            if(normal) {*/
+            m = roulette.spinRoulette();
+            if(dis < 50 && m == Movement.WALKING_BACK){
                 m = roulette.spinRoulette();
-            }while(dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m)
-                    && !(enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH
-            )                                   || m == Movement.HARD_KICK || m == Movement.SOFT_KICK));
+            }
+            else {
+                while (dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m)){
+                    m = roulette.spinRoulette();
+                    if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
+                        break;
+                    }
+                }
+            }
+            //}
             move = movementsKeys.get(m);
         }
     }
@@ -150,6 +225,7 @@ public class ia_controller {
     }
 
     public String getMove() {
+        read = true;
         return move;
     }
 
@@ -216,6 +292,19 @@ public class ia_controller {
         this.roulette = aux.getKey().getValue();
         this.mood = aux.getValue().getKey();
         this.weights = aux.getValue().getValue();
-
+        switch (dif){
+            case EASY:
+                probBlock = 0.25;
+                break;
+            case NORMAL:
+                probBlock = 0.50;
+                break;
+            case HARD:
+                probBlock = 0.75;
+                break;
+            case VERY_HARD:
+                probBlock = 1.0;
+                break;
+        }
     }
 }
