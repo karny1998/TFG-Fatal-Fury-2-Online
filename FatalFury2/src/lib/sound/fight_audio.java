@@ -46,6 +46,8 @@ public class fight_audio {
         Projectile_1,
         Projectile_2,
         Projectile_3,
+        Move_cursor,
+        Option_selected
     }
 
     // Done
