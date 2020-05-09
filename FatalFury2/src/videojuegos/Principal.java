@@ -3,6 +3,7 @@ package videojuegos;
 import lib.input.controlListener;
 import lib.objects.Screen;
 import lib.sound.audio_manager;
+import lib.utils.crashReport;
 import lib.utils.fileUtils;
 
 import javax.swing.*;
@@ -134,7 +135,7 @@ public class Principal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                //new crashReport();
+                new crashReport();
                 Principal ex = new Principal();
                 ex.setVisible(true);
             }
