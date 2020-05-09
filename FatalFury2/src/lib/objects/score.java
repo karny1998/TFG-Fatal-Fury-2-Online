@@ -51,10 +51,16 @@ public class score {
     }
 
     public void applyBonus(int lf, int secs){
+        System.out.println("Se le ha llamado con " + lf + " pt lf y " + secs + " secs");
         points += (((lf + secs) * 100)*multiplier);
     }
 
-    public int getScore(){return this.points;}
+    public int getScore(){
+        if(this.points >= 99999){
+            return 99999;
+        }
+        return this.points;
+    }
 
     public void saveLastName(String name){
         String path = System.getProperty("user.dir") + "/.files/last_name.txt";

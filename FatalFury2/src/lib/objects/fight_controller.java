@@ -89,6 +89,8 @@ public class fight_controller implements roundListener {
     boolean showedTime = false;
     // Loader ia
     ia_loader.dif iaLvl = ia_loader.dif.EASY;
+    // Puntos anteriores
+    private int lastScore = 0;
 
 
     boolean audio_ready = false, audio_round = false, audio_fight = false;
@@ -221,6 +223,7 @@ public class fight_controller implements roundListener {
         player.startStandBy();
         enemy.startStandBy();
         // Gestión puntos
+        lastScore = scorePlayer.getScore();
         if(currentRound.getResult() == Round_Results.WIN){
             scorePlayer.applyBonus(currentRound.getPlayer().getPlayer().getLife(),currentRound.getTimeLeft());
         }
@@ -658,13 +661,16 @@ public class fight_controller implements roundListener {
             long timePast = date.getTime() - scoresTimestamp;
             int lifeScore = 0;
             int timeScore = 0;
-            if (!(lastResult == Round_Results.LOSE)) {
+            if (lastResult == Round_Results.WIN) {
                 lifeScore = player.getPlayer().getLife() * 100;
                 if (!noTimer) { timeScore = currentRound.getTimeLeft() * 100; }
             }
-            int totalScore = scorePlayer.getScore() + lifeScore + timeScore;
+            int totalScore = lastScore + lifeScore + timeScore;
+            if (totalScore > 99999){
+                totalScore = 99999;
+            }
             if (timePast <= scoreTime) {
-                List<screenObject> scoreObjects = displayscores.getScore(scorePlayer.getScore());
+                List<screenObject> scoreObjects = displayscores.getScore(lastScore);
                 for (screenObject scoreObject : scoreObjects) {
                     screenObjects.put(scoreObject.getObjectType(),scoreObject);
                 }

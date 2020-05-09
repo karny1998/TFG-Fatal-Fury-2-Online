@@ -2198,7 +2198,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-5000
+50000
 # Incremento X
 0
 # Incremento Y
@@ -2530,7 +2530,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-4000
+50000
 # Incremento X
 0
 # Incremento Y
@@ -2643,7 +2643,7 @@ false
 # Altura frame (500)
 500
 # Tiempo transición
-4000
+50000
 # Incremento X
 0
 # Incremento Y
