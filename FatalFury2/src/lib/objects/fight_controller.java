@@ -191,10 +191,10 @@ public class fight_controller implements roundListener {
         introTimeStamp = System.currentTimeMillis();
         outroTimeStamp = System.currentTimeMillis();
         scoresTimestamp = System.currentTimeMillis();
-        if (showedScore) { scoresTimestamp += scoreTime; }
-        if (showedBonus) { scoresTimestamp += scoreTime; }
-        if (showedLife) { scoresTimestamp += scoreTime; }
-        if (showedTime) { scoresTimestamp += scoreTime; }
+        if (showedScore) { scoresTimestamp = scoresTimestamp - scoreTime; }
+        if (showedBonus) { scoresTimestamp = scoresTimestamp - scoreTime; }
+        if (showedLife) { scoresTimestamp = scoresTimestamp - scoreTime; }
+        if (showedTime) { scoresTimestamp = scoresTimestamp - scoreTime; }
         currentRound.resume();
     }
 
