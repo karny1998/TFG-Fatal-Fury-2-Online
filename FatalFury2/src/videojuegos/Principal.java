@@ -3,7 +3,6 @@ package videojuegos;
 import lib.input.controlListener;
 import lib.objects.Screen;
 import lib.sound.audio_manager;
-import lib.utils.crashReport;
 import lib.utils.fileUtils;
 
 import javax.swing.*;
@@ -64,6 +63,13 @@ public class Principal extends JFrame {
 
         } else {
             new File(ruta).mkdirs();
+            //TODO PREGUNTAR SI FUNCIONA
+            /*
+            try {
+                Files.setAttribute(Paths.get(ruta), "dos:hidden", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
             // Crear copia del fichero de opciones
             try {
                 fileUtils.copy(origen+"options.xml", ruta+"/options.xml");
@@ -99,7 +105,6 @@ public class Principal extends JFrame {
 
         addKeyListener(control);
 
-        setFocusable(true);
 
 
         initUI();
@@ -109,15 +114,27 @@ public class Principal extends JFrame {
         add(new Screen());
         pack();
         setTitle("Fatal Fury 2");
-        setLocationRelativeTo(null);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dispose();
+        setUndecorated(true);
+        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        setVisible(true);
+
+        setResizable(false);
+        setFocusable(true);
+        setLocationRelativeTo(null);
+
+
+
+
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new crashReport();
+                //new crashReport();
                 Principal ex = new Principal();
                 ex.setVisible(true);
             }
