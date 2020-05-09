@@ -4,6 +4,7 @@ import lib.Enums.*;
 import lib.maps.scenary;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
+import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,6 +92,12 @@ public class fight_controller implements roundListener {
     ia_loader.dif iaLvl = ia_loader.dif.EASY;
     // Puntos anteriores
     private int lastScore = 0;
+    // Booleanos sonidos de scores
+    boolean playedScore = false;
+    boolean playedBonus = false;
+    boolean playedLife = false;
+    boolean playedTime = false;
+    boolean playedTotal = false;
 
 
     boolean audio_ready = false, audio_round = false, audio_fight = false;
@@ -219,7 +226,11 @@ public class fight_controller implements roundListener {
     // Gestión de rondas, se llama cuando la ronda actual termina
     @Override
     public void roundEnded() {
-
+        playedScore = false;
+        playedBonus = false;
+        playedLife = false;
+        playedTime = false;
+        playedTotal = false;
         player.startStandBy();
         enemy.startStandBy();
         // Gestión puntos
@@ -674,17 +685,29 @@ public class fight_controller implements roundListener {
                 for (screenObject scoreObject : scoreObjects) {
                     screenObjects.put(scoreObject.getObjectType(),scoreObject);
                 }
+                if (!playedScore) {
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
+                    playedScore = true;
+                }
             }
             else if (timePast <= scoreTime * 2) {
                 showedScore = true;
                 screenObject bonusObject = displayscores.getBonusTitle();
                 screenObjects.put(bonusObject.getObjectType(),bonusObject);
+                if (!playedBonus) {
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
+                    playedBonus = true;
+                }
             }
             else if (timePast <= scoreTime * 3) {
                 showedBonus = true;
                 List<screenObject> lifeObjects = displayscores.getLife(lifeScore);
                 for (screenObject lifeObject : lifeObjects) {
                     screenObjects.put(lifeObject.getObjectType(),lifeObject);
+                }
+                if (!playedLife) {
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
+                    playedLife = true;
                 }
             }
             else if (timePast <= scoreTime * 4) {
@@ -693,12 +716,20 @@ public class fight_controller implements roundListener {
                 for (screenObject timeObject : timeObjects) {
                     screenObjects.put(timeObject.getObjectType(),timeObject);
                 }
+                if (!playedTime) {
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
+                    playedTime = true;
+                }
             }
             else if (timePast <= scoreTime * 5) {
                 showedTime = true;
                 List<screenObject> totalObjects = displayscores.getTotal(totalScore);
                 for (screenObject totalObject : totalObjects) {
                     screenObjects.put(totalObject.getObjectType(),totalObject);
+                }
+                if (!playedTotal) {
+                    audio_manager.fight.playSfx(fight_audio.sfx_indexes.Option_selected);
+                    playedTotal = true;
                 }
             }
             else {
