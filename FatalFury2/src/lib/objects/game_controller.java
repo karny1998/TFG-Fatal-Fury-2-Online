@@ -755,7 +755,7 @@ public class game_controller {
                 fight.drawHpBarPlayer(g);
                 fight.drawHpBarEnemy(g);
             }
-            else if(story.getFight() != null){
+            else if(story != null && story.getFight() != null){
                 story.getFight().drawHpBarPlayer(g);
                 story.getFight().drawHpBarEnemy(g);
             }
