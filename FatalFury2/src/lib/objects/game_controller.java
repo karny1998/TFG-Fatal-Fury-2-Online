@@ -135,7 +135,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 50.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
@@ -145,7 +145,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 50.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
                 timeReference = tiempo;

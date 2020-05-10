@@ -63,6 +63,9 @@ public class character {
         boolean collides = pHurt.collides(eHurt);
         boolean collidesLimitLeft = pHurt.getX() <= mapLimit.getX();
         boolean collidesLimitRight = pHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
+        boolean rivalCollidesLimitLeft = eHurt.getX() <= mapLimit.getX();
+        boolean rivalCollidesLimitRight = eHurt.getX()+eHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
+
         int dis = 0;
         if (pHurt.getX() > eHurt.getX()){
             dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
@@ -268,46 +271,100 @@ public class character {
         else if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
         }
-        else if(collidesLimitLeft && (s.getX() < x || collides)
-                || collidesLimitRight && (s.getX() > x || collides)){
+        else if(collidesLimitLeft){
+            int d = s.getX()-x;
             if(inKnockback() && !rival.inKnockback()){
-                rival.returnKnockback(Math.abs(x - s.getX()));
-            }
-            if(collides && pHurt.getY() < eHurt.getY()+eHurt.getHeight()){
-                int increment = -orientation;
-                if(orientation == 1 && pHurt.getX() <= eHurt.getX()
-                        || orientation == -1 && pHurt.getX() > eHurt.getX()){
-                    increment = -orientation;
-                }
-                 x += increment;
-                 s.setX(x);
+                rival.returnKnockback(Math.abs(d));
             }
             else{
-                s.setX(x);
+                if(d <= 0){
+                    s.setX(x);
+                    if(rivalCollidesLimitLeft && pHurt.getY() > eHurt.getY() && collides){
+                        s.setX(x+10);
+                        x += 10;
+                    }
+                    else if(pHurt.getY() < eHurt.getY() && collides){
+                        rival.returnKnockback(-Math.abs(d));
+                    }
+                    else if(collides && dis < 0 && onHeightRef() && rival.onHeightRef()){
+                        rival.setX(rival.getX()+1);
+                    }
+                }
+                else{
+                    x = s.getX();
+                }
+            }
+        }
+        else if(collidesLimitRight){
+            int d = s.getX()-x;
+            if(inKnockback() && !rival.inKnockback()){
+                rival.returnKnockback(Math.abs(d));
+            }
+            else {
+                if (d >= 0) {
+                    s.setX(x);
+                    if (rivalCollidesLimitRight && pHurt.getY() > eHurt.getY() && collides) {
+                        s.setX(x - 10);
+                        x -= 10;
+                    } else if (pHurt.getY() < eHurt.getY() && collides) {
+                        rival.returnKnockback(-Math.abs(d));
+                    } else if (collides && dis < 0 && onHeightRef() && rival.onHeightRef()) {
+                        rival.setX(rival.getX() - 1);
+                    }
+                } else {
+                    x = s.getX();
+                }
             }
         }
         else if(state == Movement.THROWN_OUT){
             x = s.getX();
         }
-        //////////////////////////////////////////////////////////
         else if(state == Movement.THROW){
             s.setX(x);
         }
-        //////////////////////////////////////////////////////////
-        else if(collides && pHurt.getY() <= eHurt.getY()+eHurt.getHeight()){
-            int increment = orientation;
-            if(orientation == 1 && pHurt.getX() < eHurt.getX()
-                    || orientation == -1 && pHurt.getX() > eHurt.getX()){
-                increment = -orientation;
-            }
-            if(eHurt.getX() <= mapLimit.getX() && s.getX() < x
-                || eHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth()){
-                x += increment;
+        else if(rivalCollidesLimitLeft && eHurt.getY() < pHurt.getY() && s.getX()-x <= 0 && collides
+                || rivalCollidesLimitRight && eHurt.getY() < pHurt.getY() && s.getX()-x >= 0  && collides){
+            s.setX(x);
+        }
+        else if(rivalCollidesLimitLeft && eHurt.getY() < pHurt.getY() && s.getX()-x > 0 && collides
+                || rivalCollidesLimitRight && eHurt.getY() < pHurt.getY() && s.getX()-x < 0  && collides){
+            x = s.getX();
+        }
+        else if((!isJumping() && !rival.isJumping()
+                || isJumping() && rival.isJumping()) && collides && dis < 0){
+            if(orientation == -1){
+                x += dis;
             }
             else{
-                x = s.getX() + increment;
+                x-= dis;
             }
             s.setX(x);
+        }
+        else if(isJumping() && !rival.isJumping() && collides && dis < 0 && !rival.inKnockback()){
+            boolean pos = false;
+            if(orientation == 1){
+                pos = (pHurt.getX() > eHurt.getX());
+            }
+            else{
+                pos = (pHurt.getX() < eHurt.getX());
+            }
+            int d = Math.abs(s.getX()-x);
+            if(d == 0){d = 5;}
+            if(pos) {
+                rival.returnKnockback(d);
+            }
+            else{
+                rival.returnKnockback(-d);
+            }
+        }
+        else if(inKnockback()){
+            if(rival.isAttacking() && rival.inDisplacement() && collides){
+                s.setX(s.getX()+orientation);
+                x = s.getX();
+            }
+            else {
+                x = s.getX();
+            }
         }
         // Si no colisiona, o está andando hacia atrás mirando a la izquierda
         // o está andando hacia adelante mirando hacia la derecha (ambos casos
@@ -322,6 +379,14 @@ public class character {
             s.setX(x);
         }
         y = s.getY();
+        if(pHurt.getX() < mapLimit.getX()){
+            x += 1;
+            s.setX(x);
+        }
+        else if(pHurt.getX()+pHurt.getWidth() > mapLimit.getX()+mapLimit.getWidth()){
+            x -= 1;
+            s.setX(x);
+        }
         return s;
     }
 
