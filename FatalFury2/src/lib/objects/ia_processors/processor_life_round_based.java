@@ -63,6 +63,9 @@ public class processor_life_round_based extends ia_processor {
     @Override
     public void updateRoulette(russian_roulette roulette, ia_type type[], Double weights[], int lvl, character player,
                                character enemy, int time, int round, int playerWins) {
+        if(round == 1){
+            return;
+        }
         int ind = -1;
         for(int i = type.length-1; i > -1 && ind == -1; --i){
             if((i+1)*100.0/(double)type.length >= (double)enemy.getLife() && i*100.0/(double)type.length <= (double)enemy.getLife()){
