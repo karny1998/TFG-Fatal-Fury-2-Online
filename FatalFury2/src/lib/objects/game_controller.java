@@ -779,20 +779,20 @@ public class game_controller {
             switch (i){
                 case 0:
                     s[0] = "Low attack freq.";
-                    s[1] = "Evalues";
+                    s[1] = "Evaluates";
                     s[2] = "   Time remaining";
                     t = 3;
                     break;
                 case 1:
                     s[0] = "Medium attack freq.";
-                    s[1] = "Evalues";
+                    s[1] = "Evaluates";
                     s[2] = "   Time remaining";
                     s[3] = "   Player life remaining";
                     t = 4;
                     break;
                 case 2:
                     s[0] = "High attack freq.";
-                    s[1] = "Evalues";
+                    s[1] = "Evaluates";
                     s[2] = "   Time remaining";
                     s[3] = "   Player life remaining";
                     s[4] = "   IA life remaining";
@@ -802,7 +802,7 @@ public class game_controller {
                     break;
                 case 3:
                     s[0] = "Very High attack freq.";
-                    s[1] = "Evalues";
+                    s[1] = "Evaluates";
                     s[2] = "   Time remaining";
                     s[3] = "   Player life remaining";
                     s[4] = "   IA life remaining";
