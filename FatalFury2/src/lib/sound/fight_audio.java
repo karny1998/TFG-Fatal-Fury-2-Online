@@ -26,12 +26,12 @@ public class fight_audio {
         Special_1,
         Special_2,
         Special_3,
-        Special_4,
-        Desperation_Move,
+        //Special_4,
+        //Desperation_Move,
         Win,
         Defeat,
-        Taunt,
-        Throw,
+        //Taunt,
+        Throw
     }
 
     // DONE
@@ -42,10 +42,6 @@ public class fight_audio {
         Final_hit_1,
         Final_hit_2,
         Final_hit_3,
-        //TODO -> FALTAN PROYECTILES
-        Projectile_1,
-        Projectile_2,
-        Projectile_3,
         Move_cursor,
         Option_selected
     }
@@ -71,14 +67,6 @@ public class fight_audio {
         Ready,
         Time_Up,
     }
-
-    // DONE
-    public enum crowd_indexes{
-        Cheer_1,
-        Cheer_2
-    }
-
-
 
 
     private Playable_Character p1, p2;
@@ -166,15 +154,6 @@ public class fight_audio {
             String ruta_sfx_aux = ruta_sfx +"/"+ sfx_indexes.values()[i] + ".wav";
             sfx[i] = AudioSystem.getClip();
             sfx[i].open(AudioSystem.getAudioInputStream( this.getClass().getResource(ruta_sfx_aux) ));
-        }
-
-        // CARGAR VOCES DE LA AUDIENCIA
-        crowd = new Clip[crowd_indexes.values().length];
-
-        for(int i = 0; i < crowd.length; i++){
-            String ruta_crowd_aux = ruta_crowd +"/"+ crowd_indexes.values()[i] + ".wav";
-            crowd[i] = AudioSystem.getClip();
-            crowd[i].open(AudioSystem.getAudioInputStream( this.getClass().getResource(ruta_crowd_aux) ));
         }
 
         // CARGAR VOCES DEL NARRADOR
@@ -335,10 +314,6 @@ public class fight_audio {
 
         for(int i = 0; i < announcer_indexes.values().length; i++){
             announcer[i].close();
-        }
-
-        for(int i = 0; i < crowd_indexes.values().length; i++){
-            crowd[i].close();
         }
 
 

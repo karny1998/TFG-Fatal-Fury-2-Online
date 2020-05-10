@@ -135,6 +135,7 @@ public class character_menu {
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "off.png")).getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.menuInput(mando, controlListener.DE_INDEX) && pos_2 < 2){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
+
                 pos_2 ++ ;
                 p2 = new screenObject(x2 + incrementos[pos_2], y2, w , h, new ImageIcon( this.getClass().getResource(path + p2_aux + "off.png")).getImage(), Item_Type.P2_SELECT);
             } else if (controlListener.menuInput(mando, controlListener.ENT_INDEX)) {

@@ -111,7 +111,7 @@ public class load_character {
                 String combo = readAux(b);
                 String aux = readAux(b);
                 boolean hasSound = !aux.equals("NONE");
-                fight_audio.voice_indexes sound = fight_audio.voice_indexes.Desperation_Move;
+                fight_audio.voice_indexes sound = fight_audio.voice_indexes.Hit_1;
                 if(hasSound) {
                     sound = fight_audio.voice_indexes.valueOf(aux);
                 }
