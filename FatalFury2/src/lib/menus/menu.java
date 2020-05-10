@@ -105,4 +105,19 @@ public class menu {
         this.y = y;
     }
 
+    public int getSel() {
+        return sel;
+    }
+
+    public void setSel(int sel) {
+        this.sel = sel;
+    }
+
+    public long getReferenceTime() {
+        return referenceTime;
+    }
+
+    public void setReferenceTime(long referenceTime) {
+        this.referenceTime = referenceTime;
+    }
 }

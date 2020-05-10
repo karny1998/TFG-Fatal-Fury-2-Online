@@ -147,18 +147,12 @@ public class ia_controller {
                 }
             }
             if(normal) {*/
-            m = roulette.spinRoulette();
-            if(dis < 50 && m == Movement.WALKING_BACK){
+            do{
                 m = roulette.spinRoulette();
-            }
-            else {
-                while (dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m)){
-                    m = roulette.spinRoulette();
-                    if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
-                        break;
-                    }
+                if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
+                    break;
                 }
-            }
+            }while (dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
             //}
             move = movementsKeys.get(m);
         }

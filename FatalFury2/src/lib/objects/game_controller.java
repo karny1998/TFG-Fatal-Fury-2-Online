@@ -16,6 +16,7 @@ import lib.utils.fileUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Random;
 
@@ -71,6 +72,17 @@ public class game_controller {
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
     private ia_loader.dif lvlIa;
     private screenObject how = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/how_to_play.png")).getImage(), Item_Type.MENU);;
+    private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    private Font font;
+    {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(18f);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public game_controller() {
         this.sure = menu_generator.generate_sure();
@@ -81,7 +93,6 @@ public class game_controller {
         this.difficulty = menu_generator.generate_story_difficulty();
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
-
     }
 
     public game_controller(menu principal) {
@@ -757,6 +768,57 @@ public class game_controller {
         else if(state == GameState.STORY_FIGHT){
             story.getFight().drawHpBarPlayer(g);
             story.getFight().drawHpBarEnemy(g);
+        }
+        else if(state == GameState.DIFFICULTY || state == GameState.STORY_DIFFICULTY){
+            int i = actualMenu.getSel();
+            String s[] = new String[10];
+            int t = 0;
+            if(state == GameState.STORY_DIFFICULTY){
+                i = story.getActualMenu().getSel();
+            }
+            switch (i){
+                case 0:
+                    s[0] = "Low attack freq.";
+                    s[1] = "Evalues";
+                    s[2] = "   Time remaining";
+                    t = 3;
+                    break;
+                case 1:
+                    s[0] = "Medium attack freq.";
+                    s[1] = "Evalues";
+                    s[2] = "   Time remaining";
+                    s[3] = "   Player life remaining";
+                    t = 4;
+                    break;
+                case 2:
+                    s[0] = "High attack freq.";
+                    s[1] = "Evalues";
+                    s[2] = "   Time remaining";
+                    s[3] = "   Player life remaining";
+                    s[4] = "   IA life remaining";
+                    s[5] = "   Round";
+                    s[6] = "   Round victory ratio";
+                    t = 7;
+                    break;
+                case 3:
+                    s[0] = "Very High attack freq.";
+                    s[1] = "Evalues";
+                    s[2] = "   Time remaining";
+                    s[3] = "   Player life remaining";
+                    s[4] = "   IA life remaining";
+                    s[5] = "   Round";
+                    s[6] = "   Round victory ratio";
+                    s[7] = "   Player tendencies";
+                    s[8] = "   during the own game";
+                    t = 9;
+                    break;
+            }
+            g.setFont(font);
+            g.setColor(Color.YELLOW);
+            int y = 135;
+            for(int j = 0; j < t; ++j){
+                g.drawString(s[j], 425,y + 28*j);
+            }
         }
     }
 

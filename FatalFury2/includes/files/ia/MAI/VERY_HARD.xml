@@ -26,8 +26,8 @@
         <DASH>50</DASH>
         <!--ESPECIALES-->
         <CHARGED_PUNCH_A>50</CHARGED_PUNCH_A>
-        <REVERSE_KICK_B>30</REVERSE_KICK_B>
-        <SPIN_PUNCH_A>20</SPIN_PUNCH_A>
+        <REVERSE_KICK_B>35</REVERSE_KICK_B>
+        <SPIN_PUNCH_A>15</SPIN_PUNCH_A>
     </probabilidades>
 
     <tipo_ia>
