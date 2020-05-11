@@ -13,7 +13,7 @@ import java.util.Map;
 import static lib.Enums.Item_Type.*;
 
 // Clase que se encarga de mostrar todo por pantalla
-public class Screen extends JPanel {
+public class Screen extends JPanel{
     // Resolución del juego, tiempo de actualización de los cálculos, y tiempo de refresco de la pantalla
     static int resX = 1280, resY = 720, timerDelay = 1, refreshDelay = 15;
     // Si se está debugeando o no
