@@ -15,6 +15,7 @@ import java.io.IOException;
 public class Principal extends JFrame {
 
     public Principal() {
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage("/assets/sprites/menu/story/are_you_sure1.png"));
         // TODO -> MOSTRAR OPENING
 
         String ruta =  System.getProperty("user.dir") + "/.files";
