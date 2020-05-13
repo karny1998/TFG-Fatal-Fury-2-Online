@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
 <opciones>
     <volumen>
         <vol_general>50</vol_general>
-        <vol_musica>50</vol_musica>
-        <vol_voces>100</vol_voces>
-        <vol_efectos>100</vol_efectos>
+        <vol_musica>100</vol_musica>
+        <vol_voces>0</vol_voces>
+        <vol_efectos>0</vol_efectos>
     </volumen>
     <controles_jugador_1>
         <arriba>38</arriba>

@@ -291,6 +291,10 @@ public class controlListener implements KeyListener {
 
 
 
+    public static boolean getBack(){
+        return keyStatus[8];
+    }
+
 
 
 

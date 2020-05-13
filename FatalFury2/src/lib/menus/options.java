@@ -341,6 +341,9 @@ public class options {
                 exit = true;
                 //preguntar si quieres guardar
             }
+            if(controlListener.getBack()){
+                exit = true;
+            }
 
             boolean init;
             int index;
@@ -607,6 +610,13 @@ public class options {
 
     public void printOptions(Graphics2D g){
 
+
+        g.setFont(f_2);
+        g.setColor(new Color(255, 255, 255));
+
+        g.drawString("BACKSPACE - exit", 880, 700);
+        g.drawString("ESC - save and exit", 20, 700);
+
         g.setFont(f_1);
         for(int i = 0; i < titulos.length; i++){
             if(Character.isUpperCase(titulos[i].charAt(0))){
@@ -616,6 +626,7 @@ public class options {
             }
             g.drawString(titulos[i], xTitulos[i], 135);
         }
+
 
         int y = 215;
         String[] elementos_mostrar = elementos[pagina.getVal()];
