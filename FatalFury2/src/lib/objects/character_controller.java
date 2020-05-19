@@ -19,9 +19,10 @@ public abstract  class character_controller {
     boolean standBy = true;
     // Número de jugador en JVJ
     protected int playerNum = 1;
-
+    // Rival al que se enfrenta
     protected character rival = null;
 
+    // Constructor que pide identificador del personaje, número de jugador, y coordenadas y orientación iniciales
     public character_controller(Playable_Character ch, int pN, int x, int y, int orientation){
         playerNum = pN;
         this.x = x; this.y = y;
@@ -48,15 +49,19 @@ public abstract  class character_controller {
         }
     }
 
+    // Resetea el personaje
     abstract void reset();
 
+    // Para la inteligencia artificial
     public void stopIA(){};
 
+    // Resetea el personaje con información concreta
     void reset(Playable_Character ch, int x, int y, int orientation) {
         this.x = x; this.y = y;
         player.reset(x,y, orientation);
     }
 
+    // Devuelve el frame del personaje teniendo en cuenta la colision de las hurtboxs
     abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
 
     // GETTERS Y SETTERS

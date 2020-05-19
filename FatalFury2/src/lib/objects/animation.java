@@ -13,30 +13,30 @@ import java.util.List;
 public class animation {
     // Tipo de animación
     Animation_type type = Animation_type.ENDABLE;
-    //Imágenes que conforman la animación
+    // Imágenes que conforman la animación
     List<screenObject> frames = new ArrayList<screenObject>();
-    //Incrementos de coordenadas entre frames
+    // Incrementos de coordenadas entre frames
     List<Pair<Integer, Integer>> coords = new ArrayList<Pair<Integer, Integer>>();
-    //Tiempos entre transición de un frame a otro
+    // Tiempos entre transición de un frame a otro
     List<Double> times = new ArrayList<Double>();
     // Coordenadas objetivo para terminar el frame
     List<Pair<Integer, Integer>> waitedCoords = new ArrayList<Pair<Integer, Integer>>();
-    // Si un frame puede ser cortado o no por otra animación
+    // Si un frame tiene hitbox o no
     List<Boolean> hasHitBox = new ArrayList<Boolean>();
-    //Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
+    // Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
     Boolean hasEnd = true, ended = false;
-    //En qué frame de la animación se estaba
+    // En qué frame de la animación se estaba
     int state = 0;
     // El sentido en que avanza la animación (frame 1, 2, 3.. o 3, 2, 1)
     int increment = 1;
-    //Momento en el que salió el último frame
+    // Momento en el que salió el último frame
     long startTime = 0;
+    // Momento de referencia para "creación de frames intermedios"
     long auxTime = 0;
-    //Sonido asignado y su tipo
+    // Sonido asignado y su tipo
     fight_audio.voice_indexes soundType;
+    // Si es jugador 1 o no
     boolean isPlayer1;
-
-
     // Si se está reproduciendo el sonido
     Boolean playing = false;
     //Hitbox asociada
@@ -45,18 +45,23 @@ public class animation {
     hitBox hurtBox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HURTBOX);
     // Cover asociada
     hitBox coverbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.COVERBOX);
-
+    // Si tiene un sonido asociadoo
     boolean hasSound = false;
-
+    // La y que se ha recorrido entre frames
     int yCompleted = 0;
+    // Si se ha completado la y esperada
     boolean yAux = false;
+    // El incremento total en y de la animación
     int totalIncrementY = 0;
+    // La y final de la animación
     int desiredY = 0;
+    // Si desiredY está asignada o no
     boolean desiredAssigned = false;
 
+    // Constructor por defecto
     public animation() {}
 
-    //Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas
+    // Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas
     public void addFrame(screenObject s, Double t, int iX, int iY){
         frames.add(frames.size(), s);
         times.add(times.size(), t);
@@ -66,6 +71,8 @@ public class animation {
         totalIncrementY += iY;
     }
 
+    // Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas, indicando
+    // si tiene hitbox o no
     public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean hasHit){
         frames.add(frames.size(), s);
         times.add(times.size(), t);
@@ -75,7 +82,7 @@ public class animation {
         totalIncrementY += iY;
     }
 
-    //Inicia los cálculos de la animación
+    // Inicia los cálculos de la animación
     public  void start(){
         playing = false;
         ended = false;
@@ -89,6 +96,7 @@ public class animation {
         desiredAssigned = false;
     }
 
+    // Termina la animación, y la deja en el final
     public  void end(){
         playing = true;
         ended = true;
@@ -102,7 +110,7 @@ public class animation {
         desiredAssigned = false;
     }
 
-    //Finaliza y reinicia la animación
+    // Finaliza y reinicia la animación
     public  void reset(){
         playing = false;
         ended = false;
@@ -121,11 +129,12 @@ public class animation {
     // a partir de unas coordenadas base. La orientación indica a donde mira
     // la animación (1 hacia la izquierda, -1 hacia la derecha)
     public screenObject getFrame(int x, int y, int orientation){
+        // Si no está asignada la y deseada, la calculamos
         if(!desiredAssigned){
             desiredY = y + totalIncrementY;
             desiredAssigned = true;
         }
-        // Si no se está reprodciendo el sonido, se reproducre
+        // Si no se está reprodciendo el sonido (y tiene), se reproducre
         if(hasSound && !playing && hasEnd){
             audio_manager.fight.playVoice(isPlayer1, soundType);
             playing = true;
@@ -134,8 +143,6 @@ public class animation {
         // Si ha terminado, devuelve el último frame
         if(ended || type == Animation_type.HOLDABLE && state == frames.size()-1){
             result = frames.get(frames.size()-1).cloneSO();
-            //result.setX(x+coords.get(frames.size()-1).getKey());
-            //result.setY(desiredY);
             result.setX(x);
             result.setY(y);
             result.setWidth(result.getWidth()*orientation);
@@ -145,26 +152,30 @@ public class animation {
         long current = System.currentTimeMillis();
         double elapsedTime = current - startTime;
         double elapsedTimeAux = current - auxTime;
-        /////////////////////////////////////////////////////////////////////////////////
+        // Si se está en un frame que no es el primero, y los incrementos x e y del frame anterior son 0, y
+        // el tiempo auxiliar es mayor que el de comienzo de la animación, se actualiza el auxiliar
         if(state > 0 && coords.get(state-1).first == 0 && coords.get(state-1).second == 0 && elapsedTimeAux > elapsedTime){
             elapsedTimeAux  = elapsedTime;
         }
-        /////////////////////////////////////////////////////////////////////////////////
+
+        // Incremento en x en base al tiempo transcurrido
         int incrementOnX = (int)(coords.get((state)%coords.size()).getKey()*(elapsedTimeAux/times.get(state)));
-
         incrementOnX *= -orientation;
-
+        // Incremento en y en base al tiempo transcurrido
         int incrementOnY = (int)(coords.get((state)%coords.size()).getValue()*(elapsedTimeAux/times.get(state)));
+
         int cX = coords.get((state)%coords.size()).getKey();
         int cY = coords.get((state)%coords.size()).getValue();
         int wX = waitedCoords.get(state).getKey();
         int wY = waitedCoords.get(state).getValue();
+        // Si el frame avanza en alguna coordenada, actualiza el tiempo de referencia
         if(cX != 0 && cY == 0 && incrementOnX != 0
             || cX == 0 && cY != 0 && incrementOnY != 0
             || cX != 0 && cY != 0 && incrementOnX != 0 && incrementOnY != 0) {
             auxTime = current;
         }
 
+        // Si con corresponde al último frame intermedio, se avanza lo que quede
         if(wY != -1 &&  (wY > 0 && y + incrementOnY > wY
                 || wY < 0 && y + incrementOnY < wY)){
             incrementOnY = wY - y;
@@ -213,7 +224,7 @@ public class animation {
         }
         // Si ha pasado el tiempo requerido entre frame y frame
         else if(elapsedTime >= times.get(state)){
-
+            // Si falta por avanzar algo, se avanza eso en el siguiente frame
             if(yCompleted != 0 && yCompleted+incrementOnY != coords.get(state).getValue()){
                 incrementOnY = coords.get(state).getValue() - yCompleted;
                 yCompleted = 0;
@@ -225,7 +236,7 @@ public class animation {
             startTime = current;
             yAux = false;
         }
-        // Caso por defecto
+        // Si se está en un estado intermedio entre frame y frame
         else{
             result = frames.get(state).cloneSO();
             result.setX(x + incrementOnX);
@@ -237,13 +248,13 @@ public class animation {
         return result;
     }
 
-    screenObject getFrame(){
-        return getFrame(frames.get(state).getX(),frames.get(state).getY(),1);
-    }
-
     //Getters y setters
     public void setCoords(ArrayList<Pair<Integer, Integer>> coords) {
         this.coords = coords;
+    }
+
+    screenObject getFrame(){
+        return getFrame(frames.get(state).getX(),frames.get(state).getY(),1);
     }
 
     public Boolean getHasEnd() {
@@ -310,6 +321,7 @@ public class animation {
         this.playing = playing;
     }
 
+    // Si no tiene hitbox, devuelve una aleatoria con la que nunca se golpeara
     public hitBox getHitbox() {
         if(ended || !hasHitBox.get(state)){
             return new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);

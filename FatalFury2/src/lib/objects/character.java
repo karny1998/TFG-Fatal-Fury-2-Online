@@ -7,7 +7,9 @@ import lib.characters.load_character;
 
 import java.util.*;
 
+// Clase que representa un personaje con sus correspondientes movimientos
 public class character {
+    // Identificador del personaje
     private Playable_Character charac;
     // String que representa el combo para usar un tipo de ataque
     private Map<String, Movement> combos = new HashMap<String, Movement>();
@@ -15,8 +17,6 @@ public class character {
     private Map<Movement, movement> movements = new HashMap<Movement, movement>();
     // Inverso del primero para la ia
     private Map<Movement, String> movementsKeys = new HashMap<>();;
-    // Podría haberse puesto en un único mapa, pero fue para independizar
-    // el movimiento en sí del combo necesario
     // Vida del personaje
     private int life = 100;
     // Orientación del personaje (1 mira hacia la izquierda, -1 hacia la derecha)
@@ -31,8 +31,9 @@ public class character {
     private character rival;
     // Lista de movimientos realizados
     private List<Movement> executedMoves = new ArrayList<>();
-    // Entero de victoria o derrota
+    // Entero de victoria o derrota (1 victoria ronda, 2 victoria pelea, 3 derrota y 4 auxiliar)
     private int gameResult = 0;
+    // Altura de referencia del personaje (para throws)
     private int heightRef = 0;
 
     // Genera los movimientos en base al personaje deseado
@@ -52,20 +53,19 @@ public class character {
         heightRef = movements.get(Movement.STANDING).getHurtbox().getY()+290;
     }
 
-    public boolean onHeightRef(){
-        return heightRef == movements.get(state).getHurtbox().getY()+290;
-    }
-
     // Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
-    // collides indica si colisiona o no con el otro personaje
+    // enemyAttacking indica si el rival está atacando (ahora sería innecesario)
     public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt, boolean enemyAttacking){
+        // Comprobación de si colisiona el personaje con el rival
         boolean collides = pHurt.collides(eHurt);
+        // Comprobación de colisiones de los personajes con los límites del mapa
         boolean collidesLimitLeft = pHurt.getX() <= mapLimit.getX();
         boolean collidesLimitRight = pHurt.getX()+pHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
         boolean rivalCollidesLimitLeft = eHurt.getX() <= mapLimit.getX();
         boolean rivalCollidesLimitRight = eHurt.getX()+eHurt.getWidth() >= mapLimit.getX()+mapLimit.getWidth();
 
+        // Cáculo de la distancia entre personajes
         int dis = 0;
         if (pHurt.getX() > eHurt.getX()){
             dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
@@ -73,19 +73,25 @@ public class character {
         else if(pHurt.getX() < eHurt.getX()){
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
         }
+
+        // Para evitar posibles problemas
         if(mov == null){
             mov = "";
         }
+
+        // Si el movimiento es uno compuesto por una flecha y un ataque básico
+        // Y no es el throw, se ignora la flecha
         if (mov.length() == 4 && (mov.contains("DE-") || mov.contains("IZ-"))
             && !(mov.equals("DE-C") && dis < 10)) {
             mov = String.valueOf(mov.charAt(mov.length() - 1));
         }
 
-        // Si el movimiento es infinito y el movimiento es diferente del actual
-        // o el movimiento no es infinito pero ha terminado
-        // Actualiza el estado
+        // Si ha cambiado de estado o no
         boolean stateChanged = false;
+        // Si está siendo lanzado y se el resultado es derrota, termina la animación de ser lanzado
         if(state == Movement.THROWN_OUT && gameResult == 3){}
+        // Si el resultado es derrota, y no se está siendo lanzado, se ejecuta la animación de derrota
+        // y se pasa al estado axuliar
         else if(gameResult == 3 && state != Movement.THROWN_OUT){
             movements.get(state).reset();
             state = Movement.DEFEAT;
@@ -93,12 +99,16 @@ public class character {
             gameResult = 4;
             stateChanged = true;
         }
+        // Si se está lanzando al rival, se está en el segundo frame de la animación, y el rival
+        // no está siendo lanzado, se ha fallado el movimiento, y se termina
         else if(state == Movement.THROW && movements.get(Movement.THROW).getAnim().getState() == 2 && rival.getState() != Movement.THROWN_OUT){
             movements.get(state).reset();
             state = Movement.STANDING;
             movements.get(state).start(dis);
             stateChanged = true;
         }
+        // Si la pelea ha terminado y se ha terminado el movimiento que se estaba haciendo (siempre que
+        // no sea un ataque especual ni se esté cayendo del aire), se muestra la animación de victoria o derrota
         else if(gameResult != 0 && (movements.get(state).ended() || !movements.get(state).hasEnd())
                 && !isSpecial(state) && state != Movement.JUMP_ROLL_FALL){
             movements.get(state).reset();
@@ -114,6 +124,8 @@ public class character {
             movements.get(state).start(999);
             stateChanged = true;
         }
+        // Si se estaba haciendo un movimiento especial y ha terminado, se pasa a caer al suelo
+        // (todos los especiales tienen saltos, y tras ellos se debe acabar en el suelo)
         else if (isSpecial(state) && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = Movement.JUMP_ROLL_FALL;
@@ -121,6 +133,8 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
+        // Si se está haciendo un puñetado en el aire, se está en el último frame, y ha pasado tiempo suficiente
+        // se pasa al estado de caída
         else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
                 && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
@@ -135,6 +149,8 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
+        // Si se está saltando, se está por encima de la altura mínima, y se solicita hacer un puñetazo
+        // o patada, se ejecuta el puñetado o patada en salto
         else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended() && y < -90
                 && (mov.endsWith("-A") ||  mov.endsWith("-B") ||  mov.endsWith("-C") ||  mov.endsWith("-D")
                     || mov.equals("A") || mov.equals("B") || mov.equals("C") || mov.equals("D"))){
@@ -167,6 +183,8 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
+        // Si está agachado, el movimiento pedido es agacharse, y el movimiento anterior
+        // ha terminado, se pasa al estado de agachado en su último frame
         else if(isCrouched() && mov.equals("AB") && movements.get(state).ended()){
             movements.get(state).getAnim().reset();
             state = combos.get(mov);
@@ -175,7 +193,9 @@ public class character {
             executedMoves.add(state);
             stateChanged = true;
         }
+        // Si el movimiento es combo (contiene +) y se está saltando o ejecutando un ataque especial, se omite
         else if(mov.contains("+") && combos.containsKey(mov) && combos.get(mov) != state && !isCombing()  && !isJumping()){
+            // Si es un dash, y no se corta ninguna animación peligrosa, se ejecuta
             if(state != Movement.JUMP_ROLL_FALL && state != Movement.JUMP_FALL && !((isJumping() || state == Movement.THROW) && combos.get(mov) == Movement.DASH)) {
                 movements.get(state).getAnim().reset();
                 state = combos.get(mov);
@@ -184,7 +204,7 @@ public class character {
                 stateChanged = true;
             }
         }
-
+        // Si se estaba agachado y se ha soltado el abajo, se hace la animación de levantarse
         else if ((movements.get(state).getAnim().getType() == Animation_type.HOLDABLE || isCrouched()) && movements.get(state).ended()
                 && combos.get(mov) != state && !mov.startsWith("AB")){
             Movement aux = Movement.UNDO_CROUCH;
@@ -193,7 +213,9 @@ public class character {
             movements.get(state).start(dis);
             stateChanged = true;
         }
+        // Si no existe el movimiento
         else if(!combos.containsKey(mov)){
+            // Si se ha terminado el movimiento anterior, se pone en standing
             if (!movements.get(state).hasEnd() || movements.get(state).hasEnd() && movements.get(state).ended()){
                 movements.get(state).getAnim().reset();
                 state = Movement.STANDING;
@@ -201,6 +223,7 @@ public class character {
                 stateChanged = true;
             }
         }
+        // Si el movimiento actual no tiene final, o se está andando, o se ha terminado correctamente, se ejecuta el nuevo movimiento
         else if ((!movements.get(state).hasEnd() && combos.get(mov) != state)
                 || movements.get(state).hasEnd() && movements.get(state).ended()  && combos.get(mov) != state
                 || (state == Movement.WALKING || state == Movement.WALKING_BACK || state == Movement.CROUCHED_WALKING) && movements.get(state).ended()
@@ -210,19 +233,27 @@ public class character {
             }
             Movement stateAnt = state;
             state = combos.get(mov);
+            // Si el nuevo movimiento no es Standing
             if(state != Movement.STANDING){
+                // Si el movimiento es andar y el enemigo está atacando, se cubre
                 if(state == Movement.WALKING && enemyAttacking){
                     movements.get(state).start(movements.get(state).getDistChange());
                 }
+                // Si se estaba andando agachado y el nuevo estado es agachado simplemente
+                // Se pasa al último frame de agachado
                 else if(stateAnt == Movement.CROUCHED_WALKING && state == Movement.CROUCH){
                     movements.get(state).start(dis);
                     movements.get(state).getAnim().end();
                 }
+                // Si el nuevo movimiento es el lanzamiento
                 else if(state == Movement.THROW){
+                    // Se comprueba que se está lo suficientemente cerca, y ambos a las alturas de referencia
+                    // y en caso de no estarlo, se ejecuta un puñetazo fuerte
                     if(dis >= 10 || !rival.onHeightRef()){
                         state = Movement.HARD_PUNCH;
                     }
                     else{
+                        // Lleva al rival a la altura normal
                         rival.setY(290);
                     }
                     movements.get(state).start(dis);
@@ -238,6 +269,8 @@ public class character {
         // Frame a mostrar
         screenObject s =  movements.get(state).getFrame(x,y, orientation);
 
+        // Si no se está a la altura base al momento de ejecutar un movimiento, se pasa a la caída
+        // para que el personaje baje al suelo
         if(state != Movement.THROWN_OUT && state != Movement.DEFEAT && !isJumping() && s.getY() != 290
         && !(gameResult == 2 && charac == Playable_Character.TERRY)){
             movements.get(state).getAnim().reset();
@@ -245,7 +278,8 @@ public class character {
             movements.get(state).getAnim().start();;
             s =  movements.get(state).getFrame(x,y, orientation);
         }
-
+        // Si la animación del movimiento ha terminado, pero se manteniene presionado,
+        // se coge el último frame de agacharse, o de estarse de pie según corresponda
         if(state != Movement.STANDING && state != Movement.WALKING_BACK && state != Movement.WALKING &&
                 movements.get(state).ended() && !stateChanged && s.getY() == y
                 && movements.get(state).getAnim().getType() != Animation_type.HOLDABLE
@@ -259,77 +293,110 @@ public class character {
             }
         }
 
+        // Se impide atravesar el suelo
         if(s.getY() > 290){
             y = 290;
             s.setY(290);
         }
 
         // Gestión de colisiones
+        // Si es la animación de victoria de terry, se ajusta la altura
         if (gameResult == 2 && stateChanged && (state == Movement.VICTORY_FIGHT || state == Movement.VICTORY_ROUND) && charac == Playable_Character.TERRY) {
             s.setY(-270);
         }
+        // Si está haciendo un ataque que se desplaza y choca con el enemigo, no avanza en x
         else if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
         }
+        // Si colisiona con el límite izquierdo del mapa
         else if(collidesLimitLeft){
+            // Distancia avanzada
             int d = s.getX()-x;
+            // Si se está en knockback y el rival no, se le aplica a él el desplazamiento en x para alejarlo
             if(inKnockback() && !rival.inKnockback()){
                 rival.returnKnockback(Math.abs(d));
             }
             else{
+                // Si se intenta salir del mapa por la izquierda
                 if(d <= 0){
                     s.setX(x);
+                    // Si el rival también choca contra el límite y el rival está por encima
+                    // y colisionan, desplaza hacia la derecha al personaje
                     if(rivalCollidesLimitLeft && pHurt.getY() > eHurt.getY() && collides){
                         s.setX(x+10);
                         x += 10;
                     }
+                    // Si el personaje está por encima del rival y colisionan, le hace retirarse
                     else if(pHurt.getY() < eHurt.getY() && collides){
                         rival.returnKnockback(-Math.abs(d));
                     }
+                    // Si colisiona con el rival, ambos estan a la altura referencia y la distancia
+                    // es menor que cero (están superpuestos), aleja al personaje
                     else if(collides && dis < 0 && onHeightRef() && rival.onHeightRef()){
                         rival.setX(rival.getX()+1);
                     }
                 }
+                // Si se aleja del borde
                 else{
                     x = s.getX();
                 }
             }
         }
+        // Si colisiona con el límite derecho del mapa
         else if(collidesLimitRight){
+            // Distancia avanzada
             int d = s.getX()-x;
+            // Si se está en knockback y el rival no, se le aplica a él el desplazamiento en x para alejarlo
             if(inKnockback() && !rival.inKnockback()){
                 rival.returnKnockback(Math.abs(d));
             }
             else {
+                // Si se intenta salir del mapa por la derecha
                 if (d >= 0) {
                     s.setX(x);
+                    // Si el rival también choca contra el límite y el rival está por encima
+                    // y colisionan, desplaza hacia la izquierda al personaje
                     if (rivalCollidesLimitRight && pHurt.getY() > eHurt.getY() && collides) {
                         s.setX(x - 10);
                         x -= 10;
-                    } else if (pHurt.getY() < eHurt.getY() && collides) {
+                    }
+                    // Si el personaje está por encima del rival y colisionan, le hace retirarse
+                    else if (pHurt.getY() < eHurt.getY() && collides) {
                         rival.returnKnockback(-Math.abs(d));
-                    } else if (collides && dis < 0 && onHeightRef() && rival.onHeightRef()) {
+                    }
+                    // Si colisiona con el rival, ambos estan a la altura referencia y la distancia
+                    // es menor que cero (están superpuestos), aleja al personaje
+                    else if (collides && dis < 0 && onHeightRef() && rival.onHeightRef()) {
                         rival.setX(rival.getX() - 1);
                     }
-                } else {
+                }
+                // Si se aleja del borde
+                else {
                     x = s.getX();
                 }
             }
         }
+        // Si está siendo lanzado avanza
         else if(state == Movement.THROWN_OUT){
             x = s.getX();
         }
+        // Si está siendo lanzado, se queda en el sitio
         else if(state == Movement.THROW){
             s.setX(x);
         }
+        // Si el rival choca con el limite izquierdo o derecho, se está por debajo del rival y se intenta avanzar hacia el límite,
+        // se queda en el sitio
         else if(rivalCollidesLimitLeft && eHurt.getY() < pHurt.getY() && s.getX()-x <= 0 && collides
                 || rivalCollidesLimitRight && eHurt.getY() < pHurt.getY() && s.getX()-x >= 0  && collides){
             s.setX(x);
         }
+        // Si el rival choca con el limite izquierdo o derecho, se está por encima del rival y se intenta avanzar hacia el límite,
+        // se avanza
         else if(rivalCollidesLimitLeft && eHurt.getY() < pHurt.getY() && s.getX()-x > 0 && collides
                 || rivalCollidesLimitRight && eHurt.getY() < pHurt.getY() && s.getX()-x < 0  && collides){
             x = s.getX();
         }
+        // Si ninguno de los dos esta saltando o ambos están saltando y colisionan, se repelen
         else if((!isJumping() && !rival.isJumping()
                 || isJumping() && rival.isJumping()) && collides && dis < 0){
             if(orientation == -1){
@@ -340,6 +407,7 @@ public class character {
             }
             s.setX(x);
         }
+        // Si se está saltando y el rival no, y colisionan, y el rival no está en knockback, se le hace retroceser
         else if(isJumping() && !rival.isJumping() && collides && dis < 0 && !rival.inKnockback()){
             boolean pos = false;
             if(orientation == 1){
@@ -357,12 +425,16 @@ public class character {
                 rival.returnKnockback(-d);
             }
         }
+        // Si se está en knockback
         else if(inKnockback()){
+            // Si el rival está en un ataque con desplazamiento y colisionan
+            // avanza adicional
             if(rival.isAttacking() && rival.inDisplacement() && collides){
                 s.setX(s.getX()+orientation);
                 x = s.getX();
             }
             else {
+                // Se avanza
                 x = s.getX();
             }
         }
@@ -378,11 +450,14 @@ public class character {
         else{
             s.setX(x);
         }
+        // Se avanza en y
         y = s.getY();
+        // Si se ha sobrepasado el mapa por la izquierda, se le devuelve hacia dentro
         if(pHurt.getX() < mapLimit.getX()){
             x += 1;
             s.setX(x);
         }
+        // Si se ha sobrepasado el mapa por la derecha, se le devuelve hacia dentro
         else if(pHurt.getX()+pHurt.getWidth() > mapLimit.getX()+mapLimit.getWidth()){
             x -= 1;
             s.setX(x);
@@ -390,13 +465,9 @@ public class character {
         return s;
     }
 
-    public void setVictory(int v){
-        gameResult = v;
-    }
-
-    public void setDefeat(){
-        y = 290;
-        gameResult = 3;
+    // Si está o no en altura de referencia
+    public boolean onHeightRef(){
+        return heightRef == movements.get(state).getHurtbox().getY()+290;
     }
 
     // Aplicar un daño recibido al personaje
@@ -405,6 +476,7 @@ public class character {
         else{life -= dmg;}
     }
 
+    // Se le aplica un retroceso al personaje
     public void returnKnockback(int k){
         if(rival.getState() != Movement.THROWN_OUT) {
             this.x = x + orientation * k;
@@ -414,6 +486,7 @@ public class character {
         }
     }
 
+    // Se resetea el personaje
     void reset(int x, int y, int orientation){
         life = 100;
         this.orientation = orientation;
@@ -424,6 +497,7 @@ public class character {
         this.gameResult = 0;
     }
 
+    // Se para la animación actual del personaje y se pone en standing
     void stop(){
         movements.get(state).getAnim().reset();
         state = Movement.STANDING;
@@ -497,6 +571,59 @@ public class character {
     }
 
     //Getters y setters
+    public void setVictory(int v){
+        gameResult = v;
+    }
+
+    public void setDefeat(){
+        y = 290;
+        gameResult = 3;
+    }
+
+    public void setState(Movement state, hitBox pHurt, hitBox eHurt) {
+        this.movements.get(state).reset();
+        this.state = state;
+        int dis = 0;
+        if (pHurt.getX() > eHurt.getX()){
+            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+        }
+        else if(pHurt.getX() < eHurt.getX()){
+            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+        this.movements.get(state).start(dis);
+    }
+
+    public hitBox getHitbox(){
+        hitBox aux = movements.get(state).getHitbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), box_type.HITBOX);
+    }
+
+    public hitBox getHurtbox(){
+        hitBox aux = movements.get(state).getHurtbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.HURTBOX);
+    }
+
+    public hitBox getCoverbox(){
+        hitBox aux = movements.get(state).getCoverbox();
+        int auxX = x + aux.getX();
+        if(orientation == -1){
+            auxX = x - aux.getX() - aux.getWidth();
+        }
+        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.COVERBOX);
+    }
+
+    public boolean endedMovement(){
+        return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
+    }
+
     public Playable_Character getCharac() {
         return charac;
     }
@@ -555,50 +682,6 @@ public class character {
 
     public Movement getState() {
         return state;
-    }
-
-    public void setState(Movement state, hitBox pHurt, hitBox eHurt) {
-        this.movements.get(state).reset();
-        this.state = state;
-        int dis = 0;
-        if (pHurt.getX() > eHurt.getX()){
-            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
-        }
-        else if(pHurt.getX() < eHurt.getX()){
-            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
-        }
-        this.movements.get(state).start(dis);
-    }
-
-    public hitBox getHitbox(){
-        hitBox aux = movements.get(state).getHitbox();
-        int auxX = x + aux.getX();
-        if(orientation == -1){
-            auxX = x - aux.getX() - aux.getWidth();
-        }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), box_type.HITBOX);
-    }
-
-    public hitBox getHurtbox(){
-        hitBox aux = movements.get(state).getHurtbox();
-        int auxX = x + aux.getX();
-        if(orientation == -1){
-            auxX = x - aux.getX() - aux.getWidth();
-        }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.HURTBOX);
-    }
-
-    public hitBox getCoverbox(){
-        hitBox aux = movements.get(state).getCoverbox();
-        int auxX = x + aux.getX();
-        if(orientation == -1){
-            auxX = x - aux.getX() - aux.getWidth();
-        }
-        return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.COVERBOX);
-    }
-
-    public boolean endedMovement(){
-        return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
     }
 
     public  int getDamage(){
