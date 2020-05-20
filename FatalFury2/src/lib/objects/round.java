@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static lib.Enums.Item_Type.SHADOW_1;
+import static lib.Enums.Item_Type.SHADOW_2;
+
 interface roundListener {
     void roundEnded();
 }
@@ -51,6 +54,8 @@ public class round {
     boolean isDoubleKO;
     private boolean enemyEnded = false;
     private boolean playerEnded = false;
+    private screenObject shadow1 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_1);
+    private screenObject shadow2 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_2);
 
     private hitBox mapLimit = new hitBox(-145,0,1571,720,box_type.HURTBOX);
     private hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
@@ -448,6 +453,11 @@ public class round {
         // Obtención de los frames a dibujar del enemigo
         ply = enemy.getAnimation(eHurt,pHurt);
         screenObjects.put(Item_Type.ENEMY, ply);
+
+        shadow1.setX(pHurt.getX()+pHurt.getWidth()/2 - shadow1.getWidth()/2);
+        shadow2.setX(eHurt.getX()+eHurt.getWidth()/2 - shadow2.getWidth()/2);
+        screenObjects.put(SHADOW_1,shadow1);
+        screenObjects.put(SHADOW_2,shadow2);
     }
 
     // Getters y setters

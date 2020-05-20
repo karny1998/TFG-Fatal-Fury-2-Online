@@ -4,7 +4,7 @@ package lib.Enums;
 public enum Item_Type {
     NONE,
     SCENARY_1, SCENARY_2,
-    PLAYER, ENEMY,
+    PLAYER, ENEMY, SHADOW_1, SHADOW_2,
     PLAYERTHROWABLE, ENEMYTHROWABLE,
     MENU, SURE,
     TIMER1, TIMER2, TIMERFRAME,

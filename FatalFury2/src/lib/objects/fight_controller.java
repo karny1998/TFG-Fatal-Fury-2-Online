@@ -1,10 +1,12 @@
 package lib.objects;
 
-import lib.Enums.*;
+import lib.Enums.Fight_Results;
+import lib.Enums.Item_Type;
+import lib.Enums.Round_Results;
+import lib.Enums.Scenario_time;
 import lib.maps.scenary;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
-import lib.sound.menu_audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,6 @@ import java.util.*;
 
 import static java.lang.Math.abs;
 import static lib.Enums.Item_Type.*;
-import static lib.Enums.Item_Type.TOTALN5;
 
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {

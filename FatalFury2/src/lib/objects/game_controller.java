@@ -713,6 +713,8 @@ public class game_controller {
     }
 
     private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
+        screenObjects.remove(Item_Type.SHADOW_1);
+        screenObjects.remove(Item_Type.SHADOW_2);
         screenObjects.remove(Item_Type.TIMER1);
         screenObjects.remove(Item_Type.TIMER2);
         screenObjects.remove(Item_Type.TIMERFRAME);
