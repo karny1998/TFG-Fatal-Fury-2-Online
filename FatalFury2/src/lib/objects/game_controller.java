@@ -554,8 +554,16 @@ public class game_controller {
                 timeReference = System.currentTimeMillis();
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Pause);
                 fight.pauseFight();
-                fight.getPlayer().getPlayer().stop();
-                fight.getEnemy().getPlayer().stop();
+                if(fight.getPlayer().getPlayer().getState() != Movement.VICTORY_FIGHT &&
+                        fight.getPlayer().getPlayer().getState() != Movement.VICTORY_ROUND &&
+                        fight.getPlayer().getPlayer().getState() != Movement.DEFEAT) {
+                    fight.getPlayer().getPlayer().stop();
+                }
+                if(fight.getEnemy().getPlayer().getState() != Movement.VICTORY_FIGHT &&
+                        fight.getEnemy().getPlayer().getState() != Movement.VICTORY_ROUND &&
+                        fight.getEnemy().getPlayer().getState() != Movement.DEFEAT) {
+                    fight.getEnemy().getPlayer().stop();
+                }
                 state = GameState.ESCAPE;
             }
             // Si se está mostrando la pelea
