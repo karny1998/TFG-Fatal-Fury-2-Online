@@ -2,12 +2,12 @@ package lib.objects;
 
 import lib.Enums.Item_Type;
 import lib.debug.Debug;
-import lib.input.controlListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +26,7 @@ public class Screen extends JPanel{
     private game_controller game;
     // Lista de timers (en verdad ya no sería necesario)
     private Map<String, Timer> timers = new HashMap<String, Timer>();
+    java.util.List<Item_Type> listInt;
 
     // Inicia el juego
     private void startGame(){
@@ -62,6 +63,9 @@ public class Screen extends JPanel{
         screen_refresh.start();
         // Inicia el juego
         startGame();
+        Item_Type interfacee[] = {HPBAR1, HPBAR2, NAME1, NAME2, INDICATOR1, INDICATOR2, BUBBLE1,
+                BUBBLE2, BUBBLE3, BUBBLE4, TIMER1, TIMER2, TIMERFRAME,};
+        listInt = Arrays.asList(interfacee);
     }
 
     private void setSurfaceSize() {
@@ -94,21 +98,34 @@ public class Screen extends JPanel{
                             Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME};
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = this.getSize();
+        int offset = 0;
+        if(game.getFight() != null) {
+            offset = game.getFight().getCurrentRound().getScenaryOffsetY() / 2;
+            g2d.translate(0, -offset);
+        }
         g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
-
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
             if(img != null) {
-                g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
+                if(listInt.contains(order[i])){
+                    g2d.drawImage(img.getImg(), img.getX(), img.getY()+offset, img.getWidth(), img.getHeight(), null);
+                }
+                else {
+                    g2d.drawImage(img.getImg(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), null);
+                }
             }
         }
-        game.writeDirecly(g2d);
+        if(game.getFight() != null) {
+            game.writeDirecly(g2d, offset);
+        }
+        else {
+            game.writeDirecly(g2d, 0);
+        }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println(controlListener.keyStatus[27]);
         d.drawFPS(g);
         doDrawing(g);
     }

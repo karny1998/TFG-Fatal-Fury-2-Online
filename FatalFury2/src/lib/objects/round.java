@@ -446,12 +446,6 @@ public class round {
             int hE = enemy.getPlayer().getY();
             int yRef = Math.min(hP,hE);
             scenaryOffsetY = -20*(290-yRef)/400;
-            /*if(hP == yRef){
-                enemy.getPlayer().setY(enemy.getPlayer().getY()+scenaryOffsetY);
-            }
-            else{
-                player.getPlayer().setY(player.getPlayer().getY()+scenaryOffsetY);
-            }*/
         }
     }
 

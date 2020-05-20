@@ -272,7 +272,7 @@ public class character {
         // Si no se está a la altura base al momento de ejecutar un movimiento, se pasa a la caída
         // para que el personaje baje al suelo
         if(state != Movement.THROWN_OUT && state != Movement.DEFEAT && !isJumping() && s.getY() != 290
-        && !(gameResult == 2 && charac == Playable_Character.TERRY)){
+        && !(gameResult == 2 && charac == Playable_Character.TERRY) && !rival.isJumping()){
             movements.get(state).getAnim().reset();
             state = Movement.JUMP_FALL;
             movements.get(state).getAnim().start();;
@@ -294,10 +294,10 @@ public class character {
         }
 
         // Se impide atravesar el suelo
-        if(s.getY() > 290){
+        /*if(s.getY() > 290){
             y = 290;
             s.setY(290);
-        }
+        }*/
         /*if(s.getY() > 290 && !rival.isJumping()){
             y = 290;
             s.setY(290);

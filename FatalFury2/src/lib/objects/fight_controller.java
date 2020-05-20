@@ -339,11 +339,10 @@ public class fight_controller implements roundListener {
 
         // ESCENARIO DE LA PELEA incluidos desplazamientos
         screenObject s1 = scene.getFrame1().cloneSO();
-        s1.setX(s1.getX()+currentRound.getScenaryOffset());
+        s1.setX(s1.getX()+currentRound.getScenaryOffset()/2);
         s1.setY(s1.getY()+currentRound.getScenaryOffsetY());
         screenObject s2 = scene.getFrame2().cloneSO();
-        s2.setX(s2.getX()+currentRound.getScenaryOffset()/3);
-        s2.setY(s2.getY()-currentRound.getScenaryOffsetY());
+        s2.setX(s2.getX()+currentRound.getScenaryOffset());
         screenObjects.put(Item_Type.SCENARY_1, s1);
         screenObjects.put(Item_Type.SCENARY_2, s2);
         // TIMER
@@ -765,26 +764,26 @@ public class fight_controller implements roundListener {
     }
 
     // Dibujar barras de vida
-    void drawHpBarPlayer(Graphics2D g) {
+    void drawHpBarPlayer(Graphics2D g, int offset) {
         // x = 140, y = 62, w = 406, h = 22
         g.setColor(Color.YELLOW);
         int actualHP = player.getPlayer().getLife();
         if (actualHP == 100) {
-            g.fillRect(140,62,406,22);
+            g.fillRect(140,62+offset,406,23);
         }
         else {
             int w = 407 * actualHP / 100;
-            g.fillRect(140,62,w,22);
+            g.fillRect(140,62+offset,w,23);
         }
     }
-    void drawHpBarEnemy(Graphics2D g) {
+    void drawHpBarEnemy(Graphics2D g, int offset) {
         // x = 734, y = 52, w = 406, h = 22
         g.setColor(Color.BLACK);
         int actualHP = enemy.getPlayer().getLife();
         if (actualHP != 100) {
             int damage = 100 - actualHP;
             int w = 407 * damage / 100;
-            g.fillRect(734,62,w,22);
+            g.fillRect(734,62+offset,w,22);
         }
     }
 

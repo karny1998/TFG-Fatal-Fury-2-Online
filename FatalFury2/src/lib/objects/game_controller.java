@@ -141,7 +141,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.OPENING_2;
                 tiempo = System.currentTimeMillis();
             }
@@ -151,7 +151,7 @@ public class game_controller {
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
-            if( actual - tiempo > 5000.0){
+            if( actual - tiempo > 500.0){
                 state = GameState.NAVIGATION;
                 tiempo = System.currentTimeMillis();
                 timeReference = tiempo;
@@ -753,7 +753,7 @@ public class game_controller {
         }
     }
 
-    public void writeDirecly(Graphics2D g){
+    public void writeDirecly(Graphics2D g, int offset){
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
@@ -768,12 +768,12 @@ public class game_controller {
                 fight.enemy.player.getCoverbox().drawHitBox(g);
             }
             if(!storyOn && fight != null) {
-                fight.drawHpBarPlayer(g);
-                fight.drawHpBarEnemy(g);
+                fight.drawHpBarPlayer(g, offset);
+                fight.drawHpBarEnemy(g, offset);
             }
             else if(story != null && story.getFight() != null){
-                story.getFight().drawHpBarPlayer(g);
-                story.getFight().drawHpBarEnemy(g);
+                story.getFight().drawHpBarPlayer(g, offset);
+                story.getFight().drawHpBarEnemy(g, offset);
             }
         }
         else if(state == GameState.TYPING){
@@ -782,8 +782,8 @@ public class game_controller {
                 optionsMenu.printOptions(g);
         }
         else if(state == GameState.STORY_FIGHT){
-            story.getFight().drawHpBarPlayer(g);
-            story.getFight().drawHpBarEnemy(g);
+            story.getFight().drawHpBarPlayer(g, offset);
+            story.getFight().drawHpBarEnemy(g, offset);
         }
         else if(state == GameState.DIFFICULTY || state == GameState.STORY_DIFFICULTY){
             int i = actualMenu.getSel();
@@ -885,5 +885,229 @@ public class game_controller {
 
     public void setState(GameState state) {
         this.state = state;
+    }
+
+    public Random getRan() {
+        return ran;
+    }
+
+    public void setRan(Random ran) {
+        this.ran = ran;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isStopMusic() {
+        return stopMusic;
+    }
+
+    public void setStopMusic(boolean stopMusic) {
+        this.stopMusic = stopMusic;
+    }
+
+    public menu getBasicMenu() {
+        return basicMenu;
+    }
+
+    public void setBasicMenu(menu basicMenu) {
+        this.basicMenu = basicMenu;
+    }
+
+    public menu getGameMenu() {
+        return gameMenu;
+    }
+
+    public void setGameMenu(menu gameMenu) {
+        this.gameMenu = gameMenu;
+    }
+
+    public menu getSure() {
+        return sure;
+    }
+
+    public void setSure(menu sure) {
+        this.sure = sure;
+    }
+
+    public menu getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(menu difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public menu getMapSelection() {
+        return mapSelection;
+    }
+
+    public void setMapSelection(menu mapSelection) {
+        this.mapSelection = mapSelection;
+    }
+
+    public character_menu getCharMenu() {
+        return charMenu;
+    }
+
+    public void setCharMenu(character_menu charMenu) {
+        this.charMenu = charMenu;
+    }
+
+    public options getOptionsMenu() {
+        return optionsMenu;
+    }
+
+    public void setOptionsMenu(options optionsMenu) {
+        this.optionsMenu = optionsMenu;
+    }
+
+    public character_controller getUser() {
+        return user;
+    }
+
+    public void setUser(character_controller user) {
+        this.user = user;
+    }
+
+    public character_controller getEnemy() {
+        return enemy;
+    }
+
+    public void setEnemy(character_controller enemy) {
+        this.enemy = enemy;
+    }
+
+    public score getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(score ranking) {
+        this.ranking = ranking;
+    }
+
+    public ask_for_name getName() {
+        return name;
+    }
+
+    public void setName(ask_for_name name) {
+        this.name = name;
+    }
+
+    public boolean isPvp() {
+        return pvp;
+    }
+
+    public void setPvp(boolean pvp) {
+        this.pvp = pvp;
+    }
+
+    public hitBox getMapLimit() {
+        return mapLimit;
+    }
+
+    public void setMapLimit(hitBox mapLimit) {
+        this.mapLimit = mapLimit;
+    }
+
+    public story_mode getStory() {
+        return story;
+    }
+
+    public void setStory(story_mode story) {
+        this.story = story;
+    }
+
+    public boolean isStoryOn() {
+        return storyOn;
+    }
+
+    public void setStoryOn(boolean storyOn) {
+        this.storyOn = storyOn;
+    }
+
+    public String getOpenings() {
+        return openings;
+    }
+
+    public void setOpenings(String openings) {
+        this.openings = openings;
+    }
+
+    public long getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(long tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
+    }
+
+    public boolean isOnDemo() {
+        return onDemo;
+    }
+
+    public void setOnDemo(boolean onDemo) {
+        this.onDemo = onDemo;
+    }
+
+    public boolean isFromEscape() {
+        return fromEscape;
+    }
+
+    public void setFromEscape(boolean fromEscape) {
+        this.fromEscape = fromEscape;
+    }
+
+    public screenObject getStart() {
+        return start;
+    }
+
+    public void setStart(screenObject start) {
+        this.start = start;
+    }
+
+    public ia_loader.dif getLvlIa() {
+        return lvlIa;
+    }
+
+    public void setLvlIa(ia_loader.dif lvlIa) {
+        this.lvlIa = lvlIa;
+    }
+
+    public screenObject getHow() {
+        return how;
+    }
+
+    public void setHow(screenObject how) {
+        this.how = how;
+    }
+
+    public InputStream getFontStream() {
+        return fontStream;
+    }
+
+    public void setFontStream(InputStream fontStream) {
+        this.fontStream = fontStream;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 }
