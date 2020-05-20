@@ -2,6 +2,7 @@ package lib.objects;
 
 import lib.Enums.Item_Type;
 import lib.debug.Debug;
+import lib.input.controlListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,6 +108,7 @@ public class Screen extends JPanel{
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        System.out.println(controlListener.keyStatus[27]);
         d.drawFPS(g);
         doDrawing(g);
     }

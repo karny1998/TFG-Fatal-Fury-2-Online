@@ -344,16 +344,18 @@ public class options {
 
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long current = System.currentTimeMillis();
+        if(controlListener.getEsc()){
+            saveOptions();
+            updateValues();
+            controlListener.keyStatus[27] = false;
+            exit = true;
+            return exit;
+        }
+        if(controlListener.getBack()){
+            exit = true;
+            return exit;
+        }
         if(current - referenceTime > 125){
-            if(controlListener.getEsc()){
-                saveOptions();
-                updateValues();
-                exit = true;
-                //preguntar si quieres guardar
-            }
-            if(controlListener.getBack()){
-                exit = true;
-            }
 
             boolean init;
             int index;

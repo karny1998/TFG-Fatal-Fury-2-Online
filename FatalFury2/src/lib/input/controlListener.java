@@ -14,7 +14,7 @@ import java.util.Queue;
 
 public class controlListener implements KeyListener {
 
-    static Boolean[] keyStatus;
+    public static Boolean[] keyStatus;
     static Queue<Integer> inputQueue_1, inputQueue_2, general;
     static int QUEUE_SIZE = 10;
     static int BUTTONS = 10;
