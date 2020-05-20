@@ -6,6 +6,7 @@ import lib.input.controlListener;
 import lib.objects.screenObject;
 import lib.sound.audio_manager;
 import lib.sound.menu_audio;
+import lib.utils.ScreenOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,11 +31,11 @@ import java.util.Map;
 public class options {
 
     //La opcion en mayusculas representa la actual
-    private String[] titulos = {"AUDIO", "player 1", "player 2"};
+    private String[] titulos = {"GENERAL", "player 1", "player 2"};
     private int[] xTitulos = {170, 150 + 340, 150 + 340 + 360};
 
     private String[] elementos_vol =  {
-            "general", "music", "voices", "special effects"
+            "general audio", "music", "voices", "special effects", "full screen"
     };
     private String[] elementos_p1 ={
             "up", "down", "left", "right", "weak punch", "weak kick", "strong punch", "strong kick", "ok", "pause/back"
@@ -49,6 +50,7 @@ public class options {
     private int[] valores_p1 = new int[elementos_p1.length];
     private int[] valores_p2 = new int[elementos_p2.length];
     private int[][] valores = {valores_vol, valores_p1, valores_p2};
+
 
 
     private Boolean exit;
@@ -101,9 +103,11 @@ public class options {
 
 
             Node opciones = doc.getChildNodes().item(0);
-            NodeList vol = doc.getElementsByTagName("volumen").item(0).getChildNodes();
+            NodeList vol = doc.getElementsByTagName("general").item(0).getChildNodes();
             NodeList p1 = doc.getElementsByTagName("controles_jugador_1").item(0).getChildNodes();
             NodeList p2 = doc.getElementsByTagName("controles_jugador_2").item(0).getChildNodes();
+
+
 
             int indice = 0;
 
@@ -150,7 +154,7 @@ public class options {
             int index = 0;
             doc.appendChild(rootElement);
 
-                Element vol = doc.createElement("volumen");
+                Element vol = doc.createElement("general");
 
                     Element vol_general = doc.createElement("vol_general");
                     vol_general.setTextContent(String.valueOf(valores_vol[index]));
@@ -170,6 +174,11 @@ public class options {
                     Element vol_efectos = doc.createElement("vol_efectos");
                     vol_efectos.setTextContent(String.valueOf(valores_vol[index]));
                     vol.appendChild(vol_efectos);
+                    index++;
+
+                    Element full_screen = doc.createElement("full_screen");
+                    full_screen.setTextContent(String.valueOf(valores_vol[index]));
+                    vol.appendChild(full_screen);
 
                 rootElement.appendChild(vol);
 
@@ -304,6 +313,7 @@ public class options {
     private void updateValues() {
         controlListener.update();
         audio_manager.update();
+        ScreenOptions.update();
     }
 
     public options(){
@@ -335,7 +345,7 @@ public class options {
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 125){
-            if(controlListener.getStatus(0, controlListener.ESC_INDEX)){
+            if(controlListener.getEsc()){
                 saveOptions();
                 updateValues();
                 exit = true;
@@ -360,16 +370,21 @@ public class options {
                             }
                         }
                         if(init){
-                            // Subir volumen
-                            int res = valores_vol[index] + 10;
-                            if(res  > 100){
-                                res = 100;
+                            int res = 0;
+                            if(index == 4){
+                                res = 1;
+                            } else {
+                                // Subir volumen
+                                res = valores_vol[index] + 10;
+                                if(res  > 100){
+                                    res = 100;
+                                }
                             }
                             valores_vol[index] = res;
                         }else{
                             pagina = pag.PAGINA_P1;
                             fondo = p1;
-                            titulos = new String[]{"audio", "PLAYER 1", "player 2"};
+                            titulos = new String[]{"general", "PLAYER 1", "player 2"};
                         }
                         audio_manager.menu.play(menu_audio.indexes.move_cursor);
                     }
@@ -385,9 +400,14 @@ public class options {
                         }
                         if(init){
                             // Bajar volumen
-                            int res = valores_vol[index] - 10;
-                            if(res  < 0){
+                            int res = 0;
+                            if(index == 4){
                                 res = 0;
+                            }else{
+                                res = valores_vol[index] - 10;
+                                if(res  < 0){
+                                    res = 0;
+                                }
                             }
                             valores_vol[index] = res;
                             audio_manager.menu.play(menu_audio.indexes.move_cursor);
@@ -413,7 +433,7 @@ public class options {
                         if(!init) {
                             pagina = pag.PAGINA_P2;
                             fondo = p2;
-                            titulos = new String[]{"audio", "player 1", "PLAYER 2"};
+                            titulos = new String[]{"general", "player 1", "PLAYER 2"};
                             audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         } else {
                             audio_manager.menu.play(menu_audio.indexes.error);
@@ -430,7 +450,7 @@ public class options {
                         if(!init) {
                             pagina = pag.PAGINA_VOLUMEN;
                             fondo = vol;
-                            titulos = new String[]{"AUDIO", "player 1", "player 2"};
+                            titulos = new String[]{"GENERAL", "player 1", "player 2"};
                             audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         } else {
                             audio_manager.menu.play(menu_audio.indexes.error);
@@ -466,7 +486,7 @@ public class options {
                         if(!init) {
                             pagina = pag.PAGINA_P1;
                             fondo = p1;
-                            titulos = new String[]{"audio", "PLAYER 1", "player 2"};
+                            titulos = new String[]{"general", "PLAYER 1", "player 2"};
                             audio_manager.menu.play(menu_audio.indexes.move_cursor);
                         } else {
                             audio_manager.menu.play(menu_audio.indexes.error);
@@ -647,7 +667,17 @@ public class options {
 
 
             if(pagina == pag.PAGINA_VOLUMEN){
-                g.drawString(String.valueOf(valores_mostrar[i]), 650 + 4*valores_mostrar[i], y);
+                if(elementos_mostrar[i].equals("full screen") || elementos_mostrar[i].equals("FULL SCREEN")  ){
+                    String elem = "";
+                    if(valores_mostrar[i] == 0){
+                        elem = "OFF";
+                    } else {
+                        elem = "ON";
+                    }
+                    g.drawString(elem, 650, y);
+                } else {
+                    g.drawString(String.valueOf(valores_mostrar[i]), 650 + 4*valores_mostrar[i], y);
+                }
                 y+=100;
             } else {
                 g.drawString(KeyEvent.getKeyText(valores_mostrar[i]), 650, y);

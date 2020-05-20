@@ -295,7 +295,9 @@ public class controlListener implements KeyListener {
         return keyStatus[8];
     }
 
-
+    public static boolean getEsc(){
+        return keyStatus[27];
+    }
 
 
 }

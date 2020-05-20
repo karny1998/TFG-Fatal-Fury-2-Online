@@ -76,10 +76,10 @@ public class audio_manager {
             doc.getDocumentElement().normalize();
 
 
-            NodeList p1 = doc.getElementsByTagName("volumen").item(0).getChildNodes();
+            NodeList p1 = doc.getElementsByTagName("general").item(0).getChildNodes();
 
 
-            int vols[] = new int[4];
+            int vols[] = new int[5];
             int indice = 0;
             for (int i = 0; i < p1.getLength(); i++) {
                 Node node = p1.item(i);

@@ -112,7 +112,13 @@ public class game_controller {
 
     // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
-
+        if(debug && state != GameState.OPTIONS) {
+            optionsMenu = new options();
+            actualMenu.updateTime();
+            optionsMenu.updateTime();
+            state = GameState.OPTIONS;
+        }
+/*
         if(debug && state != GameState.FIGHT){
             user = new user_controller(Playable_Character.MAI, 1);
             enemy = new user_controller(Playable_Character.TERRY, 2);
@@ -130,7 +136,7 @@ public class game_controller {
 
             fight.setVsIa(false);
         }
-
+*/
         if(state == GameState.OPENING_1){
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);

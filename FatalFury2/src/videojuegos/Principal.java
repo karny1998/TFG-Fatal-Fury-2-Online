@@ -3,6 +3,7 @@ package videojuegos;
 import lib.input.controlListener;
 import lib.objects.Screen;
 import lib.sound.audio_manager;
+import lib.utils.ScreenOptions;
 import lib.utils.crashReport;
 import lib.utils.fileUtils;
 
@@ -76,7 +77,7 @@ public class Principal extends JFrame {
             try {
                 fileUtils.copy(origen+"options.xml", ruta+"/options.xml");
             } catch (IOException e) {
-                e.printStackTrace();
+                  e.printStackTrace();
             }
 
             // Crear copia del fichero de rankings
@@ -116,18 +117,8 @@ public class Principal extends JFrame {
         add(new Screen());
         pack();
         setTitle("Fatal Fury 2");
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        dispose();
-        setUndecorated(true);
-        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        setVisible(true);
-
-        setResizable(false);
-        setFocusable(true);
-        setLocationRelativeTo(null);
-
-
+        ScreenOptions.init(this);
+        ScreenOptions.update();
 
 
     }
