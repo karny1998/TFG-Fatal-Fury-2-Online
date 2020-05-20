@@ -337,11 +337,11 @@ public class fight_controller implements roundListener {
             iaAux.setpWins(playerScore);
         }
 
-        // ESCENARIO DE LA PELEA
+        // ESCENARIO DE LA PELEA incluidos desplazamientos
         screenObject s1 = scene.getFrame1().cloneSO();
         s1.setX(s1.getX()+currentRound.getScenaryOffset());
         screenObject s2 = scene.getFrame2().cloneSO();
-        s2.setX(s2.getX()+currentRound.getScenaryOffset());
+        s2.setX(s2.getX()+currentRound.getScenaryOffset()/3);
         screenObjects.put(Item_Type.SCENARY_1, s1);
         screenObjects.put(Item_Type.SCENARY_2, s2);
         // TIMER
