@@ -60,6 +60,7 @@ public class round {
     private hitBox mapLimit = new hitBox(-145,0,1571,720,box_type.HURTBOX);
     private hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
     private int scenaryOffset = 0;
+    private int scenaryOffsetY = 0;
 
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
@@ -436,6 +437,22 @@ public class round {
                 ++scenaryOffset;
             }
         }
+
+        if (player.getPlayer().getY() == 290 && enemy.getPlayer().getY() == 290){
+            scenaryOffsetY = 0;
+        }
+        else{
+            int hP = player.getPlayer().getY();
+            int hE = enemy.getPlayer().getY();
+            int yRef = Math.min(hP,hE);
+            scenaryOffsetY = -20*(290-yRef)/400;
+            /*if(hP == yRef){
+                enemy.getPlayer().setY(enemy.getPlayer().getY()+scenaryOffsetY);
+            }
+            else{
+                player.getPlayer().setY(player.getPlayer().getY()+scenaryOffsetY);
+            }*/
+        }
     }
 
     // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
@@ -593,6 +610,78 @@ public class round {
 
     public void setScenaryOffset(int scenaryOffset) {
         this.scenaryOffset = scenaryOffset;
+    }
+
+    public Boolean getPlayerHit() {
+        return playerHit;
+    }
+
+    public void setPlayerHit(Boolean playerHit) {
+        this.playerHit = playerHit;
+    }
+
+    public Boolean getEnemyHit() {
+        return enemyHit;
+    }
+
+    public void setEnemyHit(Boolean enemyHit) {
+        this.enemyHit = enemyHit;
+    }
+
+    public boolean isEnemyEnded() {
+        return enemyEnded;
+    }
+
+    public void setEnemyEnded(boolean enemyEnded) {
+        this.enemyEnded = enemyEnded;
+    }
+
+    public boolean isPlayerEnded() {
+        return playerEnded;
+    }
+
+    public void setPlayerEnded(boolean playerEnded) {
+        this.playerEnded = playerEnded;
+    }
+
+    public screenObject getShadow1() {
+        return shadow1;
+    }
+
+    public void setShadow1(screenObject shadow1) {
+        this.shadow1 = shadow1;
+    }
+
+    public screenObject getShadow2() {
+        return shadow2;
+    }
+
+    public void setShadow2(screenObject shadow2) {
+        this.shadow2 = shadow2;
+    }
+
+    public hitBox getMapLimit() {
+        return mapLimit;
+    }
+
+    public void setMapLimit(hitBox mapLimit) {
+        this.mapLimit = mapLimit;
+    }
+
+    public hitBox getCameraLimit() {
+        return cameraLimit;
+    }
+
+    public void setCameraLimit(hitBox cameraLimit) {
+        this.cameraLimit = cameraLimit;
+    }
+
+    public int getScenaryOffsetY() {
+        return scenaryOffsetY;
+    }
+
+    public void setScenaryOffsetY(int scenaryOffsetY) {
+        this.scenaryOffsetY = scenaryOffsetY;
     }
 }
 

@@ -298,6 +298,14 @@ public class character {
             y = 290;
             s.setY(290);
         }
+        /*if(s.getY() > 290 && !rival.isJumping()){
+            y = 290;
+            s.setY(290);
+        }
+        else if(s.getY() > 270 && rival.isJumping()){
+            y = 270;
+            s.setY(270);
+        }*/
 
         // Gestión de colisiones
         // Si es la animación de victoria de terry, se ajusta la altura
