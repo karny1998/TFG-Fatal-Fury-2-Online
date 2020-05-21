@@ -1,6 +1,7 @@
 package lib.objects;
 
 import lib.Enums.Item_Type;
+import lib.Enums.Movement;
 import lib.debug.Debug;
 
 import javax.swing.*;
@@ -99,9 +100,13 @@ public class Screen extends JPanel{
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = this.getSize();
         int offset = 0;
-        if(game.getFight() != null) {
-            offset = game.getFight().getCurrentRound().getScenaryOffsetY() / 2;
-            g2d.translate(0, -offset);
+        if(game.getFight() != null && !game.getFight().getEnd()) {
+            Movement s = game.getFight().getPlayer().getPlayer().getState();
+            boolean ended = s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT;
+            if(!ended) {
+                offset = game.getFight().getCurrentRound().getScenaryOffsetY() / 2;
+                g2d.translate(0, -offset);
+            }
         }
         g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
         for(int i = 0; i < order.length; ++i) {

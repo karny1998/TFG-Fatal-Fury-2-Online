@@ -97,63 +97,12 @@ public class ia_controller {
                 || timeOk2 && enemy.getState() == Movement.STANDING
                 || enemy.isJumping() && timeOk2){
             Movement m = Movement.STANDING;
-            /*boolean normal = true;
-            if(counter == 1){
-                if(player.getMovements().get(player.getState()).ended() && timeOk2) {
-                    counter = 2;
-                    normal = false;
-                }
-                else{
-                    if(processor[0].isLowAttack(player.getState())){
-                        m = Movement.CROUCHED_BLOCK;
-                    }
-                    else{
-                        m = Movement.WALKING_BACK;
-                    }
-                }
-            }
-            else if(counter == 2){
-                if(dif == ia_loader.dif.VERY_HARD){
-                    do {
-                        m = roulette.spinRoulette();
-                    } while (!processor[0].isSpecial(m));
-                }
-                else{
-                    do {
-                        m = roulette.spinRoulette();
-                    } while (!processor[0].isAttack(m));
-                }
-                if(read){
-                    counter = 0;
-                    read = false;
-                }
-                normal = false;
-            }
-            else if(player.isAttacking() && dis < 150 && counter == 0){
-                double r = Math.random();
-                if (r <= probBlock) {
-                    if(processor[0].isLowAttack(player.getState())){
-                        m = Movement.CROUCHED_BLOCK;
-                    }
-                    else{
-                        m = Movement.WALKING_BACK;
-                    }
-                    if(read) {
-                        counter = 1;
-                        read = false;
-                    }
-                    normal = false;
-                    return;
-                }
-            }
-            if(normal) {*/
             do{
                 m = roulette.spinRoulette();
                 if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
                     break;
                 }
             }while (dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
-            //}
             move = movementsKeys.get(m);
         }
     }
@@ -298,6 +247,10 @@ public class ia_controller {
                 break;
             case VERY_HARD:
                 probBlock = 1.0;
+                if(!player.isRebalanced() &&  !enemy.isRebalanced()) {
+                    player.rebalance(0.7, 1.0);
+                    enemy.rebalance(1.3, 0.7);
+                }
                 break;
         }
     }

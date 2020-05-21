@@ -35,6 +35,8 @@ public class character {
     private int gameResult = 0;
     // Altura de referencia del personaje (para throws)
     private int heightRef = 0;
+    // Si ha sido rebalanceado o no
+    private boolean rebalanced = false;
 
     // Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
@@ -513,6 +515,22 @@ public class character {
         y = 290;
     }
 
+    // Rebalancea los daños de los movimientos en base al multiplicador d,
+    // y rebalancea los tiempos de los movimientos en base al multiplicador t
+    void rebalance(double d, double t){
+        rebalanced = true;
+        for(Map.Entry<Movement, movement> e : movements.entrySet()){
+            if(isAttack(e.getKey()) && e.getKey() != Movement.THROW) {
+                e.getValue().getAnim().updateTimes(t);
+                e.getValue().setDamage((int) (e.getValue().getDamage() * d));
+                if (e.getValue().getSubMovement() != null) {
+                    e.getValue().getSubMovement().setDamage((int) (e.getValue().getSubMovement().getDamage() * d));
+                    e.getValue().getSubMovement().getAnim().updateTimes(t);
+                }
+            }
+        }
+    }
+
     boolean isCrouched(){
         return (state == Movement.CROUCH || state == Movement.CROUCH_2
                 || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING
@@ -529,6 +547,17 @@ public class character {
                 Movement.CROUCHING_SOFT_PUNCH, Movement.CROUCHING_HARD_PUNCH};
         List<Movement> attacks = Arrays.asList(array);
         return attacks.contains(state);
+    }
+
+    boolean isAttack(Movement m){
+        Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
+                Movement.HARD_KICK, Movement.THROW, Movement.ATTACK_POKE,
+                Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.CHARGED_PUNCH_A,
+                Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.JUMP_KICK_DOWN, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
+                Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK,
+                Movement.CROUCHING_SOFT_PUNCH, Movement.CROUCHING_HARD_PUNCH};
+        List<Movement> attacks = Arrays.asList(array);
+        return attacks.contains(m);
     }
 
     boolean isJumping(){
@@ -740,5 +769,29 @@ public class character {
 
     public void setExecutedMoves(List<Movement> executedMoves) {
         this.executedMoves = executedMoves;
+    }
+
+    public int getGameResult() {
+        return gameResult;
+    }
+
+    public void setGameResult(int gameResult) {
+        this.gameResult = gameResult;
+    }
+
+    public int getHeightRef() {
+        return heightRef;
+    }
+
+    public void setHeightRef(int heightRef) {
+        this.heightRef = heightRef;
+    }
+
+    public boolean isRebalanced() {
+        return rebalanced;
+    }
+
+    public void setRebalanced(boolean rebalanced) {
+        this.rebalanced = rebalanced;
     }
 }

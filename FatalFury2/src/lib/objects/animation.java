@@ -248,6 +248,15 @@ public class animation {
         return result;
     }
 
+    // Actualiza los tiempos de transición entre frames en basea un multiplicador
+    void updateTimes(double x){
+        for(int i = 0; i < times.size(); ++i){
+            double aux = times.get(i) * x;
+            times.remove(i);
+            times.add(i, aux);
+        }
+    }
+
     //Getters y setters
     public void setCoords(ArrayList<Pair<Integer, Integer>> coords) {
         this.coords = coords;
