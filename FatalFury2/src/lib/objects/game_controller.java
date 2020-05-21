@@ -24,19 +24,21 @@ import static lib.Enums.Item_Type.*;
 import static lib.Enums.Item_Type.SCORE_FRAME;
 
 
-// Clase que representa un controlador encargado de gestionar todo el juego
+// Clase que representa un controlador principal del juego que se encarga de gestionarlo
 public class game_controller {
-
     Random ran = new Random();
+    // Modo debug
     boolean debug = false;
     boolean stopMusic = false;
     // Controlador de una pelea
     private fight_controller fight;
-    // Escenario (habría que meterlo en fight_controller)
+    // Escenario de una pelea
     private scenary scene;
     // Menus
-    private menu principal,basicMenu, gameMenu;
+    private menu principal, basicMenu, gameMenu;
+    // Menu de salir del juego
     private menu sure;
+    // Menu de selección de dificultad
     private menu difficulty;
     // Menu actual
     private menu actualMenu;
@@ -44,34 +46,43 @@ public class game_controller {
     private menu escapeMenu;
     // Menu de selección de mapa
     private menu mapSelection;
-
+    // Menu de selección de personaje
     private character_menu charMenu;
-
+    // Menu de opciones del juego
     private options optionsMenu;
-
+    // Controladores de los dos personajes de la pelkea
     private character_controller user;
     private character_controller enemy;
-    // Estado del juego
+    // Estado del juego, inicalmente en opening
     private GameState state = GameState.OPENING_1;
     // Ranking
     private score ranking = new score(ia_loader.dif.EASY);
-    // introducción de nombre
+    // Instancia de la clase que implementa el pedir el nombre
     private ask_for_name name = new ask_for_name();
-    // Si es JvJ
+    // Si es modo 1P vs 2P
     private boolean pvp = false;
-    // Limnites del mapa
+    // Limites del mapa
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
     // Modo historia
     private story_mode story;
+    // Es modo historia
     private boolean storyOn;
+    // Ruta sprites del principio del juego
     private String openings = "/assets/sprites/menu/opening/opening_";
+    // Marcas de tiempo
     private long tiempo = System.currentTimeMillis();
     private long timeReference = System.currentTimeMillis();
+    // Está la demo mostrandose
     private boolean onDemo = false;
+    // Se vuelve del menu escape
     private boolean fromEscape = false;
+    // Sprite press start de la pantalla principal
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
+    // Cargador de la inteligencia artifical
     private ia_loader.dif lvlIa;
+    // Sprite de como jugar
     private screenObject how = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/how_to_play.png")).getImage(), Item_Type.MENU);;
+    // Fuente de menus
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
     private Font font;
     {
@@ -84,6 +95,7 @@ public class game_controller {
         }
     }
 
+    // Constructor del game controller por defecto, se inicializan variables
     public game_controller() {
         this.sure = menu_generator.generate_sure();
         this.principal = menu_generator.generate();
@@ -95,6 +107,7 @@ public class game_controller {
         this.mapSelection = menu_generator.generate_map_selection();
     }
 
+    // Constructor con menu principal
     public game_controller(menu principal) {
         this.sure = menu_generator.generate_sure();
         this.principal = principal;
@@ -103,6 +116,7 @@ public class game_controller {
         this.difficulty = menu_generator.generate_story_difficulty();
     }
 
+    // Constructor con controlador de pelea y menu principal
     public game_controller(fight_controller fight, menu principal) {
         this.fight = fight;
         this.principal = principal;
@@ -137,6 +151,8 @@ public class game_controller {
             fight.setVsIa(false);
         }
 */
+
+        // Estado del juego de opening 1 (incial), se muestra un sprite en toda la pantalla
         if(state == GameState.OPENING_1){
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
@@ -146,6 +162,7 @@ public class game_controller {
                 tiempo = System.currentTimeMillis();
             }
         }
+        // Estado del juego de opening 2 , se muestra un sprite en toda la pantalla
         else if(state == GameState.OPENING_2){
             screenObjects.remove(Item_Type.MENU);
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "2.png")).getImage(), Item_Type.MENU);
@@ -157,6 +174,8 @@ public class game_controller {
                 timeReference = tiempo;
             }
         }
+        // Estado del juego demo, se muestra una pelea aleatoria entre dos personajes controlados por inteligencia artificial
+        // Se entra tras estar 10 segundos en el menu principal del juego sin pulsar ninguna tecla
         else if(state == GameState.DEMO){
             if(controlListener.anyKeyPressed()){
                 fight.pauseFight();
@@ -304,7 +323,7 @@ public class game_controller {
                 user = null;
                 System.gc();
             }
-
+            // Cambio al modo demo: han pasado 10 segundos sin presionar nada
             if(actualMenu == principal && System.currentTimeMillis() - timeReference > 10000.0){
                 state = GameState.DEMO;
             }
@@ -337,32 +356,38 @@ public class game_controller {
                             actualMenu = sure;
                             fromEscape = false;
                             break;
+                        // Cambio al menu de opciones del juego
                         case PRINCIPAL_OPTIONS:
                             optionsMenu = new options();
                             actualMenu.updateTime();
                             optionsMenu.updateTime();
                             state = GameState.OPTIONS;
                             break;
+                        // Cambio a la pantalla de ranking
                         case PRINCIPAL_RANK:
                             ranking.reloadRanking();
                             state = GameState.RANKING;
                             break;
+                        // Cambio al estado de juego 1p vs 2p
                         case GAME_MULTIPLAYER:
                             actualMenu.updateTime();
                             charMenu = new character_menu(0);
                             state = GameState.PLAYERS;
                             pvp = true;
                             break;
+                        // Cambio al estado de juego 1p vs IA
                         case GAME_IA:
                             actualMenu = difficulty;
                             actualMenu.updateTime();
                             state = GameState.DIFFICULTY;
                             pvp = false;
                             break;
+                        // Cambio al estado de juego historia
                         case GAME_HISTORY:
                             story = new story_mode();
                             state = GameState.STORY;
                             break;
+                        // Cambio a la pantalla de como jugar
                         case GAME_HOW:
                             state = GameState.HOW_TO_PLAY;
                             break;
@@ -376,6 +401,7 @@ public class game_controller {
                 }
             }
         }
+        // Estado del juego SURE, pregunta al usuario si de verdad quiere salir del juego
         else if(state == GameState.SURE){
             screenObject s = actualMenu.getFrame();
             s.setX(317);
@@ -388,9 +414,11 @@ public class game_controller {
                 if(p.getKey() == null) {
                     switch (p.getValue()) {
                         case YES:
+                            // Fin del programa
                             System.exit(0);
                             break;
                         case NO:
+                            // Volver al menu en el que se encontraba
                             if(fromEscape){
                                 state = GameState.ESCAPE;
                                 actualMenu = escapeMenu;
@@ -407,6 +435,7 @@ public class game_controller {
                 }
             }
         }
+        // Estado del juego how to play, muestra una pantalla con los controles de la pelea
         else if(state == GameState.HOW_TO_PLAY){
             screenObjects.put(Item_Type.MENU, how);
             if(controlListener.getStatus(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference > 300.0){
@@ -416,6 +445,8 @@ public class game_controller {
                 state = GameState.NAVIGATION;
             }
         }
+        // Estado del juego dificultad, muestra un menu para elegir la dificultad de la pelea e informa de que diferencia
+        // un nivel de dificultad de otro
         else if (state == GameState.DIFFICULTY){
             if(controlListener.getStatus(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference > 300.0){
                 timeReference = System.currentTimeMillis();
@@ -428,6 +459,7 @@ public class game_controller {
                 Pair<menu, Selectionable> p = actualMenu.select();
                 if (controlListener.menuInput(1, controlListener.ENT_INDEX) && p.getValue() != Selectionable.NONE) {
                     if (p.getKey() == null) {
+                        // Ajustar el nivel de la inteligencia artificial segun lo escogido
                         switch (p.getValue()) {
                             case EASY:
                                 lvlIa = ia_loader.dif.EASY;
@@ -445,13 +477,15 @@ public class game_controller {
                         audio_manager.menu.play(menu_audio.indexes.option_selected);
                         actualMenu.updateTime();
                         charMenu = new character_menu(1);
+                        // Transición al estado de selección de personaje
                         state = GameState.PLAYERS;
                     }
                 }
             }
         }
+        // Estado del juego players, muestra el menu de selección de personajes
         else if (state == GameState.PLAYERS){
-
+            // Se ha presionado ESC, volver atrás
             if(controlListener.menuInput(1, controlListener.ESC_INDEX)){
                 timeReference = System.currentTimeMillis();
                 audio_manager.menu.play(menu_audio.indexes.back);
@@ -488,12 +522,16 @@ public class game_controller {
                     state = GameState.MAP;
                 }
             }
-        } else if (state == GameState.OPTIONS){
+        }
+        // Estado del juego options, muestra el menu de opciones (volumen, controles P1, controles P2)
+        else if (state == GameState.OPTIONS){
             if (optionsMenu.gestionMenu(screenObjects)){
                 state = GameState.NAVIGATION;
             }
-        } else if (state == GameState.MAP){
-
+        }
+        // Estado del juego map, muestra el menu de selección de mapa para la pelea
+        else if (state == GameState.MAP){
+            // Se ha presionado ESC, volver atrás
             if(controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis()-timeReference > 300.0){
                 audio_manager.menu.play(menu_audio.indexes.back);
                 actualMenu = gameMenu;
@@ -553,7 +591,7 @@ public class game_controller {
                 }
             }
         }
-        // Si se está peleando
+        // Estado del juego fight, se está peleando
         else if(state == GameState.FIGHT){
             // Si se ha presionado escape se cambia de estado
             if( controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis()-timeReference>300.0){
@@ -583,8 +621,7 @@ public class game_controller {
                     audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                     stopMusic = false;
                 }
-
-
+                // Ha terminado la pelea
                 if (fight.getEnd()) {
                     if(fight.isVsIa()){
                         Fight_Results resultado = fight.getFight_result();
@@ -609,11 +646,12 @@ public class game_controller {
                         principal.updateTime();
                     }
                     timeReference = System.currentTimeMillis();
+                    // Borrar todos los elementos de la interfaz de pelea
                     clearInterface(screenObjects);
                 }
             }
         }
-        // Si se le ha dado a escape durante una pelea
+        // Estado del juego escape, si se le ha dado a escape durante una pelea
         else if (state == GameState.ESCAPE){
             if(!storyOn) {
                 fight.pauseFight();
@@ -661,6 +699,7 @@ public class game_controller {
             audio_manager.menu.play(menu_audio.indexes.back);
             state = GameState.NAVIGATION;
         }
+        // Estado del juego typing, muestra la introducción del nombre tras una pelea
         else if (state == GameState.TYPING){
             if (name.gestionMenu(screenObjects)){
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
@@ -675,9 +714,8 @@ public class game_controller {
                 screenObjects.remove(Item_Type.P1_SELECT);
                 screenObjects.remove(Item_Type.P2_SELECT);
             }
-
-
         }
+        // Estados del juego relacionados con el modo historia
         else if (state == GameState.STORY || state == GameState.STORY_FIGHT
                 || state == GameState.STORY_MENU || state == GameState.STORY_LOADING
                 || state == GameState.STORY_END || state == GameState.STORY_DIFFICULTY){
@@ -726,6 +764,7 @@ public class game_controller {
         }
     }
 
+    // Borrar todos los elementos de la pantalla que pertenecen a la interfaz de pelea
     private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
         screenObjects.remove(Item_Type.SHADOW_1);
         screenObjects.remove(Item_Type.SHADOW_2);
@@ -753,12 +792,14 @@ public class game_controller {
         }
     }
 
+    // Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
         if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
         else if(state == GameState.FIGHT || state == GameState.ESCAPE
                 || state == GameState.DEMO || state == GameState.SURE && fromEscape) {
+            // Hitboxes, hurtboxes y coverboxes de los personajes para el modo debug
             if(debug){
                 fight.player.player.getHitbox().drawHitBox(g);
                 fight.player.player.getHurtbox().drawHitBox(g);
@@ -792,6 +833,7 @@ public class game_controller {
             if(state == GameState.STORY_DIFFICULTY){
                 i = story.getActualMenu().getSel();
             }
+            // Indicadores de dificultad
             switch (i){
                 case 0:
                     s[0] = "Low attack freq.";
