@@ -12,6 +12,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Properties;
 
+// Clase encargada de gestionar las excepciones que provocan el crasheo del juego.
+// Cuando el juego crashea, se crea una ventana para que el usuario escriba la posible causa del crasheo,
+// una vez escrita la causa, el usuario pulsara aceptar para enviar un mail a una cuenta de correo
+// creada unicamente para recivir reportes de crasheo.
+
 public class crashReport {
 
     private static String from ="ff2crashreports@gmail.com";

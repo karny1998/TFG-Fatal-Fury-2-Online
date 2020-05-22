@@ -6,6 +6,7 @@ import lib.Enums.Scenario_type;
 import javax.sound.sampled.*;
 import java.io.IOException;
 
+// Clase encargada de cargar los audios que seran usados en la pelea
 public class fight_audio {
 
     Clip p1_voices[];
@@ -72,6 +73,7 @@ public class fight_audio {
     private Playable_Character p1, p2;
     private Scenario_type map;
 
+    // Inicializa todos los audios
     public fight_audio(Playable_Character p1_, Playable_Character p2_, Scenario_type map_){
         p1 = p1_;
         p2 = p2_;
@@ -191,6 +193,7 @@ public class fight_audio {
 
     }
 
+    // Reproduce un audio del tipo voice
     public void playVoice(boolean isP1, voice_indexes i){
         if(isP1){
             try {
@@ -210,7 +213,7 @@ public class fight_audio {
     }
 
 
-
+    // Reproduce un audio del tipo announcer
     public void playAnnouncer(announcer_indexes i){
         try {
             announcer[i.ordinal()].setFramePosition(0);
@@ -220,6 +223,7 @@ public class fight_audio {
         }
     }
 
+    // Reproduce un audio del tipo sfx
     public void playSfx(sfx_indexes i){
         try {
             sfx[i.ordinal()].setFramePosition(0);
@@ -229,6 +233,7 @@ public class fight_audio {
         }
     }
 
+    // Reproduce un audio del tipo music en bucle
     public void loopMusic(music_indexes i){
         try {
             music[i.ordinal()].setFramePosition(0);
@@ -256,7 +261,7 @@ public class fight_audio {
         updateVoices(voices);
     }
 
-
+    // Actualiza el volumen de la musica
     private void updateMusic(double mus){
 
         FloatControl gainControl = (FloatControl) music[music_indexes.map_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -270,7 +275,7 @@ public class fight_audio {
 
     }
 
-
+    // Actualiza el volumen de los efectos especiales
     private void updateSfx(double sfx_){
         for(int i = 0; i < sfx_indexes.values().length; i++){
             FloatControl gainControl = (FloatControl) sfx[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -278,6 +283,7 @@ public class fight_audio {
         }
     }
 
+    // Actualiza el volumen de las voces
     private void updateVoices(double voices){
 
         for(int i = 0; i < announcer_indexes.values().length; i++){
@@ -302,7 +308,7 @@ public class fight_audio {
         }
     }
 
-
+    // Cierra todos los clips de audio abiertos
     public void close(){
         for(int i = 0; i < music_indexes.values().length; i++){
             music[i].close();

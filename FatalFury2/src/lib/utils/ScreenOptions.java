@@ -3,6 +3,8 @@ package lib.utils;
 import javax.swing.*;
 import java.awt.*;
 
+// Clase que se encarga de actualizar el modo en el que se muestra el juego
+// pantalla completa o en ventana
 public class ScreenOptions {
 
     private static JFrame screen;

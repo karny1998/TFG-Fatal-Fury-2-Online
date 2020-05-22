@@ -3,6 +3,7 @@ package lib.utils;
 import java.io.*;
 import java.net.URL;
 
+// Clase que implementa un método de copia de ficheros
 public class fileUtils {
     public static void copy(String s, String d) throws IOException {
         File dest = new File(d);

@@ -3,6 +3,7 @@ package lib.sound;
 import javax.sound.sampled.*;
 import java.io.IOException;
 
+// Clase encargada de cargar los audios que seran usados en la menus
 public class menu_audio {
 
     public Clip[] clips;
@@ -22,6 +23,7 @@ public class menu_audio {
         menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai, error
     }
 
+    // Carga los clips de audio
     menu_audio(){
         try {
             load();
@@ -71,12 +73,14 @@ public class menu_audio {
     }
 
 
+    // Cierra los clips de audio
     public void close(){
         for(int i = 0; i < indexes.values().length; i++){
             clips[i].close();
         }
     }
 
+    // Actualiza los valores de volumen
     public void update_init(double mus, double sfx, double voices){
 
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -110,6 +114,7 @@ public class menu_audio {
         gainControl.setValue(20f * (float) Math.log10(sfx ));
     }
 
+    // Actualiza los valores de volumen
     public void update(double mus, double sfx, double voices){
         stop(indexes.menu_theme);
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -162,6 +167,7 @@ public class menu_audio {
         resume(indexes.error);
     }
 
+    // Reproduce el clip con indice i
     public void play(indexes i){
         try {
             clips[i.ordinal()].setFramePosition(0);
@@ -171,18 +177,21 @@ public class menu_audio {
         }
     }
 
+    // detiene el clip con indice i
     public void stop(indexes i){
         if(clips[i.ordinal()].isRunning()){
             clips[i.ordinal()].stop();
         }
     }
 
+    // Continua la reproducción del clip con indice i
     public void resume(indexes i){
         if(!clips[i.ordinal()].isRunning() && clips[i.ordinal()].getFramePosition() != 0){
             clips[i.ordinal()].start();
         }
     }
 
+    // Reproduce en bucle el clip con indice i
     public void loop(indexes i){
         try {
             clips[i.ordinal()].setFramePosition(0);

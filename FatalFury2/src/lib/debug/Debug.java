@@ -2,6 +2,7 @@ package lib.debug;
 
 import java.awt.*;
 
+//Clase encargada de mostrar los Frames por segundo para realizar tareas de depuración
 public class Debug {
     private Boolean debugOn;
     private int width;
@@ -13,6 +14,7 @@ public class Debug {
     private static int totalFrames = 0;
     private static long nsInASecond = 1/*s*/*1000/*ms*/*1000/*us*/*1000/*ns*/;
 
+    // Inicializa los valores
     public Debug(Boolean on, int w, int h, long update){
         debugOn = on;
         width = w;
@@ -20,6 +22,7 @@ public class Debug {
         updateTime_ns = update*1000*1000;
     }
 
+    // Calcula los frames por segundo actuales
     public int currentFPS(){
         totalFrames++;
             if (System.nanoTime() > lastFpsCheck + updateTime_ns ) {
@@ -30,6 +33,7 @@ public class Debug {
             return currentFps;
     }
 
+    // Muestra por pantalla los frames por segundo calculados
     public void drawFPS(Graphics g){
         if(debugOn) {
             g.setColor(Color.BLACK);

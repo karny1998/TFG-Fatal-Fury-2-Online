@@ -52,6 +52,7 @@ public class ia_loader {
     private static Double pesos[][] = new Double[4][5];
     private static russian_roulette ruleta = new russian_roulette();
 
+    // Carga la información contenida en el fichero de la ia de cada personaje
     public static Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> loadIA(Playable_Character c, dif d){
         String file = path + c.toString() + "/" + d.toString() +".xml";
         ruleta = new russian_roulette();

@@ -25,6 +25,7 @@ public class hitBox {
         this.width = newWidth;          this.height = newHeight;
     }
 
+    // Devuelve cierto si esta Hitbox colisiona con otra
     public Boolean collides(hitBox other) {
         if (this.x < other.x + other.width &&
                 this.x + this.width > other.x &&
@@ -35,6 +36,7 @@ public class hitBox {
         return false;
     }
 
+    // Muestra la hitbox por pantalla
     public void drawHitBox(Graphics g) {
         if (this.type == box_type.HITBOX) {
             g.setColor(new Color(1,0,0, (float) 0.5));

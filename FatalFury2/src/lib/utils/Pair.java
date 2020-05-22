@@ -1,5 +1,6 @@
 package lib.utils;
 
+// Implementación de la clase Pair para evitar el uso de JavaFX
 public class Pair<T, V> {
 
     public T first;

@@ -12,15 +12,19 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
+// Clase encargada de gestionar los eventos de teclado
 public class controlListener implements KeyListener {
 
+    // ALmacena el estado de cada tecla
     public static Boolean[] keyStatus;
+    // Cola de los 10 ultimos inputs
     static Queue<Integer> inputQueue_1, inputQueue_2, general;
     static int QUEUE_SIZE = 10;
     static int BUTTONS = 10;
     private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
     static int currentKey, lastKey;
 
+    // Almacena el estado de cada tecla perteneciente a los mandos
     public static Boolean[] mando1, mando2, menus1, menus2;
     public static Boolean enter1, enter2;
 
@@ -36,6 +40,7 @@ public class controlListener implements KeyListener {
     public static final int ESC_INDEX = 9;
 
 
+    // Vector de correspondencias entre pulsaciones de teclado y acciones a realizar por el personaje
     public static String[] movimientos = {
                         "AR",
                         "AB",
@@ -50,7 +55,7 @@ public class controlListener implements KeyListener {
     static int[] keyBindings1, keyBindings2;
 
 
-
+    // Constructor de la clase, inicializa todos los vectores
     public controlListener(){
         keyStatus = new Boolean[526];
 
@@ -81,13 +86,10 @@ public class controlListener implements KeyListener {
     }
 
 
+    // Implementación de las funciones asbtractas de la clase KeyListener
     @Override
     public void keyTyped(KeyEvent e) {
         currentKey = e.getKeyChar();
-    }
-
-    public static int getCurrentKey(){
-        return (int) currentKey;
     }
 
     @Override
@@ -137,7 +139,12 @@ public class controlListener implements KeyListener {
 
 
 
+    // Devuelve el indice de la tecla pulsada actualmente
+    public static int getCurrentKey(){
+        return (int) currentKey;
+    }
 
+    // Devuelve el indice de la ultima tecla pulsada por el jugador 1, jugador 2, o en general
     public static int getLastKey(int player){
 
         switch (player){
@@ -158,6 +165,7 @@ public class controlListener implements KeyListener {
         }
     }
 
+    // Devuelve cierto si la tecla pasada como parametro esta pulsada
     public static boolean isPressed(int keycode){
         if(keycode == -1){
             return false;
@@ -165,6 +173,7 @@ public class controlListener implements KeyListener {
         return keyStatus[keycode];
     }
 
+    // Devuelve la cola que almacena los 10 ultimos inputs del jugador 1 o del jugador 2
     public static Queue<Integer> getQueue(int player){
         switch (player){
             case 1:
@@ -176,7 +185,7 @@ public class controlListener implements KeyListener {
         }
     }
 
-
+    // Devuelve cierto si se ha pulsado al menos una tecla del teclado
     public static boolean anyKeyPressed(){
         Boolean status = false;
         for(int i = 0; i < keyStatus.length; i++){
@@ -185,6 +194,7 @@ public class controlListener implements KeyListener {
         return status;
     }
 
+    // Devuelve el estado de la tecla index en el mando del jugador 1, j ugador 2 o de ambos
     public static boolean getStatus(int player, int index){
         switch (player){
             case 0:
@@ -198,7 +208,8 @@ public class controlListener implements KeyListener {
         }
     }
 
-
+    // Devuelve el estado de la tecla index durante la navegación de menús
+    // en el mando del jugador 1, j ugador 2 o de ambos.
     public static boolean menuInput(int player, int index){
         switch (player){
             case 0:
@@ -228,7 +239,7 @@ public class controlListener implements KeyListener {
         }
     }
 
-
+    // Metodo encargado de transformar el estado de un mando en los movimientos del personaje
     public static String getMove(int player){
         Boolean[] actual;
         String mov = "";
@@ -251,6 +262,7 @@ public class controlListener implements KeyListener {
         return mov;
     }
 
+    // Método encargado de leer el fichero de opciones y actualizar los valores de las teclas asignadas a los mandos
     public static void update(){
         try {
             File input = new File(optionsFilePath);
@@ -290,11 +302,11 @@ public class controlListener implements KeyListener {
 
 
 
-
+    // Devuelve cierto si la tecla Backspace está siendo pulsada
     public static boolean getBack(){
         return keyStatus[8];
     }
-
+    // Devuelve cierto si la tecla Escape está siendo pulsada
     public static boolean getEsc(){
         return keyStatus[27];
     }
