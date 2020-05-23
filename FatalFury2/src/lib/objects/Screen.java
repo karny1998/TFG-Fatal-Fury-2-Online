@@ -104,7 +104,7 @@ public class Screen extends JPanel{
             Movement s = game.getFight().getPlayer().getPlayer().getState();
             boolean ended = s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT;
             if(!ended) {
-                offset = game.getFight().getCurrentRound().getScenaryOffsetY() / 2;
+                offset = (int) (game.getFight().getCurrentRound().getScenaryOffsetY() * 3);
                 g2d.translate(0, -offset);
             }
         }

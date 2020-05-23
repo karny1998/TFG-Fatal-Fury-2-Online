@@ -30,21 +30,21 @@ public class scenary {
         switch (type) {
             case USA:
                 x = -145;
-                y = 0;
+                y = -60;
                 x2 = -145;
                 y2 = 398;
                 loadUsa();
                 break;
             case CHINA:
                 x = -145;
-                y = 0;
+                y = -60;
                 x2 = -145;
                 y2 = 57;
                 loadChina();
                 break;
             case AUSTRALIA:
                 x = -145;
-                y = 0;
+                y = -60;
                 x2 = -145;
                 y2 = 90;
                 loadAustralia();

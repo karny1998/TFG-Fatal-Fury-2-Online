@@ -137,14 +137,15 @@ public class character {
         }
         // Si se está haciendo un puñetado en el aire, se está en el último frame, y ha pasado tiempo suficiente
         // se pasa al estado de caída
-        else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN)
+        else if((state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_ROLL_PUNCH_DOWN
+                || state == Movement.JUMP_HARD_PUNCH_DOWN || state == Movement.JUMP_ROLL_HARD_PUNCH_DOWN)
                 && movements.get(state).getAnim().getState() == movements.get(state).getAnim().getFrames().size()-1
                 && System.currentTimeMillis() - movements.get(state).getAnim().getStartTime() > 0.5 * movements.get(state).getAnim().getTimes().get(movements.get(state).getAnim().getState())){
             movements.get(state).getAnim().reset();
-            if(state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_HARD_PUNCH_DOWN || state == Movement.JUMP_KICK_DOWN){
+            if(state == Movement.JUMP_PUNCH_DOWN || state == Movement.JUMP_HARD_PUNCH_DOWN){
                 state = Movement.JUMP_FALL;
             }
-            else if(state == Movement.JUMP_ROLL_PUNCH_DOWN || state == Movement.JUMP_ROLL_HARD_PUNCH_DOWN || state == Movement.JUMP_KICK){
+            else if(state == Movement.JUMP_ROLL_PUNCH_DOWN || state == Movement.JUMP_ROLL_HARD_PUNCH_DOWN){
                 state = Movement.JUMP_ROLL_FALL;
             }
             movements.get(state).start(dis);
@@ -153,7 +154,7 @@ public class character {
         }
         // Si se está saltando, se está por encima de la altura mínima, y se solicita hacer un puñetazo
         // o patada, se ejecuta el puñetado o patada en salto
-        else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended() && y < -90
+        else if((state == Movement.NORMAL_JUMP || state == Movement.JUMP_ROLL_RIGHT) && !movements.get(state).ended() && y < 40
                 && (mov.endsWith("-A") ||  mov.endsWith("-B") ||  mov.endsWith("-C") ||  mov.endsWith("-D")
                     || mov.equals("A") || mov.equals("B") || mov.equals("C") || mov.equals("D"))){
             movements.get(state).getAnim().reset();
@@ -296,18 +297,10 @@ public class character {
         }
 
         // Se impide atravesar el suelo
-        /*if(s.getY() > 290){
-            y = 290;
-            s.setY(290);
-        }*/
-        /*if(s.getY() > 290 && !rival.isJumping()){
+        if(s.getY() > 290){
             y = 290;
             s.setY(290);
         }
-        else if(s.getY() > 270 && rival.isJumping()){
-            y = 270;
-            s.setY(270);
-        }*/
 
         // Gestión de colisiones
         // Si es la animación de victoria de terry, se ajusta la altura
@@ -317,6 +310,14 @@ public class character {
         // Si está haciendo un ataque que se desplaza y choca con el enemigo, no avanza en x
         else if(collides && isAttacking() && inDisplacement()){
             s.setX(x);
+        }
+        // Si está siendo lanzado, se queda en el sitio
+        else if(state == Movement.THROW){
+            s.setX(x);
+        }
+        // Si colisiona con el límite izquierdo del map y está siendo lanzado en la dirección contraria
+        else if(collidesLimitLeft && state == Movement.THROWN_OUT && orientation == -1){
+            x = s.getX();
         }
         // Si colisiona con el límite izquierdo del mapa
         else if(collidesLimitLeft){
@@ -351,6 +352,10 @@ public class character {
                     x = s.getX();
                 }
             }
+        }
+        // Si colisiona con el límite derecho del map y está siendo lanzado en la dirección contraria
+        else if(collidesLimitRight && state == Movement.THROWN_OUT && orientation == 1){
+             x = s.getX();
         }
         // Si colisiona con el límite derecho del mapa
         else if(collidesLimitRight){
@@ -389,10 +394,6 @@ public class character {
         // Si está siendo lanzado avanza
         else if(state == Movement.THROWN_OUT){
             x = s.getX();
-        }
-        // Si está siendo lanzado, se queda en el sitio
-        else if(state == Movement.THROW){
-            s.setX(x);
         }
         // Si el rival choca con el limite izquierdo o derecho, se está por debajo del rival y se intenta avanzar hacia el límite,
         // se queda en el sitio

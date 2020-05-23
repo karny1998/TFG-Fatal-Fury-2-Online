@@ -1,5 +1,6 @@
 package lib.objects;
 
+import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
 import lib.input.controlListener;
 
@@ -75,10 +76,14 @@ public class user_controller extends character_controller{
                     auxComb = auxComb.substring(0, auxComb.length() - 1);
                 }
                 if (this.player.getCombos().containsKey(auxComb) && auxComb.contains("+")) {
-                    end = true;
-                    mov = auxComb;
-                    inputs.clear();
-                    times.clear();
+                    if(this.player.getCombos().get(auxComb) != Movement.DASH ||
+                            this.player.getCombos().get(auxComb) == Movement.DASH &&
+                            times.get(i+1) - times.get(i) <= 1000.0) {
+                        end = true;
+                        mov = auxComb;
+                        inputs.clear();
+                        times.clear();
+                    }
                 }
             }
         }
