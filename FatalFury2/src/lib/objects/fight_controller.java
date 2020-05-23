@@ -337,7 +337,7 @@ public class fight_controller implements roundListener {
             iaAux.setpWins(playerScore);
         }
 
-        // ESCENARIO DE LA PELEA incluidos desplazamientos
+        // ESCENARIO DE LA PELEA incluidos desplazamientos del mismo
         screenObject s1 = scene.getFrame1().cloneSO();
         s1.setX(s1.getX()+currentRound.getScenaryOffset()/2);
         s1.setY(s1.getY()+currentRound.getScenaryOffsetY());

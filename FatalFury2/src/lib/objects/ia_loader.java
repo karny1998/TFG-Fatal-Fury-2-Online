@@ -21,8 +21,6 @@ public class ia_loader {
         EASY, NORMAL, HARD, VERY_HARD
     }
 
-
-
     private enum indexes {
         NORMAL_JUMP,
         JUMP_ROLL_RIGHT,
