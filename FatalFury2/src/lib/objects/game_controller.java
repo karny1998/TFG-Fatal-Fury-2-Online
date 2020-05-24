@@ -637,10 +637,14 @@ public class game_controller {
                                 break;
                         }
                         name = new ask_for_name();
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
                         state = GameState.TYPING;
                     }
                     else{
                         audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                        audio_manager.endFight();
+                        audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                         state = GameState.NAVIGATION;
                         actualMenu = gameMenu;
                         principal.updateTime();
@@ -706,6 +710,7 @@ public class game_controller {
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
                 audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.fight_selected);
+                audio_manager.menu.loop(menu_audio.indexes.menu_theme);
                 fight.getScorePlayer().writeRankScore(name.getName());
                 timeReference = System.currentTimeMillis();
                 actualMenu = gameMenu;
