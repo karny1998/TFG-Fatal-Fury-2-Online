@@ -637,8 +637,7 @@ public class game_controller {
                                 break;
                         }
                         name = new ask_for_name();
-                        audio_manager.fight.stopMusic(fight_audio.music_indexes.lose_theme);
-                        audio_manager.fight.stopMusic(fight_audio.music_indexes.win_theme);
+
                         state = GameState.TYPING;
                     }
                     else{

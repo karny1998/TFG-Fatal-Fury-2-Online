@@ -3,6 +3,7 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.input.controlListener;
 import lib.sound.audio_manager;
+import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 
 import javax.swing.*;
@@ -105,15 +106,15 @@ public class ask_for_name {
             }
             else if(controlListener.getStatus(0, controlListener.IZ_INDEX)){
                 actual = actual - 1 < 0 ? 0 :  actual - 1;
-                audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
             }
             else if(controlListener.getStatus(0, controlListener.AR_INDEX)){
                 resultado[actual] = resultado[actual] + 1 > valores.length-1 ? 0 :  resultado[actual] + 1;
-                audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
             }
             else if(controlListener.getStatus(0, controlListener.AB_INDEX)){
                 resultado[actual] = resultado[actual] - 1 < 0 ? valores.length -1 :  resultado[actual] - 1;
-                audio_manager.menu.play(menu_audio.indexes.move_cursor);
+                audio_manager.fight.playSfx(fight_audio.sfx_indexes.Move_cursor);
             }
 
             referenceTime = current;
