@@ -7,23 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class russian_roulette {
+    // Si es una ruleta simple o no, siendo compleja cuando está compuesta por otras ruletas rusas
     private boolean basic = true;
+    // Selecciones simples
     private List<Pair<Double, Movement>> basicSelections = new ArrayList<>();
+    // Selecciones complejas (otras ruletas)
     private List<Pair<Double, russian_roulette>> complexSelection = new ArrayList<>();
+    // Selecciones simples originales
     private List<Pair<Double, Movement>> basicSelectionsOriginal = new ArrayList<>();
+    // Selecciones complejas (otras ruletas) originales
     private List<Pair<Double, russian_roulette>> complexSelectionOriginal = new ArrayList<>();
+    // Total de probabilidad en base al que normalizar
     private double total = 0.0;
+    // Categoría de la ruleta, siendo global, una ruleta normal que agrupa todo tipo de movimientos
     private Movement category = Movement.GLOBAL;
 
+    // Contructor por defecto
     public russian_roulette(){}
 
+    // Contructor que se le indica si es compleja o no
     public russian_roulette(boolean b){
         basic = b;
     }
 
+    // Devuelve un movimiento resultado de "girar" la ruleta
     public Movement spinRoulette(){
         double r = Math.random();
         double base = 0.0;
+        // Si es simple obtiene el resultado directamente en base al número aleatorio y las probabilidades
         if(basic){
             if(basicSelections.size() == 0){
                 return Movement.STANDING;
@@ -38,6 +49,7 @@ public class russian_roulette {
                 }
             }
         }
+        // Si es compleja obtiene el resultado en base al spinRoulette sacada del número aleatorio y las probabilidades
         else{
             if(complexSelection.size() == 0){
                 return Movement.STANDING;
@@ -55,6 +67,7 @@ public class russian_roulette {
         return Movement.STANDING;
     }
 
+    // Se añade una componente a la ruleta básica
     public void addComponent(double p, Movement m){
         if(basic) {
             basicSelectionsOriginal.add(new Pair<>(p, m));
@@ -63,6 +76,7 @@ public class russian_roulette {
         }
     }
 
+    // Se añade una componente a la ruleta compleja
     public void addComponent(double p, russian_roulette r){
         if(!basic){
             complexSelectionOriginal.add(new Pair<>(p, r));
@@ -71,6 +85,7 @@ public class russian_roulette {
         }
     }
 
+    // Normaliza las probabilidades
     public void fillRoulette(){
         updateTotal();
         if(basic){
@@ -89,6 +104,7 @@ public class russian_roulette {
         }
     }
 
+    // Devuelve una ruleta rusa idéntica a sí misma
     public  russian_roulette clone(){
         russian_roulette r = new russian_roulette();
         if(basic) {
@@ -105,6 +121,7 @@ public class russian_roulette {
         return r;
     }
 
+    // Getters y setters
     public boolean isBasic() {
         return basic;
     }

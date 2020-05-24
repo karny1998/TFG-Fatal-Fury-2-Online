@@ -165,10 +165,13 @@ public class round {
         paused2 = false;
     }
 
+    // Gestion de daños
     void collidesManagement(hitBox pHurt, hitBox eHurt){
+        // Estado actual de ambos
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
 
+        // Si está recibiendo knockback no se calcula daños¡, ya que ya lo ha recibido
         if(player.getPlayer().inKnockback() || enemy.getPlayer().inKnockback()){
             return;
         }
@@ -191,6 +194,7 @@ public class round {
         Boolean pStateChanged = player_old_state != player_act_state,
                 eStateChanged = enemy_old_state != enemy_act_state;
 
+        // Si han cambiado de estado se actualizan
         if(pStateChanged){
             player_old_state = player_act_state;
             playerHit = false;
@@ -200,11 +204,14 @@ public class round {
             enemyHit = false;
         }
 
+        // Daños de cada uno
         int dmgP = player.getPlayer().getDamage();
         int dmgE = enemy.getPlayer().getDamage();
 
+        // Si no se han golpeado entre sí ni en hitbox ni hurtbox
         if(!hitsCollides && !playerHits && !enemyHits){
-            // TENER CUIDADO CON LO DEL STATECHANGED
+            // Se comprueba si se estaban cubriendo y les golpearon en la coverbox
+            // y se aplica un knockback u otro en base al daño del ataque
             if(playerCovers){
                 int dmg = enemy.getPlayer().getDamage();
                 // KNOCKBACK CUBIERTO
@@ -232,23 +239,26 @@ public class round {
             return;
         }
 
-        // EN CASO DE DOBLE AGARRE HAY QUE ELEGIR UN GANADOR
-        // Control de daño provocado por el jugador 1
+        // Si el jugador ha golpeado al rival y ha cambiado de estado, o no había golpeado aún
         if((playerHits || hitsCollides) && (pStateChanged || !playerHit)){
             playerHit = true;
+            // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
             if(enemyCovers && playerState != Movement.THROW){
                 enemy.getPlayer().applyDamage((int) (dmgP*0.5));
                 scorePlayer.addHit((int) (dmgP*10*0.5));
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);
             }
+            // Si no se estaba protegiendo o el ataque era el lanzamiento, se hace daño real
             else{
                 enemy.getPlayer().applyDamage(dmgP);
                 scorePlayer.addHit(dmgP*10);
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_2);
             }
+            // Si está lanzando al rival, cambia el estado del rival a ser lanzado
             if(playerState == Movement.THROW){
                 enemy.getPlayer().setState(Movement.THROWN_OUT, eHurt, pHurt);
             }
+            // Si estaba bloqueando se le aplica al enemigo el knockback correspondiente en base al daño
             else if(enemyState == Movement.STANDING_BLOCK || enemyState == Movement.WALKING){
                 if(dmgP > 10) {
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, eHurt, pHurt);
@@ -257,6 +267,7 @@ public class round {
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, eHurt, pHurt);
                 }
             }
+            // Si el enemigo no estaba agachado, realiza el knockback correspondiente
             else if(!enemy.getPlayer().isCrouched()){
                 if(enemy.getPlayer().isJumping()){
                     enemy.getPlayer().setState(Movement.JUMP_KNOCKBACK, eHurt, pHurt);
@@ -268,6 +279,7 @@ public class round {
                     enemy.getPlayer().setState(Movement.SOFT_KNOCKBACK, eHurt, pHurt);
                 }
             }
+            // Si el enemigo estaba agachado, realiza el knockback correspondiente
             else{
                 if(player.getPlayer().getState() == Movement.CROUCHED_BLOCK){
                     enemy.getPlayer().setState(Movement.CROUCHED_BLOCK_KNOCKBACK, pHurt, eHurt);
@@ -277,22 +289,26 @@ public class round {
                 }
             }
         }
-        // Control de daño provocado por el jugador 2
+        // Si el rival ha golpeado al rival y ha cambiado de estado, o no había golpeado aún
         if((enemyHits || hitsCollides) && (eStateChanged || !enemyHit)){
             enemyHit = true;
+            // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
             if(playerCovers && enemyState != Movement.THROW){
                 player.getPlayer().applyDamage((int) (dmgE*0.5));
                 scoreEnemy.addHit((int) (dmgE*10*0.5));
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);
             }
+            // Si no se estaba protegiendo o el ataque era el lanzamiento, se hace daño real
             else{
                 player.getPlayer().applyDamage(dmgE);
                 scoreEnemy.addHit(dmgE*10);
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_2);
             }
+            // Si está lanzando al jugador, cambia el estado del rival a ser lanzado
             if(enemyState == Movement.THROW){
                 player.getPlayer().setState(Movement.THROWN_OUT, pHurt, eHurt);
             }
+            // Si estaba bloqueando se le aplica al jugador el knockback correspondiente en base al daño
             else if(playerState == Movement.STANDING_BLOCK || playerState == Movement.WALKING){
                 if(dmgE > 10) {
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_HARD, pHurt, eHurt);
@@ -301,6 +317,7 @@ public class round {
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, pHurt, eHurt);
                 }
             }
+            // Si el jugador no estaba agachado, realiza el knockback correspondiente
             else if(!player.getPlayer().isCrouched()){
                 if(player.getPlayer().isJumping()){
                     player.getPlayer().setState(Movement.JUMP_KNOCKBACK, pHurt, eHurt);
@@ -312,6 +329,7 @@ public class round {
                     player.getPlayer().setState(Movement.SOFT_KNOCKBACK, pHurt, eHurt);
                 }
             }
+            // Si el jugador estaba agachado, realiza el knockback correspondiente
             else{
                 if(player.getPlayer().getState() == Movement.CROUCHED_BLOCK){
                     player.getPlayer().setState(Movement.CROUCHED_BLOCK_KNOCKBACK, pHurt, eHurt);
@@ -323,24 +341,26 @@ public class round {
         }
     }
 
+    // Gestión de colisiones, cambios de orientación y daños entre los personajes
     void fightManagement(hitBox pHurt, hitBox eHurt){
+        // Gestiona las colisiones y daños
         collidesManagement(pHurt, eHurt);
         // EL 400 ES EL ANCHO DE LA IMAGEN
-        // Si se sobrepasan
+        // Si se sobrepasan y alguno está mirando en las direccion incorrecta
         if((player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
            && pHurt.getX() > eHurt.getX() || player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
-                && pHurt.getX() < eHurt.getX())
-            /*&& player.getPlayer().getState() != Movement.THROWN_OUT
-            && player.getPlayer().getState() != Movement.THROW && enemy.getPlayer().getState() != Movement.THROWN_OUT
-                && enemy.getPlayer().getState() != Movement.THROW*/){
+                && pHurt.getX() < eHurt.getX())){
+            // Si el enemigo ha terminado el movimiento y el jugador no, se guarda esa info
             if(enemy.getPlayer().endedMovement() && !player.getPlayer().endedMovement()){
                 enemyEnded = true;
             }
+            // Si el jugador ha terminado el movimiento y el enemigo no, se guarda esa info
             else if(!enemy.getPlayer().endedMovement() && player.getPlayer().endedMovement()){
                 playerEnded = true;
             }
         }
-
+        // Si ambos personajes tienen la misma orientacion, y no están siendo lanzados, y ambos han terminado el
+        // movimiento que inició el cambio de orientación
         if(player.getPlayer().getOrientation() == enemy.getPlayer().getOrientation()
             && player.getPlayer().getState() != Movement.THROWN_OUT
             && enemy.getPlayer().getState() != Movement.THROWN_OUT
@@ -365,6 +385,8 @@ public class round {
             enemyEnded = false;
             playerEnded = false;
         }
+        // Si ambos personajes están mirando en la orientacion incorrecta, y no están siendo lanzados, y ambos han
+        // terminado el movimiento que inició el cambio de orientación
         else if(player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
                 && pHurt.getX() > eHurt.getX()
                 && (player.getPlayer().endedMovement() || playerEnded || player.getPlayer().getState() == Movement.THROWN_OUT)
@@ -382,6 +404,8 @@ public class round {
                 playerEnded = false;
             }
         }
+        // Si ambos personajes están mirando en la orientacion incorrecta, y no están siendo lanzados, y ambos han
+        // terminado el movimiento que inició el cambio de orientación
         else if(player.getPlayer().getOrientation() == 1 && enemy.getPlayer().getOrientation() == -1
                 && pHurt.getX() < eHurt.getX()
                 && (player.getPlayer().endedMovement() || playerEnded || player.getPlayer().getState() == Movement.THROWN_OUT)
@@ -401,8 +425,10 @@ public class round {
         }
     }
 
+    // Gestiona la cámara (el escenario) en base a las posiciones de los personajes
     void cameraManagement(hitBox pHurt,hitBox eHurt){
         int xP, xE;
+        // La x de cada personaje en base a la oientación
         if(pHurt.getX() < eHurt.getX()){
             xP = pHurt.getX();
             xE = eHurt.getX()+eHurt.getWidth();
@@ -411,6 +437,7 @@ public class round {
             xE = eHurt.getX();
             xP = pHurt.getX()+pHurt.getWidth();
         }
+        // Si alguno de los dos se sale por el lado derecho, y aun queda escenario por recorrer
         if(Math.min(xP,xE) > cameraLimit.getX() && Math.max(xP,xE) >= cameraLimit.getX()+cameraLimit.getWidth()
             && cameraLimit.getX()+cameraLimit.getWidth() + 40 - scenaryOffset < mapLimit.getX()+mapLimit.getWidth()){
             if(xP > xE && player.getPlayer().inDisplacement()
@@ -424,6 +451,7 @@ public class round {
                 --scenaryOffset;
             }
         }
+        // Si alguno de los dos se sale por el lado izquierdo, y aun queda escenario por recorrer
         else if(Math.min(xP,xE) <= cameraLimit.getX() && Math.max(xP,xE) < cameraLimit.getX()+cameraLimit.getWidth()
                 && cameraLimit.getX() - 40 - scenaryOffset > mapLimit.getX()){
             if(xP > xE && enemy.getPlayer().inDisplacement()
@@ -438,9 +466,11 @@ public class round {
             }
         }
 
+        // Si ambos están en el suelo, offsetY = 0
         if (player.getPlayer().getY() == 290 && enemy.getPlayer().getY() == 290){
             scenaryOffsetY = 0;
         }
+        // Sino se saca en base a la mayor altura de los dos personajes y una proporción
         else{
             int hP = player.getPlayer().getY();
             int hE = enemy.getPlayer().getY();

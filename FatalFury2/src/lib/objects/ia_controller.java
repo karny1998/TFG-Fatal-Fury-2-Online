@@ -65,7 +65,6 @@ public class ia_controller {
         Timer ia_control = new Timer(1, new ActionListener() {
             @Override
             // Realiza las comprobaciones y gestión de la IA periódicamente
-
             public void actionPerformed(ActionEvent e) {
                 ia_gestion();
             }

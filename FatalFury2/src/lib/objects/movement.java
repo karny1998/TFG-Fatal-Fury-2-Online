@@ -17,6 +17,7 @@ public class movement {
     // Submovimiento (solo se soporta tener hijos, no nietos)
     movement subMovement = null;
 
+    // Constructor que pide el identificador de movimiento y la animación
     public movement(Movement type, animation anim) {
         if(type == Movement.WALKING ||type == Movement.CROUCHED_WALKING){
             distChange = -999;
@@ -25,6 +26,7 @@ public class movement {
         this.anim = anim;
     }
 
+    // Constructor que pide el identificador de movimiento
     public movement(Movement type) {
         this.type = type;
         anim = new animation();
@@ -42,12 +44,6 @@ public class movement {
         else{
             subMovement.start(999);
         }
-        /*if(type == Movement.RANGED_ATTACK){
-            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
-            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
-            //EL COMIENZO DE LA ANIM Y LA SUYA
-            throwable.start();
-        }*/
     }
 
     // Termina y reinicia las animaciones
@@ -56,12 +52,6 @@ public class movement {
         if(subMovement != null) {
             subMovement.reset();
         }
-        /*if(type == Movement.THROW){
-            //ASEGURARSE DE QUE LA ANIMACION DEL LANZAMIENTO
-            //TIENE UN PRIMER FRAME VACIO CON EL TIEMPO ENTRE
-            //EL COMIENZO DE LA ANIM Y LA SUYA
-            throwable.reset();
-        }*/
     }
 
     // Si ha terminado o no el movimiento
@@ -74,14 +64,7 @@ public class movement {
         }
     }
 
-    public Movement getType() {
-        return type;
-    }
-
-    public void setType(Movement type) {
-        this.type = type;
-    }
-
+    // GETTERS y SETTERS, en caso de tener submovimiento se devuelve su get si corresponde
     public animation getAnim() {
         if(distance > distChange || subMovement == null) {
             return anim;
@@ -89,6 +72,14 @@ public class movement {
         else {
             return subMovement.getAnim();
         }
+    }
+
+    public Movement getType() {
+        return type;
+    }
+
+    public void setType(Movement type) {
+        this.type = type;
     }
 
     public void setAnim(animation anim) {
