@@ -15,44 +15,70 @@ import java.io.*;
 import java.util.Map;
 
 public class story_mode {
+    // Menú actual del modo historia
     private menu actualMenu;
+    // Menu de victoria
     private menu winMenu = menu_generator.generate_story_win();
+    // Menú de derrota
     private menu loseMenu = menu_generator.generate_story_lose();
+    // Menú de dificultad
     private menu difficulty = menu_generator.generate_story_difficulty();
+    // Pantallas de transición
     private screenObject loads[];
+    // Pantallas del final del modo hisotria
     private screenObject ends[];
+    // Dificultad
     private ia_loader.dif lvlIa = ia_loader.dif.EASY;
+    // Score
     private int score = 0;
+    // Nivel del modo historia en el que se está
     private int stage = 0;
+    // Personaje que se juega
     private Playable_Character charac = Playable_Character.TERRY;
+    // La pelea en sí
     private fight_controller fight;
+    // Controladores de los personajes
     private character_controller player, enemy;
+    // Estado del modo historia, por defecto en selección de dificultad
     private GameState state = GameState.STORY_DIFFICULTY;
+    // Escenario
     private scenary scene = new scenary(Scenario_type.USA);;
+    // Límites del mapa
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
+    // Tiempo de referencia
     private long timeReference = System.currentTimeMillis();
+    // Si se está jugando
     private boolean playing = false;
+    // Orden de escenarios
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
+    // Orden de enemigos
     private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
+    // Audios de los personajes
     private menu_audio.indexes audioEnemies[] = { menu_audio.indexes.Terry, menu_audio.indexes.Andy,menu_audio.indexes.Mai,
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai,
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai};
-
+    // Si hay que parar la música
     private boolean stopMusic = false;
+
+    // Constructor por defecto
     public story_mode(){
+        // Carga la partida si la hay
         loadGame();
+        // Carga las pantallas de transición
         loadLoadScreens();
     }
 
+    // Contructor que pide la dificultad
     public story_mode(ia_loader.dif lvl){
         this.lvlIa = lvl;
         loadLoadScreens();
     }
 
+    // Carga la partida si existe
     void loadGame(){
         String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         boolean newGame = true;
@@ -91,6 +117,7 @@ public class story_mode {
         }
     }
 
+    // Guarda la partida en su estado actual
     void saveGame(){
         String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         File f= new File(path);
@@ -106,6 +133,7 @@ public class story_mode {
         catch (Exception e){}
     }
 
+    // Carga las pantallas de transición y final
     void loadLoadScreens(){
         String path =  "/assets/sprites/menu/story/story_";
         loads = new screenObject[9];
@@ -119,6 +147,7 @@ public class story_mode {
         }
     }
 
+    // Crea la pelea del nivel actual
     void generateFight(){
         player = new user_controller(charac, 1);
         enemy = new enemy_controller(enemies[stage], 2);
@@ -133,9 +162,11 @@ public class story_mode {
         fight.setVsIa(true);
     }
 
+    // Obtiene el frame correspondiente al momento actual en el modo historia
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
         long current = System.currentTimeMillis();
+        // Selección de dificultad
         if(state == GameState.STORY_DIFFICULTY){
             screenObjects.put(Item_Type.MENU,actualMenu.getFrame());
             Pair<menu, Selectionable> p = actualMenu.select();
@@ -162,6 +193,7 @@ public class story_mode {
                 }
             }
         }
+        // Pantalla de transición
         else if(state == GameState.STORY_LOADING){
             if(current - timeReference < 3000.0 && (!playing || current - timeReference < 300.0)){
                 screenObjects.put(Item_Type.MENU, loads[stage]);
@@ -189,6 +221,8 @@ public class story_mode {
                 fight.getAnimation(screenObjects);
             }
         }
+
+        // En una pelea
         else if(state == GameState.STORY_FIGHT){
             fight.getAnimation(screenObjects);
             if(fight.showIntro  || fight.showOutro){
@@ -198,7 +232,7 @@ public class story_mode {
                 audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
                 stopMusic = false;
             }
-
+            // Si la pelea ha terminado, se muestra el menú correspondiente
             if (fight.getEnd()) {
                 Fight_Results resultado = fight.getFight_result();
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
@@ -223,6 +257,7 @@ public class story_mode {
                 }
             }
         }
+        // En menú de victoria o derrota
         else if(state == GameState.STORY_MENU){
             screenObjects.put(Item_Type.MENU,actualMenu.getFrame());
             Pair<menu, Selectionable> p = actualMenu.select();
@@ -258,6 +293,7 @@ public class story_mode {
                 }
             }
         }
+        // En el final del modo historia
         else if(state == GameState.STORY_END){
             if(current - timeReference < 4000.0){
                 screenObjects.put(Item_Type.MENU, ends[0]);
@@ -279,6 +315,7 @@ public class story_mode {
         return new Pair<>(exit, state);
     }
 
+    // Getters y setters
     public menu getActualMenu() {
         return actualMenu;
     }

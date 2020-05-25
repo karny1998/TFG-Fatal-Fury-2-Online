@@ -17,19 +17,32 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+// Clase que gestiona todo lo relacionado con los scores durante las peleas vs IA
+// y el ranking
 public class score {
+    // Puntos del jugador
     private int points = 0;
+    // Puntero en el ranking
     private int pointer = 0;
+    // Ruta del fichero del rank
     private String path = System.getProperty("user.dir") + "/.files/rank_scores.txt";
+    // Si se ha cargado la animación del ranking
     private boolean animLoaded = false;
+    // Animaciones del ranking
     private animation anim[] = {null, null, null};
+    // La fuente
     private Font f = null;
+    // Lista de scores y nombres
     private List<Pair<String, Integer>> rank;
+    // Tiempo de referencia
     private long timeReference = 0;
+    // Cargamos el fichero de la fuente
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    // Multiplicador de los puntos en base a la dificultad
     private double multiplier = 1.0;
 
     public score(ia_loader.dif d){{
+        // Ajusta el multiplicador en base al nivel de la IA
         switch (d){
             case EASY:
                 multiplier = 1.0;
@@ -46,14 +59,17 @@ public class score {
         }
     }}
 
+    // Suma score en base al daño hecho
     public void addHit(int p){
         points += (p*multiplier);
     }
 
+    // Aplica bonus de puntos en base a la vida y tiempo restantes
     public void applyBonus(int lf, int secs){
         points += (((lf + secs) * 100)*multiplier);
     }
 
+    // Devuelve el score capado a 99999 (no se deberia poder alcanzar)
     public int getScore(){
         if(this.points >= 99999){
             return 99999;
@@ -61,6 +77,7 @@ public class score {
         return this.points;
     }
 
+    // Guarda el nombre como el último introducido, para precargarlo la siguiente vez
     public void saveLastName(String name){
         String path = System.getProperty("user.dir") + "/.files/last_name.txt";
         File f= new File(path);
@@ -77,11 +94,12 @@ public class score {
         }
     }
 
+    // Añade al ranking el score actual con el nombre name
     public void writeRankScore(String name){
+        // Guarda el nombre
         saveLastName(name);
-
+        // Lee el ranking anterior
         List<Pair<String, Integer>> list = readRankScores(false);
-
 
         File f= new File(path);
         f.delete();
@@ -90,7 +108,9 @@ public class score {
             Boolean write = true;
             FileOutputStream fos = new FileOutputStream(f);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+            // Revisa todo el ranking
             for (int i = 0; i < list.size(); i++) {
+                // Si es un nombre ya existente, actualiza el score si es mejor que en anterior, sino lo deja igual
                 if(list.get(i).getKey().equals(name)){
                     write = this.points > list.get(i).getValue();
                     if(!write){
@@ -100,6 +120,7 @@ public class score {
                         if(i < list.size()-1){bw.newLine();}
                     }
                 }
+                // Si es un nombre no existente,
                 else {
                     bw.write(list.get(i).getKey());
                     bw.newLine();
@@ -118,9 +139,11 @@ public class score {
         catch (Exception e){}
     }
 
+    // Lee el fichero del ranking y lo ordena o no
     public List<Pair<String, Integer>> readRankScores(Boolean ordered){
         List<Pair<String, Integer>> list = new ArrayList<Pair<String, Integer>>();
         try {
+            // Lee el fichero de nombres y scores
             String name = "";
             FileReader f = new FileReader(path);
             BufferedReader b = new BufferedReader(f);
@@ -133,13 +156,16 @@ public class score {
         catch(Exception e){
             e.printStackTrace();
         }
+        // Lo ordena si corresponde
         if(ordered) {
             Collections.sort(list, new scoreComparator());
         }
         return list;
     }
 
+    // Muestra por pantalla el ranking
     public void printRanking(Graphics2D g){
+        // Si no se habían cargado las animaciones, se cargan
         if(!animLoaded){
             loadAnim();
             timeReference = System.currentTimeMillis();
@@ -155,6 +181,7 @@ public class score {
             animLoaded = true;
         }
         long current = System.currentTimeMillis();
+        // Se gestiona el subir y bajar en el scroll del ranking
         if(current - timeReference > 100.0){
             if(controlListener.getStatus(1, controlListener.AR_INDEX) && pointer > 0){
                 audio_manager.menu.play(menu_audio.indexes.move_cursor);
@@ -166,6 +193,7 @@ public class score {
             }
             timeReference = current;
         }
+        // Se muestra la animación correspondiente según el puntero del ranking
         if(pointer == 0){
             g.drawImage(anim[0].getFrame(0,0,1).getImg(), 0, 0, 1280,720, null);
         }
@@ -179,6 +207,7 @@ public class score {
         g.setColor(Color.YELLOW);
         int x = 180;
         int y = 220;
+        // Se escriben los 7 correspondientes scores por pantalla
         for(int i = pointer; i-pointer < 7 && i < rank.size(); ++i){
             g.drawString((i+1) + ". " , x, y);
             g.drawString(rank.get(i).getKey() , x+46*4, y);
@@ -187,11 +216,13 @@ public class score {
         }
     }
 
+    // Recarga el ranking
     public void reloadRanking(){
         timeReference = System.currentTimeMillis();
         rank = readRankScores(true);
     }
 
+    // Carga las animaciones del ranking
     public void loadAnim(){
         anim[0] = new animation();
         anim[0].setHasEnd(false);
@@ -226,6 +257,7 @@ public class score {
         anim[2].addFrame(s,250.0,0,0);
     }
 
+    // Comparador de scores para ordenar la lista
     class scoreComparator implements Comparator {
         public int compare(Object o1,Object o2){
             Pair<String, Integer> s1=(Pair<String, Integer>)o1;

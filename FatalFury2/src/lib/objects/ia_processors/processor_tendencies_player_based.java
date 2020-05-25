@@ -11,11 +11,16 @@ import lib.utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+// Procesador de la IA que actualiza las probabilidades en base a los movimientos usados por el
+// usuario hasta el momento
 public class processor_tendencies_player_based extends ia_processor {
+    // último tamaño de la lista de movimientos
     private int lastSize = 0;
 
+    // Contructor por defecto
     public  processor_tendencies_player_based(){super();}
 
+    // Actualiza la ruleta rusa en base al caracter de la ia, y las probabilidades de los tipos de movimientos
     private void updateProbs(russian_roulette roulette, ia_type type, double pHighAttacks, double pLowAttacks,
                              double pJump, double pSpecial, double pGetGloser, double pRunAway){
         if(roulette.isBasic()){
@@ -85,11 +90,17 @@ public class processor_tendencies_player_based extends ia_processor {
     }
 
     @Override
+    // Actualiza la ruleta en base al tipo de IA y los movimientos ejecutados por el usuario hasta el momento
     public void updateRoulette(russian_roulette roulette, ia_type type[], Double weights[], int lvl, character player,
                                character enemy, int time, int round, int playerWins) {
+        // Si es la primera ronda se omite el procesado por ser perjudicial
+        if(round == 1){
+            return;
+        }
+        // Si no ha ejecutado ningún nuevo movimiento se omite el procesado
         if(lastSize == player.getExecutedMoves().size()){return;}
-
         int ind = -1;
+        // Se calcula el indice del caracter que le corresponde a la ia en base a type[] y la vida del personaje
         for(int i = type.length-1; i > -1 && ind == -1; --i){
             if((i+1)*100.0/(double)type.length >= (double)enemy.getLife() && i*100.0/(double)type.length <= (double)enemy.getLife()){
                 ind = type.length - 1 - i;
@@ -99,7 +110,7 @@ public class processor_tendencies_player_based extends ia_processor {
 
         lastSize = player.getExecutedMoves().size();
         List<Movement> playerMoves = new ArrayList<>();
-
+        // Movimientos realizador por el jugador omitiendo quedarse de pie y knockback
         for(int i = 0; i < player.getExecutedMoves().size(); ++i){
             Movement m = player.getExecutedMoves().get(i);
             if(m != Movement.STANDING && !isKncockback(m)){
@@ -109,6 +120,7 @@ public class processor_tendencies_player_based extends ia_processor {
 
         if(playerMoves.size() == 0){return;}
 
+        // Haya las variables a valorar (probabilidades de tipos de movimientos)
         double pHighAttacks = 0.0, pLowAttacks = 0.0, pJump = 0.0, pSpecial = 0.0,
                 pGetGloser = 0.0, pRunAway = 0.0;
         for(int i = 0; i < playerMoves.size(); ++i){
@@ -147,8 +159,9 @@ public class processor_tendencies_player_based extends ia_processor {
             pGetGloser /= displacement;
             pRunAway /= displacement;
         }
-
+        // Actualiza las probabilidades en base al potenciamiento y el caracter correspondiente
         updateProbs(roulette,iat,pHighAttacks, pLowAttacks, pSpecial, pJump, pGetGloser, pRunAway);
+        // Normaliza de nuevo las probabilidades
         roulette.fillRoulette();
     }
 }

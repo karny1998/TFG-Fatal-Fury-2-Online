@@ -27,11 +27,25 @@ public class Screen extends JPanel{
     private game_controller game;
     // Lista de timers (en verdad ya no sería necesario)
     private Map<String, Timer> timers = new HashMap<String, Timer>();
+    // Lista de los timpos de Item_types que pertecen a la interfaz
     java.util.List<Item_Type> listInt;
+    // Orden de pintado por pantalla de los Item_type
+    Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.SHADOW_1, Item_Type. SHADOW_2, Item_Type.ENEMY,
+            Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
+            SCORE_FRAME,BONUS,
+            LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
+            TIME_TEXT, TIMEN1, TIMEN2, TIMEN3, TIMEN4, TIMEN5,
+            SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
+            TOTAL_TEXT, TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5,
+            Item_Type.MENU, Item_Type.SURE, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
+            Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
+            Item_Type.INDICATOR1, Item_Type.INDICATOR2,
+            Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4,
+            Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME};
 
     // Inicia el juego
     private void startGame(){
-        // Timer encargado de recalcular
+        // Timer encargado de gestionar el juego en si
         Timer game_control = new Timer(timerDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,11 +78,13 @@ public class Screen extends JPanel{
         screen_refresh.start();
         // Inicia el juego
         startGame();
+        // Item_types que pertenecen a la interfaz
         Item_Type interfacee[] = {HPBAR1, HPBAR2, NAME1, NAME2, INDICATOR1, INDICATOR2, BUBBLE1,
                 BUBBLE2, BUBBLE3, BUBBLE4, TIMER1, TIMER2, TIMERFRAME,};
         listInt = Arrays.asList(interfacee);
     }
 
+    //Configura la resulución inicial
     private void setSurfaceSize() {
         Dimension d = new Dimension();
         d.width = resX;
@@ -78,40 +94,34 @@ public class Screen extends JPanel{
 
     // Muestra por pantalla los screenObjects en la lista
     private void doDrawing(Graphics g) {
-
+        // Ajusta el toolkit en base al SO para mantener el rendimiento
         String OS = System.getProperty("os.name").toLowerCase();
         if(OS.contains("nix") || OS.contains("nux") || OS.contains("aix")){
             Toolkit.getDefaultToolkit().sync();
         }
 
-
-        Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.SHADOW_1, Item_Type. SHADOW_2, Item_Type.ENEMY,
-                            Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
-                            SCORE_FRAME,BONUS,
-                            LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
-                            TIME_TEXT, TIMEN1, TIMEN2, TIMEN3, TIMEN4, TIMEN5,
-                            SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
-                            TOTAL_TEXT, TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5,
-                            Item_Type.MENU, Item_Type.SURE, Item_Type.TIMER1, Item_Type.TIMER2, Item_Type.TIMERFRAME,
-                            Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
-                            Item_Type.INDICATOR1, Item_Type.INDICATOR2,
-                            Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4,
-                            Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME};
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = this.getSize();
+        // Offset a bajar el scenario
         int offset = 0;
+        // Si ha terminado la ronda o pelena el offset es 0
         if(game.getFight() != null && !game.getFight().getEnd()) {
             Movement s = game.getFight().getPlayer().getPlayer().getState();
             boolean ended = s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT;
+            s = game.getFight().getEnemy().getPlayer().getState();
+            ended = (ended || s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT);
             if(!ended) {
                 offset = (int) (game.getFight().getCurrentRound().getScenaryOffsetY() * 3);
                 g2d.translate(0, -offset);
             }
         }
+        // Se escala la pantalla
         g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
+        // Se pintan por pantalla todos los screenObjects en el orden indicado
         for(int i = 0; i < order.length; ++i) {
             screenObject img = screenObjects.get(order[i]);
             if(img != null) {
+                // Si es parte de la interfaz se ajusta en base al offset para que no se baje
                 if(listInt.contains(order[i])){
                     g2d.drawImage(img.getImg(), img.getX(), img.getY()+offset, img.getWidth(), img.getHeight(), null);
                 }
@@ -120,9 +130,11 @@ public class Screen extends JPanel{
                 }
             }
         }
+        // Si hay una pelea en marcha se aplica el offeset calculado
         if(game.getFight() != null) {
             game.writeDirecly(g2d, offset);
         }
+        // En caso contrario se pinta con offset 0
         else {
             game.writeDirecly(g2d, 0);
         }

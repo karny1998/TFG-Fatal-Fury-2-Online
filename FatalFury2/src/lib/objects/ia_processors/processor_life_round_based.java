@@ -9,16 +9,26 @@ import lib.objects.russian_roulette;
 
 import java.util.List;
 
+// Procesador de la IA que actualiza las probabilidades en base a la vida restante de los dos personajes,
+// el tiempo restante, el número de ronda, y el número de victorias del jugador
 public class processor_life_round_based extends ia_processor {
+    // último nivel
     private int lastLvl = 0;
+    // última vida restante del jugador
     private int lastPlayerLife = 0;
+    // última vida restante de la ia
     private int lastIaLife = 0;
+    // último tiempo restante
     private int lastTime = 0;
+    // última ronda
     private int lastRound = 0;
+    // último número de vixtorias del jugador
     private int lastWins = -1;
 
+    // Contructor por defecto
     public processor_life_round_based(){super();}
 
+    // Actualliza las probabilidades de la ruleta rusa en base al tipo de ia (agresivo o defensivo) y al potenciamiento
     private void updateProbs(russian_roulette roulette, ia_type type, double empowerment){
         if(roulette.isBasic()){
             double sign = 1.0;
@@ -61,18 +71,19 @@ public class processor_life_round_based extends ia_processor {
     }
 
     @Override
+    // Actualiza la ruleta en base al tipo de IA, a los pesos correspondientes, al nivel de la ia, el tiempo, ronda,
+    // número den victorias del jugador, y las vidas de ambos
     public void updateRoulette(russian_roulette roulette, ia_type type[], Double weights[], int lvl, character player,
                                character enemy, int time, int round, int playerWins) {
-        if(round == 1){
-            return;
-        }
         int ind = -1;
+        // Se calcula el indice del caracter que le corresponde a la ia en base a type[] y la vida del personaje
         for(int i = type.length-1; i > -1 && ind == -1; --i){
             if((i+1)*100.0/(double)type.length >= (double)enemy.getLife() && i*100.0/(double)type.length <= (double)enemy.getLife()){
                 ind = type.length - 1 - i;
             }
         }
         ia_type iat = type[ind];
+        // Si no se ha cambiado ningún valor, no se omite el procesado
         if(lvl == lastLvl && player.getLife() == lastPlayerLife && lastTime == time
                 && enemy.getLife() == lastIaLife && round == lastRound && lastWins == playerWins
             || iat == ia_type.BALANCED){
@@ -86,12 +97,14 @@ public class processor_life_round_based extends ia_processor {
         lastTime = time;
         lastWins = playerWins;
 
+        // Variables a valorar
         double varTime = (double)time / 90.0;
         double varPlayerLife = player.getLife() / 100.0;
         double varEnemyLife = enemy.getLife() / 100.0;
         double varRound = round / 4.0;
         double varWins = (double)playerWins/(double)round;
 
+        // En caso de el peso ser negativo se usan sus complementarios
         if(weights[0] < 0.0){
             varTime = 1.0 - varTime;
         }
@@ -107,11 +120,13 @@ public class processor_life_round_based extends ia_processor {
         else if(weights[4] < 0.0){
             varWins = 1.0 - varWins;
         }
+        // Potenciamiento en base a las variables y sus pesos, según el nivel de ia se tienen más o menos en cuenta
         double empowerment = (Math.abs(weights[0]) * varTime + Math.abs(weights[1]) * varPlayerLife
                 + Math.abs(weights[2]) * varEnemyLife + Math.abs(weights[3]) * varRound
-                + Math.abs(weights[4]) * varWins) / (4.0/(double)lvl);
-
+                + Math.abs(weights[4]) * varWins);// / (4.0/(double)lvl);
+        // Actualiza las probabilidades en base al potenciamiento y el caracter correspondiente
         updateProbs(roulette, iat, empowerment);
+        // Normaliza de nuevo las probabilidades
         roulette.fillRoulette();
     }
 }
