@@ -14,57 +14,129 @@ import javax.swing.*;
 import java.io.*;
 import java.util.Map;
 
+/**
+ * The type Story mode.
+ */
 public class story_mode {
-    // Menú actual del modo historia
+    /**
+     * The Actual menu.
+     */
+// Menú actual del modo historia
     private menu actualMenu;
-    // Menu de victoria
+    /**
+     * The Win menu.
+     */
+// Menu de victoria
     private menu winMenu = menu_generator.generate_story_win();
-    // Menú de derrota
+    /**
+     * The Lose menu.
+     */
+// Menú de derrota
     private menu loseMenu = menu_generator.generate_story_lose();
-    // Menú de dificultad
+    /**
+     * The Difficulty.
+     */
+// Menú de dificultad
     private menu difficulty = menu_generator.generate_story_difficulty();
-    // Pantallas de transición
+    /**
+     * The Loads.
+     */
+// Pantallas de transición
     private screenObject loads[];
-    // Pantallas del final del modo hisotria
+    /**
+     * The Ends.
+     */
+// Pantallas del final del modo hisotria
     private screenObject ends[];
-    // Dificultad
+    /**
+     * The Lvl ia.
+     */
+// Dificultad
     private ia_loader.dif lvlIa = ia_loader.dif.EASY;
-    // Score
+    /**
+     * The Score.
+     */
+// Score
     private int score = 0;
-    // Nivel del modo historia en el que se está
+    /**
+     * The Stage.
+     */
+// Nivel del modo historia en el que se está
     private int stage = 0;
-    // Personaje que se juega
+    /**
+     * The Charac.
+     */
+// Personaje que se juega
     private Playable_Character charac = Playable_Character.TERRY;
-    // La pelea en sí
+    /**
+     * The Fight.
+     */
+// La pelea en sí
     private fight_controller fight;
-    // Controladores de los personajes
-    private character_controller player, enemy;
-    // Estado del modo historia, por defecto en selección de dificultad
+    /**
+     * The Player.
+     */
+// Controladores de los personajes
+    private character_controller player, /**
+     * The Enemy.
+     */
+    enemy;
+    /**
+     * The State.
+     */
+// Estado del modo historia, por defecto en selección de dificultad
     private GameState state = GameState.STORY_DIFFICULTY;
-    // Escenario
+    /**
+     * The Scene.
+     */
+// Escenario
     private scenary scene = new scenary(Scenario_type.USA);;
-    // Límites del mapa
+    /**
+     * The Map limit.
+     */
+// Límites del mapa
     private hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);;
-    // Tiempo de referencia
+    /**
+     * The Time reference.
+     */
+// Tiempo de referencia
     private long timeReference = System.currentTimeMillis();
-    // Si se está jugando
+    /**
+     * The Playing.
+     */
+// Si se está jugando
     private boolean playing = false;
-    // Orden de escenarios
+    /**
+     * The Scenarys.
+     */
+// Orden de escenarios
     private Scenario_type scenarys[] = {Scenario_type.CHINA, Scenario_type.CHINA, Scenario_type.CHINA
                                         , Scenario_type.AUSTRALIA, Scenario_type.AUSTRALIA,Scenario_type.AUSTRALIA,
                                         Scenario_type.USA, Scenario_type.USA,Scenario_type.USA};
-    // Orden de enemigos
+    /**
+     * The Enemies.
+     */
+// Orden de enemigos
     private Playable_Character enemies[] = {Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI,
                                             Playable_Character.TERRY, Playable_Character.ANDY, Playable_Character.MAI};
-    // Audios de los personajes
+    /**
+     * The Audio enemies.
+     */
+// Audios de los personajes
     private menu_audio.indexes audioEnemies[] = { menu_audio.indexes.Terry, menu_audio.indexes.Andy,menu_audio.indexes.Mai,
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai,
                                                     menu_audio.indexes.Terry,menu_audio.indexes.Andy,menu_audio.indexes.Mai};
-    // Si hay que parar la música
+    /**
+     * The Stop music.
+     */
+// Si hay que parar la música
     private boolean stopMusic = false;
 
-    // Constructor por defecto
+    /**
+     * Instantiates a new Story mode.
+     */
+// Constructor por defecto
     public story_mode(){
         // Carga la partida si la hay
         loadGame();
@@ -72,13 +144,21 @@ public class story_mode {
         loadLoadScreens();
     }
 
-    // Contructor que pide la dificultad
+    /**
+     * Instantiates a new Story mode.
+     *
+     * @param lvl the lvl
+     */
+// Contructor que pide la dificultad
     public story_mode(ia_loader.dif lvl){
         this.lvlIa = lvl;
         loadLoadScreens();
     }
 
-    // Carga la partida si existe
+    /**
+     * Load game.
+     */
+// Carga la partida si existe
     void loadGame(){
         String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         boolean newGame = true;
@@ -117,7 +197,10 @@ public class story_mode {
         }
     }
 
-    // Guarda la partida en su estado actual
+    /**
+     * Save game.
+     */
+// Guarda la partida en su estado actual
     void saveGame(){
         String path =  System.getProperty("user.dir") + "/.files/last_game.txt";
         File f= new File(path);
@@ -133,7 +216,10 @@ public class story_mode {
         catch (Exception e){}
     }
 
-    // Carga las pantallas de transición y final
+    /**
+     * Load load screens.
+     */
+// Carga las pantallas de transición y final
     void loadLoadScreens(){
         String path =  "/assets/sprites/menu/story/story_";
         loads = new screenObject[9];
@@ -147,7 +233,10 @@ public class story_mode {
         }
     }
 
-    // Crea la pelea del nivel actual
+    /**
+     * Generate fight.
+     */
+// Crea la pelea del nivel actual
     void generateFight(){
         player = new user_controller(charac, 1);
         enemy = new enemy_controller(enemies[stage], 2);
@@ -162,7 +251,13 @@ public class story_mode {
         fight.setVsIa(true);
     }
 
-    // Obtiene el frame correspondiente al momento actual en el modo historia
+    /**
+     * Get animation pair.
+     *
+     * @param screenObjects the screen objects
+     * @return the pair
+     */
+// Obtiene el frame correspondiente al momento actual en el modo historia
     public Pair<Boolean, GameState> getAnimation(Map<Item_Type, screenObject> screenObjects){
         Boolean exit = false;
         long current = System.currentTimeMillis();
@@ -315,139 +410,309 @@ public class story_mode {
         return new Pair<>(exit, state);
     }
 
-    // Getters y setters
+    /**
+     * Gets actual menu.
+     *
+     * @return the actual menu
+     */
+// Getters y setters
     public menu getActualMenu() {
         return actualMenu;
     }
 
+    /**
+     * Sets actual menu.
+     *
+     * @param actualMenu the actual menu
+     */
     public void setActualMenu(menu actualMenu) {
         this.actualMenu = actualMenu;
     }
 
+    /**
+     * Gets win menu.
+     *
+     * @return the win menu
+     */
     public menu getWinMenu() {
         return winMenu;
     }
 
+    /**
+     * Sets win menu.
+     *
+     * @param winMenu the win menu
+     */
     public void setWinMenu(menu winMenu) {
         this.winMenu = winMenu;
     }
 
+    /**
+     * Gets lose menu.
+     *
+     * @return the lose menu
+     */
     public menu getLoseMenu() {
         return loseMenu;
     }
 
+    /**
+     * Sets lose menu.
+     *
+     * @param loseMenu the lose menu
+     */
     public void setLoseMenu(menu loseMenu) {
         this.loseMenu = loseMenu;
     }
 
+    /**
+     * Get loads screen object [ ].
+     *
+     * @return the screen object [ ]
+     */
     public screenObject[] getLoads() {
         return loads;
     }
 
+    /**
+     * Sets loads.
+     *
+     * @param loads the loads
+     */
     public void setLoads(screenObject[] loads) {
         this.loads = loads;
     }
 
+    /**
+     * Gets lvl ia.
+     *
+     * @return the lvl ia
+     */
     public ia_loader.dif getLvlIa() {
         return lvlIa;
     }
 
+    /**
+     * Sets lvl ia.
+     *
+     * @param lvlIa the lvl ia
+     */
     public void setLvlIa(ia_loader.dif lvlIa) {
         this.lvlIa = lvlIa;
     }
 
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets score.
+     *
+     * @param score the score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Gets stage.
+     *
+     * @return the stage
+     */
     public int getStage() {
         return stage;
     }
 
+    /**
+     * Sets stage.
+     *
+     * @param stage the stage
+     */
     public void setStage(int stage) {
         this.stage = stage;
     }
 
+    /**
+     * Gets charac.
+     *
+     * @return the charac
+     */
     public Playable_Character getCharac() {
         return charac;
     }
 
+    /**
+     * Sets charac.
+     *
+     * @param charac the charac
+     */
     public void setCharac(Playable_Character charac) {
         this.charac = charac;
     }
 
+    /**
+     * Gets fight.
+     *
+     * @return the fight
+     */
     public fight_controller getFight() {
         return fight;
     }
 
+    /**
+     * Sets fight.
+     *
+     * @param fight the fight
+     */
     public void setFight(fight_controller fight) {
         this.fight = fight;
     }
 
+    /**
+     * Gets player.
+     *
+     * @return the player
+     */
     public character_controller getPlayer() {
         return player;
     }
 
+    /**
+     * Sets player.
+     *
+     * @param player the player
+     */
     public void setPlayer(character_controller player) {
         this.player = player;
     }
 
+    /**
+     * Gets enemy.
+     *
+     * @return the enemy
+     */
     public character_controller getEnemy() {
         return enemy;
     }
 
+    /**
+     * Sets enemy.
+     *
+     * @param enemy the enemy
+     */
     public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
+    /**
+     * Gets state.
+     *
+     * @return the state
+     */
     public GameState getState() {
         return state;
     }
 
+    /**
+     * Sets state.
+     *
+     * @param state the state
+     */
     public void setState(GameState state) {
         this.state = state;
     }
 
+    /**
+     * Gets scene.
+     *
+     * @return the scene
+     */
     public scenary getScene() {
         return scene;
     }
 
+    /**
+     * Sets scene.
+     *
+     * @param scene the scene
+     */
     public void setScene(scenary scene) {
         this.scene = scene;
     }
 
+    /**
+     * Gets map limit.
+     *
+     * @return the map limit
+     */
     public hitBox getMapLimit() {
         return mapLimit;
     }
 
+    /**
+     * Sets map limit.
+     *
+     * @param mapLimit the map limit
+     */
     public void setMapLimit(hitBox mapLimit) {
         this.mapLimit = mapLimit;
     }
 
+    /**
+     * Gets time reference.
+     *
+     * @return the time reference
+     */
     public long getTimeReference() {
         return timeReference;
     }
 
+    /**
+     * Sets time reference.
+     *
+     * @param timeReference the time reference
+     */
     public void setTimeReference(long timeReference) {
         this.timeReference = timeReference;
     }
 
+    /**
+     * Get scenarys scenario type [ ].
+     *
+     * @return the scenario type [ ]
+     */
     public Scenario_type[] getScenarys() {
         return scenarys;
     }
 
+    /**
+     * Sets scenarys.
+     *
+     * @param scenarys the scenarys
+     */
     public void setScenarys(Scenario_type[] scenarys) {
         this.scenarys = scenarys;
     }
 
+    /**
+     * Get enemies playable character [ ].
+     *
+     * @return the playable character [ ]
+     */
     public Playable_Character[] getEnemies() {
         return enemies;
     }
 
+    /**
+     * Sets enemies.
+     *
+     * @param enemies the enemies
+     */
     public void setEnemies(Playable_Character[] enemies) {
         this.enemies = enemies;
     }

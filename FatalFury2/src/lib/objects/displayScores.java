@@ -9,18 +9,60 @@ import java.util.List;
 
 import static lib.Enums.Item_Type.*;
 
+/**
+ * The type Display scores.
+ */
 public class displayScores {
-    // Path
+    /**
+     * The Path.
+     */
+// Path
     String path = "/assets/sprites/fight_interface/scores/";
-    // Imágenes necesarias
+    /**
+     * The Types score.
+     */
+// Imágenes necesarias
     private Item_Type[] typesScore;
+    /**
+     * The Types life.
+     */
     private Item_Type[] typesLife;
+    /**
+     * The Types time.
+     */
     private Item_Type[] typesTime;
+    /**
+     * The Types total.
+     */
     private Item_Type[] typesTotal;
+    /**
+     * The Numbers.
+     */
     private List<Image> numbers = new ArrayList<>();
-    private Image bonus, life, score, time, total, frame;
+    /**
+     * The Bonus.
+     */
+    private Image bonus, /**
+     * The Life.
+     */
+    life, /**
+     * The Score.
+     */
+    score, /**
+     * The Time.
+     */
+    time, /**
+     * The Total.
+     */
+    total, /**
+     * The Frame.
+     */
+    frame;
 
-    // Constructor por defecto
+    /**
+     * Instantiates a new Display scores.
+     */
+// Constructor por defecto
     public displayScores() {
         for (int i = 0; i < 10; ++i) {
             numbers.add(new ImageIcon( this.getClass().getResource(path+"numbers/"+i+".png")).getImage());
@@ -37,7 +79,16 @@ public class displayScores {
         typesTotal = new Item_Type[]{TOTALN1, TOTALN2, TOTALN3, TOTALN4, TOTALN5};
     }
 
-    // Devuelve una lista de screenObjects para un número de 5 cifras dado un tipo y coordenadas
+    /**
+     * Gets numbers.
+     *
+     * @param x      the x
+     * @param y      the y
+     * @param number the number
+     * @param type   the type
+     * @return the numbers
+     */
+// Devuelve una lista de screenObjects para un número de 5 cifras dado un tipo y coordenadas
     List<screenObject> getNumbers(int x, int y, int number, String type) {
         int w = 37;
         int h = 53;
@@ -83,7 +134,13 @@ public class displayScores {
         return numberList;
     }
 
-    // Devuelve los screenObjects para la fila de SCORE
+    /**
+     * Gets score.
+     *
+     * @param number the number
+     * @return the score
+     */
+// Devuelve los screenObjects para la fila de SCORE
     List<screenObject> getScore(int number) {
         List <screenObject> l = new ArrayList<>();
         int x_text = 294;
@@ -95,7 +152,13 @@ public class displayScores {
         return l;
     }
 
-    // Devuelve los screenObjects para la fila de LIFE
+    /**
+     * Gets life.
+     *
+     * @param number the number
+     * @return the life
+     */
+// Devuelve los screenObjects para la fila de LIFE
     List<screenObject> getLife(int number) {
         List <screenObject> l = new ArrayList<>();
         int x_text = 294;
@@ -107,7 +170,13 @@ public class displayScores {
         return l;
     }
 
-    // Devuelve los screenObjects para la fila de TIME
+    /**
+     * Gets time.
+     *
+     * @param number the number
+     * @return the time
+     */
+// Devuelve los screenObjects para la fila de TIME
     List<screenObject> getTime(int number) {
         List <screenObject> l = new ArrayList<>();
         int x_text = 294;
@@ -119,7 +188,13 @@ public class displayScores {
         return l;
     }
 
-    // Devuelve los screenObjects para la fila de TOTAL
+    /**
+     * Gets total.
+     *
+     * @param number the number
+     * @return the total
+     */
+// Devuelve los screenObjects para la fila de TOTAL
     List<screenObject> getTotal(int number) {
         List <screenObject> l = new ArrayList<>();
         int x_text = 294;
@@ -131,12 +206,22 @@ public class displayScores {
         return l;
     }
 
-    // Devuelve el screenObject para la fila BONUS
+    /**
+     * Gets bonus title.
+     *
+     * @return the bonus title
+     */
+// Devuelve el screenObject para la fila BONUS
     screenObject getBonusTitle() {
         return new screenObject(503,259,275,40,bonus,BONUS);
     }
 
-    // Devuelve el screenObject para el frame
+    /**
+     * Gets frame.
+     *
+     * @return the frame
+     */
+// Devuelve el screenObject para el frame
     screenObject getFrame() {
         return new screenObject(273,142,733,469,frame,SCORE_FRAME);
     }

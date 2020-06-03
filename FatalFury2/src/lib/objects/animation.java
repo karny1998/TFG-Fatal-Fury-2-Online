@@ -8,60 +8,146 @@ import lib.utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Animation.
+ */
 //Animación representada por sus frames, cambios de posición
 //y tiempos de transición.
 public class animation {
-    // Tipo de animación
+    /**
+     * The Type.
+     */
+// Tipo de animación
     Animation_type type = Animation_type.ENDABLE;
-    // Imágenes que conforman la animación
+    /**
+     * The Frames.
+     */
+// Imágenes que conforman la animación
     List<screenObject> frames = new ArrayList<screenObject>();
-    // Incrementos de coordenadas entre frames
+    /**
+     * The Coords.
+     */
+// Incrementos de coordenadas entre frames
     List<Pair<Integer, Integer>> coords = new ArrayList<Pair<Integer, Integer>>();
-    // Tiempos entre transición de un frame a otro
+    /**
+     * The Times.
+     */
+// Tiempos entre transición de un frame a otro
     List<Double> times = new ArrayList<Double>();
-    // Coordenadas objetivo para terminar el frame
+    /**
+     * The Waited coords.
+     */
+// Coordenadas objetivo para terminar el frame
     List<Pair<Integer, Integer>> waitedCoords = new ArrayList<Pair<Integer, Integer>>();
-    // Si un frame tiene hitbox o no
+    /**
+     * The Has hit box.
+     */
+// Si un frame tiene hitbox o no
     List<Boolean> hasHitBox = new ArrayList<Boolean>();
-    // Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
-    Boolean hasEnd = true, ended = false;
-    // En qué frame de la animación se estaba
+    /**
+     * The Has end.
+     */
+// Si la animación puede ser infinita, si ha terminado, y si se puede interrumpir o no
+    Boolean hasEnd = true, /**
+     * The Ended.
+     */
+    ended = false;
+    /**
+     * The State.
+     */
+// En qué frame de la animación se estaba
     int state = 0;
-    // El sentido en que avanza la animación (frame 1, 2, 3.. o 3, 2, 1)
+    /**
+     * The Increment.
+     */
+// El sentido en que avanza la animación (frame 1, 2, 3.. o 3, 2, 1)
     int increment = 1;
-    // Momento en el que salió el último frame
+    /**
+     * The Start time.
+     */
+// Momento en el que salió el último frame
     long startTime = 0;
-    // Momento de referencia para "creación de frames intermedios"
+    /**
+     * The Aux time.
+     */
+// Momento de referencia para "creación de frames intermedios"
     long auxTime = 0;
-    // Sonido asignado y su tipo
+    /**
+     * The Sound type.
+     */
+// Sonido asignado y su tipo
     fight_audio.voice_indexes soundType;
-    // Si es jugador 1 o no
+    /**
+     * The Is player 1.
+     */
+// Si es jugador 1 o no
     boolean isPlayer1;
-    // Si se está reproduciendo el sonido
+    /**
+     * The Playing.
+     */
+// Si se está reproduciendo el sonido
     Boolean playing = false;
-    //Hitbox asociada
+    /**
+     * The Hitbox.
+     */
+//Hitbox asociada
     hitBox hitbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);
-    // Hurtbox asociada
+    /**
+     * The Hurt box.
+     */
+// Hurtbox asociada
     hitBox hurtBox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HURTBOX);
-    // Cover asociada
+    /**
+     * The Coverbox.
+     */
+// Cover asociada
     hitBox coverbox = new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.COVERBOX);
-    // Si tiene un sonido asociadoo
+    /**
+     * The Has sound.
+     */
+// Si tiene un sonido asociadoo
     boolean hasSound = false;
-    // La y que se ha recorrido entre frames
+    /**
+     * The Y completed.
+     */
+// La y que se ha recorrido entre frames
     int yCompleted = 0;
-    // Si se ha completado la y esperada
+    /**
+     * The Y aux.
+     */
+// Si se ha completado la y esperada
     boolean yAux = false;
-    // El incremento total en y de la animación
+    /**
+     * The Total increment y.
+     */
+// El incremento total en y de la animación
     int totalIncrementY = 0;
-    // La y final de la animación
+    /**
+     * The Desired y.
+     */
+// La y final de la animación
     int desiredY = 0;
-    // Si desiredY está asignada o no
+    /**
+     * The Desired assigned.
+     */
+// Si desiredY está asignada o no
     boolean desiredAssigned = false;
 
-    // Constructor por defecto
+    /**
+     * Instantiates a new Animation.
+     */
+// Constructor por defecto
     public animation() {}
 
-    // Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas
+    /**
+     * Add frame.
+     *
+     * @param s  the s
+     * @param t  the t
+     * @param iX the x
+     * @param iY the y
+     */
+// Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas
     public void addFrame(screenObject s, Double t, int iX, int iY){
         frames.add(frames.size(), s);
         times.add(times.size(), t);
@@ -71,7 +157,18 @@ public class animation {
         totalIncrementY += iY;
     }
 
-    // Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas, indicando
+    /**
+     * Add frame.
+     *
+     * @param s      the s
+     * @param t      the t
+     * @param iX     the x
+     * @param iY     the y
+     * @param wX     the w x
+     * @param wY     the w y
+     * @param hasHit the has hit
+     */
+// Añade un frame a la imagen, con un tiempo de transición y un incremento de coordenadas, indicando
     // si tiene hitbox o no
     public void addFrame(screenObject s, Double t, int iX, int iY, int wX, int wY, Boolean hasHit){
         frames.add(frames.size(), s);
@@ -82,7 +179,10 @@ public class animation {
         totalIncrementY += iY;
     }
 
-    // Inicia los cálculos de la animación
+    /**
+     * Start.
+     */
+// Inicia los cálculos de la animación
     public  void start(){
         playing = false;
         ended = false;
@@ -96,7 +196,10 @@ public class animation {
         desiredAssigned = false;
     }
 
-    // Termina la animación, y la deja en el final
+    /**
+     * End.
+     */
+// Termina la animación, y la deja en el final
     public  void end(){
         playing = true;
         ended = true;
@@ -110,7 +213,10 @@ public class animation {
         desiredAssigned = false;
     }
 
-    // Finaliza y reinicia la animación
+    /**
+     * Reset.
+     */
+// Finaliza y reinicia la animación
     public  void reset(){
         playing = false;
         ended = false;
@@ -125,7 +231,15 @@ public class animation {
 
     }
 
-    // Obtiene el frame de la animación correspondiente al momento actual
+    /**
+     * Get frame screen object.
+     *
+     * @param x           the x
+     * @param y           the y
+     * @param orientation the orientation
+     * @return the screen object
+     */
+// Obtiene el frame de la animación correspondiente al momento actual
     // a partir de unas coordenadas base. La orientación indica a donde mira
     // la animación (1 hacia la izquierda, -1 hacia la derecha)
     public screenObject getFrame(int x, int y, int orientation){
@@ -248,7 +362,12 @@ public class animation {
         return result;
     }
 
-    // Actualiza los tiempos de transición entre frames en basea un multiplicador
+    /**
+     * Update times.
+     *
+     * @param x the x
+     */
+// Actualiza los tiempos de transición entre frames en basea un multiplicador
     void updateTimes(double x){
         for(int i = 0; i < times.size(); ++i){
             double aux = times.get(i) * x;
@@ -257,80 +376,176 @@ public class animation {
         }
     }
 
-    //Getters y setters
+    /**
+     * Sets coords.
+     *
+     * @param coords the coords
+     */
+//Getters y setters
     public void setCoords(ArrayList<Pair<Integer, Integer>> coords) {
         this.coords = coords;
     }
 
+    /**
+     * Get frame screen object.
+     *
+     * @return the screen object
+     */
     screenObject getFrame(){
         return getFrame(frames.get(state).getX(),frames.get(state).getY(),1);
     }
 
+    /**
+     * Gets has end.
+     *
+     * @return the has end
+     */
     public Boolean getHasEnd() {
         return hasEnd;
     }
 
+    /**
+     * Sets has end.
+     *
+     * @param hasEnd the has end
+     */
     public void setHasEnd(Boolean hasEnd) {
         this.hasEnd = hasEnd;
     }
 
+    /**
+     * Gets state.
+     *
+     * @return the state
+     */
     public int getState() {
         return state;
     }
 
+    /**
+     * Sets state.
+     *
+     * @param state the state
+     */
     public void setState(int state) {
         this.state = state;
     }
 
+    /**
+     * Gets start time.
+     *
+     * @return the start time
+     */
     public double getStartTime() {
         return startTime;
     }
 
+    /**
+     * Sets start time.
+     *
+     * @param startTime the start time
+     */
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * Gets frames.
+     *
+     * @return the frames
+     */
     public List<screenObject> getFrames() {
         return frames;
     }
 
+    /**
+     * Sets frames.
+     *
+     * @param frames the frames
+     */
     public void setFrames(List<screenObject> frames) {
         this.frames = frames;
     }
 
+    /**
+     * Gets coords.
+     *
+     * @return the coords
+     */
     public List<Pair<Integer, Integer>> getCoords() {
         return coords;
     }
 
+    /**
+     * Sets coords.
+     *
+     * @param coords the coords
+     */
     public void setCoords(List<Pair<Integer, Integer>> coords) {
         this.coords = coords;
     }
 
+    /**
+     * Gets times.
+     *
+     * @return the times
+     */
     public List<Double> getTimes() {
         return times;
     }
 
+    /**
+     * Sets times.
+     *
+     * @param times the times
+     */
     public void setTimes(List<Double> times) {
         this.times = times;
     }
 
+    /**
+     * Gets has hit box.
+     *
+     * @return the has hit box
+     */
     public Boolean getHasHitBox() {
         return hasHitBox.get(state);
     }
 
+    /**
+     * Sets unstoppable.
+     *
+     * @param has the has
+     * @param i   the
+     */
     public void setUnstoppable(Boolean has, int i) {
         this.hasHitBox.set(i, has) ;
     }
 
+    /**
+     * Gets playing.
+     *
+     * @return the playing
+     */
     public Boolean getPlaying() {
         return playing;
     }
 
+    /**
+     * Sets playing.
+     *
+     * @param playing the playing
+     */
     public void setPlaying(Boolean playing) {
         this.playing = playing;
     }
 
-    // Si no tiene hitbox, devuelve una aleatoria con la que nunca se golpeara
+    /**
+     * Gets hitbox.
+     *
+     * @return the hitbox
+     */
+// Si no tiene hitbox, devuelve una aleatoria con la que nunca se golpeara
     public hitBox getHitbox() {
         if(ended || !hasHitBox.get(state)){
             return new hitBox((int) (-10000.0*Math.random())-5000,(int) (-10000.0*Math.random())-5000,1,1, box_type.HITBOX);
@@ -338,147 +553,336 @@ public class animation {
         return hitbox;
     }
 
+    /**
+     * Sets hitbox.
+     *
+     * @param hitbox the hitbox
+     */
     public void setHitbox(hitBox hitbox) {
         this.hitbox = hitbox;
     }
 
+    /**
+     * Sets hitbox.
+     *
+     * @param originX the origin x
+     * @param originY the origin y
+     * @param width   the width
+     * @param height  the height
+     */
     public void setHitbox(int originX, int originY, int width, int height) {
         this.hitbox = new hitBox(originX, originY, width, height, box_type.HITBOX);
     }
 
+    /**
+     * Gets hurt box.
+     *
+     * @return the hurt box
+     */
     public hitBox getHurtBox() {
         return hurtBox;
     }
 
+    /**
+     * Sets hurt box.
+     *
+     * @param hurtBox the hurt box
+     */
     public void setHurtBox(hitBox hurtBox) {
         this.hurtBox = hurtBox;
     }
 
+    /**
+     * Sets hurt box.
+     *
+     * @param originX the origin x
+     * @param originY the origin y
+     * @param width   the width
+     * @param height  the height
+     */
     public void setHurtBox(int originX, int originY, int width, int height) {
         this.hurtBox = new hitBox(originX, originY, width, height, box_type.HURTBOX);
     }
 
+    /**
+     * Sets coverbox.
+     *
+     * @param originX the origin x
+     * @param originY the origin y
+     * @param width   the width
+     * @param height  the height
+     */
     public void setCoverbox(int originX, int originY, int width, int height) {
         this.coverbox = new hitBox(originX, originY, width, height, box_type.COVERBOX);
     }
 
+    /**
+     * Gets coverbox.
+     *
+     * @return the coverbox
+     */
     public hitBox getCoverbox() {
         return coverbox;
     }
 
+    /**
+     * Gets sound type.
+     *
+     * @return the sound type
+     */
     public fight_audio.voice_indexes getSoundType() {
         return soundType;
     }
 
+    /**
+     * Sets sound type.
+     *
+     * @param soundType the sound type
+     */
     public void setSoundType(fight_audio.voice_indexes soundType) {
         this.soundType = soundType;
     }
 
+    /**
+     * Gets ended.
+     *
+     * @return the ended
+     */
     public Boolean getEnded() {
         return ended;
     }
 
+    /**
+     * Sets ended.
+     *
+     * @param ended the ended
+     */
     public void setEnded(Boolean ended) {
         this.ended = ended;
     }
 
+    /**
+     * Gets increment.
+     *
+     * @return the increment
+     */
     public int getIncrement() {
         return increment;
     }
 
+    /**
+     * Sets increment.
+     *
+     * @param increment the increment
+     */
     public void setIncrement(int increment) {
         this.increment = increment;
     }
 
+    /**
+     * Gets type.
+     *
+     * @return the type
+     */
     public Animation_type getType() {
         return type;
     }
 
+    /**
+     * Sets type.
+     *
+     * @param type the type
+     */
     public void setType(Animation_type type) {
         this.type = type;
     }
 
+    /**
+     * Gets waited coords.
+     *
+     * @return the waited coords
+     */
     public List<Pair<Integer, Integer>> getWaitedCoords() {
         return waitedCoords;
     }
 
+    /**
+     * Sets waited coords.
+     *
+     * @param waitedCoords the waited coords
+     */
     public void setWaitedCoords(List<Pair<Integer, Integer>> waitedCoords) {
         this.waitedCoords = waitedCoords;
     }
 
+    /**
+     * Gets has hit box vector.
+     *
+     * @return the has hit box vector
+     */
     public List<Boolean> getHasHitBoxVector() {
         return hasHitBox;
     }
 
+    /**
+     * Sets has hit box.
+     *
+     * @param hasHitBoxVector the has hit box vector
+     */
     public void setHasHitBox(List<Boolean> hasHitBoxVector) {
         this.hasHitBox = hasHitBoxVector;
     }
 
+    /**
+     * Gets aux time.
+     *
+     * @return the aux time
+     */
     public long getAuxTime() {
         return auxTime;
     }
 
+    /**
+     * Sets aux time.
+     *
+     * @param auxTime the aux time
+     */
     public void setAuxTime(long auxTime) {
         this.auxTime = auxTime;
     }
 
+    /**
+     * Sets coverbox.
+     *
+     * @param coverbox the coverbox
+     */
     public void setCoverbox(hitBox coverbox) {
         this.coverbox = coverbox;
     }
 
+    /**
+     * Gets completed.
+     *
+     * @return the completed
+     */
     public int getyCompleted() {
         return yCompleted;
     }
 
+    /**
+     * Sets completed.
+     *
+     * @param yCompleted the y completed
+     */
     public void setyCompleted(int yCompleted) {
         this.yCompleted = yCompleted;
     }
 
+    /**
+     * Isy aux boolean.
+     *
+     * @return the boolean
+     */
     public boolean isyAux() {
         return yAux;
     }
 
+    /**
+     * Sets aux.
+     *
+     * @param yAux the y aux
+     */
     public void setyAux(boolean yAux) {
         this.yAux = yAux;
     }
 
+    /**
+     * Gets total increment y.
+     *
+     * @return the total increment y
+     */
     public int getTotalIncrementY() {
         return totalIncrementY;
     }
 
+    /**
+     * Sets total increment y.
+     *
+     * @param totalIncrementY the total increment y
+     */
     public void setTotalIncrementY(int totalIncrementY) {
         this.totalIncrementY = totalIncrementY;
     }
 
+    /**
+     * Gets desired y.
+     *
+     * @return the desired y
+     */
     public int getDesiredY() {
         return desiredY;
     }
 
+    /**
+     * Sets desired y.
+     *
+     * @param desiredY the desired y
+     */
     public void setDesiredY(int desiredY) {
         this.desiredY = desiredY;
     }
 
+    /**
+     * Is desired assigned boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDesiredAssigned() {
         return desiredAssigned;
     }
 
+    /**
+     * Sets desired assigned.
+     *
+     * @param desiredAssigned the desired assigned
+     */
     public void setDesiredAssigned(boolean desiredAssigned) {
         this.desiredAssigned = desiredAssigned;
     }
 
+    /**
+     * Has sound boolean.
+     *
+     * @return the boolean
+     */
     public boolean hasSound(){
         return hasSound;
     }
 
+    /**
+     * Set has sound.
+     *
+     * @param has the has
+     */
     public void setHasSound(boolean has){
         hasSound = has;
     }
 
 
+    /**
+     * Is player 1 boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPlayer1() {
         return isPlayer1;
     }
 
+    /**
+     * Sets player 1.
+     *
+     * @param player1 the player 1
+     */
     public void setPlayer1(boolean player1) {
         isPlayer1 = player1;
     }

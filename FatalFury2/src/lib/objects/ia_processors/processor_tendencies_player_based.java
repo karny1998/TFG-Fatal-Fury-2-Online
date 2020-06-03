@@ -11,16 +11,37 @@ import lib.utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Processor tendencies player based.
+ */
 // Procesador de la IA que actualiza las probabilidades en base a los movimientos usados por el
 // usuario hasta el momento
 public class processor_tendencies_player_based extends ia_processor {
-    // último tamaño de la lista de movimientos
+    /**
+     * The Last size.
+     */
+// último tamaño de la lista de movimientos
     private int lastSize = 0;
 
-    // Contructor por defecto
+    /**
+     * Instantiates a new Processor tendencies player based.
+     */
+// Contructor por defecto
     public  processor_tendencies_player_based(){super();}
 
-    // Actualiza la ruleta rusa en base al caracter de la ia, y las probabilidades de los tipos de movimientos
+    /**
+     * Update probs.
+     *
+     * @param roulette     the roulette
+     * @param type         the type
+     * @param pHighAttacks the p high attacks
+     * @param pLowAttacks  the p low attacks
+     * @param pJump        the p jump
+     * @param pSpecial     the p special
+     * @param pGetGloser   the p get gloser
+     * @param pRunAway     the p run away
+     */
+// Actualiza la ruleta rusa en base al caracter de la ia, y las probabilidades de los tipos de movimientos
     private void updateProbs(russian_roulette roulette, ia_type type, double pHighAttacks, double pLowAttacks,
                              double pJump, double pSpecial, double pGetGloser, double pRunAway){
         if(roulette.isBasic()){
@@ -89,6 +110,19 @@ public class processor_tendencies_player_based extends ia_processor {
         }
     }
 
+    /**
+     * Update roulette.
+     *
+     * @param roulette   the roulette
+     * @param type       the type
+     * @param weights    the weights
+     * @param lvl        the lvl
+     * @param player     the player
+     * @param enemy      the enemy
+     * @param time       the time
+     * @param round      the round
+     * @param playerWins the player wins
+     */
     @Override
     // Actualiza la ruleta en base al tipo de IA y los movimientos ejecutados por el usuario hasta el momento
     public void updateRoulette(russian_roulette roulette, ia_type type[], Double weights[], int lvl, character player,

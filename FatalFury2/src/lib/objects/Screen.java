@@ -14,22 +14,58 @@ import java.util.Map;
 
 import static lib.Enums.Item_Type.*;
 
+/**
+ * The type Screen.
+ */
 // Clase que se encarga de mostrar todo por pantalla
 public class Screen extends JPanel{
-    // Resolución del juego, tiempo de actualización de los cálculos, y tiempo de refresco de la pantalla
-    static int resX = 1280, resY = 720, timerDelay = 1, refreshDelay = 15;
-    // Si se está debugeando o no
+    /**
+     * The constant resX.
+     */
+// Resolución del juego, tiempo de actualización de los cálculos, y tiempo de refresco de la pantalla
+    static int resX = 1280, /**
+     * The Res y.
+     */
+    resY = 720, /**
+     * The Timer delay.
+     */
+    timerDelay = 1, /**
+     * The Refresh delay.
+     */
+    refreshDelay = 15;
+    /**
+     * The constant debug.
+     */
+// Si se está debugeando o no
     static Boolean debug = true;
+    /**
+     * The D.
+     */
     private Debug d = new Debug(debug, resX, resY, refreshDelay);
-    // Lista de objetos a mostrar por pantalla, identificados por Item_types
+    /**
+     * The Screen objects.
+     */
+// Lista de objetos a mostrar por pantalla, identificados por Item_types
     private Map<Item_Type, screenObject> screenObjects = new HashMap<Item_Type, screenObject>();
-    // El controlador del juego en sí
+    /**
+     * The Game.
+     */
+// El controlador del juego en sí
     private game_controller game;
-    // Lista de timers (en verdad ya no sería necesario)
+    /**
+     * The Timers.
+     */
+// Lista de timers (en verdad ya no sería necesario)
     private Map<String, Timer> timers = new HashMap<String, Timer>();
-    // Lista de los timpos de Item_types que pertecen a la interfaz
+    /**
+     * The List int.
+     */
+// Lista de los timpos de Item_types que pertecen a la interfaz
     java.util.List<Item_Type> listInt;
-    // Orden de pintado por pantalla de los Item_type
+    /**
+     * The Order.
+     */
+// Orden de pintado por pantalla de los Item_type
     Item_Type[] order = {Item_Type.SCENARY_1, Item_Type.SCENARY_2, Item_Type.SHADOW_1, Item_Type. SHADOW_2, Item_Type.ENEMY,
             Item_Type.PLAYER, Item_Type.ENEMYTHROWABLE, Item_Type.PLAYERTHROWABLE, Item_Type.ANNOUNCEMENT,
             SCORE_FRAME,BONUS,
@@ -43,7 +79,10 @@ public class Screen extends JPanel{
             Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4,
             Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME};
 
-    // Inicia el juego
+    /**
+     * Start game.
+     */
+// Inicia el juego
     private void startGame(){
         // Timer encargado de gestionar el juego en si
         Timer game_control = new Timer(timerDelay, new ActionListener() {
@@ -56,13 +95,19 @@ public class Screen extends JPanel{
         timers.put("game_control", game_control);
     }
 
-    // Para el timer del juego
+    /**
+     * Stop game.
+     */
+// Para el timer del juego
     private void stopGame(){
         timers.get("game_control").stop();
         System.exit(0);
     }
 
-    // Inicia todo
+    /**
+     * Instantiates a new Screen.
+     */
+// Inicia todo
     public Screen() {
         setSurfaceSize();
         // Controlador del juego
@@ -84,7 +129,10 @@ public class Screen extends JPanel{
         listInt = Arrays.asList(interfacee);
     }
 
-    //Configura la resulución inicial
+    /**
+     * Sets surface size.
+     */
+//Configura la resulución inicial
     private void setSurfaceSize() {
         Dimension d = new Dimension();
         d.width = resX;
@@ -92,7 +140,12 @@ public class Screen extends JPanel{
         setPreferredSize(d);
     }
 
-    // Muestra por pantalla los screenObjects en la lista
+    /**
+     * Do drawing.
+     *
+     * @param g the g
+     */
+// Muestra por pantalla los screenObjects en la lista
     private void doDrawing(Graphics g) {
         // Ajusta el toolkit en base al SO para mantener el rendimiento
         String OS = System.getProperty("os.name").toLowerCase();
@@ -140,6 +193,11 @@ public class Screen extends JPanel{
         }
     }
 
+    /**
+     * Paint component.
+     *
+     * @param g the g
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

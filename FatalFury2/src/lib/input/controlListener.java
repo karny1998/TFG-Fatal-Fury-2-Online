@@ -12,35 +12,116 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * The type Control listener.
+ */
 // Clase encargada de gestionar los eventos de teclado
 public class controlListener implements KeyListener {
 
-    // ALmacena el estado de cada tecla
+    /**
+     * The Key status.
+     */
+// ALmacena el estado de cada tecla
     public static Boolean[] keyStatus;
-    // Cola de los 10 ultimos inputs
-    static Queue<Integer> inputQueue_1, inputQueue_2, general;
+    /**
+     * The Input queue 1.
+     */
+// Cola de los 10 ultimos inputs
+    static Queue<Integer> inputQueue_1, /**
+     * The Input queue 2.
+     */
+    inputQueue_2, /**
+     * The General.
+     */
+    general;
+    /**
+     * The Queue size.
+     */
     static int QUEUE_SIZE = 10;
+    /**
+     * The Buttons.
+     */
     static int BUTTONS = 10;
+    /**
+     * The constant optionsFilePath.
+     */
     private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
-    static int currentKey, lastKey;
+    /**
+     * The Current key.
+     */
+    static int currentKey, /**
+     * The Last key.
+     */
+    lastKey;
 
-    // Almacena el estado de cada tecla perteneciente a los mandos
-    public static Boolean[] mando1, mando2, menus1, menus2;
-    public static Boolean enter1, enter2;
+    /**
+     * The Mando 1.
+     */
+// Almacena el estado de cada tecla perteneciente a los mandos
+    public static Boolean[] mando1, /**
+     * The Mando 2.
+     */
+    mando2, /**
+     * The Menus 1.
+     */
+    menus1, /**
+     * The Menus 2.
+     */
+    menus2;
+    /**
+     * The constant enter1.
+     */
+    public static Boolean enter1, /**
+     * The Enter 2.
+     */
+    enter2;
 
+    /**
+     * The constant AR_INDEX.
+     */
     public static final int AR_INDEX = 0;
+    /**
+     * The constant AB_INDEX.
+     */
     public static final int AB_INDEX = 1;
+    /**
+     * The constant IZ_INDEX.
+     */
     public static final int IZ_INDEX = 2;
+    /**
+     * The constant DE_INDEX.
+     */
     public static final int DE_INDEX = 3;
+    /**
+     * The constant A_INDEX.
+     */
     public static final int A_INDEX = 4;
+    /**
+     * The constant B_INDEX.
+     */
     public static final int B_INDEX = 5;
+    /**
+     * The constant C_INDEX.
+     */
     public static final int C_INDEX = 6;
+    /**
+     * The constant D_INDEX.
+     */
     public static final int D_INDEX = 7;
+    /**
+     * The constant ENT_INDEX.
+     */
     public static final int ENT_INDEX = 8;
+    /**
+     * The constant ESC_INDEX.
+     */
     public static final int ESC_INDEX = 9;
 
 
-    // Vector de correspondencias entre pulsaciones de teclado y acciones a realizar por el personaje
+    /**
+     * The Movimientos.
+     */
+// Vector de correspondencias entre pulsaciones de teclado y acciones a realizar por el personaje
     public static String[] movimientos = {
                         "AR",
                         "AB",
@@ -52,10 +133,19 @@ public class controlListener implements KeyListener {
                         "D"
                     };
 
-    static int[] keyBindings1, keyBindings2;
+    /**
+     * The Key bindings 1.
+     */
+    static int[] keyBindings1, /**
+     * The Key bindings 2.
+     */
+    keyBindings2;
 
 
-    // Constructor de la clase, inicializa todos los vectores
+    /**
+     * Instantiates a new Control listener.
+     */
+// Constructor de la clase, inicializa todos los vectores
     public controlListener(){
         keyStatus = new Boolean[526];
 
@@ -86,12 +176,22 @@ public class controlListener implements KeyListener {
     }
 
 
-    // Implementación de las funciones asbtractas de la clase KeyListener
+    /**
+     * Key typed.
+     *
+     * @param e the e
+     */
+// Implementación de las funciones asbtractas de la clase KeyListener
     @Override
     public void keyTyped(KeyEvent e) {
         currentKey = e.getKeyChar();
     }
 
+    /**
+     * Key pressed.
+     *
+     * @param e the e
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() < keyStatus.length){
@@ -119,6 +219,11 @@ public class controlListener implements KeyListener {
         }
     }
 
+    /**
+     * Key released.
+     *
+     * @param e the e
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         if(e.getKeyCode() < keyStatus.length) {
@@ -137,14 +242,23 @@ public class controlListener implements KeyListener {
     }
 
 
-
-
-    // Devuelve el indice de la tecla pulsada actualmente
+    /**
+     * Get current key int.
+     *
+     * @return the int
+     */
+// Devuelve el indice de la tecla pulsada actualmente
     public static int getCurrentKey(){
         return (int) currentKey;
     }
 
-    // Devuelve el indice de la ultima tecla pulsada por el jugador 1, jugador 2, o en general
+    /**
+     * Get last key int.
+     *
+     * @param player the player
+     * @return the int
+     */
+// Devuelve el indice de la ultima tecla pulsada por el jugador 1, jugador 2, o en general
     public static int getLastKey(int player){
 
         switch (player){
@@ -165,7 +279,13 @@ public class controlListener implements KeyListener {
         }
     }
 
-    // Devuelve cierto si la tecla pasada como parametro esta pulsada
+    /**
+     * Is pressed boolean.
+     *
+     * @param keycode the keycode
+     * @return the boolean
+     */
+// Devuelve cierto si la tecla pasada como parametro esta pulsada
     public static boolean isPressed(int keycode){
         if(keycode == -1){
             return false;
@@ -173,7 +293,13 @@ public class controlListener implements KeyListener {
         return keyStatus[keycode];
     }
 
-    // Devuelve la cola que almacena los 10 ultimos inputs del jugador 1 o del jugador 2
+    /**
+     * Get queue queue.
+     *
+     * @param player the player
+     * @return the queue
+     */
+// Devuelve la cola que almacena los 10 ultimos inputs del jugador 1 o del jugador 2
     public static Queue<Integer> getQueue(int player){
         switch (player){
             case 1:
@@ -185,7 +311,12 @@ public class controlListener implements KeyListener {
         }
     }
 
-    // Devuelve cierto si se ha pulsado al menos una tecla del teclado
+    /**
+     * Any key pressed boolean.
+     *
+     * @return the boolean
+     */
+// Devuelve cierto si se ha pulsado al menos una tecla del teclado
     public static boolean anyKeyPressed(){
         Boolean status = false;
         for(int i = 0; i < keyStatus.length; i++){
@@ -194,7 +325,14 @@ public class controlListener implements KeyListener {
         return status;
     }
 
-    // Devuelve el estado de la tecla index en el mando del jugador 1, j ugador 2 o de ambos
+    /**
+     * Get status boolean.
+     *
+     * @param player the player
+     * @param index  the index
+     * @return the boolean
+     */
+// Devuelve el estado de la tecla index en el mando del jugador 1, j ugador 2 o de ambos
     public static boolean getStatus(int player, int index){
         switch (player){
             case 0:
@@ -208,7 +346,14 @@ public class controlListener implements KeyListener {
         }
     }
 
-    // Devuelve el estado de la tecla index durante la navegación de menús
+    /**
+     * Menu input boolean.
+     *
+     * @param player the player
+     * @param index  the index
+     * @return the boolean
+     */
+// Devuelve el estado de la tecla index durante la navegación de menús
     // en el mando del jugador 1, j ugador 2 o de ambos.
     public static boolean menuInput(int player, int index){
         switch (player){
@@ -239,7 +384,13 @@ public class controlListener implements KeyListener {
         }
     }
 
-    // Metodo encargado de transformar el estado de un mando en los movimientos del personaje
+    /**
+     * Get move string.
+     *
+     * @param player the player
+     * @return the string
+     */
+// Metodo encargado de transformar el estado de un mando en los movimientos del personaje
     public static String getMove(int player){
         Boolean[] actual;
         String mov = "";
@@ -262,7 +413,10 @@ public class controlListener implements KeyListener {
         return mov;
     }
 
-    // Método encargado de leer el fichero de opciones y actualizar los valores de las teclas asignadas a los mandos
+    /**
+     * Update.
+     */
+// Método encargado de leer el fichero de opciones y actualizar los valores de las teclas asignadas a los mandos
     public static void update(){
         try {
             File input = new File(optionsFilePath);
@@ -301,12 +455,22 @@ public class controlListener implements KeyListener {
     }
 
 
-
-    // Devuelve cierto si la tecla Backspace está siendo pulsada
+    /**
+     * Get back boolean.
+     *
+     * @return the boolean
+     */
+// Devuelve cierto si la tecla Backspace está siendo pulsada
     public static boolean getBack(){
         return keyStatus[8];
     }
-    // Devuelve cierto si la tecla Escape está siendo pulsada
+
+    /**
+     * Get esc boolean.
+     *
+     * @return the boolean
+     */
+// Devuelve cierto si la tecla Escape está siendo pulsada
     public static boolean getEsc(){
         return keyStatus[27];
     }

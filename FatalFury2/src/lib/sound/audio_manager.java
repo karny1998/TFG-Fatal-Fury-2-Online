@@ -10,27 +10,69 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
+/**
+ * The type Audio manager.
+ */
 public class audio_manager {
 
+    /**
+     * The constant menu.
+     */
     public static menu_audio menu;
+    /**
+     * The constant fight.
+     */
     public static fight_audio fight;
 
+    /**
+     * The constant volumen_general.
+     */
     private static double volumen_general;
+    /**
+     * The constant volumen_musica.
+     */
     private static double volumen_musica;
+    /**
+     * The constant volumen_voces.
+     */
     private static double volumen_voces;
+    /**
+     * The constant volumen_sfx.
+     */
     private static double volumen_sfx;
 
 
+    /**
+     * The constant optionsFilePath.
+     */
     private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
 
+    /**
+     * The enum Estado.
+     */
     enum estado {
+        /**
+         * None estado.
+         */
         NONE,
+        /**
+         * Menus estado.
+         */
         MENUS,
+        /**
+         * Pelea estado.
+         */
         PELEA
     }
 
+    /**
+     * The constant actual.
+     */
     private static estado actual = estado.NONE;
 
+    /**
+     * Instantiates a new Audio manager.
+     */
     public audio_manager(){
         update();
         menu = new menu_audio();
@@ -38,6 +80,13 @@ public class audio_manager {
         actual = estado.MENUS;
     }
 
+    /**
+     * Start fight.
+     *
+     * @param p1  the p 1
+     * @param p2  the p 2
+     * @param map the map
+     */
     public static void startFight(Playable_Character p1, Playable_Character p2, Scenario_type map){
         if (actual == estado.MENUS){
             menu.close();
@@ -47,6 +96,9 @@ public class audio_manager {
         }
     }
 
+    /**
+     * End fight.
+     */
     public static void endFight(){
         if (actual == estado.PELEA){
             fight.close();
@@ -56,6 +108,9 @@ public class audio_manager {
         }
     }
 
+    /**
+     * Update.
+     */
     public static void update(){
         readOptions();
         if (actual == estado.PELEA){
@@ -65,6 +120,9 @@ public class audio_manager {
         }
     }
 
+    /**
+     * Read options.
+     */
     public static void readOptions(){
         try {
 

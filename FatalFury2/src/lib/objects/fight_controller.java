@@ -16,94 +16,346 @@ import java.util.*;
 import static java.lang.Math.abs;
 import static lib.Enums.Item_Type.*;
 
+/**
+ * The type Fight controller.
+ */
 // Clase que representa el controlador encargado de la gestión de una pelea
 public class fight_controller implements roundListener {
-    // Segundos que dura una ronda
+    /**
+     * The Round time.
+     */
+// Segundos que dura una ronda
     final int roundTime = 90;
-    // Milisegundos que aparecen los textos entre rondas
+    /**
+     * The Announcement time.
+     */
+// Milisegundos que aparecen los textos entre rondas
     final int announcementTime = 2000;
-    // Milisegundos que aparecen los textos del score entre rondas
+    /**
+     * The Score time.
+     */
+// Milisegundos que aparecen los textos del score entre rondas
     final int scoreTime = 2000;
-    // Path de sprites para la interfaz
+    /**
+     * The Path.
+     */
+// Path de sprites para la interfaz
     String path = "/assets/sprites/fight_interface";
-    // Ronda actual de la pelea
+    /**
+     * The Current round.
+     */
+// Ronda actual de la pelea
     round currentRound;
-    // Lista de resultados de todas las rondas
+    /**
+     * The Results.
+     */
+// Lista de resultados de todas las rondas
     List<Round_Results> results;
-    // Controlador del usuario
+    /**
+     * The Player.
+     */
+// Controlador del usuario
     character_controller player;
-    // Escenario
+    /**
+     * The Scene.
+     */
+// Escenario
     scenary scene;
-    // Para gestión de límites de mapa
+    /**
+     * The Map limit.
+     */
+// Para gestión de límites de mapa
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
-    // Score p1
+    /**
+     * The Score player.
+     */
+// Score p1
     score scorePlayer = new score(ia_loader.dif.EASY);
-    // Controlador del enemigo
+    /**
+     * The Enemy.
+     */
+// Controlador del enemigo
     character_controller enemy;
-    // Score p2
+    /**
+     * The Score enemy.
+     */
+// Score p2
     score scoreEnemy = new score(ia_loader.dif.EASY);
-    // Número de rondas finalizadas
+    /**
+     * The Round counter.
+     */
+// Número de rondas finalizadas
     int roundCounter;
-    // Puntos de ronda ganados
+    /**
+     * The Player score.
+     */
+// Puntos de ronda ganados
     int playerScore = 0;
+    /**
+     * The Enemy score.
+     */
     int enemyScore = 0;
-    // Resultado de la pelea
+    /**
+     * The Fight result.
+     */
+// Resultado de la pelea
     Fight_Results fight_result;
-    // Ha acabado la pelea (true = acabada)
+    /**
+     * The Has ended.
+     */
+// Ha acabado la pelea (true = acabada)
     boolean hasEnded;
-    // No hay timer
+    /**
+     * The No timer.
+     */
+// No hay timer
     boolean noTimer;
-    // Pelea del mismo personaje
+    /**
+     * The Mirror fight.
+     */
+// Pelea del mismo personaje
     boolean mirrorFight;
-    // Si es contra IA
+    /**
+     * The Vs ia.
+     */
+// Si es contra IA
     boolean vsIa = false;
-    // La anterior ronda fue perfect
+    /**
+     * The Was perfect.
+     */
+// La anterior ronda fue perfect
     boolean wasPerfect;
-    // La anterior ronda se acabó el tiempo
+    /**
+     * The Was timed out.
+     */
+// La anterior ronda se acabó el tiempo
     boolean wasTimedOut;
-    // La anterior ronda fue double KO
+    /**
+     * The Was double ko.
+     */
+// La anterior ronda fue double KO
     boolean wasDoubleKO;
-    // Es necesaria una nueva ronda
+    /**
+     * The New round.
+     */
+// Es necesaria una nueva ronda
     boolean newRound;
-    // Interfaz
+    /**
+     * The Timer.
+     */
+// Interfaz
     displayTimer timer = new displayTimer();
-    Image bar_player, bar_enemy;
-    Image name_player, name_enemy;
-    Image indicator_player, indicator_enemy;
+    /**
+     * The Bar player.
+     */
+    Image bar_player,
+    /**
+     * The Bar enemy.
+     */
+    bar_enemy;
+    /**
+     * The Name player.
+     */
+    Image name_player,
+    /**
+     * The Name enemy.
+     */
+    name_enemy;
+    /**
+     * The Indicator player.
+     */
+    Image indicator_player,
+    /**
+     * The Indicator enemy.
+     */
+    indicator_enemy;
+    /**
+     * The Bubbles.
+     */
     roundIndicators bubbles = new roundIndicators();
+    /**
+     * The Fight announcement.
+     */
     announcerAnimation fightAnnouncement = new announcerAnimation();
-    Image match_play, round_1, round_2, round_3, round_extra;
-    Image perfect, you_win, you_lost, time_up, draw_game, double_ko;
-    Image terry_win, mai_win, andy_win;
+    /**
+     * The Match play.
+     */
+    Image match_play,
+    /**
+     * The Round 1.
+     */
+    round_1,
+    /**
+     * The Round 2.
+     */
+    round_2,
+    /**
+     * The Round 3.
+     */
+    round_3,
+    /**
+     * The Round extra.
+     */
+    round_extra;
+    /**
+     * The Perfect.
+     */
+    Image perfect,
+    /**
+     * The You win.
+     */
+    you_win,
+    /**
+     * The You lost.
+     */
+    you_lost,
+    /**
+     * The Time up.
+     */
+    time_up,
+    /**
+     * The Draw game.
+     */
+    draw_game,
+    /**
+     * The Double ko.
+     */
+    double_ko;
+    /**
+     * The Terry win.
+     */
+    Image terry_win,
+    /**
+     * The Mai win.
+     */
+    mai_win,
+    /**
+     * The Andy win.
+     */
+    andy_win;
+    /**
+     * The Displayscores.
+     */
     displayScores displayscores = new displayScores();
-    // Booleanos anuncios
+    /**
+     * The Started fight animation.
+     */
+// Booleanos anuncios
     boolean startedFightAnimation;
+    /**
+     * The Started victory animation.
+     */
     boolean startedVictoryAnimation;
+    /**
+     * The Show intro.
+     */
     boolean showIntro = false;
+    /**
+     * The Intro time stamp.
+     */
     long introTimeStamp;
+    /**
+     * The Show outro.
+     */
     boolean showOutro = false;
+    /**
+     * The Outro time stamp.
+     */
     long outroTimeStamp;
+    /**
+     * The Show scores.
+     */
     boolean showScores = false;
+    /**
+     * The Scores timestamp.
+     */
     long scoresTimestamp;
+    /**
+     * The Showed score.
+     */
     boolean showedScore = false;
+    /**
+     * The Showed bonus.
+     */
     boolean showedBonus = false;
+    /**
+     * The Showed life.
+     */
     boolean showedLife = false;
+    /**
+     * The Showed time.
+     */
     boolean showedTime = false;
-    // Loader ia
+    /**
+     * The Ia lvl.
+     */
+// Loader ia
     ia_loader.dif iaLvl = ia_loader.dif.EASY;
-    // Puntos anteriores
+    /**
+     * The Last score.
+     */
+// Puntos anteriores
     private int lastScore = 0;
-    // Booleanos sonidos de scores
+    /**
+     * The Played score.
+     */
+// Booleanos sonidos de scores
     boolean playedScore = false;
+    /**
+     * The Played bonus.
+     */
     boolean playedBonus = false;
+    /**
+     * The Played life.
+     */
     boolean playedLife = false;
+    /**
+     * The Played time.
+     */
     boolean playedTime = false;
+    /**
+     * The Played total.
+     */
     boolean playedTotal = false;
 
 
-    boolean audio_ready = false, audio_round = false, audio_fight = false;
-    boolean audio_timeOut = false, audio_perfect = false, audio_double_ko = false, audio_draw_game = false;
-    // Constructor (empieza la primera ronda)
+    /**
+     * The Audio ready.
+     */
+    boolean audio_ready = false,
+    /**
+     * The Audio round.
+     */
+    audio_round = false,
+    /**
+     * The Audio fight.
+     */
+    audio_fight = false;
+    /**
+     * The Audio time out.
+     */
+    boolean audio_timeOut = false,
+    /**
+     * The Audio perfect.
+     */
+    audio_perfect = false,
+    /**
+     * The Audio double ko.
+     */
+    audio_double_ko = false,
+    /**
+     * The Audio draw game.
+     */
+    audio_draw_game = false;
+
+    /**
+     * Instantiates a new Fight controller.
+     *
+     * @param p the p
+     * @param e the e
+     * @param s the s
+     */
+// Constructor (empieza la primera ronda)
     public fight_controller(character_controller p, character_controller e, scenary s) {
         scene = s;
         player = p;
@@ -170,33 +422,48 @@ public class fight_controller implements roundListener {
         showIntro();
     }
 
-    // Enseñar la intro de la ronda
+    /**
+     * Show intro.
+     */
+// Enseñar la intro de la ronda
     public void showIntro() {
         Date date = new Date();
         introTimeStamp = date.getTime();
         showIntro = true;
     }
 
-    // Enseñar el final de la ronda
+    /**
+     * Show outro.
+     */
+// Enseñar el final de la ronda
     public void showOutro() {
         Date date = new Date();
         outroTimeStamp = date.getTime();
         showOutro = true;
     }
 
-    // Enseñar la pantalal de scores
+    /**
+     * Show scores.
+     */
+// Enseñar la pantalal de scores
     public void showScores() {
         Date date = new Date();
         scoresTimestamp = date.getTime();
         showScores = true;
     }
 
-    // Parar la pelea
+    /**
+     * Pause fight.
+     */
+// Parar la pelea
     public void pauseFight() {
         currentRound.pause();
     }
 
-    // Retomar la pelea
+    /**
+     * Resume fight.
+     */
+// Retomar la pelea
     public void resumeFight() {
         introTimeStamp = System.currentTimeMillis();
         outroTimeStamp = System.currentTimeMillis();
@@ -208,14 +475,24 @@ public class fight_controller implements roundListener {
         currentRound.resume();
     }
 
-    // Empezar ronda nueva
+    /**
+     * Start new round.
+     *
+     * @param hasEnd the has end
+     */
+// Empezar ronda nueva
     void startNewRound(boolean hasEnd) {
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(hasEnd);
     }
 
-    // Añadir puntuación en base a resultados de rondas
+    /**
+     * Update scores.
+     *
+     * @param r the r
+     */
+// Añadir puntuación en base a resultados de rondas
     public void updateScores(Round_Results r) {
         if (r == Round_Results.WIN) {
             ++playerScore;
@@ -223,8 +500,16 @@ public class fight_controller implements roundListener {
             ++enemyScore;
         }
     }
+
+    /**
+     * The Random.
+     */
     Random random = new Random();
-    // Gestión de rondas, se llama cuando la ronda actual termina
+
+    /**
+     * Round ended.
+     */
+// Gestión de rondas, se llama cuando la ronda actual termina
     @Override
     public void roundEnded() {
         playedScore = false;
@@ -326,7 +611,12 @@ public class fight_controller implements roundListener {
         }
     }
 
-    // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
+    /**
+     * Gets animation.
+     *
+     * @param screenObjects the screen objects
+     */
+// Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         // Actualizar valores de la ia
         if(vsIa){
@@ -763,7 +1053,13 @@ public class fight_controller implements roundListener {
         currentRound.getAnimation(screenObjects);
     }
 
-    // Dibujar barras de vida
+    /**
+     * Draw hp bar player.
+     *
+     * @param g      the g
+     * @param offset the offset
+     */
+// Dibujar barras de vida
     void drawHpBarPlayer(Graphics2D g, int offset) {
         // x = 140, y = 62, w = 406, h = 22
         g.setColor(Color.YELLOW);
@@ -776,6 +1072,13 @@ public class fight_controller implements roundListener {
             g.fillRect(140,62+offset,w,23);
         }
     }
+
+    /**
+     * Draw hp bar enemy.
+     *
+     * @param g      the g
+     * @param offset the offset
+     */
     void drawHpBarEnemy(Graphics2D g, int offset) {
         // x = 734, y = 52, w = 406, h = 22
         g.setColor(Color.BLACK);
@@ -787,7 +1090,12 @@ public class fight_controller implements roundListener {
         }
     }
 
-    // Borra todos los elementos de la interfaz de score
+    /**
+     * Clear scores.
+     *
+     * @param screenObjects the screen objects
+     */
+// Borra todos los elementos de la interfaz de score
     void clearScores(Map<Item_Type, screenObject> screenObjects) {
         Item_Type[] types = new Item_Type[]{    SCORE_TEXT, SCOREN1, SCOREN2, SCOREN3, SCOREN4, SCOREN5,
                                                  LIFE_TEXT, LIFEN1, LIFEN2, LIFEN3, LIFEN4, LIFEN5,
@@ -799,204 +1107,454 @@ public class fight_controller implements roundListener {
         }
     }
 
-    // Devuelve si ha terminado la pelea
+    /**
+     * Gets end.
+     *
+     * @return the end
+     */
+// Devuelve si ha terminado la pelea
     public boolean getEnd() {
         return hasEnded;
     }
 
+    /**
+     * Is vs ia boolean.
+     *
+     * @return the boolean
+     */
     public boolean isVsIa() {
         return vsIa;
     }
 
+    /**
+     * Sets vs ia.
+     *
+     * @param vsIa the vs ia
+     */
     public void setVsIa(boolean vsIa) {
         this.vsIa = vsIa;
     }
 
+    /**
+     * Gets round time.
+     *
+     * @return the round time
+     */
     public int getRoundTime() {
         return roundTime;
     }
 
+    /**
+     * Gets path.
+     *
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Sets path.
+     *
+     * @param path the path
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * Gets current round.
+     *
+     * @return the current round
+     */
     public round getCurrentRound() {
         return currentRound;
     }
 
+    /**
+     * Sets current round.
+     *
+     * @param currentRound the current round
+     */
     public void setCurrentRound(round currentRound) {
         this.currentRound = currentRound;
     }
 
+    /**
+     * Gets results.
+     *
+     * @return the results
+     */
     public List<Round_Results> getResults() {
         return results;
     }
 
+    /**
+     * Sets results.
+     *
+     * @param results the results
+     */
     public void setResults(List<Round_Results> results) {
         this.results = results;
     }
 
+    /**
+     * Gets player.
+     *
+     * @return the player
+     */
     public character_controller getPlayer() {
         return player;
     }
 
+    /**
+     * Sets player.
+     *
+     * @param player the player
+     */
     public void setPlayer(character_controller player) {
         this.player = player;
     }
 
+    /**
+     * Gets score player.
+     *
+     * @return the score player
+     */
     public score getScorePlayer() {
         return scorePlayer;
     }
 
+    /**
+     * Sets score player.
+     *
+     * @param scorePlayer the score player
+     */
     public void setScorePlayer(score scorePlayer) {
         this.scorePlayer = scorePlayer;
     }
 
+    /**
+     * Gets enemy.
+     *
+     * @return the enemy
+     */
     public character_controller getEnemy() {
         return enemy;
     }
 
+    /**
+     * Sets enemy.
+     *
+     * @param enemy the enemy
+     */
     public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
+    /**
+     * Gets score enemy.
+     *
+     * @return the score enemy
+     */
     public score getScoreEnemy() {
         return scoreEnemy;
     }
 
+    /**
+     * Sets score enemy.
+     *
+     * @param scoreEnemy the score enemy
+     */
     public void setScoreEnemy(score scoreEnemy) {
         this.scoreEnemy = scoreEnemy;
     }
 
+    /**
+     * Gets round counter.
+     *
+     * @return the round counter
+     */
     public int getRoundCounter() {
         return roundCounter;
     }
 
+    /**
+     * Sets round counter.
+     *
+     * @param roundCounter the round counter
+     */
     public void setRoundCounter(int roundCounter) {
         this.roundCounter = roundCounter;
     }
 
+    /**
+     * Gets player score.
+     *
+     * @return the player score
+     */
     public int getPlayerScore() {
         return playerScore;
     }
 
+    /**
+     * Sets player score.
+     *
+     * @param playerScore the player score
+     */
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
 
+    /**
+     * Gets enemy score.
+     *
+     * @return the enemy score
+     */
     public int getEnemyScore() {
         return enemyScore;
     }
 
+    /**
+     * Sets enemy score.
+     *
+     * @param enemyScore the enemy score
+     */
     public void setEnemyScore(int enemyScore) {
         this.enemyScore = enemyScore;
     }
 
+    /**
+     * Is has ended boolean.
+     *
+     * @return the boolean
+     */
     public boolean isHasEnded() {
         return hasEnded;
     }
 
+    /**
+     * Sets has ended.
+     *
+     * @param hasEnded the has ended
+     */
     public void setHasEnded(boolean hasEnded) {
         this.hasEnded = hasEnded;
     }
 
+    /**
+     * Is no timer boolean.
+     *
+     * @return the boolean
+     */
     public boolean isNoTimer() {
         return noTimer;
     }
 
+    /**
+     * Sets no timer.
+     *
+     * @param noTimer the no timer
+     */
     public void setNoTimer(boolean noTimer) {
         this.noTimer = noTimer;
     }
 
+    /**
+     * Is mirror fight boolean.
+     *
+     * @return the boolean
+     */
     public boolean isMirrorFight() {
         return mirrorFight;
     }
 
+    /**
+     * Sets mirror fight.
+     *
+     * @param mirrorFight the mirror fight
+     */
     public void setMirrorFight(boolean mirrorFight) {
         this.mirrorFight = mirrorFight;
     }
 
+    /**
+     * Gets timer.
+     *
+     * @return the timer
+     */
     public displayTimer getTimer() {
         return timer;
     }
 
+    /**
+     * Sets timer.
+     *
+     * @param timer the timer
+     */
     public void setTimer(displayTimer timer) {
         this.timer = timer;
     }
 
+    /**
+     * Gets bar player.
+     *
+     * @return the bar player
+     */
     public Image getBar_player() {
         return bar_player;
     }
 
+    /**
+     * Sets bar player.
+     *
+     * @param bar_player the bar player
+     */
     public void setBar_player(Image bar_player) {
         this.bar_player = bar_player;
     }
 
+    /**
+     * Gets bar enemy.
+     *
+     * @return the bar enemy
+     */
     public Image getBar_enemy() {
         return bar_enemy;
     }
 
+    /**
+     * Sets bar enemy.
+     *
+     * @param bar_enemy the bar enemy
+     */
     public void setBar_enemy(Image bar_enemy) {
         this.bar_enemy = bar_enemy;
     }
 
+    /**
+     * Gets name player.
+     *
+     * @return the name player
+     */
     public Image getName_player() {
         return name_player;
     }
 
+    /**
+     * Sets name player.
+     *
+     * @param name_player the name player
+     */
     public void setName_player(Image name_player) {
         this.name_player = name_player;
     }
 
+    /**
+     * Gets name enemy.
+     *
+     * @return the name enemy
+     */
     public Image getName_enemy() {
         return name_enemy;
     }
 
+    /**
+     * Sets name enemy.
+     *
+     * @param name_enemy the name enemy
+     */
     public void setName_enemy(Image name_enemy) {
         this.name_enemy = name_enemy;
     }
 
+    /**
+     * Gets indicator player.
+     *
+     * @return the indicator player
+     */
     public Image getIndicator_player() {
         return indicator_player;
     }
 
+    /**
+     * Sets indicator player.
+     *
+     * @param indicator_player the indicator player
+     */
     public void setIndicator_player(Image indicator_player) {
         this.indicator_player = indicator_player;
     }
 
+    /**
+     * Gets indicator enemy.
+     *
+     * @return the indicator enemy
+     */
     public Image getIndicator_enemy() {
         return indicator_enemy;
     }
 
+    /**
+     * Sets indicator enemy.
+     *
+     * @param indicator_enemy the indicator enemy
+     */
     public void setIndicator_enemy(Image indicator_enemy) {
         this.indicator_enemy = indicator_enemy;
     }
 
+    /**
+     * Gets fight result.
+     *
+     * @return the fight result
+     */
     public Fight_Results getFight_result() {
         return fight_result;
     }
 
+    /**
+     * Sets fight result.
+     *
+     * @param fight_result the fight result
+     */
     public void setFight_result(Fight_Results fight_result) {
         this.fight_result = fight_result;
     }
 
+    /**
+     * Gets ia lvl.
+     *
+     * @return the ia lvl
+     */
     public ia_loader.dif getIaLvl() {
         return iaLvl;
     }
 
+    /**
+     * Sets ia lvl.
+     *
+     * @param iaLvl the ia lvl
+     */
     public void setIaLvl(ia_loader.dif iaLvl) {
         this.scorePlayer = new score(iaLvl);
         this.iaLvl = iaLvl;
     }
 
+    /**
+     * Gets map limit.
+     *
+     * @return the map limit
+     */
     public hitBox getMapLimit() {
         return mapLimit;
     }
 
+    /**
+     * Sets map limit.
+     *
+     * @param mapLimit the map limit
+     */
     public void setMapLimit(hitBox mapLimit) {
         this.mapLimit = mapLimit;
     }

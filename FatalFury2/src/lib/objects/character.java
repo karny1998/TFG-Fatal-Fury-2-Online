@@ -7,38 +7,92 @@ import lib.characters.load_character;
 
 import java.util.*;
 
+/**
+ * The type Character.
+ */
 // Clase que representa un personaje con sus correspondientes movimientos
 public class character {
-    // Identificador del personaje
+    /**
+     * The Charac.
+     */
+// Identificador del personaje
     private Playable_Character charac;
-    // String que representa el combo para usar un tipo de ataque
+    /**
+     * The Combos.
+     */
+// String que representa el combo para usar un tipo de ataque
     private Map<String, Movement> combos = new HashMap<String, Movement>();
-    // Movimiento asociando a un tipo de ataque
+    /**
+     * The Movements.
+     */
+// Movimiento asociando a un tipo de ataque
     private Map<Movement, movement> movements = new HashMap<Movement, movement>();
-    // Inverso del primero para la ia
+    /**
+     * The Movements keys.
+     */
+// Inverso del primero para la ia
     private Map<Movement, String> movementsKeys = new HashMap<>();;
-    // Vida del personaje
+    /**
+     * The Life.
+     */
+// Vida del personaje
     private int life = 100;
-    // Orientación del personaje (1 mira hacia la izquierda, -1 hacia la derecha)
+    /**
+     * The Orientation.
+     */
+// Orientación del personaje (1 mira hacia la izquierda, -1 hacia la derecha)
     private int orientation = 1;
-    // Coordenadas actuales del personaje
-    private int x = 150, y = 160;
-    // Estado del personaje en cuanto a movimientos
+    /**
+     * The X.
+     */
+// Coordenadas actuales del personaje
+    private int x = 150, /**
+     * The Y.
+     */
+    y = 160;
+    /**
+     * The State.
+     */
+// Estado del personaje en cuanto a movimientos
     private Movement state = Movement.STANDING;
-    // Para gestión de límites de mapa
+    /**
+     * The Map limit.
+     */
+// Para gestión de límites de mapa
     private hitBox mapLimit;
-    // Rival
+    /**
+     * The Rival.
+     */
+// Rival
     private character rival;
-    // Lista de movimientos realizados
+    /**
+     * The Executed moves.
+     */
+// Lista de movimientos realizados
     private List<Movement> executedMoves = new ArrayList<>();
-    // Entero de victoria o derrota (1 victoria ronda, 2 victoria pelea, 3 derrota y 4 auxiliar)
+    /**
+     * The Game result.
+     */
+// Entero de victoria o derrota (1 victoria ronda, 2 victoria pelea, 3 derrota y 4 auxiliar)
     private int gameResult = 0;
-    // Altura de referencia del personaje (para throws)
+    /**
+     * The Height ref.
+     */
+// Altura de referencia del personaje (para throws)
     private int heightRef = 0;
-    // Si ha sido rebalanceado o no
+    /**
+     * The Rebalanced.
+     */
+// Si ha sido rebalanceado o no
     private boolean rebalanced = false;
 
-    // Genera los movimientos en base al personaje deseado
+    /**
+     * Instantiates a new Character.
+     *
+     * @param c  the c
+     * @param pN the p n
+     */
+// Genera los movimientos en base al personaje deseado
     public character(Playable_Character c, int pN){
         charac = c;
         if(c == Playable_Character.MAI){
@@ -55,7 +109,16 @@ public class character {
         heightRef = movements.get(Movement.STANDING).getHurtbox().getY()+290;
     }
 
-    // Devuelve el frame correspondiente al movimiento identificado por el combo mov
+    /**
+     * Get frame screen object.
+     *
+     * @param mov            the mov
+     * @param pHurt          the p hurt
+     * @param eHurt          the e hurt
+     * @param enemyAttacking the enemy attacking
+     * @return screen object
+     */
+// Devuelve el frame correspondiente al movimiento identificado por el combo mov
     // en caso de no estar en un estado que no se pueda interrumpir
     // enemyAttacking indica si el rival está atacando (ahora sería innecesario)
     public screenObject getFrame(String mov, hitBox pHurt, hitBox eHurt, boolean enemyAttacking){
@@ -476,18 +539,33 @@ public class character {
         return s;
     }
 
-    // Si está o no en altura de referencia
+    /**
+     * On height ref boolean.
+     *
+     * @return the boolean
+     */
+// Si está o no en altura de referencia
     public boolean onHeightRef(){
         return heightRef == movements.get(state).getHurtbox().getY()+290;
     }
 
-    // Aplicar un daño recibido al personaje
+    /**
+     * Apply damage.
+     *
+     * @param dmg the dmg
+     */
+// Aplicar un daño recibido al personaje
     public void applyDamage(int dmg){
         if(life-dmg < 0){life = 0;}
         else{life -= dmg;}
     }
 
-    // Se le aplica un retroceso al personaje
+    /**
+     * Return knockback.
+     *
+     * @param k the k
+     */
+// Se le aplica un retroceso al personaje
     public void returnKnockback(int k){
         if(rival.getState() != Movement.THROWN_OUT) {
             this.x = x + orientation * k;
@@ -497,7 +575,14 @@ public class character {
         }
     }
 
-    // Se resetea el personaje
+    /**
+     * Reset.
+     *
+     * @param x           the x
+     * @param y           the y
+     * @param orientation the orientation
+     */
+// Se resetea el personaje
     void reset(int x, int y, int orientation){
         life = 100;
         this.orientation = orientation;
@@ -508,7 +593,10 @@ public class character {
         this.gameResult = 0;
     }
 
-    // Se para la animación actual del personaje y se pone en standing
+    /**
+     * Stop.
+     */
+// Se para la animación actual del personaje y se pone en standing
     void stop(){
         movements.get(state).getAnim().reset();
         state = Movement.STANDING;
@@ -516,7 +604,13 @@ public class character {
         y = 290;
     }
 
-    // Rebalancea los daños de los movimientos en base al multiplicador d,
+    /**
+     * Rebalance.
+     *
+     * @param d the d
+     * @param t the t
+     */
+// Rebalancea los daños de los movimientos en base al multiplicador d,
     // y rebalancea los tiempos de los movimientos en base al multiplicador t
     void rebalance(double d, double t){
         rebalanced = true;
@@ -532,6 +626,11 @@ public class character {
         }
     }
 
+    /**
+     * Is crouched boolean.
+     *
+     * @return the boolean
+     */
     boolean isCrouched(){
         return (state == Movement.CROUCH || state == Movement.CROUCH_2
                 || state == Movement.CROUCHED_BLOCK || state == Movement.CROUCHED_WALKING
@@ -539,6 +638,11 @@ public class character {
                 || state == Movement.CROUCHING_HARD_KICK || state == Movement.CROUCHING_SOFT_KICK);
     }
 
+    /**
+     * Is attacking boolean.
+     *
+     * @return the boolean
+     */
     boolean isAttacking(){
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.THROW, Movement.ATTACK_POKE,
@@ -550,6 +654,12 @@ public class character {
         return attacks.contains(state);
     }
 
+    /**
+     * Is attack boolean.
+     *
+     * @param m the m
+     * @return the boolean
+     */
     boolean isAttack(Movement m){
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.THROW, Movement.ATTACK_POKE,
@@ -561,6 +671,11 @@ public class character {
         return attacks.contains(m);
     }
 
+    /**
+     * Is jumping boolean.
+     *
+     * @return the boolean
+     */
     boolean isJumping(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
                             Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
@@ -572,6 +687,11 @@ public class character {
         return jumps.contains(state);
     }
 
+    /**
+     * In knockback boolean.
+     *
+     * @return the boolean
+     */
     boolean inKnockback(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
@@ -580,6 +700,11 @@ public class character {
         return knock.contains(state);
     }
 
+    /**
+     * In displacement boolean.
+     *
+     * @return the boolean
+     */
     boolean inDisplacement(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
@@ -591,6 +716,11 @@ public class character {
         return knock.contains(state);
     }
 
+    /**
+     * Is combing boolean.
+     *
+     * @return the boolean
+     */
     boolean isCombing(){
         Movement array[] = {Movement.JUMP_KICK_DOWN, Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,
                 Movement.CHARGED_PUNCH_A, Movement.JUMP_HARD_PUNCH_DOWN,  Movement.JUMP_ROLL_HARD_PUNCH_DOWN,
@@ -600,6 +730,12 @@ public class character {
         return attacks.contains(state);
     }
 
+    /**
+     * Is special boolean.
+     *
+     * @param m the m
+     * @return the boolean
+     */
     boolean isSpecial(Movement m){
         Movement array[] = {Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK,
                 Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
@@ -608,16 +744,31 @@ public class character {
         return attacks.contains(m);
     }
 
-    //Getters y setters
+    /**
+     * Set victory.
+     *
+     * @param v the v
+     */
+//Getters y setters
     public void setVictory(int v){
         gameResult = v;
     }
 
+    /**
+     * Set defeat.
+     */
     public void setDefeat(){
         y = 290;
         gameResult = 3;
     }
 
+    /**
+     * Sets state.
+     *
+     * @param state the state
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     */
     public void setState(Movement state, hitBox pHurt, hitBox eHurt) {
         this.movements.get(state).reset();
         this.state = state;
@@ -631,6 +782,11 @@ public class character {
         this.movements.get(state).start(dis);
     }
 
+    /**
+     * Get hitbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getHitbox(){
         hitBox aux = movements.get(state).getHitbox();
         int auxX = x + aux.getX();
@@ -640,6 +796,11 @@ public class character {
         return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(), box_type.HITBOX);
     }
 
+    /**
+     * Get hurtbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getHurtbox(){
         hitBox aux = movements.get(state).getHurtbox();
         int auxX = x + aux.getX();
@@ -649,6 +810,11 @@ public class character {
         return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.HURTBOX);
     }
 
+    /**
+     * Get coverbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getCoverbox(){
         hitBox aux = movements.get(state).getCoverbox();
         int auxX = x + aux.getX();
@@ -658,140 +824,312 @@ public class character {
         return new hitBox(auxX, y+aux.getY(), aux.getWidth(), aux.getHeight(),  box_type.COVERBOX);
     }
 
+    /**
+     * Ended movement boolean.
+     *
+     * @return the boolean
+     */
     public boolean endedMovement(){
         return !movements.get(state).getAnim().getHasEnd() || movements.get(state).getAnim().getEnded();
     }
 
+    /**
+     * Gets charac.
+     *
+     * @return the charac
+     */
     public Playable_Character getCharac() {
         return charac;
     }
 
+    /**
+     * Sets charac.
+     *
+     * @param charac the charac
+     */
     public void setCharac(Playable_Character charac) {
         this.charac = charac;
     }
 
+    /**
+     * Gets combos.
+     *
+     * @return the combos
+     */
     public Map<String, Movement> getCombos() {
         return combos;
     }
 
+    /**
+     * Sets combos.
+     *
+     * @param combos the combos
+     */
     public void setCombos(Map<String, Movement> combos) {
         this.combos = combos;
     }
 
+    /**
+     * Gets movements.
+     *
+     * @return the movements
+     */
     public Map<Movement, movement> getMovements() {
         return movements;
     }
 
+    /**
+     * Sets movements.
+     *
+     * @param movements the movements
+     */
     public void setMovements(Map<Movement, movement> movements) {
         this.movements = movements;
     }
 
+    /**
+     * Gets life.
+     *
+     * @return the life
+     */
     public int getLife() {
         return life;
     }
 
+    /**
+     * Sets life.
+     *
+     * @param life the life
+     */
     public void setLife(int life) {
         this.life = life;
     }
 
+    /**
+     * Gets orientation.
+     *
+     * @return the orientation
+     */
     public int getOrientation() {
         return orientation;
     }
 
+    /**
+     * Sets orientation.
+     *
+     * @param orientation the orientation
+     */
     public void setOrientation(int orientation) {
         this.orientation = orientation;
     }
 
+    /**
+     * Gets x.
+     *
+     * @return the x
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Sets x.
+     *
+     * @param x the x
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     * Gets y.
+     *
+     * @return the y
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Sets y.
+     *
+     * @param y the y
+     */
     public void setY(int y) {
         this.y = y;
     }
 
+    /**
+     * Gets state.
+     *
+     * @return the state
+     */
     public Movement getState() {
         return state;
     }
 
+    /**
+     * Get damage int.
+     *
+     * @return the int
+     */
     public  int getDamage(){
         return movements.get(state).getDamage();
     }
 
+    /**
+     * Get movement movement.
+     *
+     * @param m the m
+     * @return the movement
+     */
     public movement getMovement(Movement m){
         return movements.get(m);
     }
 
+    /**
+     * Get movement movement.
+     *
+     * @param c the c
+     * @return the movement
+     */
     public movement getMovement(String c){
         return movements.get(combos.get(c));
     }
 
+    /**
+     * Sets state.
+     *
+     * @param state the state
+     */
     public void setState(Movement state) {
         this.movements.get(state).reset();
         this.state = state;
         this.movements.get(state).start(9999);
     }
 
+    /**
+     * Gets map limit.
+     *
+     * @return the map limit
+     */
     public hitBox getMapLimit() {
         return mapLimit;
     }
 
+    /**
+     * Sets map limit.
+     *
+     * @param mapLimit the map limit
+     */
     public void setMapLimit(hitBox mapLimit) {
         this.mapLimit = mapLimit;
     }
 
+    /**
+     * Gets rival.
+     *
+     * @return the rival
+     */
     public character getRival() {
         return rival;
     }
 
+    /**
+     * Sets rival.
+     *
+     * @param rival the rival
+     */
     public void setRival(character rival) {
         this.rival = rival;
     }
 
+    /**
+     * Gets movements keys.
+     *
+     * @return the movements keys
+     */
     public Map<Movement, String> getMovementsKeys() {
         return movementsKeys;
     }
 
+    /**
+     * Sets movements keys.
+     *
+     * @param movementsKeys the movements keys
+     */
     public void setMovementsKeys(Map<Movement, String> movementsKeys) {
         this.movementsKeys = movementsKeys;
     }
 
+    /**
+     * Gets executed moves.
+     *
+     * @return the executed moves
+     */
     public List<Movement> getExecutedMoves() {
         return executedMoves;
     }
 
+    /**
+     * Sets executed moves.
+     *
+     * @param executedMoves the executed moves
+     */
     public void setExecutedMoves(List<Movement> executedMoves) {
         this.executedMoves = executedMoves;
     }
 
+    /**
+     * Gets game result.
+     *
+     * @return the game result
+     */
     public int getGameResult() {
         return gameResult;
     }
 
+    /**
+     * Sets game result.
+     *
+     * @param gameResult the game result
+     */
     public void setGameResult(int gameResult) {
         this.gameResult = gameResult;
     }
 
+    /**
+     * Gets height ref.
+     *
+     * @return the height ref
+     */
     public int getHeightRef() {
         return heightRef;
     }
 
+    /**
+     * Sets height ref.
+     *
+     * @param heightRef the height ref
+     */
     public void setHeightRef(int heightRef) {
         this.heightRef = heightRef;
     }
 
+    /**
+     * Is rebalanced boolean.
+     *
+     * @return the boolean
+     */
     public boolean isRebalanced() {
         return rebalanced;
     }
 
+    /**
+     * Sets rebalanced.
+     *
+     * @param rebalanced the rebalanced
+     */
     public void setRebalanced(boolean rebalanced) {
         this.rebalanced = rebalanced;
     }

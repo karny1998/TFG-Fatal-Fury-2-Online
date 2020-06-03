@@ -17,19 +17,49 @@ import java.util.Properties;
 // una vez escrita la causa, el usuario pulsara aceptar para enviar un mail a una cuenta de correo
 // creada unicamente para recivir reportes de crasheo.
 
+/**
+ * The type Crash report.
+ */
 public class crashReport {
 
+    /**
+     * The constant from.
+     */
     private static String from ="ff2crashreports@gmail.com";
+    /**
+     * The constant to.
+     */
     private static String to ="ff2crashreports@gmail.com";
+    /**
+     * The constant password.
+     */
     private static String password = "FatalFury2";
 
+    /**
+     * The constant thread.
+     */
     private static String thread;
+    /**
+     * The constant trace.
+     */
     private static String trace;
+    /**
+     * The constant cause.
+     */
     private static JTextField cause;
+    /**
+     * The constant res.
+     */
     private static JLabel res;
 
+    /**
+     * The constant activeWindow.
+     */
     private static boolean activeWindow = false;
 
+    /**
+     * Instantiates a new Crash report.
+     */
     public crashReport(){
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
@@ -47,6 +77,9 @@ public class crashReport {
         });
     }
 
+    /**
+     * Create window.
+     */
     private void createWindow(){
         JFrame frame = new JFrame("Crash report");
 
@@ -59,7 +92,11 @@ public class crashReport {
     }
 
 
-
+    /**
+     * Send mail.
+     *
+     * @param content the content
+     */
     private static void sendMail(String content){
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -91,8 +128,13 @@ public class crashReport {
     }
 
 
-
+    /**
+     * The type Ventana.
+     */
     private static class Ventana extends JPanel {
+        /**
+         * Instantiates a new Ventana.
+         */
         private Ventana() {
             setLayout(new BorderLayout());
 
@@ -122,7 +164,15 @@ public class crashReport {
         }
     }
 
+    /**
+     * The type Btn listener.
+     */
     private static class BtnListener implements ActionListener {
+        /**
+         * Action performed.
+         *
+         * @param e the e
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             String content = cause.getText();

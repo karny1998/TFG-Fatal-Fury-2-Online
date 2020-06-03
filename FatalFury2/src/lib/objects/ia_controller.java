@@ -9,47 +9,111 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+/**
+ * The type Ia controller.
+ */
 // Clase que encapsula la inteligencia artificial en sí, es decir, toma
 // las decisiones de qué movimientos hacer
 public class ia_controller {
-    // Jugador
+    /**
+     * The Player.
+     */
+// Jugador
     private character player;
-    // Personaje controlado por la IA
+    /**
+     * The Enemy.
+     */
+// Personaje controlado por la IA
     private character enemy;
-    // Caracteres de la IA durante las 4 rondas
+    /**
+     * The Mood.
+     */
+// Caracteres de la IA durante las 4 rondas
     private ia_type mood[][] = new ia_type[4][];
-    // Pesos de las variables de la IA durante las 4 rondas
+    /**
+     * The Weights.
+     */
+// Pesos de las variables de la IA durante las 4 rondas
     private Double weights[][] = new Double[4][5];
-    // Ruleta rusa para decidir el movimiento
+    /**
+     * The Roulette.
+     */
+// Ruleta rusa para decidir el movimiento
     private russian_roulette roulette;
-    // Procesadores de la IA que alteran las probabilidades según la situación
+    /**
+     * The Processor.
+     */
+// Procesadores de la IA que alteran las probabilidades según la situación
     private ia_processor processor[];
-    // Timer de control de referencia
+    /**
+     * The Control.
+     */
+// Timer de control de referencia
     private Timer control;
-    // Mapa de combos dado un movimiento
+    /**
+     * The Movements keys.
+     */
+// Mapa de combos dado un movimiento
     private Map<Movement, String> movementsKeys;
-    // Movimiento a ejecutar
+    /**
+     * The Move.
+     */
+// Movimiento a ejecutar
     private String move = "";
-    // Número de ronda
+    /**
+     * The Round.
+     */
+// Número de ronda
     private int round = 1;
-    // Victorias del jugador
+    /**
+     * The P wins.
+     */
+// Victorias del jugador
     private int pWins = 0;
-    // Tiempo restante de la ronda
+    /**
+     * The Time.
+     */
+// Tiempo restante de la ronda
     private int time = 90;
-    // Timers de referencia
+    /**
+     * The Time reference 1.
+     */
+// Timers de referencia
     private long timeReference1 = System.currentTimeMillis();
+    /**
+     * The Time reference 2.
+     */
     private long timeReference2 = System.currentTimeMillis();
-    // Dificultad de la IA
+    /**
+     * The Dif.
+     */
+// Dificultad de la IA
     private ia_loader.dif dif = ia_loader.dif.EASY;
-    // Probabilidad de bloqueo (al final no se usa)
+    /**
+     * The Prob block.
+     */
+// Probabilidad de bloqueo (al final no se usa)
     private double probBlock = 0.0;
-    // Si se ha leído o no el movimiento
+    /**
+     * The Read.
+     */
+// Si se ha leído o no el movimiento
     private boolean read = false;
 
-    // Contructor por defecto
+    /**
+     * Instantiates a new Ia controller.
+     */
+// Contructor por defecto
     public  ia_controller(){}
 
-    // Contructor que pide el personaje del jugador, el de la ia, y la dificultad de esta última
+    /**
+     * Instantiates a new Ia controller.
+     *
+     * @param p   the p
+     * @param e   the e
+     * @param lvl the lvl
+     */
+// Contructor que pide el personaje del jugador, el de la ia, y la dificultad de esta última
     public  ia_controller(character p, character e, ia_loader.dif lvl){
         this.dif = lvl;
         this.movementsKeys = e.getMovementsKeys();
@@ -87,12 +151,18 @@ public class ia_controller {
         }
     }
 
-    // Para la gestión de la IA
+    /**
+     * Stop ia.
+     */
+// Para la gestión de la IA
     public void stopIA(){
         control.stop();
     }
 
-    // Realiza la gestión de la IA, es decir, analizar la situación, evaluar, y decidir un movimiento
+    /**
+     * Ia gestion.
+     */
+// Realiza la gestión de la IA, es decir, analizar la situación, evaluar, y decidir un movimiento
     private void ia_gestion(){
         // Actualiza la ruleta rusa en base a los procesadores
         for(int i = 0; i < processor.length; ++i) {
@@ -133,7 +203,12 @@ public class ia_controller {
         }
     }
 
-    // Asigna una nueva dificultad y actualiza las cosas necesarias
+    /**
+     * Sets dif.
+     *
+     * @param dif the dif
+     */
+// Asigna una nueva dificultad y actualiza las cosas necesarias
     public void setDif(ia_loader.dif dif) {
         this.dif = dif;
         Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> aux = ia_loader.loadIA(enemy.getCharac(), dif);
@@ -163,124 +238,274 @@ public class ia_controller {
         }
     }
 
-    // Getters y setters
+    /**
+     * Get movement string.
+     *
+     * @return the string
+     */
+// Getters y setters
     public String getMovement(){
         return move;
     }
 
+    /**
+     * Gets player.
+     *
+     * @return the player
+     */
     public character getPlayer() {
         return player;
     }
 
+    /**
+     * Sets player.
+     *
+     * @param player the player
+     */
     public void setPlayer(character player) {
         this.player = player;
     }
 
+    /**
+     * Gets enemy.
+     *
+     * @return the enemy
+     */
     public character getEnemy() {
         return enemy;
     }
 
+    /**
+     * Sets enemy.
+     *
+     * @param enemy the enemy
+     */
     public void setEnemy(character enemy) {
         this.enemy = enemy;
     }
 
+    /**
+     * Get mood ia type [ ] [ ].
+     *
+     * @return the ia type [ ] [ ]
+     */
     public ia_type[][] getMood() {
         return mood;
     }
 
+    /**
+     * Sets mood.
+     *
+     * @param mood the mood
+     */
     public void setMood(ia_type[][] mood) {
         this.mood = mood;
     }
 
+    /**
+     * Gets roulette.
+     *
+     * @return the roulette
+     */
     public russian_roulette getRoulette() {
         return roulette;
     }
 
+    /**
+     * Sets roulette.
+     *
+     * @param roulette the roulette
+     */
     public void setRoulette(russian_roulette roulette) {
         this.roulette = roulette;
     }
 
+    /**
+     * Get processor ia processor [ ].
+     *
+     * @return the ia processor [ ]
+     */
     public ia_processor[] getProcessor() {
         return processor;
     }
 
+    /**
+     * Sets processor.
+     *
+     * @param processor the processor
+     */
     public void setProcessor(ia_processor processor[]) {
         this.processor = processor;
     }
 
+    /**
+     * Gets control.
+     *
+     * @return the control
+     */
     public Timer getControl() {
         return control;
     }
 
+    /**
+     * Sets control.
+     *
+     * @param control the control
+     */
     public void setControl(Timer control) {
         this.control = control;
     }
 
+    /**
+     * Gets movements keys.
+     *
+     * @return the movements keys
+     */
     public Map<Movement, String> getMovementsKeys() {
         return movementsKeys;
     }
 
+    /**
+     * Sets movements keys.
+     *
+     * @param movementsKeys the movements keys
+     */
     public void setMovementsKeys(Map<Movement, String> movementsKeys) {
         this.movementsKeys = movementsKeys;
     }
 
+    /**
+     * Gets move.
+     *
+     * @return the move
+     */
     public String getMove() {
         read = true;
         return move;
     }
 
+    /**
+     * Sets move.
+     *
+     * @param move the move
+     */
     public void setMove(String move) {
         this.move = move;
     }
 
+    /**
+     * Gets round.
+     *
+     * @return the round
+     */
     public int getRound() {
         return round;
     }
 
+    /**
+     * Sets round.
+     *
+     * @param round the round
+     */
     public void setRound(int round) {
         this.round = round;
     }
 
+    /**
+     * Get weights double [ ] [ ].
+     *
+     * @return the double [ ] [ ]
+     */
     public Double[][] getWeights() {
         return weights;
     }
 
+    /**
+     * Sets weights.
+     *
+     * @param weights the weights
+     */
     public void setWeights(Double[][] weights) {
         this.weights = weights;
     }
 
+    /**
+     * Gets wins.
+     *
+     * @return the wins
+     */
     public int getpWins() {
         return pWins;
     }
 
+    /**
+     * Sets wins.
+     *
+     * @param pWins the p wins
+     */
     public void setpWins(int pWins) {
         this.pWins = pWins;
     }
 
+    /**
+     * Gets time.
+     *
+     * @return the time
+     */
     public int getTime() {
         return time;
     }
 
+    /**
+     * Sets time.
+     *
+     * @param time the time
+     */
     public void setTime(int time) {
         this.time = time;
     }
 
+    /**
+     * Gets time reference 1.
+     *
+     * @return the time reference 1
+     */
     public long getTimeReference1() {
         return timeReference1;
     }
 
+    /**
+     * Sets time reference 1.
+     *
+     * @param timeReference1 the time reference 1
+     */
     public void setTimeReference1(long timeReference1) {
         this.timeReference1 = timeReference1;
     }
 
+    /**
+     * Gets time reference 2.
+     *
+     * @return the time reference 2
+     */
     public long getTimeReference2() {
         return timeReference2;
     }
 
+    /**
+     * Sets time reference 2.
+     *
+     * @param timeReference2 the time reference 2
+     */
     public void setTimeReference2(long timeReference2) {
         this.timeReference2 = timeReference2;
     }
 
+    /**
+     * Gets dif.
+     *
+     * @return the dif
+     */
     public ia_loader.dif getDif() {
         return dif;
     }

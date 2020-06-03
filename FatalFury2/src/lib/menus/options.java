@@ -28,68 +28,185 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * The type Options.
+ */
 public class options {
 
-    //La opcion en mayusculas representa la actual
+    /**
+     * The Titulos.
+     */
+//La opcion en mayusculas representa la actual
     private String[] titulos = {"GENERAL", "player 1", "player 2"};
+    /**
+     * The X titulos.
+     */
     private int[] xTitulos = {170, 150 + 340, 150 + 340 + 360};
 
+    /**
+     * The Elementos vol.
+     */
     private String[] elementos_vol =  {
             "general audio", "music", "voices", "special effects", "full screen"
     };
+    /**
+     * The Elementos p 1.
+     */
     private String[] elementos_p1 ={
             "up", "down", "left", "right", "weak punch", "weak kick", "strong punch", "strong kick", "ok", "pause/back"
     };
+    /**
+     * The Elementos p 2.
+     */
     private String[] elementos_p2 ={
             "up", "down", "left", "right", "weak punch", "weak kick", "strong punch", "strong kick", "ok", "pause/back"
     };
 
+    /**
+     * The Elementos.
+     */
     private String[][] elementos = {elementos_vol, elementos_p1, elementos_p2};
 
+    /**
+     * The Valores vol.
+     */
     private int[] valores_vol = new int[elementos_vol.length];
+    /**
+     * The Valores p 1.
+     */
     private int[] valores_p1 = new int[elementos_p1.length];
+    /**
+     * The Valores p 2.
+     */
     private int[] valores_p2 = new int[elementos_p2.length];
+    /**
+     * The Valores.
+     */
     private int[][] valores = {valores_vol, valores_p1, valores_p2};
 
 
-
+    /**
+     * The Exit.
+     */
     private Boolean exit;
+    /**
+     * The Reference time.
+     */
     private long referenceTime;
 
 
+    /**
+     * The File path.
+     */
     private String filePath = System.getProperty("user.dir") + "/.files/options.xml";
+    /**
+     * The Img path 1.
+     */
     private URL imgPath_1 = this.getClass().getResource("/assets/sprites/menu/options/menu_vol.png");
+    /**
+     * The Img path 2.
+     */
     private URL imgPath_2 = this.getClass().getResource("/assets/sprites/menu/options/menu_p1.png");
+    /**
+     * The Img path 3.
+     */
     private URL imgPath_3 = this.getClass().getResource("/assets/sprites/menu/options/menu_p2.png");
 
 
+    /**
+     * The Font stream 1.
+     */
     private InputStream fontStream_1 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    /**
+     * The Font stream 2.
+     */
     private InputStream fontStream_2 = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+
+    /**
+     * Update time.
+     */
     public void updateTime() {
         referenceTime = System.currentTimeMillis();
     }
 
-    private Font f_1, f_2;
-    private screenObject fondo, vol, p1, p2;
+    /**
+     * The F 1.
+     */
+    private Font f_1, /**
+     * The F 2.
+     */
+    f_2;
+    /**
+     * The Fondo.
+     */
+    private screenObject fondo, /**
+     * The Vol.
+     */
+    vol, /**
+     * The P 1.
+     */
+    p1, /**
+     * The P 2.
+     */
+    p2;
 
+    /**
+     * The enum Pag.
+     */
     private enum pag {
+        /**
+         * Pagina volumen pag.
+         */
         PAGINA_VOLUMEN(0),
+        /**
+         * Pagina p 1 pag.
+         */
         PAGINA_P1(1),
+        /**
+         * Pagina p 2 pag.
+         */
         PAGINA_P2(2),
+        /**
+         * Pagina p 1 mapeo pag.
+         */
         PAGINA_P1_MAPEO(1),
+        /**
+         * Pagina p 2 mapeo pag.
+         */
         PAGINA_P2_MAPEO(2);
 
+        /**
+         * The Val.
+         */
         private int val;
+
+        /**
+         * Instantiates a new Pag.
+         *
+         * @param i the
+         */
         pag(int i) {
             this.val = i;
         }
+
+        /**
+         * Get val int.
+         *
+         * @return the int
+         */
         public int getVal(){
             return val;
         }
     }
 
+    /**
+     * The Pagina.
+     */
     private pag pagina;
 
+    /**
+     * Read options file.
+     */
     private void readOptionsFile() {
         try {
 
@@ -143,6 +260,9 @@ public class options {
         }
     }
 
+    /**
+     * Save options.
+     */
     private void saveOptions() {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
@@ -310,12 +430,18 @@ public class options {
         }
     }
 
+    /**
+     * Update values.
+     */
     private void updateValues() {
         controlListener.update();
         audio_manager.update();
         ScreenOptions.update();
     }
 
+    /**
+     * Instantiates a new Options.
+     */
     public options(){
         exit = false;
         pagina = pag.PAGINA_VOLUMEN;
@@ -342,6 +468,12 @@ public class options {
     }
 
 
+    /**
+     * Gestion menu boolean.
+     *
+     * @param screenObjects the screen objects
+     * @return the boolean
+     */
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long current = System.currentTimeMillis();
         if(controlListener.getEsc()){
@@ -564,6 +696,12 @@ public class options {
         return exit;
     }
 
+    /**
+     * Already used boolean.
+     *
+     * @param key the key
+     * @return the boolean
+     */
     private boolean alreadyUsed(int key){
         for(int i = 0; i < valores_p1.length; i++){
             if(valores_p1[i] == key || valores_p2[i] == key){
@@ -573,6 +711,12 @@ public class options {
         return false;
     }
 
+    /**
+     * Move cursor string [ ].
+     *
+     * @param elem the elem
+     * @return the string [ ]
+     */
     private String[] moveCursor(String[] elem){
         //Gestion de subir
         if(controlListener.getStatus(0, controlListener.AB_INDEX)){
@@ -630,6 +774,11 @@ public class options {
     }
 
 
+    /**
+     * Print options.
+     *
+     * @param g the g
+     */
     public void printOptions(Graphics2D g){
 
 

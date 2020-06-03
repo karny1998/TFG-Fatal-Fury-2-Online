@@ -13,44 +13,161 @@ import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 
+/**
+ * The type Ia loader.
+ */
 public class ia_loader {
+    /**
+     * Instantiates a new Ia loader.
+     */
     public ia_loader(){}
 
+    /**
+     * The constant path.
+     */
     private static String path = "/files/ia/";
+
+    /**
+     * The enum Dif.
+     */
     public enum dif {
-        EASY, NORMAL, HARD, VERY_HARD
+        /**
+         * Easy dif.
+         */
+        EASY,
+        /**
+         * Normal dif.
+         */
+        NORMAL,
+        /**
+         * Hard dif.
+         */
+        HARD,
+        /**
+         * Very hard dif.
+         */
+        VERY_HARD
     }
 
+    /**
+     * The enum Indexes.
+     */
     private enum indexes {
+        /**
+         * Normal jump indexes.
+         */
         NORMAL_JUMP,
+        /**
+         * Jump roll right indexes.
+         */
         JUMP_ROLL_RIGHT,
+        /**
+         * Jump roll left indexes.
+         */
         JUMP_ROLL_LEFT,
+        /**
+         * Standing indexes.
+         */
         STANDING,
+        /**
+         * Walking indexes.
+         */
         WALKING,
+        /**
+         * Walking back indexes.
+         */
         WALKING_BACK,
+        /**
+         * Soft punch indexes.
+         */
         SOFT_PUNCH,
+        /**
+         * Soft kick indexes.
+         */
         SOFT_KICK,
+        /**
+         * Hard punch indexes.
+         */
         HARD_PUNCH,
+        /**
+         * Hard kick indexes.
+         */
         HARD_KICK,
+        /**
+         * Crouch indexes.
+         */
         CROUCH,
+        /**
+         * Crouched walking indexes.
+         */
         CROUCHED_WALKING,
+        /**
+         * Crouched block indexes.
+         */
         CROUCHED_BLOCK,
+        /**
+         * Crouching soft punch indexes.
+         */
         CROUCHING_SOFT_PUNCH,
+        /**
+         * Crouching soft kick indexes.
+         */
         CROUCHING_SOFT_KICK,
+        /**
+         * Crouching hard punch indexes.
+         */
         CROUCHING_HARD_PUNCH,
+        /**
+         * Crouching hard kick indexes.
+         */
         CROUCHING_HARD_KICK,
+        /**
+         * Throw indexes.
+         */
         THROW,
+        /**
+         * Dash indexes.
+         */
         DASH,
+        /**
+         * Charged punch a indexes.
+         */
         CHARGED_PUNCH_A,
+        /**
+         * Reverse kick b indexes.
+         */
         REVERSE_KICK_B,
+        /**
+         * Spin punch a indexes.
+         */
         SPIN_PUNCH_A
     }
+
+    /**
+     * The constant tipos.
+     */
     private static ia_type tipos[][];
+    /**
+     * The constant procesamiento.
+     */
     private static ia_processor procesamiento[];
+    /**
+     * The constant pesos.
+     */
     private static Double pesos[][] = new Double[4][5];
+    /**
+     * The constant ruleta.
+     */
     private static russian_roulette ruleta = new russian_roulette();
 
-    // Carga la información contenida en el fichero de la ia de cada personaje
+    /**
+     * Load ia pair.
+     *
+     * @param c the c
+     * @param d the d
+     * @return the pair
+     */
+// Carga la información contenida en el fichero de la ia de cada personaje
     public static Pair<Pair<ia_processor[],russian_roulette>, Pair<ia_type[][], Double[][]>> loadIA(Playable_Character c, dif d){
         String file = path + c.toString() + "/" + d.toString() +".xml";
         ruleta = new russian_roulette();

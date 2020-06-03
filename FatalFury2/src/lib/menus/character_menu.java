@@ -10,43 +10,157 @@ import lib.sound.menu_audio;
 import javax.swing.*;
 import java.util.Map;
 
+/**
+ * The type Character menu.
+ */
 public class character_menu {
 
+    /**
+     * The Path.
+     */
     private String path = "/assets/sprites/menu/character/";
-    private enum estados { P1_SELECT, P2_SELECT, DONE };
+
+    /**
+     * The enum Estados.
+     */
+    private enum estados {
+        /**
+         * P 1 select estados.
+         */
+        P1_SELECT,
+        /**
+         * P 2 select estados.
+         */
+        P2_SELECT,
+        /**
+         * Done estados.
+         */
+        DONE };
+    /**
+     * The Actual.
+     */
     estados actual;
-    menu_audio.indexes p1_sound, p2_sound;
+    /**
+     * The P 1 sound.
+     */
+    menu_audio.indexes p1_sound, /**
+     * The P 2 sound.
+     */
+    p2_sound;
 
 
+    /**
+     * The Screen objects.
+     */
     Map<Item_Type, screenObject> screenObjects;
 
-    private screenObject p1, p2, p1_mug, p1_name, p2_mug, p2_name, fondo;
+    /**
+     * The P 1.
+     */
+    private screenObject p1, /**
+     * The P 2.
+     */
+    p2, /**
+     * The P 1 mug.
+     */
+    p1_mug, /**
+     * The P 1 name.
+     */
+    p1_name, /**
+     * The P 2 mug.
+     */
+    p2_mug, /**
+     * The P 2 name.
+     */
+    p2_name, /**
+     * The Fondo.
+     */
+    fondo;
 
-    int pos_1, pos_2;
+    /**
+     * The Pos 1.
+     */
+    int pos_1, /**
+     * The Pos 2.
+     */
+    pos_2;
+    /**
+     * The Incrementos.
+     */
     int incrementos[] = {0, 173, 173+174};
+    /**
+     * The Mugs.
+     */
     String mugs[] = { "andy/andy_mugshot.png", "mai/mai_mugshot.png", "terry/terry_mugshot.png" };
+    /**
+     * The Names.
+     */
     String names[] = { "andy/andy_name.png", "mai/mai_name.png", "terry/terry_name.png" };
-    int x1 = 400, x2 = 400;
-    int y1 = 426, y2 = 441;
-    int w = 135, h = 134;
+    /**
+     * The X 1.
+     */
+    int x1 = 400, /**
+     * The X 2.
+     */
+    x2 = 400;
+    /**
+     * The Y 1.
+     */
+    int y1 = 426, /**
+     * The Y 2.
+     */
+    y2 = 441;
+    /**
+     * The W.
+     */
+    int w = 135, /**
+     * The H.
+     */
+    h = 134;
 
+    /**
+     * The Tipo.
+     */
     int tipo;
 
+    /**
+     * Gets p 1 ch.
+     *
+     * @return the p 1 ch
+     */
     public Playable_Character getP1_ch() {
         return p1_ch;
     }
 
+    /**
+     * Gets p 2 ch.
+     *
+     * @return the p 2 ch
+     */
     public Playable_Character getP2_ch() {
         return p2_ch;
     }
 
 
-    Playable_Character p1_ch, p2_ch;
+    /**
+     * The P 1 ch.
+     */
+    Playable_Character p1_ch, /**
+     * The P 2 ch.
+     */
+    p2_ch;
 
 
-
+    /**
+     * The P 2 aux.
+     */
     private String p2_aux = "";
 
+    /**
+     * Instantiates a new Character menu.
+     *
+     * @param tipo_ the tipo
+     */
     public character_menu(int tipo_){
         tipo = tipo_;
         pos_1 = 0; pos_2 = 0;
@@ -65,6 +179,12 @@ public class character_menu {
         }
     }
 
+    /**
+     * Gestion menu boolean.
+     *
+     * @param screenObjects the screen objects
+     * @return the boolean
+     */
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
         long currentTime = System.currentTimeMillis();
         screenObjects.put(Item_Type.MENU, fondo);
@@ -80,6 +200,12 @@ public class character_menu {
 
     }
 
+    /**
+     * Gestion menu 2 boolean.
+     *
+     * @param screenObjects the screen objects
+     * @return the boolean
+     */
     public Boolean gestionMenu2(Map<Item_Type, screenObject> screenObjects){
         if(actual == estados.P1_SELECT){
 

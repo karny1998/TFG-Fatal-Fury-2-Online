@@ -20,8 +20,19 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * The type Load character.
+ */
 public class load_character {
 
+    /**
+     * Filter image image.
+     *
+     * @param img    the img
+     * @param charac the charac
+     * @param method the method
+     * @return the image
+     */
     public static Image filterImage(Image img, String charac, int method) {
         if (img == null) {
             return img;
@@ -80,6 +91,12 @@ public class load_character {
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
 
+    /**
+     * Read aux string.
+     *
+     * @param b the b
+     * @return the string
+     */
     public String readAux(BufferedReader b) {
         String lineaBuena = "";
         try {
@@ -92,6 +109,16 @@ public class load_character {
     }
 
 
+    /**
+     * Generate movs.
+     *
+     * @param charac        the charac
+     * @param nJ            the n j
+     * @param combos        the combos
+     * @param combosInverse the combos inverse
+     * @param movs          the movs
+     * @param multiplier    the multiplier
+     */
     public void generateMovs(String charac, int nJ, Map<String, Movement> combos, Map<Movement,String> combosInverse, Map<Movement, movement> movs, double multiplier) {
         String path = "/assets/sprites/characters/" + charac + "/";
         try {

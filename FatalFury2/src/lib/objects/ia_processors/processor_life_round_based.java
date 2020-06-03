@@ -9,26 +9,57 @@ import lib.objects.russian_roulette;
 
 import java.util.List;
 
+/**
+ * The type Processor life round based.
+ */
 // Procesador de la IA que actualiza las probabilidades en base a la vida restante de los dos personajes,
 // el tiempo restante, el número de ronda, y el número de victorias del jugador
 public class processor_life_round_based extends ia_processor {
-    // último nivel
+    /**
+     * The Last lvl.
+     */
+// último nivel
     private int lastLvl = 0;
-    // última vida restante del jugador
+    /**
+     * The Last player life.
+     */
+// última vida restante del jugador
     private int lastPlayerLife = 0;
-    // última vida restante de la ia
+    /**
+     * The Last ia life.
+     */
+// última vida restante de la ia
     private int lastIaLife = 0;
-    // último tiempo restante
+    /**
+     * The Last time.
+     */
+// último tiempo restante
     private int lastTime = 0;
-    // última ronda
+    /**
+     * The Last round.
+     */
+// última ronda
     private int lastRound = 0;
-    // último número de vixtorias del jugador
+    /**
+     * The Last wins.
+     */
+// último número de vixtorias del jugador
     private int lastWins = -1;
 
-    // Contructor por defecto
+    /**
+     * Instantiates a new Processor life round based.
+     */
+// Contructor por defecto
     public processor_life_round_based(){super();}
 
-    // Actualliza las probabilidades de la ruleta rusa en base al tipo de ia (agresivo o defensivo) y al potenciamiento
+    /**
+     * Update probs.
+     *
+     * @param roulette    the roulette
+     * @param type        the type
+     * @param empowerment the empowerment
+     */
+// Actualliza las probabilidades de la ruleta rusa en base al tipo de ia (agresivo o defensivo) y al potenciamiento
     private void updateProbs(russian_roulette roulette, ia_type type, double empowerment){
         if(roulette.isBasic()){
             double sign = 1.0;
@@ -70,6 +101,19 @@ public class processor_life_round_based extends ia_processor {
         }
     }
 
+    /**
+     * Update roulette.
+     *
+     * @param roulette   the roulette
+     * @param type       the type
+     * @param weights    the weights
+     * @param lvl        the lvl
+     * @param player     the player
+     * @param enemy      the enemy
+     * @param time       the time
+     * @param round      the round
+     * @param playerWins the player wins
+     */
     @Override
     // Actualiza la ruleta en base al tipo de IA, a los pesos correspondientes, al nivel de la ia, el tiempo, ronda,
     // número den victorias del jugador, y las vidas de ambos

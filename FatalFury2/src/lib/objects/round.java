@@ -14,54 +14,150 @@ import java.util.Map;
 import static lib.Enums.Item_Type.SHADOW_1;
 import static lib.Enums.Item_Type.SHADOW_2;
 
+/**
+ * The interface Round listener.
+ */
 interface roundListener {
+    /**
+     * Round ended.
+     */
     void roundEnded();
 }
 
+/**
+ * The type Round.
+ */
 public class round {
-    // Tiempo restante hasta final de ronda
+    /**
+     * The Time left.
+     */
+// Tiempo restante hasta final de ronda
     private int timeLeft;
-    // Controlador del usuario
+    /**
+     * The Player.
+     */
+// Controlador del usuario
     private character_controller player;
-    // Anterior movimiento del jugador
+    /**
+     * The Player old state.
+     */
+// Anterior movimiento del jugador
     private Movement player_old_state = Movement.STANDING;
-    // Controlador del enemigo
+    /**
+     * The Enemy.
+     */
+// Controlador del enemigo
     private character_controller enemy;
-    // Anterior movimiento del enemigo
+    /**
+     * The Enemy old state.
+     */
+// Anterior movimiento del enemigo
     private Movement enemy_old_state = Movement.STANDING;
 
+    /**
+     * The Player hit.
+     */
     private Boolean playerHit = false;
+    /**
+     * The Enemy hit.
+     */
     private Boolean enemyHit = false;
-    // Resultado de la ronda
+    /**
+     * The Result.
+     */
+// Resultado de la ronda
     private Round_Results result;
-    // Listeners de la ronda
+    /**
+     * The Listeners.
+     */
+// Listeners de la ronda
     private List<roundListener> listeners = new ArrayList<roundListener>();
-    // Timers de la ronda
+    /**
+     * The Check lifes.
+     */
+// Timers de la ronda
     private Timer checkLifes = new Timer(1000, null);;
+    /**
+     * The Round timer.
+     */
     private Timer roundTimer = new Timer(1000, null);;
-    // Comprobación de parada de timers
+    /**
+     * The Paused 1.
+     */
+// Comprobación de parada de timers
     private boolean paused1;
+    /**
+     * The Paused 2.
+     */
     private boolean paused2;
-    // Score p1
+    /**
+     * The Score player.
+     */
+// Score p1
     private score scorePlayer;
-    // Score p2
+    /**
+     * The Score enemy.
+     */
+// Score p2
     private  score scoreEnemy;
-    // Perfect
+    /**
+     * The Is perfect.
+     */
+// Perfect
     private boolean isPerfect;
-    // Time Out
+    /**
+     * The Is time out.
+     */
+// Time Out
     private boolean isTimeOut;
-    // Double KO
+    /**
+     * The Is double ko.
+     */
+// Double KO
     boolean isDoubleKO;
+    /**
+     * The Enemy ended.
+     */
     private boolean enemyEnded = false;
+    /**
+     * The Player ended.
+     */
     private boolean playerEnded = false;
+    /**
+     * The Shadow 1.
+     */
     private screenObject shadow1 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_1);
+    /**
+     * The Shadow 2.
+     */
     private screenObject shadow2 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_2);
 
+    /**
+     * The Map limit.
+     */
     private hitBox mapLimit = new hitBox(-145,0,1571,720,box_type.HURTBOX);
+    /**
+     * The Camera limit.
+     */
     private hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
+    /**
+     * The Scenary offset.
+     */
     private int scenaryOffset = 0;
+    /**
+     * The Scenary offset y.
+     */
     private int scenaryOffsetY = 0;
 
+    /**
+     * Instantiates a new Round.
+     *
+     * @param p    the p
+     * @param e    the e
+     * @param time the time
+     * @param sP   the s p
+     * @param sE   the s e
+     */
     public round (character_controller p, character_controller e, int time, score sP, score sE) {
         this.player = p;
         this.enemy = e;
@@ -75,11 +171,19 @@ public class round {
         this.scoreEnemy = sE;
     }
 
+    /**
+     * Add listener.
+     *
+     * @param toAdd the to add
+     */
     public void addListener(roundListener toAdd) {
         listeners.add(toAdd);
     }
 
-    // Parar la ronda
+    /**
+     * Pause.
+     */
+// Parar la ronda
     public void pause() {
         if (roundTimer.isRunning()) {
             roundTimer.stop();
@@ -91,7 +195,10 @@ public class round {
         }
     }
 
-    // Retomar la ronda
+    /**
+     * Resume.
+     */
+// Retomar la ronda
     public void resume() {
         if (paused1) {
             roundTimer.start();
@@ -103,7 +210,12 @@ public class round {
         }
     }
 
-    // Empezar una nueva ronda
+    /**
+     * Start round.
+     *
+     * @param hasEnd the has end
+     */
+// Empezar una nueva ronda
     public void startRound(boolean hasEnd) {
         // Timer tiempo límite de ronda
         roundTimer = new Timer(1000, null);
@@ -165,7 +277,13 @@ public class round {
         paused2 = false;
     }
 
-    // Gestion de daños
+    /**
+     * Collides management.
+     *
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     */
+// Gestion de daños
     void collidesManagement(hitBox pHurt, hitBox eHurt){
         // Estado actual de ambos
         Movement player_act_state = player.getPlayer().getState();
@@ -341,7 +459,13 @@ public class round {
         }
     }
 
-    // Gestión de colisiones, cambios de orientación y daños entre los personajes
+    /**
+     * Fight management.
+     *
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     */
+// Gestión de colisiones, cambios de orientación y daños entre los personajes
     void fightManagement(hitBox pHurt, hitBox eHurt){
         // Gestiona las colisiones y daños
         collidesManagement(pHurt, eHurt);
@@ -425,7 +549,13 @@ public class round {
         }
     }
 
-    // Gestiona la cámara (el escenario) en base a las posiciones de los personajes
+    /**
+     * Camera management.
+     *
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     */
+// Gestiona la cámara (el escenario) en base a las posiciones de los personajes
     void cameraManagement(hitBox pHurt,hitBox eHurt){
         int xP, xE;
         // La x de cada personaje en base a la oientación
@@ -479,7 +609,12 @@ public class round {
         }
     }
 
-    // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
+    /**
+     * Gets animation.
+     *
+     * @param screenObjects the screen objects
+     */
+// Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         hitBox pHurt = player.getPlayer().getHurtbox();
         hitBox eHurt = enemy.getPlayer().getHurtbox();
@@ -501,209 +636,469 @@ public class round {
         screenObjects.put(SHADOW_2,shadow2);
     }
 
-    // Getters y setters
+    /**
+     * Gets time left.
+     *
+     * @return the time left
+     */
+// Getters y setters
     public int getTimeLeft() {
         return timeLeft;
     }
 
+    /**
+     * Sets time left.
+     *
+     * @param timeLeft the time left
+     */
     public void setTimeLeft(int timeLeft) {
         this.timeLeft = timeLeft;
     }
 
+    /**
+     * Gets player.
+     *
+     * @return the player
+     */
     public character_controller getPlayer() {
         return player;
     }
 
+    /**
+     * Sets player.
+     *
+     * @param player the player
+     */
     public void setPlayer(character_controller player) {
         this.player = player;
     }
 
+    /**
+     * Gets player old state.
+     *
+     * @return the player old state
+     */
     public Movement getPlayer_old_state() {
         return player_old_state;
     }
 
+    /**
+     * Sets player old state.
+     *
+     * @param player_old_state the player old state
+     */
     public void setPlayer_old_state(Movement player_old_state) {
         this.player_old_state = player_old_state;
     }
 
+    /**
+     * Gets enemy.
+     *
+     * @return the enemy
+     */
     public character_controller getEnemy() {
         return enemy;
     }
 
+    /**
+     * Sets enemy.
+     *
+     * @param enemy the enemy
+     */
     public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
+    /**
+     * Gets enemy old state.
+     *
+     * @return the enemy old state
+     */
     public Movement getEnemy_old_state() {
         return enemy_old_state;
     }
 
+    /**
+     * Sets enemy old state.
+     *
+     * @param enemy_old_state the enemy old state
+     */
     public void setEnemy_old_state(Movement enemy_old_state) {
         this.enemy_old_state = enemy_old_state;
     }
 
+    /**
+     * Gets result.
+     *
+     * @return the result
+     */
     public Round_Results getResult() {
         return result;
     }
 
+    /**
+     * Sets result.
+     *
+     * @param result the result
+     */
     public void setResult(Round_Results result) {
         this.result = result;
     }
 
+    /**
+     * Gets listeners.
+     *
+     * @return the listeners
+     */
     public List<roundListener> getListeners() {
         return listeners;
     }
 
+    /**
+     * Sets listeners.
+     *
+     * @param listeners the listeners
+     */
     public void setListeners(List<roundListener> listeners) {
         this.listeners = listeners;
     }
 
+    /**
+     * Gets check lifes.
+     *
+     * @return the check lifes
+     */
     public Timer getCheckLifes() {
         return checkLifes;
     }
 
+    /**
+     * Sets check lifes.
+     *
+     * @param checkLifes the check lifes
+     */
     public void setCheckLifes(Timer checkLifes) {
         this.checkLifes = checkLifes;
     }
 
+    /**
+     * Gets round timer.
+     *
+     * @return the round timer
+     */
     public Timer getRoundTimer() {
         return roundTimer;
     }
 
+    /**
+     * Sets round timer.
+     *
+     * @param roundTimer the round timer
+     */
     public void setRoundTimer(Timer roundTimer) {
         this.roundTimer = roundTimer;
     }
 
+    /**
+     * Is paused 1 boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPaused1() {
         return paused1;
     }
 
+    /**
+     * Sets paused 1.
+     *
+     * @param paused1 the paused 1
+     */
     public void setPaused1(boolean paused1) {
         this.paused1 = paused1;
     }
 
+    /**
+     * Is paused 2 boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPaused2() {
         return paused2;
     }
 
+    /**
+     * Sets paused 2.
+     *
+     * @param paused2 the paused 2
+     */
     public void setPaused2(boolean paused2) {
         this.paused2 = paused2;
     }
 
+    /**
+     * Gets score player.
+     *
+     * @return the score player
+     */
     public score getScorePlayer() {
         return scorePlayer;
     }
 
+    /**
+     * Sets score player.
+     *
+     * @param scorePlayer the score player
+     */
     public void setScorePlayer(score scorePlayer) {
         this.scorePlayer = scorePlayer;
     }
 
+    /**
+     * Gets score enemy.
+     *
+     * @return the score enemy
+     */
     public score getScoreEnemy() {
         return scoreEnemy;
     }
 
+    /**
+     * Sets score enemy.
+     *
+     * @param scoreEnemy the score enemy
+     */
     public void setScoreEnemy(score scoreEnemy) {
         this.scoreEnemy = scoreEnemy;
     }
 
+    /**
+     * Is perfect boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPerfect() { return isPerfect; }
 
+    /**
+     * Sets perfect.
+     *
+     * @param perfect the perfect
+     */
     public void setPerfect(boolean perfect) {
         isPerfect = perfect;
     }
 
+    /**
+     * Is time out boolean.
+     *
+     * @return the boolean
+     */
     public boolean isTimeOut() {
         return isTimeOut;
     }
 
+    /**
+     * Sets time out.
+     *
+     * @param TimeOut the time out
+     */
     public void setTimeOut(boolean TimeOut) {
         isTimeOut = TimeOut;
     }
 
+    /**
+     * Is double ko boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDoubleKO() {
         return isDoubleKO;
     }
 
+    /**
+     * Sets double ko.
+     *
+     * @param doubleKO the double ko
+     */
     public void setDoubleKO(boolean doubleKO) {
         isDoubleKO = doubleKO;
     }
 
+    /**
+     * Gets scenary offset.
+     *
+     * @return the scenary offset
+     */
     public int getScenaryOffset() {
         return scenaryOffset;
     }
 
+    /**
+     * Sets scenary offset.
+     *
+     * @param scenaryOffset the scenary offset
+     */
     public void setScenaryOffset(int scenaryOffset) {
         this.scenaryOffset = scenaryOffset;
     }
 
+    /**
+     * Gets player hit.
+     *
+     * @return the player hit
+     */
     public Boolean getPlayerHit() {
         return playerHit;
     }
 
+    /**
+     * Sets player hit.
+     *
+     * @param playerHit the player hit
+     */
     public void setPlayerHit(Boolean playerHit) {
         this.playerHit = playerHit;
     }
 
+    /**
+     * Gets enemy hit.
+     *
+     * @return the enemy hit
+     */
     public Boolean getEnemyHit() {
         return enemyHit;
     }
 
+    /**
+     * Sets enemy hit.
+     *
+     * @param enemyHit the enemy hit
+     */
     public void setEnemyHit(Boolean enemyHit) {
         this.enemyHit = enemyHit;
     }
 
+    /**
+     * Is enemy ended boolean.
+     *
+     * @return the boolean
+     */
     public boolean isEnemyEnded() {
         return enemyEnded;
     }
 
+    /**
+     * Sets enemy ended.
+     *
+     * @param enemyEnded the enemy ended
+     */
     public void setEnemyEnded(boolean enemyEnded) {
         this.enemyEnded = enemyEnded;
     }
 
+    /**
+     * Is player ended boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPlayerEnded() {
         return playerEnded;
     }
 
+    /**
+     * Sets player ended.
+     *
+     * @param playerEnded the player ended
+     */
     public void setPlayerEnded(boolean playerEnded) {
         this.playerEnded = playerEnded;
     }
 
+    /**
+     * Gets shadow 1.
+     *
+     * @return the shadow 1
+     */
     public screenObject getShadow1() {
         return shadow1;
     }
 
+    /**
+     * Sets shadow 1.
+     *
+     * @param shadow1 the shadow 1
+     */
     public void setShadow1(screenObject shadow1) {
         this.shadow1 = shadow1;
     }
 
+    /**
+     * Gets shadow 2.
+     *
+     * @return the shadow 2
+     */
     public screenObject getShadow2() {
         return shadow2;
     }
 
+    /**
+     * Sets shadow 2.
+     *
+     * @param shadow2 the shadow 2
+     */
     public void setShadow2(screenObject shadow2) {
         this.shadow2 = shadow2;
     }
 
+    /**
+     * Gets map limit.
+     *
+     * @return the map limit
+     */
     public hitBox getMapLimit() {
         return mapLimit;
     }
 
+    /**
+     * Sets map limit.
+     *
+     * @param mapLimit the map limit
+     */
     public void setMapLimit(hitBox mapLimit) {
         this.mapLimit = mapLimit;
     }
 
+    /**
+     * Gets camera limit.
+     *
+     * @return the camera limit
+     */
     public hitBox getCameraLimit() {
         return cameraLimit;
     }
 
+    /**
+     * Sets camera limit.
+     *
+     * @param cameraLimit the camera limit
+     */
     public void setCameraLimit(hitBox cameraLimit) {
         this.cameraLimit = cameraLimit;
     }
 
+    /**
+     * Gets scenary offset y.
+     *
+     * @return the scenary offset y
+     */
     public int getScenaryOffsetY() {
         return scenaryOffsetY;
     }
 
+    /**
+     * Sets scenary offset y.
+     *
+     * @param scenaryOffsetY the scenary offset y
+     */
     public void setScenaryOffsetY(int scenaryOffsetY) {
         this.scenaryOffsetY = scenaryOffsetY;
     }

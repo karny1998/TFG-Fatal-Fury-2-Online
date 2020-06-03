@@ -3,27 +3,108 @@ package lib.sound;
 import javax.sound.sampled.*;
 import java.io.IOException;
 
+/**
+ * The type Menu audio.
+ */
 // Clase encargada de cargar los audios que seran usados en la menus
 public class menu_audio {
 
+    /**
+     * The Clips.
+     */
     public Clip[] clips;
 
+    /**
+     * The constant Music_Route.
+     */
     private static String Music_Route = "/assets/sound/music/Menu.wav";
+    /**
+     * The constant Back_route.
+     */
     private static String Back_route = "/assets/sound/special_effects/Back.wav";
+    /**
+     * The constant Move_cursor_route.
+     */
     private static String Move_cursor_route = "/assets/sound/special_effects/Move_cursor.wav";
+    /**
+     * The constant Option_selected_route.
+     */
     private static String Option_selected_route = "/assets/sound/special_effects/Option_selected.wav";
+    /**
+     * The constant Fight_selected_route.
+     */
     private static String Fight_selected_route = "/assets/sound/special_effects/Fight_selected.wav";
+    /**
+     * The constant Versus_route.
+     */
     private static String Versus_route = "/assets/sound/voice/Announcer/Versus.wav";
+    /**
+     * The constant Andy_route.
+     */
     private static String Andy_route = "/assets/sound/voice/Announcer/Andy.wav";
+    /**
+     * The constant Terry_route.
+     */
     private static String Terry_route = "/assets/sound/voice/Announcer/Terry.wav";
+    /**
+     * The constant Mai_route.
+     */
     private static String Mai_route = "/assets/sound/voice/Announcer/Mai.wav";
+    /**
+     * The constant Error_route.
+     */
     private static String Error_route = "/assets/sound/special_effects/Error.wav";
 
+    /**
+     * The enum Indexes.
+     */
     public enum indexes {
-        menu_theme, back, move_cursor, option_selected, fight_selected, Versus, Andy, Terry, Mai, error
+        /**
+         * Menu theme indexes.
+         */
+        menu_theme,
+        /**
+         * Back indexes.
+         */
+        back,
+        /**
+         * Move cursor indexes.
+         */
+        move_cursor,
+        /**
+         * Option selected indexes.
+         */
+        option_selected,
+        /**
+         * Fight selected indexes.
+         */
+        fight_selected,
+        /**
+         * Versus indexes.
+         */
+        Versus,
+        /**
+         * Andy indexes.
+         */
+        Andy,
+        /**
+         * Terry indexes.
+         */
+        Terry,
+        /**
+         * Mai indexes.
+         */
+        Mai,
+        /**
+         * Error indexes.
+         */
+        error
     }
 
-    // Carga los clips de audio
+    /**
+     * Instantiates a new Menu audio.
+     */
+// Carga los clips de audio
     menu_audio(){
         try {
             load();
@@ -38,6 +119,13 @@ public class menu_audio {
 
     }
 
+    /**
+     * Load.
+     *
+     * @throws LineUnavailableException      the line unavailable exception
+     * @throws IOException                   the io exception
+     * @throws UnsupportedAudioFileException the unsupported audio file exception
+     */
     private void load() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         clips = new Clip[indexes.values().length];
 
@@ -73,14 +161,24 @@ public class menu_audio {
     }
 
 
-    // Cierra los clips de audio
+    /**
+     * Close.
+     */
+// Cierra los clips de audio
     public void close(){
         for(int i = 0; i < indexes.values().length; i++){
             clips[i].close();
         }
     }
 
-    // Actualiza los valores de volumen
+    /**
+     * Update init.
+     *
+     * @param mus    the mus
+     * @param sfx    the sfx
+     * @param voices the voices
+     */
+// Actualiza los valores de volumen
     public void update_init(double mus, double sfx, double voices){
 
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -114,7 +212,14 @@ public class menu_audio {
         gainControl.setValue(20f * (float) Math.log10(sfx ));
     }
 
-    // Actualiza los valores de volumen
+    /**
+     * Update.
+     *
+     * @param mus    the mus
+     * @param sfx    the sfx
+     * @param voices the voices
+     */
+// Actualiza los valores de volumen
     public void update(double mus, double sfx, double voices){
         stop(indexes.menu_theme);
         FloatControl gainControl = (FloatControl) clips[indexes.menu_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -167,7 +272,12 @@ public class menu_audio {
         resume(indexes.error);
     }
 
-    // Reproduce el clip con indice i
+    /**
+     * Play.
+     *
+     * @param i the
+     */
+// Reproduce el clip con indice i
     public void play(indexes i){
         try {
             clips[i.ordinal()].setFramePosition(0);
@@ -177,21 +287,36 @@ public class menu_audio {
         }
     }
 
-    // detiene el clip con indice i
+    /**
+     * Stop.
+     *
+     * @param i the
+     */
+// detiene el clip con indice i
     public void stop(indexes i){
         if(clips[i.ordinal()].isRunning()){
             clips[i.ordinal()].stop();
         }
     }
 
-    // Continua la reproducción del clip con indice i
+    /**
+     * Resume.
+     *
+     * @param i the
+     */
+// Continua la reproducción del clip con indice i
     public void resume(indexes i){
         if(!clips[i.ordinal()].isRunning() && clips[i.ordinal()].getFramePosition() != 0){
             clips[i.ordinal()].start();
         }
     }
 
-    // Reproduce en bucle el clip con indice i
+    /**
+     * Loop.
+     *
+     * @param i the
+     */
+// Reproduce en bucle el clip con indice i
     public void loop(indexes i){
         try {
             clips[i.ordinal()].setFramePosition(0);

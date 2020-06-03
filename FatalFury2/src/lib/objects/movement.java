@@ -2,22 +2,52 @@ package lib.objects;
 
 import lib.Enums.Movement;
 
+/**
+ * The type Movement.
+ */
 //Clase que representa los movimientos de un personaje
 public class movement {
-    // Tipo de movimiento
+    /**
+     * The Type.
+     */
+// Tipo de movimiento
     Movement type = Movement.NONE;
-    // Animaciones del personaje y de las cosas que lanza
-    animation anim, throwable;
-    // Daño del movimiento
+    /**
+     * The Anim.
+     */
+// Animaciones del personaje y de las cosas que lanza
+    animation anim, /**
+     * The Throwable.
+     */
+    throwable;
+    /**
+     * The Damage.
+     */
+// Daño del movimiento
     int damage = 0;
-    // Distancia para movimiento hijo
+    /**
+     * The Dist change.
+     */
+// Distancia para movimiento hijo
     int distChange = 20;
-    // Distancia cuando se inicio el movimiento
+    /**
+     * The Distance.
+     */
+// Distancia cuando se inicio el movimiento
     int distance = 100;
-    // Submovimiento (solo se soporta tener hijos, no nietos)
+    /**
+     * The Sub movement.
+     */
+// Submovimiento (solo se soporta tener hijos, no nietos)
     movement subMovement = null;
 
-    // Constructor que pide el identificador de movimiento y la animación
+    /**
+     * Instantiates a new Movement.
+     *
+     * @param type the type
+     * @param anim the anim
+     */
+// Constructor que pide el identificador de movimiento y la animación
     public movement(Movement type, animation anim) {
         if(type == Movement.WALKING ||type == Movement.CROUCHED_WALKING){
             distChange = -999;
@@ -26,7 +56,12 @@ public class movement {
         this.anim = anim;
     }
 
-    // Constructor que pide el identificador de movimiento
+    /**
+     * Instantiates a new Movement.
+     *
+     * @param type the type
+     */
+// Constructor que pide el identificador de movimiento
     public movement(Movement type) {
         this.type = type;
         anim = new animation();
@@ -35,7 +70,12 @@ public class movement {
         }
     }
 
-    // Inicia las animaciones
+    /**
+     * Start.
+     *
+     * @param dist the dist
+     */
+// Inicia las animaciones
     public void start(int dist){
         distance = dist;
         if(dist > distChange || subMovement == null) {
@@ -46,7 +86,10 @@ public class movement {
         }
     }
 
-    // Termina y reinicia las animaciones
+    /**
+     * Reset.
+     */
+// Termina y reinicia las animaciones
     public void reset(){
         anim.reset();
         if(subMovement != null) {
@@ -54,7 +97,12 @@ public class movement {
         }
     }
 
-    // Si ha terminado o no el movimiento
+    /**
+     * Ended boolean.
+     *
+     * @return the boolean
+     */
+// Si ha terminado o no el movimiento
     public boolean ended(){
         if(distance > distChange || subMovement == null) {
             return anim.getEnded();
@@ -64,7 +112,12 @@ public class movement {
         }
     }
 
-    // GETTERS y SETTERS, en caso de tener submovimiento se devuelve su get si corresponde
+    /**
+     * Gets anim.
+     *
+     * @return the anim
+     */
+// GETTERS y SETTERS, en caso de tener submovimiento se devuelve su get si corresponde
     public animation getAnim() {
         if(distance > distChange || subMovement == null) {
             return anim;
@@ -74,26 +127,62 @@ public class movement {
         }
     }
 
+    /**
+     * Gets type.
+     *
+     * @return the type
+     */
     public Movement getType() {
         return type;
     }
 
+    /**
+     * Sets type.
+     *
+     * @param type the type
+     */
     public void setType(Movement type) {
         this.type = type;
     }
 
+    /**
+     * Sets anim.
+     *
+     * @param anim the anim
+     */
     public void setAnim(animation anim) {
         this.anim = anim;
     }
 
+    /**
+     * Add frame.
+     *
+     * @param s  the s
+     * @param t  the t
+     * @param iX the x
+     * @param iY the y
+     */
     public void addFrame(screenObject s, Double t, int iX, int iY){
         anim.addFrame(s,t,iX,iY);
     }
 
+    /**
+     * Add throwable frame.
+     *
+     * @param s  the s
+     * @param t  the t
+     * @param iX the x
+     * @param iY the y
+     */
     public void addThrowableFrame(screenObject s, Double t, int iX, int iY){
         throwable.addFrame(s,t,iX,iY);
     }
 
+    /**
+     * Gets damage.
+     *
+     * @return the damage
+     */
     public int getDamage() {
         if(distance > distChange || subMovement == null) {
             return damage;
@@ -103,14 +192,32 @@ public class movement {
         }
     }
 
+    /**
+     * Sets damage.
+     *
+     * @param damage the damage
+     */
     public void setDamage(int damage) {
         this.damage = damage;
     }
 
+    /**
+     * Has end boolean.
+     *
+     * @return the boolean
+     */
     public boolean hasEnd(){
         return anim.getHasEnd();
     }
 
+    /**
+     * Gets frame.
+     *
+     * @param x           the x
+     * @param y           the y
+     * @param orientation the orientation
+     * @return the frame
+     */
     public screenObject getFrame(int x, int y, int orientation) {
         if(distance > distChange || subMovement == null) {
             return anim.getFrame(x,y, orientation);
@@ -120,6 +227,11 @@ public class movement {
         }
     }
 
+    /**
+     * Get hitbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getHitbox(){
         if(distance > distChange || subMovement == null) {
             return anim.getHitbox();
@@ -129,6 +241,11 @@ public class movement {
         }
     }
 
+    /**
+     * Get hurtbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getHurtbox(){
         if(distance > distChange || subMovement == null) {
             return anim.getHurtBox();
@@ -138,6 +255,11 @@ public class movement {
         }
     }
 
+    /**
+     * Get coverbox hit box.
+     *
+     * @return the hit box
+     */
     public hitBox getCoverbox(){
         if(distance > distChange || subMovement == null) {
             return anim.getCoverbox();
@@ -147,34 +269,74 @@ public class movement {
         }
     }
 
+    /**
+     * Gets throwable.
+     *
+     * @return the throwable
+     */
     public animation getThrowable() {
         return throwable;
     }
 
+    /**
+     * Sets throwable.
+     *
+     * @param throwable the throwable
+     */
     public void setThrowable(animation throwable) {
         this.throwable = throwable;
     }
 
+    /**
+     * Gets sub movement.
+     *
+     * @return the sub movement
+     */
     public movement getSubMovement() {
         return subMovement;
     }
 
+    /**
+     * Sets sub movement.
+     *
+     * @param subMovement the sub movement
+     */
     public void setSubMovement(movement subMovement) {
         this.subMovement = subMovement;
     }
 
+    /**
+     * Gets dist change.
+     *
+     * @return the dist change
+     */
     public int getDistChange() {
         return distChange;
     }
 
+    /**
+     * Sets dist change.
+     *
+     * @param distChange the dist change
+     */
     public void setDistChange(int distChange) {
         this.distChange = distChange;
     }
 
+    /**
+     * Gets distance.
+     *
+     * @return the distance
+     */
     public int getDistance() {
         return distance;
     }
 
+    /**
+     * Sets distance.
+     *
+     * @param distance the distance
+     */
     public void setDistance(int distance) {
         this.distance = distance;
     }

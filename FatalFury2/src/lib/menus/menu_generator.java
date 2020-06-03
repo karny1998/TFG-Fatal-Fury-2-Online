@@ -11,7 +11,15 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Menu generator.
+ */
 public class menu_generator {
+    /**
+     * Start menu.
+     *
+     * @return the menu
+     */
     private static menu start(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.START});
@@ -35,6 +43,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Principal menu.
+     *
+     * @return the menu
+     */
     private static menu principal(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.PRINCIPAL_GAME, Selectionable.PRINCIPAL_RANK, Selectionable.PRINCIPAL_OPTIONS, Selectionable.PRINCIPAL_EXIT});
@@ -95,6 +108,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Game menu.
+     *
+     * @return the menu
+     */
     private static menu game(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.GAME_HISTORY, Selectionable.GAME_MULTIPLAYER, Selectionable.GAME_IA, Selectionable.GAME_HOW});
@@ -153,6 +171,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate scape menu.
+     *
+     * @return the menu
+     */
     public static menu generate_scape(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.ESCAPE_RESUME, Selectionable.ESCAPE_BACK, Selectionable.ESCAPE_EXIT});
@@ -203,6 +226,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate sure menu.
+     *
+     * @return the menu
+     */
     public static menu generate_sure(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.YES, Selectionable.NO});
@@ -238,6 +266,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate story win menu.
+     *
+     * @return the menu
+     */
     public static menu generate_story_win(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.WIN_SAVE, Selectionable.WIN_CONTINUE});
@@ -273,6 +306,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate story lose menu.
+     *
+     * @return the menu
+     */
     public static menu generate_story_lose(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.LOSE_RETRY, Selectionable.LOSE_EXIT});
@@ -308,6 +346,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate story difficulty menu.
+     *
+     * @return the menu
+     */
     public static menu generate_story_difficulty(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.EASY, Selectionable.NORMAL, Selectionable.HARD, Selectionable.VERY_HARD});
@@ -367,6 +410,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate map selection menu.
+     *
+     * @return the menu
+     */
     public static menu generate_map_selection(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.MAP_USA, Selectionable.MAP_AUS, Selectionable.MAP_CHI});
@@ -413,6 +461,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Generate menu.
+     *
+     * @return the menu
+     */
     public static menu generate(){
         return start();
     }

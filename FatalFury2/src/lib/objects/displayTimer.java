@@ -7,15 +7,33 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Display timer.
+ */
 public class displayTimer {
-    // Path
+    /**
+     * The Path.
+     */
+// Path
     String path = "/assets/sprites/fight_interface/timer/";
-    // Imágenes necesarias
+    /**
+     * The Numbers.
+     */
+// Imágenes necesarias
     private List<Image> numbers = new ArrayList<>();
+    /**
+     * The Frame.
+     */
     private Image frame;
+    /**
+     * The Infinite.
+     */
     private Image infinite;
 
-    // Constructor por defecto
+    /**
+     * Instantiates a new Display timer.
+     */
+// Constructor por defecto
     public displayTimer() {
         for (int i = 0; i < 10; ++i) {
             numbers.add(new ImageIcon( this.getClass().getResource(path+i+".png")).getImage());
@@ -24,7 +42,13 @@ public class displayTimer {
         infinite = new ImageIcon( this.getClass().getResource(path+"infinite.png")).getImage();
     }
 
-    // Generar los screenObjects para un número del timer
+    /**
+     * Gets timer.
+     *
+     * @param number the number
+     * @return the timer
+     */
+// Generar los screenObjects para un número del timer
     public List<screenObject> getTimer(int number) {
         int firstDigit = number / 10;
         int secondDigit = number % 10;
@@ -35,7 +59,12 @@ public class displayTimer {
         return list;
     }
 
-    // Generar los screenObjects para un número del timer
+    /**
+     * Gets timer.
+     *
+     * @return the timer
+     */
+// Generar los screenObjects para un número del timer
     public List<screenObject> getTimer() {
         List <screenObject> list = new ArrayList<screenObject>();
         list.add(new screenObject(550+40,15+20,100,80,infinite, Item_Type.TIMER1));

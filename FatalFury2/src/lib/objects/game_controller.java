@@ -24,66 +24,171 @@ import static lib.Enums.Item_Type.*;
 import static lib.Enums.Item_Type.SCORE_FRAME;
 
 
+/**
+ * The type Game controller.
+ */
 // Clase que representa un controlador principal del juego que se encarga de gestionarlo
 public class game_controller {
+    /**
+     * The Ran.
+     */
     Random ran = new Random();
-    // Modo debug
+    /**
+     * The Debug.
+     */
+// Modo debug
     boolean debug = false;
+    /**
+     * The Stop music.
+     */
     boolean stopMusic = false;
-    // Controlador de una pelea
+    /**
+     * The Fight.
+     */
+// Controlador de una pelea
     private fight_controller fight;
-    // Escenario de una pelea
+    /**
+     * The Scene.
+     */
+// Escenario de una pelea
     private scenary scene;
-    // Menus
-    private menu principal, basicMenu, gameMenu;
-    // Menu de salir del juego
+    /**
+     * The Principal.
+     */
+// Menus
+    private menu principal, /**
+     * The Basic menu.
+     */
+    basicMenu, /**
+     * The Game menu.
+     */
+    gameMenu;
+    /**
+     * The Sure.
+     */
+// Menu de salir del juego
     private menu sure;
-    // Menu de selección de dificultad
+    /**
+     * The Difficulty.
+     */
+// Menu de selección de dificultad
     private menu difficulty;
-    // Menu actual
+    /**
+     * The Actual menu.
+     */
+// Menu actual
     private menu actualMenu;
-    // Menu al presionar escape en una pelea
+    /**
+     * The Escape menu.
+     */
+// Menu al presionar escape en una pelea
     private menu escapeMenu;
-    // Menu de selección de mapa
+    /**
+     * The Map selection.
+     */
+// Menu de selección de mapa
     private menu mapSelection;
-    // Menu de selección de personaje
+    /**
+     * The Char menu.
+     */
+// Menu de selección de personaje
     private character_menu charMenu;
-    // Menu de opciones del juego
+    /**
+     * The Options menu.
+     */
+// Menu de opciones del juego
     private options optionsMenu;
-    // Controladores de los dos personajes de la pelkea
+    /**
+     * The User.
+     */
+// Controladores de los dos personajes de la pelkea
     private character_controller user;
+    /**
+     * The Enemy.
+     */
     private character_controller enemy;
-    // Estado del juego, inicalmente en opening
+    /**
+     * The State.
+     */
+// Estado del juego, inicalmente en opening
     private GameState state = GameState.OPENING_1;
-    // Ranking
+    /**
+     * The Ranking.
+     */
+// Ranking
     private score ranking = new score(ia_loader.dif.EASY);
-    // Instancia de la clase que implementa el pedir el nombre
+    /**
+     * The Name.
+     */
+// Instancia de la clase que implementa el pedir el nombre
     private ask_for_name name = new ask_for_name();
-    // Si es modo 1P vs 2P
+    /**
+     * The Pvp.
+     */
+// Si es modo 1P vs 2P
     private boolean pvp = false;
-    // Limites del mapa
+    /**
+     * The Map limit.
+     */
+// Limites del mapa
     hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
-    // Modo historia
+    /**
+     * The Story.
+     */
+// Modo historia
     private story_mode story;
-    // Es modo historia
+    /**
+     * The Story on.
+     */
+// Es modo historia
     private boolean storyOn;
-    // Ruta sprites del principio del juego
+    /**
+     * The Openings.
+     */
+// Ruta sprites del principio del juego
     private String openings = "/assets/sprites/menu/opening/opening_";
-    // Marcas de tiempo
+    /**
+     * The Tiempo.
+     */
+// Marcas de tiempo
     private long tiempo = System.currentTimeMillis();
+    /**
+     * The Time reference.
+     */
     private long timeReference = System.currentTimeMillis();
-    // Está la demo mostrandose
+    /**
+     * The On demo.
+     */
+// Está la demo mostrandose
     private boolean onDemo = false;
-    // Se vuelve del menu escape
+    /**
+     * The From escape.
+     */
+// Se vuelve del menu escape
     private boolean fromEscape = false;
-    // Sprite press start de la pantalla principal
+    /**
+     * The Start.
+     */
+// Sprite press start de la pantalla principal
     private screenObject start = new screenObject(357, 482,  549, 35, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/press_start.png")).getImage(), Item_Type.MENU);;
-    // Cargador de la inteligencia artifical
+    /**
+     * The Lvl ia.
+     */
+// Cargador de la inteligencia artifical
     private ia_loader.dif lvlIa;
-    // Sprite de como jugar
+    /**
+     * The How.
+     */
+// Sprite de como jugar
     private screenObject how = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/how_to_play.png")).getImage(), Item_Type.MENU);;
-    // Fuente de menus
+    /**
+     * The Font stream.
+     */
+// Fuente de menus
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
+    /**
+     * The Font.
+     */
     private Font font;
     {
         try {
@@ -95,7 +200,10 @@ public class game_controller {
         }
     }
 
-    // Constructor del game controller por defecto, se inicializan variables
+    /**
+     * Instantiates a new Game controller.
+     */
+// Constructor del game controller por defecto, se inicializan variables
     public game_controller() {
         this.sure = menu_generator.generate_sure();
         this.principal = menu_generator.generate();
@@ -107,7 +215,12 @@ public class game_controller {
         this.mapSelection = menu_generator.generate_map_selection();
     }
 
-    // Constructor con menu principal
+    /**
+     * Instantiates a new Game controller.
+     *
+     * @param principal the principal
+     */
+// Constructor con menu principal
     public game_controller(menu principal) {
         this.sure = menu_generator.generate_sure();
         this.principal = principal;
@@ -116,7 +229,13 @@ public class game_controller {
         this.difficulty = menu_generator.generate_story_difficulty();
     }
 
-    // Constructor con controlador de pelea y menu principal
+    /**
+     * Instantiates a new Game controller.
+     *
+     * @param fight     the fight
+     * @param principal the principal
+     */
+// Constructor con controlador de pelea y menu principal
     public game_controller(fight_controller fight, menu principal) {
         this.fight = fight;
         this.principal = principal;
@@ -124,7 +243,12 @@ public class game_controller {
         this.escapeMenu = menu_generator.generate_scape();
     }
 
-    // Asigna a screenObjects las cosas a mostrar por pantalla
+    /**
+     * Get frame.
+     *
+     * @param screenObjects the screen objects
+     */
+// Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
         if(debug && state != GameState.OPTIONS) {
             optionsMenu = new options();
@@ -768,7 +892,12 @@ public class game_controller {
         }
     }
 
-    // Borrar todos los elementos de la pantalla que pertenecen a la interfaz de pelea
+    /**
+     * Clear interface.
+     *
+     * @param screenObjects the screen objects
+     */
+// Borrar todos los elementos de la pantalla que pertenecen a la interfaz de pelea
     private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
         screenObjects.remove(Item_Type.SHADOW_1);
         screenObjects.remove(Item_Type.SHADOW_2);
@@ -796,7 +925,13 @@ public class game_controller {
         }
     }
 
-    // Escribir directamente sobre el gráfico de la pantalla
+    /**
+     * Write direcly.
+     *
+     * @param g      the g
+     * @param offset the offset
+     */
+// Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
         if(state == GameState.RANKING){
             ranking.printRanking(g);
@@ -884,275 +1019,615 @@ public class game_controller {
         }
     }
 
-    // Getters y setters
+    /**
+     * Gets fight.
+     *
+     * @return the fight
+     */
+// Getters y setters
     public fight_controller getFight() {
         return fight;
     }
 
+    /**
+     * Sets fight.
+     *
+     * @param fight the fight
+     */
     public void setFight(fight_controller fight) {
         this.fight = fight;
     }
 
+    /**
+     * Gets principal.
+     *
+     * @return the principal
+     */
     public menu getPrincipal() {
         return principal;
     }
 
+    /**
+     * Sets principal.
+     *
+     * @param principal the principal
+     */
     public void setPrincipal(menu principal) {
         this.principal = principal;
     }
 
+    /**
+     * Gets actual menu.
+     *
+     * @return the actual menu
+     */
     public menu getActualMenu() {
         return actualMenu;
     }
 
+    /**
+     * Sets actual menu.
+     *
+     * @param actualMenu the actual menu
+     */
     public void setActualMenu(menu actualMenu) {
         this.actualMenu = actualMenu;
     }
 
+    /**
+     * Gets scene.
+     *
+     * @return the scene
+     */
     public scenary getScene() {
         return scene;
     }
 
+    /**
+     * Sets scene.
+     *
+     * @param scene the scene
+     */
     public void setScene(scenary scene) {
         this.scene = scene;
     }
 
+    /**
+     * Gets escape menu.
+     *
+     * @return the escape menu
+     */
     public menu getEscapeMenu() {
         return escapeMenu;
     }
 
+    /**
+     * Sets escape menu.
+     *
+     * @param escapeMenu the escape menu
+     */
     public void setEscapeMenu(menu escapeMenu) {
         this.escapeMenu = escapeMenu;
     }
 
+    /**
+     * Gets state.
+     *
+     * @return the state
+     */
     public GameState getState() {
         return state;
     }
 
+    /**
+     * Sets state.
+     *
+     * @param state the state
+     */
     public void setState(GameState state) {
         this.state = state;
     }
 
+    /**
+     * Gets ran.
+     *
+     * @return the ran
+     */
     public Random getRan() {
         return ran;
     }
 
+    /**
+     * Sets ran.
+     *
+     * @param ran the ran
+     */
     public void setRan(Random ran) {
         this.ran = ran;
     }
 
+    /**
+     * Is debug boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDebug() {
         return debug;
     }
 
+    /**
+     * Sets debug.
+     *
+     * @param debug the debug
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
+    /**
+     * Is stop music boolean.
+     *
+     * @return the boolean
+     */
     public boolean isStopMusic() {
         return stopMusic;
     }
 
+    /**
+     * Sets stop music.
+     *
+     * @param stopMusic the stop music
+     */
     public void setStopMusic(boolean stopMusic) {
         this.stopMusic = stopMusic;
     }
 
+    /**
+     * Gets basic menu.
+     *
+     * @return the basic menu
+     */
     public menu getBasicMenu() {
         return basicMenu;
     }
 
+    /**
+     * Sets basic menu.
+     *
+     * @param basicMenu the basic menu
+     */
     public void setBasicMenu(menu basicMenu) {
         this.basicMenu = basicMenu;
     }
 
+    /**
+     * Gets game menu.
+     *
+     * @return the game menu
+     */
     public menu getGameMenu() {
         return gameMenu;
     }
 
+    /**
+     * Sets game menu.
+     *
+     * @param gameMenu the game menu
+     */
     public void setGameMenu(menu gameMenu) {
         this.gameMenu = gameMenu;
     }
 
+    /**
+     * Gets sure.
+     *
+     * @return the sure
+     */
     public menu getSure() {
         return sure;
     }
 
+    /**
+     * Sets sure.
+     *
+     * @param sure the sure
+     */
     public void setSure(menu sure) {
         this.sure = sure;
     }
 
+    /**
+     * Gets difficulty.
+     *
+     * @return the difficulty
+     */
     public menu getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * Sets difficulty.
+     *
+     * @param difficulty the difficulty
+     */
     public void setDifficulty(menu difficulty) {
         this.difficulty = difficulty;
     }
 
+    /**
+     * Gets map selection.
+     *
+     * @return the map selection
+     */
     public menu getMapSelection() {
         return mapSelection;
     }
 
+    /**
+     * Sets map selection.
+     *
+     * @param mapSelection the map selection
+     */
     public void setMapSelection(menu mapSelection) {
         this.mapSelection = mapSelection;
     }
 
+    /**
+     * Gets char menu.
+     *
+     * @return the char menu
+     */
     public character_menu getCharMenu() {
         return charMenu;
     }
 
+    /**
+     * Sets char menu.
+     *
+     * @param charMenu the char menu
+     */
     public void setCharMenu(character_menu charMenu) {
         this.charMenu = charMenu;
     }
 
+    /**
+     * Gets options menu.
+     *
+     * @return the options menu
+     */
     public options getOptionsMenu() {
         return optionsMenu;
     }
 
+    /**
+     * Sets options menu.
+     *
+     * @param optionsMenu the options menu
+     */
     public void setOptionsMenu(options optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
     public character_controller getUser() {
         return user;
     }
 
+    /**
+     * Sets user.
+     *
+     * @param user the user
+     */
     public void setUser(character_controller user) {
         this.user = user;
     }
 
+    /**
+     * Gets enemy.
+     *
+     * @return the enemy
+     */
     public character_controller getEnemy() {
         return enemy;
     }
 
+    /**
+     * Sets enemy.
+     *
+     * @param enemy the enemy
+     */
     public void setEnemy(character_controller enemy) {
         this.enemy = enemy;
     }
 
+    /**
+     * Gets ranking.
+     *
+     * @return the ranking
+     */
     public score getRanking() {
         return ranking;
     }
 
+    /**
+     * Sets ranking.
+     *
+     * @param ranking the ranking
+     */
     public void setRanking(score ranking) {
         this.ranking = ranking;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public ask_for_name getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(ask_for_name name) {
         this.name = name;
     }
 
+    /**
+     * Is pvp boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPvp() {
         return pvp;
     }
 
+    /**
+     * Sets pvp.
+     *
+     * @param pvp the pvp
+     */
     public void setPvp(boolean pvp) {
         this.pvp = pvp;
     }
 
+    /**
+     * Gets map limit.
+     *
+     * @return the map limit
+     */
     public hitBox getMapLimit() {
         return mapLimit;
     }
 
+    /**
+     * Sets map limit.
+     *
+     * @param mapLimit the map limit
+     */
     public void setMapLimit(hitBox mapLimit) {
         this.mapLimit = mapLimit;
     }
 
+    /**
+     * Gets story.
+     *
+     * @return the story
+     */
     public story_mode getStory() {
         return story;
     }
 
+    /**
+     * Sets story.
+     *
+     * @param story the story
+     */
     public void setStory(story_mode story) {
         this.story = story;
     }
 
+    /**
+     * Is story on boolean.
+     *
+     * @return the boolean
+     */
     public boolean isStoryOn() {
         return storyOn;
     }
 
+    /**
+     * Sets story on.
+     *
+     * @param storyOn the story on
+     */
     public void setStoryOn(boolean storyOn) {
         this.storyOn = storyOn;
     }
 
+    /**
+     * Gets openings.
+     *
+     * @return the openings
+     */
     public String getOpenings() {
         return openings;
     }
 
+    /**
+     * Sets openings.
+     *
+     * @param openings the openings
+     */
     public void setOpenings(String openings) {
         this.openings = openings;
     }
 
+    /**
+     * Gets tiempo.
+     *
+     * @return the tiempo
+     */
     public long getTiempo() {
         return tiempo;
     }
 
+    /**
+     * Sets tiempo.
+     *
+     * @param tiempo the tiempo
+     */
     public void setTiempo(long tiempo) {
         this.tiempo = tiempo;
     }
 
+    /**
+     * Gets time reference.
+     *
+     * @return the time reference
+     */
     public long getTimeReference() {
         return timeReference;
     }
 
+    /**
+     * Sets time reference.
+     *
+     * @param timeReference the time reference
+     */
     public void setTimeReference(long timeReference) {
         this.timeReference = timeReference;
     }
 
+    /**
+     * Is on demo boolean.
+     *
+     * @return the boolean
+     */
     public boolean isOnDemo() {
         return onDemo;
     }
 
+    /**
+     * Sets on demo.
+     *
+     * @param onDemo the on demo
+     */
     public void setOnDemo(boolean onDemo) {
         this.onDemo = onDemo;
     }
 
+    /**
+     * Is from escape boolean.
+     *
+     * @return the boolean
+     */
     public boolean isFromEscape() {
         return fromEscape;
     }
 
+    /**
+     * Sets from escape.
+     *
+     * @param fromEscape the from escape
+     */
     public void setFromEscape(boolean fromEscape) {
         this.fromEscape = fromEscape;
     }
 
+    /**
+     * Gets start.
+     *
+     * @return the start
+     */
     public screenObject getStart() {
         return start;
     }
 
+    /**
+     * Sets start.
+     *
+     * @param start the start
+     */
     public void setStart(screenObject start) {
         this.start = start;
     }
 
+    /**
+     * Gets lvl ia.
+     *
+     * @return the lvl ia
+     */
     public ia_loader.dif getLvlIa() {
         return lvlIa;
     }
 
+    /**
+     * Sets lvl ia.
+     *
+     * @param lvlIa the lvl ia
+     */
     public void setLvlIa(ia_loader.dif lvlIa) {
         this.lvlIa = lvlIa;
     }
 
+    /**
+     * Gets how.
+     *
+     * @return the how
+     */
     public screenObject getHow() {
         return how;
     }
 
+    /**
+     * Sets how.
+     *
+     * @param how the how
+     */
     public void setHow(screenObject how) {
         this.how = how;
     }
 
+    /**
+     * Gets font stream.
+     *
+     * @return the font stream
+     */
     public InputStream getFontStream() {
         return fontStream;
     }
 
+    /**
+     * Sets font stream.
+     *
+     * @param fontStream the font stream
+     */
     public void setFontStream(InputStream fontStream) {
         this.fontStream = fontStream;
     }
 
+    /**
+     * Gets font.
+     *
+     * @return the font
+     */
     public Font getFont() {
         return font;
     }
 
+    /**
+     * Sets font.
+     *
+     * @param font the font
+     */
     public void setFont(Font font) {
         this.font = font;
     }

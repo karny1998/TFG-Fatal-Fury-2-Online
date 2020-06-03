@@ -12,8 +12,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The type Xml reader.
+ */
 public class xmlReader {
-    //Método encargado de abrir un InputStream de un xml y devolverlo como documento
+    /**
+     * Open document.
+     *
+     * @param is the is
+     * @return the document
+     * @throws SAXException                 the sax exception
+     * @throws IOException                  the io exception
+     * @throws ParserConfigurationException the parser configuration exception
+     */
+//Método encargado de abrir un InputStream de un xml y devolverlo como documento
     public static Document open(InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -33,9 +45,18 @@ public class xmlReader {
 
         return db.parse(is);
     }
+
+    /**
+     * The constant optionsFilePath.
+     */
     private static String optionsFilePath = System.getProperty("user.dir") + "/.files/options.xml";
 
-    // Método encargado de leer el fichero de opciones para detectar si el juego debe ejecutarse
+    /**
+     * Is fullscren boolean.
+     *
+     * @return the boolean
+     */
+// Método encargado de leer el fichero de opciones para detectar si el juego debe ejecutarse
     // en pantalla completa o en ventana.
     public static boolean IsFullscren(){
         try {

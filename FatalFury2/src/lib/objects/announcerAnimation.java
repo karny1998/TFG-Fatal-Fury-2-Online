@@ -6,20 +6,49 @@ import lib.sound.fight_audio;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The type Announcer animation.
+ */
 public class announcerAnimation {
+    /**
+     * The Path.
+     */
     String path = "/assets/sprites/fight_interface/announcer/";
+    /**
+     * The Fightanimation.
+     */
     private animation fightanimation;
+    /**
+     * The Fight image.
+     */
     Image fight_image;
-    // Listas de coordenadas
+    /**
+     * The Index.
+     */
+// Listas de coordenadas
     int index;
-    // Dimensiones originales de las imagenes
-    int w = 540, h = 148;
+    /**
+     * The W.
+     */
+// Dimensiones originales de las imagenes
+    int w = 540, /**
+     * The H.
+     */
+    h = 148;
 
+    /**
+     * Instantiates a new Announcer animation.
+     */
     public announcerAnimation() {
         fight_image = new ImageIcon(this.getClass().getResource(path+"fight.png")).getImage();
         fightanimation = generateAnimation();
     }
 
+    /**
+     * Generate animation animation.
+     *
+     * @return the animation
+     */
     public animation generateAnimation() {
         animation anim = new animation();
         int newW, newH, x, y;
@@ -37,10 +66,18 @@ public class announcerAnimation {
         return anim;
     }
 
+    /**
+     * Gets frame.
+     *
+     * @return the frame
+     */
     public screenObject getFrame() {
         return fightanimation.getFrame();
     }
 
+    /**
+     * Start.
+     */
     public void start() {
         fightanimation.start();
     }

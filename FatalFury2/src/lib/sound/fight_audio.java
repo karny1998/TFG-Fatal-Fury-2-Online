@@ -6,74 +6,225 @@ import lib.Enums.Scenario_type;
 import javax.sound.sampled.*;
 import java.io.IOException;
 
+/**
+ * The type Fight audio.
+ */
 // Clase encargada de cargar los audios que seran usados en la pelea
 public class fight_audio {
 
+    /**
+     * The P 1 voices.
+     */
     Clip p1_voices[];
+    /**
+     * The P 2 voices.
+     */
     Clip p2_voices[];
+    /**
+     * The Sfx.
+     */
     Clip sfx[];
+    /**
+     * The Music.
+     */
     Clip music[];
+    /**
+     * The Announcer.
+     */
     Clip announcer[];
+    /**
+     * The Crowd.
+     */
     Clip crowd[];
 
-    // DONE
+    /**
+     * The enum Voice indexes.
+     */
+// DONE
     public enum voice_indexes {
+        /**
+         * Hit 1 voice indexes.
+         */
         Hit_1,
+        /**
+         * Hit 2 voice indexes.
+         */
         Hit_2,
+        /**
+         * Hit 3 voice indexes.
+         */
         Hit_3,
+        /**
+         * Hurt 1 voice indexes.
+         */
         Hurt_1,
+        /**
+         * Hurt 2 voice indexes.
+         */
         Hurt_2,
+        /**
+         * Hurt 3 voice indexes.
+         */
         Hurt_3,
+        /**
+         * Special 1 voice indexes.
+         */
         Special_1,
+        /**
+         * Special 2 voice indexes.
+         */
         Special_2,
+        /**
+         * Special 3 voice indexes.
+         */
         Special_3,
-        //Special_4,
+        /**
+         * Win voice indexes.
+         */
+//Special_4,
         //Desperation_Move,
         Win,
+        /**
+         * Defeat voice indexes.
+         */
         Defeat,
-        //Taunt,
+        /**
+         * Throw voice indexes.
+         */
+//Taunt,
         Throw
     }
 
-    // DONE
+    /**
+     * The enum Sfx indexes.
+     */
+// DONE
     public enum sfx_indexes{
+        /**
+         * Pause sfx indexes.
+         */
         Pause,
+        /**
+         * Hit 1 sfx indexes.
+         */
         Hit_1,
+        /**
+         * Hit 2 sfx indexes.
+         */
         Hit_2,
+        /**
+         * Final hit 1 sfx indexes.
+         */
         Final_hit_1,
+        /**
+         * Final hit 2 sfx indexes.
+         */
         Final_hit_2,
+        /**
+         * Final hit 3 sfx indexes.
+         */
         Final_hit_3,
+        /**
+         * Move cursor sfx indexes.
+         */
         Move_cursor,
+        /**
+         * Option selected sfx indexes.
+         */
         Option_selected
     }
 
-    // Done
+    /**
+     * The enum Music indexes.
+     */
+// Done
     public enum music_indexes {
+        /**
+         * Map theme music indexes.
+         */
         map_theme,
+        /**
+         * Win theme music indexes.
+         */
         win_theme,
+        /**
+         * Lose theme music indexes.
+         */
         lose_theme
     }
 
-    // Done
+    /**
+     * The enum Announcer indexes.
+     */
+// Done
     public enum announcer_indexes{
+        /**
+         * Fight announcer indexes.
+         */
         Fight,
+        /**
+         * Round one announcer indexes.
+         */
         Round_One,
+        /**
+         * Round two announcer indexes.
+         */
         Round_Two,
+        /**
+         * Round three announcer indexes.
+         */
         Round_Three,
+        /**
+         * Final round announcer indexes.
+         */
         Final_Round,
+        /**
+         * Bonus game announcer indexes.
+         */
         Bonus_Game,
+        /**
+         * Double ko announcer indexes.
+         */
         Double_KO,
+        /**
+         * Draw game announcer indexes.
+         */
         Draw_Game,
+        /**
+         * Perfect announcer indexes.
+         */
         Perfect,
+        /**
+         * Ready announcer indexes.
+         */
         Ready,
+        /**
+         * Time up announcer indexes.
+         */
         Time_Up,
     }
 
 
-    private Playable_Character p1, p2;
+    /**
+     * The P 1.
+     */
+    private Playable_Character p1, /**
+     * The P 2.
+     */
+    p2;
+    /**
+     * The Map.
+     */
     private Scenario_type map;
 
-    // Inicializa todos los audios
+    /**
+     * Instantiates a new Fight audio.
+     *
+     * @param p1_  the p 1
+     * @param p2_  the p 2
+     * @param map_ the map
+     */
+// Inicializa todos los audios
     public fight_audio(Playable_Character p1_, Playable_Character p2_, Scenario_type map_){
         p1 = p1_;
         p2 = p2_;
@@ -90,6 +241,13 @@ public class fight_audio {
     }
 
 
+    /**
+     * Load.
+     *
+     * @throws LineUnavailableException      the line unavailable exception
+     * @throws IOException                   the io exception
+     * @throws UnsupportedAudioFileException the unsupported audio file exception
+     */
     private void load() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
 
         String ruta_p1 = "";
@@ -193,7 +351,13 @@ public class fight_audio {
 
     }
 
-    // Reproduce un audio del tipo voice
+    /**
+     * Play voice.
+     *
+     * @param isP1 the is p 1
+     * @param i    the
+     */
+// Reproduce un audio del tipo voice
     public void playVoice(boolean isP1, voice_indexes i){
         if(isP1){
             try {
@@ -213,7 +377,12 @@ public class fight_audio {
     }
 
 
-    // Reproduce un audio del tipo announcer
+    /**
+     * Play announcer.
+     *
+     * @param i the
+     */
+// Reproduce un audio del tipo announcer
     public void playAnnouncer(announcer_indexes i){
         try {
             announcer[i.ordinal()].setFramePosition(0);
@@ -223,7 +392,12 @@ public class fight_audio {
         }
     }
 
-    // Reproduce un audio del tipo sfx
+    /**
+     * Play sfx.
+     *
+     * @param i the
+     */
+// Reproduce un audio del tipo sfx
     public void playSfx(sfx_indexes i){
         try {
             sfx[i.ordinal()].setFramePosition(0);
@@ -233,7 +407,12 @@ public class fight_audio {
         }
     }
 
-    // Reproduce un audio del tipo music en bucle
+    /**
+     * Loop music.
+     *
+     * @param i the
+     */
+// Reproduce un audio del tipo music en bucle
     public void loopMusic(music_indexes i){
         try {
             music[i.ordinal()].setFramePosition(0);
@@ -243,25 +422,47 @@ public class fight_audio {
         }
     }
 
+    /**
+     * Stop music.
+     *
+     * @param i the
+     */
     public void stopMusic(music_indexes i){
         if(music[i.ordinal()].isRunning()){
             music[i.ordinal()].stop();
         }
     }
 
+    /**
+     * Resume music.
+     *
+     * @param i the
+     */
     public void resumeMusic(music_indexes i){
         if(!music[i.ordinal()].isRunning() && music[i.ordinal()].getFramePosition() != 0){
             music[i.ordinal()].start();
         }
     }
 
+    /**
+     * Update.
+     *
+     * @param mus    the mus
+     * @param sfx    the sfx
+     * @param voices the voices
+     */
     public void update(double mus, double sfx, double voices){
         updateMusic(mus);
         updateSfx(sfx);
         updateVoices(voices);
     }
 
-    // Actualiza el volumen de la musica
+    /**
+     * Update music.
+     *
+     * @param mus the mus
+     */
+// Actualiza el volumen de la musica
     private void updateMusic(double mus){
 
         FloatControl gainControl = (FloatControl) music[music_indexes.map_theme.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
@@ -275,7 +476,12 @@ public class fight_audio {
 
     }
 
-    // Actualiza el volumen de los efectos especiales
+    /**
+     * Update sfx.
+     *
+     * @param sfx_ the sfx
+     */
+// Actualiza el volumen de los efectos especiales
     private void updateSfx(double sfx_){
         for(int i = 0; i < sfx_indexes.values().length; i++){
             FloatControl gainControl = (FloatControl) sfx[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -283,7 +489,12 @@ public class fight_audio {
         }
     }
 
-    // Actualiza el volumen de las voces
+    /**
+     * Update voices.
+     *
+     * @param voices the voices
+     */
+// Actualiza el volumen de las voces
     private void updateVoices(double voices){
 
         for(int i = 0; i < announcer_indexes.values().length; i++){
@@ -308,7 +519,10 @@ public class fight_audio {
         }
     }
 
-    // Cierra todos los clips de audio abiertos
+    /**
+     * Close.
+     */
+// Cierra todos los clips de audio abiertos
     public void close(){
         for(int i = 0; i < music_indexes.values().length; i++){
             music[i].close();

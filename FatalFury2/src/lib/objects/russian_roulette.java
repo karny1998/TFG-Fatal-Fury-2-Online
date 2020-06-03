@@ -6,31 +6,68 @@ import lib.utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Russian roulette.
+ */
 public class russian_roulette {
-    // Si es una ruleta simple o no, siendo compleja cuando está compuesta por otras ruletas rusas
+    /**
+     * The Basic.
+     */
+// Si es una ruleta simple o no, siendo compleja cuando está compuesta por otras ruletas rusas
     private boolean basic = true;
-    // Selecciones simples
+    /**
+     * The Basic selections.
+     */
+// Selecciones simples
     private List<Pair<Double, Movement>> basicSelections = new ArrayList<>();
-    // Selecciones complejas (otras ruletas)
+    /**
+     * The Complex selection.
+     */
+// Selecciones complejas (otras ruletas)
     private List<Pair<Double, russian_roulette>> complexSelection = new ArrayList<>();
-    // Selecciones simples originales
+    /**
+     * The Basic selections original.
+     */
+// Selecciones simples originales
     private List<Pair<Double, Movement>> basicSelectionsOriginal = new ArrayList<>();
-    // Selecciones complejas (otras ruletas) originales
+    /**
+     * The Complex selection original.
+     */
+// Selecciones complejas (otras ruletas) originales
     private List<Pair<Double, russian_roulette>> complexSelectionOriginal = new ArrayList<>();
-    // Total de probabilidad en base al que normalizar
+    /**
+     * The Total.
+     */
+// Total de probabilidad en base al que normalizar
     private double total = 0.0;
-    // Categoría de la ruleta, siendo global, una ruleta normal que agrupa todo tipo de movimientos
+    /**
+     * The Category.
+     */
+// Categoría de la ruleta, siendo global, una ruleta normal que agrupa todo tipo de movimientos
     private Movement category = Movement.GLOBAL;
 
-    // Contructor por defecto
+    /**
+     * Instantiates a new Russian roulette.
+     */
+// Contructor por defecto
     public russian_roulette(){}
 
-    // Contructor que se le indica si es compleja o no
+    /**
+     * Instantiates a new Russian roulette.
+     *
+     * @param b the b
+     */
+// Contructor que se le indica si es compleja o no
     public russian_roulette(boolean b){
         basic = b;
     }
 
-    // Devuelve un movimiento resultado de "girar" la ruleta
+    /**
+     * Spin roulette movement.
+     *
+     * @return the movement
+     */
+// Devuelve un movimiento resultado de "girar" la ruleta
     public Movement spinRoulette(){
         double r = Math.random();
         double base = 0.0;
@@ -67,7 +104,13 @@ public class russian_roulette {
         return Movement.STANDING;
     }
 
-    // Se añade una componente a la ruleta básica
+    /**
+     * Add component.
+     *
+     * @param p the p
+     * @param m the m
+     */
+// Se añade una componente a la ruleta básica
     public void addComponent(double p, Movement m){
         if(basic) {
             basicSelectionsOriginal.add(new Pair<>(p, m));
@@ -76,7 +119,13 @@ public class russian_roulette {
         }
     }
 
-    // Se añade una componente a la ruleta compleja
+    /**
+     * Add component.
+     *
+     * @param p the p
+     * @param r the r
+     */
+// Se añade una componente a la ruleta compleja
     public void addComponent(double p, russian_roulette r){
         if(!basic){
             complexSelectionOriginal.add(new Pair<>(p, r));
@@ -85,7 +134,10 @@ public class russian_roulette {
         }
     }
 
-    // Normaliza las probabilidades
+    /**
+     * Fill roulette.
+     */
+// Normaliza las probabilidades
     public void fillRoulette(){
         updateTotal();
         if(basic){
@@ -104,7 +156,12 @@ public class russian_roulette {
         }
     }
 
-    // Devuelve una ruleta rusa idéntica a sí misma
+    /**
+     * Clone russian roulette.
+     *
+     * @return the russian roulette
+     */
+// Devuelve una ruleta rusa idéntica a sí misma
     public  russian_roulette clone(){
         russian_roulette r = new russian_roulette();
         if(basic) {
@@ -121,39 +178,82 @@ public class russian_roulette {
         return r;
     }
 
-    // Getters y setters
+    /**
+     * Is basic boolean.
+     *
+     * @return the boolean
+     */
+// Getters y setters
     public boolean isBasic() {
         return basic;
     }
 
+    /**
+     * Sets basic.
+     *
+     * @param basic the basic
+     */
     public void setBasic(boolean basic) {
         this.basic = basic;
     }
 
+    /**
+     * Gets basic selections.
+     *
+     * @return the basic selections
+     */
     public List<Pair<Double, Movement>> getBasicSelections() {
         return basicSelections;
     }
 
+    /**
+     * Sets basic selections.
+     *
+     * @param basicSelections the basic selections
+     */
     public void setBasicSelections(List<Pair<Double, Movement>> basicSelections) {
         this.basicSelections = basicSelections;
     }
 
+    /**
+     * Gets complex selection.
+     *
+     * @return the complex selection
+     */
     public List<Pair<Double, russian_roulette>> getComplexSelection() {
         return complexSelection;
     }
 
+    /**
+     * Sets complex selection.
+     *
+     * @param complexSelection the complex selection
+     */
     public void setComplexSelection(List<Pair<Double, russian_roulette>> complexSelection) {
         this.complexSelection = complexSelection;
     }
 
+    /**
+     * Gets total.
+     *
+     * @return the total
+     */
     public double getTotal() {
         return total;
     }
 
+    /**
+     * Sets total.
+     *
+     * @param total the total
+     */
     public void setTotal(double total) {
         this.total = total;
     }
 
+    /**
+     * Update total.
+     */
     public void updateTotal(){
         total = 0.0;
         if(basic){
@@ -169,26 +269,56 @@ public class russian_roulette {
         }
     }
 
+    /**
+     * Gets basic selections original.
+     *
+     * @return the basic selections original
+     */
     public List<Pair<Double, Movement>> getBasicSelectionsOriginal() {
         return basicSelectionsOriginal;
     }
 
+    /**
+     * Sets basic selections original.
+     *
+     * @param basicSelectionsOriginal the basic selections original
+     */
     public void setBasicSelectionsOriginal(List<Pair<Double, Movement>> basicSelectionsOriginal) {
         this.basicSelectionsOriginal = basicSelectionsOriginal;
     }
 
+    /**
+     * Gets complex selection original.
+     *
+     * @return the complex selection original
+     */
     public List<Pair<Double, russian_roulette>> getComplexSelectionOriginal() {
         return complexSelectionOriginal;
     }
 
+    /**
+     * Sets complex selection original.
+     *
+     * @param complexSelectionOriginal the complex selection original
+     */
     public void setComplexSelectionOriginal(List<Pair<Double, russian_roulette>> complexSelectionOriginal) {
         this.complexSelectionOriginal = complexSelectionOriginal;
     }
 
+    /**
+     * Gets category.
+     *
+     * @return the category
+     */
     public Movement getCategory() {
         return category;
     }
 
+    /**
+     * Sets category.
+     *
+     * @param category the category
+     */
     public void setCategory(Movement category) {
         this.category = category;
     }

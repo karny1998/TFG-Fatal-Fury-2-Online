@@ -17,30 +17,68 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The type Score.
+ */
 // Clase que gestiona todo lo relacionado con los scores durante las peleas vs IA
 // y el ranking
 public class score {
-    // Puntos del jugador
+    /**
+     * The Points.
+     */
+// Puntos del jugador
     private int points = 0;
-    // Puntero en el ranking
+    /**
+     * The Pointer.
+     */
+// Puntero en el ranking
     private int pointer = 0;
-    // Ruta del fichero del rank
+    /**
+     * The Path.
+     */
+// Ruta del fichero del rank
     private String path = System.getProperty("user.dir") + "/.files/rank_scores.txt";
-    // Si se ha cargado la animación del ranking
+    /**
+     * The Anim loaded.
+     */
+// Si se ha cargado la animación del ranking
     private boolean animLoaded = false;
-    // Animaciones del ranking
+    /**
+     * The Anim.
+     */
+// Animaciones del ranking
     private animation anim[] = {null, null, null};
-    // La fuente
+    /**
+     * The F.
+     */
+// La fuente
     private Font f = null;
-    // Lista de scores y nombres
+    /**
+     * The Rank.
+     */
+// Lista de scores y nombres
     private List<Pair<String, Integer>> rank;
-    // Tiempo de referencia
+    /**
+     * The Time reference.
+     */
+// Tiempo de referencia
     private long timeReference = 0;
-    // Cargamos el fichero de la fuente
+    /**
+     * The Font stream.
+     */
+// Cargamos el fichero de la fuente
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
-    // Multiplicador de los puntos en base a la dificultad
+    /**
+     * The Multiplier.
+     */
+// Multiplicador de los puntos en base a la dificultad
     private double multiplier = 1.0;
 
+    /**
+     * Instantiates a new Score.
+     *
+     * @param d the d
+     */
     public score(ia_loader.dif d){{
         // Ajusta el multiplicador en base al nivel de la IA
         switch (d){
@@ -59,17 +97,33 @@ public class score {
         }
     }}
 
-    // Suma score en base al daño hecho
+    /**
+     * Add hit.
+     *
+     * @param p the p
+     */
+// Suma score en base al daño hecho
     public void addHit(int p){
         points += (p*multiplier);
     }
 
-    // Aplica bonus de puntos en base a la vida y tiempo restantes
+    /**
+     * Apply bonus.
+     *
+     * @param lf   the lf
+     * @param secs the secs
+     */
+// Aplica bonus de puntos en base a la vida y tiempo restantes
     public void applyBonus(int lf, int secs){
         points += (((lf + secs) * 100)*multiplier);
     }
 
-    // Devuelve el score capado a 99999 (no se deberia poder alcanzar)
+    /**
+     * Get score int.
+     *
+     * @return the int
+     */
+// Devuelve el score capado a 99999 (no se deberia poder alcanzar)
     public int getScore(){
         if(this.points >= 99999){
             return 99999;
@@ -77,7 +131,12 @@ public class score {
         return this.points;
     }
 
-    // Guarda el nombre como el último introducido, para precargarlo la siguiente vez
+    /**
+     * Save last name.
+     *
+     * @param name the name
+     */
+// Guarda el nombre como el último introducido, para precargarlo la siguiente vez
     public void saveLastName(String name){
         String path = System.getProperty("user.dir") + "/.files/last_name.txt";
         File f= new File(path);
@@ -94,7 +153,12 @@ public class score {
         }
     }
 
-    // Añade al ranking el score actual con el nombre name
+    /**
+     * Write rank score.
+     *
+     * @param name the name
+     */
+// Añade al ranking el score actual con el nombre name
     public void writeRankScore(String name){
         // Guarda el nombre
         saveLastName(name);
@@ -139,7 +203,13 @@ public class score {
         catch (Exception e){}
     }
 
-    // Lee el fichero del ranking y lo ordena o no
+    /**
+     * Read rank scores list.
+     *
+     * @param ordered the ordered
+     * @return the list
+     */
+// Lee el fichero del ranking y lo ordena o no
     public List<Pair<String, Integer>> readRankScores(Boolean ordered){
         List<Pair<String, Integer>> list = new ArrayList<Pair<String, Integer>>();
         try {
@@ -163,7 +233,12 @@ public class score {
         return list;
     }
 
-    // Muestra por pantalla el ranking
+    /**
+     * Print ranking.
+     *
+     * @param g the g
+     */
+// Muestra por pantalla el ranking
     public void printRanking(Graphics2D g){
         // Si no se habían cargado las animaciones, se cargan
         if(!animLoaded){
@@ -216,13 +291,19 @@ public class score {
         }
     }
 
-    // Recarga el ranking
+    /**
+     * Reload ranking.
+     */
+// Recarga el ranking
     public void reloadRanking(){
         timeReference = System.currentTimeMillis();
         rank = readRankScores(true);
     }
 
-    // Carga las animaciones del ranking
+    /**
+     * Load anim.
+     */
+// Carga las animaciones del ranking
     public void loadAnim(){
         anim[0] = new animation();
         anim[0].setHasEnd(false);
@@ -257,8 +338,18 @@ public class score {
         anim[2].addFrame(s,250.0,0,0);
     }
 
-    // Comparador de scores para ordenar la lista
+    /**
+     * The type Score comparator.
+     */
+// Comparador de scores para ordenar la lista
     class scoreComparator implements Comparator {
+        /**
+         * Compare int.
+         *
+         * @param o1 the o 1
+         * @param o2 the o 2
+         * @return the int
+         */
         public int compare(Object o1,Object o2){
             Pair<String, Integer> s1=(Pair<String, Integer>)o1;
             Pair<String, Integer> s2=(Pair<String, Integer>)o2;

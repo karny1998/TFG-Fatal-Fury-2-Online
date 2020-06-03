@@ -13,8 +13,14 @@ import java.io.File;
 import java.io.IOException;
 
 
+/**
+ * The type Principal.
+ */
 public class Principal extends JFrame {
 
+    /**
+     * Instantiates a new Principal.
+     */
     public Principal() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage("/assets/sprites/menu/story/are_you_sure1.png"));
         // TODO -> MOSTRAR OPENING
@@ -113,6 +119,9 @@ public class Principal extends JFrame {
         initUI();
     }
 
+    /**
+     * Init ui.
+     */
     private void initUI() {
         add(new Screen());
         pack();
@@ -123,6 +132,11 @@ public class Principal extends JFrame {
 
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override

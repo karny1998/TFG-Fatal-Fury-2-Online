@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<history>
+	<fights>
+		<fight>
+			<id>1</id>
+			<rounds>
+				<round>
+					<received_hits>5</received_hits>
+					<blocked_hits>8</successful_hits>
+					<realized_hits>10</realized_hits>
+					<successful_hits>8</successful_hits>
+					<player_remaining_life>0</player_remaining_life>
+					<remaining_life>70</remaining_life>
+					<remaining_time>80</remaining_time>
+					<result>0</result>
+				</round>
+			</rounds>
+		</fight>
+	</fights>
+</history>

@@ -16,7 +16,13 @@ import java.net.URL;
 import java.util.Map;
 
 
+/**
+ * The type Ask for name.
+ */
 public class ask_for_name {
+    /**
+     * The F.
+     */
     private Font f;
 
     {
@@ -28,29 +34,75 @@ public class ask_for_name {
             e.printStackTrace();
         }
     }
+
+    /**
+     * The Img path 1.
+     */
     private URL imgPath_1 = this.getClass().getResource("/assets/sprites/menu/rank_register/base.png");
+    /**
+     * The Img path 2.
+     */
     private URL imgPath_2 = this.getClass().getResource("/assets/sprites/menu/rank_register/ar.png");
+    /**
+     * The Img path 3.
+     */
     private URL imgPath_3 = this.getClass().getResource("/assets/sprites/menu/rank_register/ab.png");
+    /**
+     * The Fondo.
+     */
     private screenObject fondo = new screenObject(0, 0,  1280, 720, new ImageIcon(imgPath_1).getImage(), Item_Type.MENU);
 
+    /**
+     * The X flechas.
+     */
     private int[] xFlechas = {465,615,765};
+    /**
+     * The Y ar.
+     */
     private int yAr = 200;
+    /**
+     * The Y ab.
+     */
     private int yAb = 400;
 
 
+    /**
+     * The Reference time.
+     */
     private long referenceTime;
 
+    /**
+     * The Valores.
+     */
     private char[] valores = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z','-','.'};
 
+    /**
+     * The Resultado.
+     */
     private int[] resultado = {0,0,0};
 
+    /**
+     * The Actual.
+     */
     public int actual;
 
+    /**
+     * The Ar.
+     */
     private screenObject ar;
+    /**
+     * The Ab.
+     */
     private screenObject ab;
 
+    /**
+     * The Done.
+     */
     private boolean done;
 
+    /**
+     * Instantiates a new Ask for name.
+     */
     public  ask_for_name(){
         actual = 0;
         done = false;
@@ -74,6 +126,12 @@ public class ask_for_name {
     }
 
 
+    /**
+     * To value int.
+     *
+     * @param c the c
+     * @return the int
+     */
     private int toValue(char c){
         for(int i = 0; i < valores.length; i++){
             if (valores[i] == c){
@@ -83,6 +141,12 @@ public class ask_for_name {
         return 0;
     }
 
+    /**
+     * Gestion menu boolean.
+     *
+     * @param screenObjects the screen objects
+     * @return the boolean
+     */
     public Boolean gestionMenu(Map<Item_Type, screenObject> screenObjects){
 
         screenObjects.put(Item_Type.MENU, fondo);
@@ -97,6 +161,11 @@ public class ask_for_name {
         return done;
     }
 
+    /**
+     * Write name.
+     *
+     * @param g the g
+     */
     public void writeName(Graphics2D g){
         long current = System.currentTimeMillis();
         if(current - referenceTime > 125){
@@ -135,6 +204,11 @@ public class ask_for_name {
         }
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         String out = "";
         for(int i = 0; i < resultado.length; i++){

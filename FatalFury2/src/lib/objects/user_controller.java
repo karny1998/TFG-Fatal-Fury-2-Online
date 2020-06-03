@@ -10,21 +10,45 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type User controller.
+ */
 // Clase que representa un controlador de interacción entre
 // el personaje y el jugador
 public class user_controller extends character_controller{
-    // Lista de inputs del usuario en los últimos dos segundos
+    /**
+     * The Inputs.
+     */
+// Lista de inputs del usuario en los últimos dos segundos
     private List<String> inputs = new ArrayList<String>();
-    // Tiempos de referencia de cada input
+    /**
+     * The Times.
+     */
+// Tiempos de referencia de cada input
     private List<Long> times = new ArrayList<Long>();
-    // Tiempo de referencia general
+    /**
+     * The Time reference.
+     */
+// Tiempo de referencia general
     private long timeReference = System.currentTimeMillis();
-    // último input introducido
+    /**
+     * The Last key.
+     */
+// último input introducido
     private String lastKey = "";
-    // Movimiento a realizar
+    /**
+     * The Mov.
+     */
+// Movimiento a realizar
     private String mov = "";
 
-    // Contructor que pide el identificador de personaje y el número de jugador
+    /**
+     * Instantiates a new User controller.
+     *
+     * @param ch the ch
+     * @param pN the p n
+     */
+// Contructor que pide el identificador de personaje y el número de jugador
     public user_controller(Playable_Character ch, int pN){
         super(ch, pN,500,290, -1);
         // Proceso encargado de la gestión de inputs del usuario
@@ -37,7 +61,10 @@ public class user_controller extends character_controller{
         inptut_control.start();
     }
 
-    // Gestiona la introducción de inputs del usuario y detección de combos
+    /**
+     * Inputs gestion.
+     */
+// Gestiona la introducción de inputs del usuario y detección de combos
     void inputsGestion(){
         mov = "";
         // Si no se está en standBy se anañizan los inputs
@@ -105,7 +132,14 @@ public class user_controller extends character_controller{
         }
     }
 
-    // Obtiene el frame del personaje, teniendo en cuanta las colisiones entre los personajes
+    /**
+     * Get animation screen object.
+     *
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     * @return the screen object
+     */
+// Obtiene el frame del personaje, teniendo en cuanta las colisiones entre los personajes
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         this.x = this.player.getX();
         this.y = this.player.getY();
@@ -117,6 +151,9 @@ public class user_controller extends character_controller{
         }
     }
 
+    /**
+     * Reset.
+     */
     @Override
     // Resetea el personaje en base al número de jugador
     void reset() {
@@ -124,43 +161,93 @@ public class user_controller extends character_controller{
         else{reset(this.player.getCharac(),750,290, 1);}
     }
 
-    // Getters y setters
+    /**
+     * Gets inputs.
+     *
+     * @return the inputs
+     */
+// Getters y setters
     public List<String> getInputs() {
         return inputs;
     }
 
+    /**
+     * Sets inputs.
+     *
+     * @param inputs the inputs
+     */
     public void setInputs(List<String> inputs) {
         this.inputs = inputs;
     }
 
+    /**
+     * Gets times.
+     *
+     * @return the times
+     */
     public List<Long> getTimes() {
         return times;
     }
 
+    /**
+     * Sets times.
+     *
+     * @param times the times
+     */
     public void setTimes(List<Long> times) {
         this.times = times;
     }
 
+    /**
+     * Gets time reference.
+     *
+     * @return the time reference
+     */
     public long getTimeReference() {
         return timeReference;
     }
 
+    /**
+     * Sets time reference.
+     *
+     * @param timeReference the time reference
+     */
     public void setTimeReference(long timeReference) {
         this.timeReference = timeReference;
     }
 
+    /**
+     * Gets last key.
+     *
+     * @return the last key
+     */
     public String getLastKey() {
         return lastKey;
     }
 
+    /**
+     * Sets last key.
+     *
+     * @param lastKey the last key
+     */
     public void setLastKey(String lastKey) {
         this.lastKey = lastKey;
     }
 
+    /**
+     * Gets mov.
+     *
+     * @return the mov
+     */
     public String getMov() {
         return mov;
     }
 
+    /**
+     * Sets mov.
+     *
+     * @param mov the mov
+     */
     public void setMov(String mov) {
         this.mov = mov;
     }

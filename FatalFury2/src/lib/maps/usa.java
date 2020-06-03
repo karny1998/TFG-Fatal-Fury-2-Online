@@ -8,10 +8,22 @@ import lib.sound.fight_audio;
 
 import javax.swing.*;
 
+/**
+ * The type Usa.
+ */
 public class usa {
+    /**
+     * The constant path.
+     */
     private static String path = "/assets/sprites/scenarios/usa/";
 
-    // Generar animación del fondo
+    /**
+     * Generate animation 1 animation.
+     *
+     * @param time the time
+     * @return the animation
+     */
+// Generar animación del fondo
     public static animation generateAnimation1(Scenario_time time){
         animation a1 = new animation();
         a1.setHasEnd(false);
@@ -42,7 +54,12 @@ public class usa {
         return a1;
     }
 
-    // Generar animación del suelo
+    /**
+     * Generate animation 2 animation.
+     *
+     * @return the animation
+     */
+// Generar animación del suelo
     public static animation generateAnimation2(){
         animation a2 = new animation();
         a2.setHasEnd(false);
