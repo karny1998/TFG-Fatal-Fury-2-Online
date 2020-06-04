@@ -344,7 +344,7 @@ public class fight_controller implements roundListener {
      * The Audio draw game.
      */
     audio_draw_game = false;
-    private boolean difAssigned;
+    private boolean difAssigned = false;
 
     /**
      * Instantiates a new Fight controller.
