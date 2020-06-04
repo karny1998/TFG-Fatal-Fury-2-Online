@@ -10,6 +10,7 @@ import lib.menus.options;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
+import lib.training.IaVsIaTraining;
 import lib.utils.Pair;
 import lib.utils.fileUtils;
 
@@ -33,6 +34,12 @@ public class game_controller {
      * The Ran.
      */
     Random ran = new Random();
+    /**
+     * The training.
+     */
+// Modo debug
+    boolean training = true;
+    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.EASY, ia_loader.dif.HARD, 10);
     /**
      * The Debug.
      */
@@ -250,7 +257,11 @@ public class game_controller {
      */
 // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
-        if(debug && state != GameState.OPTIONS) {
+        if(training){
+            fight = trainer.getFight();
+            trainer.train(screenObjects);
+        }
+        else if(debug && state != GameState.OPTIONS) {
             optionsMenu = new options();
             actualMenu.updateTime();
             optionsMenu.updateTime();
@@ -277,7 +288,7 @@ public class game_controller {
 */
 
         // Estado del juego de opening 1 (incial), se muestra un sprite en toda la pantalla
-        if(state == GameState.OPENING_1){
+        else if(state == GameState.OPENING_1){
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
             screenObjects.put(Item_Type.MENU, s);
             long actual = System.currentTimeMillis();
@@ -933,7 +944,11 @@ public class game_controller {
      */
 // Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
-        if(state == GameState.RANKING){
+        if(training){
+            trainer.getFight().drawHpBarPlayer(g, offset);
+            trainer.getFight().drawHpBarEnemy(g, offset);
+        }
+        else if(state == GameState.RANKING){
             ranking.printRanking(g);
         }
         else if(state == GameState.FIGHT || state == GameState.ESCAPE
@@ -962,6 +977,7 @@ public class game_controller {
                 optionsMenu.printOptions(g);
         }
         else if(state == GameState.STORY_FIGHT){
+            fight = story.getFight();
             story.getFight().drawHpBarPlayer(g, offset);
             story.getFight().drawHpBarEnemy(g, offset);
         }

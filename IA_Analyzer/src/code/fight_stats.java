@@ -64,6 +64,24 @@ public class fight_stats {
     }
 
     /**
+     * Win ratio double.
+     *
+     * @return the double
+     */
+    public double winRatio(){
+        double iaWins = 0.0;
+        for(int i = 0; i < rounds.size(); ++i){
+            if(rounds.get(i).getResult() == 1){
+                iaWins += 1.0;
+            }
+            else if(rounds.get(i).getResult() == 0){
+                iaWins += 0.5;
+            }
+        }
+        return iaWins/rounds.size();
+    }
+
+    /**
      * Block ratio double.
      *
      * @return the double
@@ -85,6 +103,62 @@ public class fight_stats {
         double ratio = 0.0;
         for(int i = 0; i < rounds.size(); ++i){
             ratio +=  rounds.get(i).hitRatio();
+        }
+        return ratio/rounds.size();
+    }
+
+    /**
+     * Remaining life mean double.
+     *
+     * @return the double
+     */
+    public double remainingLifeMean(){
+        double ratio = 0.0;
+        for(int i = 0; i < rounds.size(); ++i){
+            ratio +=  rounds.get(i).getRemaining_life();
+        }
+        return ratio/rounds.size();
+    }
+
+    /**
+     * Successful hit per received ratio double.
+     *
+     * @return the double
+     */
+    public double successfulHitPerReceivedRatio(){
+        double ratio1 = 0.0, ratio2 = 0.0;
+        for(int i = 0; i < rounds.size(); ++i){
+            ratio1 +=  rounds.get(i).getSuccessful_hits();
+            ratio2 +=  rounds.get(i).getReceived_hits();
+        }
+        if(ratio1+ratio2>0) {
+            return ratio1 / (ratio1 + ratio2);
+        }
+        return 0;
+    }
+
+    /**
+     * Remaining player life mean double.
+     *
+     * @return the double
+     */
+    public double remainingPlayerLifeMean(){
+        double ratio = 0.0;
+        for(int i = 0; i < rounds.size(); ++i){
+            ratio +=  rounds.get(i).getPlayer_remaining_life();
+        }
+        return ratio/rounds.size();
+    }
+
+    /**
+     * Remaining time mean double.
+     *
+     * @return the double
+     */
+    public double remainingTimeMean(){
+        double ratio = 0.0;
+        for(int i = 0; i < rounds.size(); ++i){
+            ratio +=  rounds.get(i).getRemaining_time();
         }
         return ratio/rounds.size();
     }

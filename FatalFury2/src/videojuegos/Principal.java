@@ -141,7 +141,7 @@ public class Principal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new crashReport();
+                //new crashReport();
                 Principal ex = new Principal();
                 ex.setVisible(true);
             }

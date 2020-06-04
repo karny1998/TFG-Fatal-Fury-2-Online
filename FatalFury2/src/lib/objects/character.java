@@ -3,6 +3,8 @@ package lib.objects;
 import lib.Enums.Animation_type;
 import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
+import lib.Enums.box_type;
+import lib.analysis.ia_stats;
 import lib.characters.load_character;
 
 import java.util.*;
@@ -46,7 +48,8 @@ public class character {
      * The X.
      */
 // Coordenadas actuales del personaje
-    private int x = 150, /**
+    private int x = 150,
+    /**
      * The Y.
      */
     y = 160;
@@ -85,6 +88,11 @@ public class character {
      */
 // Si ha sido rebalanceado o no
     private boolean rebalanced = false;
+
+    /**
+     * The Stats.
+     */
+    ia_stats stats = new ia_stats();
 
     /**
      * Instantiates a new Character.
@@ -536,6 +544,13 @@ public class character {
             x -= 1;
             s.setX(x);
         }
+
+        // REGISTRO DE INFORMACIÓN PARA LAS STADÍSTICAS
+        if(stateChanged && isAttack(state)){
+            stats.getActualFight().addRealizedHits();
+        }
+        ///////////////////////////////////////////////
+
         return s;
     }
 
@@ -1132,5 +1147,23 @@ public class character {
      */
     public void setRebalanced(boolean rebalanced) {
         this.rebalanced = rebalanced;
+    }
+
+    /**
+     * Gets stats.
+     *
+     * @return the stats
+     */
+    public ia_stats getStats() {
+        return stats;
+    }
+
+    /**
+     * Sets stats.
+     *
+     * @param stats the stats
+     */
+    public void setStats(ia_stats stats) {
+        this.stats = stats;
     }
 }

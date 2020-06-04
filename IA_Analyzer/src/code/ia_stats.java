@@ -22,6 +22,10 @@ public class ia_stats {
      * The history.
      */
     private history_stats history = null;
+    /**
+     * The file name.
+     */
+    private String filename = "ia_stadistics.xml";
 
     /**
      * Instantiates a new Ia stats.
@@ -36,7 +40,7 @@ public class ia_stats {
      */
     public void loadHistory(){
         try {
-            File file = new File("ia_stadistics.xml");
+            File file = new File(filename);
             JAXBContext context = JAXBContext.newInstance(history_stats.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             history = (history_stats) unmarshaller.unmarshal(file);
@@ -66,7 +70,7 @@ public class ia_stats {
             ++maxId;
         }
         try {
-            File file = new File("ia_stadistics.xml");
+            File file = new File(filename);
             JAXBContext context = JAXBContext.newInstance(history_stats.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -137,5 +141,23 @@ public class ia_stats {
      */
     public void setHistory(history_stats history) {
         this.history = history;
+    }
+
+    /**
+     * Gets filename.
+     *
+     * @return the filename
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+    /**
+     * Sets filename.
+     *
+     * @param filename the filename
+     */
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

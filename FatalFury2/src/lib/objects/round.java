@@ -3,6 +3,7 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.Enums.Round_Results;
+import lib.Enums.box_type;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 
@@ -135,7 +136,7 @@ public class round {
     /**
      * The Map limit.
      */
-    private hitBox mapLimit = new hitBox(-145,0,1571,720,box_type.HURTBOX);
+    private hitBox mapLimit = new hitBox(-145,0,1571,720, box_type.HURTBOX);
     /**
      * The Camera limit.
      */
@@ -350,6 +351,10 @@ public class round {
                 }
                 else{
                     enemy.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, eHurt, pHurt);
+
+                    // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                    enemy.getPlayer().getStats().getActualFight().addBlockedHit();
+                    /////////////////////////////////////////////
                 }
                 enemy_old_state = enemy_act_state;
                 enemyHit = true;
@@ -360,9 +365,19 @@ public class round {
         // Si el jugador ha golpeado al rival y ha cambiado de estado, o no había golpeado aún
         if((playerHits || hitsCollides) && (pStateChanged || !playerHit)){
             playerHit = true;
+
+            // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+            enemy.getPlayer().getStats().getActualFight().addReceivedHit();
+            /////////////////////////////////////////////
+
             // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
             if(enemyCovers && playerState != Movement.THROW){
                 enemy.getPlayer().applyDamage((int) (dmgP*0.5));
+
+                // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                enemy.getPlayer().getStats().getActualFight().addBlockedHit();
+                /////////////////////////////////////////////
+
                 scorePlayer.addHit((int) (dmgP*10*0.5));
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);
             }
@@ -410,6 +425,11 @@ public class round {
         // Si el rival ha golpeado al rival y ha cambiado de estado, o no había golpeado aún
         if((enemyHits || hitsCollides) && (eStateChanged || !enemyHit)){
             enemyHit = true;
+
+            // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+            enemy.getPlayer().getStats().getActualFight().addSuccessfulHits();
+            /////////////////////////////////////////////
+
             // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
             if(playerCovers && enemyState != Movement.THROW){
                 player.getPlayer().applyDamage((int) (dmgE*0.5));

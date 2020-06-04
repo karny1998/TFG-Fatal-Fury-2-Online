@@ -198,7 +198,7 @@ public class ia_controller {
                 if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
                     break;
                 }
-            }while (dis > 250 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
+            }while (dis > 175 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
             move = movementsKeys.get(m);
         }
     }

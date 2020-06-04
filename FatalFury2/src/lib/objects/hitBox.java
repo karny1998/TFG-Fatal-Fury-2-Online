@@ -1,23 +1,8 @@
 package lib.objects;
 
-import java.awt.*;
+import lib.Enums.box_type;
 
-/**
- * The enum Box type.
- */
-enum box_type{
-    /**
-     * Hitbox box type.
-     */
-    HITBOX,
-    /**
-     * Hurtbox box type.
-     */
-    HURTBOX,
-    /**
-     * Coverbox box type.
-     */
-    COVERBOX}
+import java.awt.*;
 
 /**
  * The type Hit box.

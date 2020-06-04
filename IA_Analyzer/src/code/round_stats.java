@@ -106,6 +106,7 @@ public class round_stats {
      * @return the double
      */
     public double blockRatio(){
+        if(received_hits == 0){return 0;}
         return (double)blocked_hits/received_hits;
     }
 
@@ -115,6 +116,7 @@ public class round_stats {
      * @return the double
      */
     public double hitRatio(){
+        if(realized_hits == 0){return 0;}
         return (double)successful_hits/realized_hits;
     }
 

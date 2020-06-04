@@ -1,9 +1,6 @@
 package lib.objects;
 
-import lib.Enums.Fight_Results;
-import lib.Enums.Item_Type;
-import lib.Enums.Round_Results;
-import lib.Enums.Scenario_time;
+import lib.Enums.*;
 import lib.maps.scenary;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
@@ -65,7 +62,7 @@ public class fight_controller implements roundListener {
      * The Map limit.
      */
 // Para gestión de límites de mapa
-    hitBox mapLimit = new hitBox(0,0,1280,720,box_type.HURTBOX);
+    hitBox mapLimit = new hitBox(0,0,1280,720, box_type.HURTBOX);
     /**
      * The Score player.
      */
@@ -347,6 +344,7 @@ public class fight_controller implements roundListener {
      * The Audio draw game.
      */
     audio_draw_game = false;
+    private boolean difAssigned;
 
     /**
      * Instantiates a new Fight controller.
@@ -621,7 +619,10 @@ public class fight_controller implements roundListener {
         // Actualizar valores de la ia
         if(vsIa){
             ia_controller iaAux = enemy.getIa();
-            iaAux.setDif(iaLvl);
+            if(!difAssigned) {
+                iaAux.setDif(iaLvl);
+                difAssigned =  true;
+            }
             iaAux.setRound(roundCounter+1);
             iaAux.setTime(currentRound.getTimeLeft());
             iaAux.setpWins(playerScore);
@@ -754,18 +755,34 @@ public class fight_controller implements roundListener {
             }
             // Pose de victoria de ronda
             if (!startedVictoryAnimation) {
-                switch (results.get(roundCounter-1)) {
+                switch (results.get(roundCounter - 1)) {
                     // Ha ganado el jugador 1
                     case WIN:
-                        if (!newRound) { player.getPlayer().setVictory(2); }
-                        else { player.getPlayer().setVictory(1); }
+                        if (!newRound) {
+                            player.getPlayer().setVictory(2);
+                        } else {
+                            player.getPlayer().setVictory(1);
+                        }
                         enemy.getPlayer().setDefeat();
+
+                        // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                        enemy.getPlayer().getStats().getActualFight().currentRound().setResult(2);
+                        /////////////////////////////////////////////
+
                         break;
                     // Ha ganado el jugador 2
                     case LOSE:
-                        if (!newRound) { enemy.getPlayer().setVictory(2); }
-                        else { enemy.getPlayer().setVictory(1); }
+                        if (!newRound) {
+                            enemy.getPlayer().setVictory(2);
+                        } else {
+                            enemy.getPlayer().setVictory(1);
+                        }
                         player.getPlayer().setDefeat();
+
+                        // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                        enemy.getPlayer().getStats().getActualFight().currentRound().setResult(1);
+                        /////////////////////////////////////////////
+
                         break;
                     // Empate
                     case TIE:
@@ -777,13 +794,27 @@ public class fight_controller implements roundListener {
                                 player.getPlayer().setVictory(1);
                                 enemy.getPlayer().setVictory(1);
                             }
+                        } else {
+                            player.getPlayer().setDefeat();
+                            enemy.getPlayer().setDefeat();
                         }
-                        else {
-                                player.getPlayer().setDefeat();
-                                enemy.getPlayer().setDefeat();
-                        }
+
+                        // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                        enemy.getPlayer().getStats().getActualFight().currentRound().setResult(0);
+                        /////////////////////////////////////////////
+
                         break;
                 }
+
+                // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
+                enemy.getPlayer().getStats().getActualFight().currentRound().setPlayer_remaining_life(player.getPlayer().getLife());
+                enemy.getPlayer().getStats().getActualFight().currentRound().setRemaining_life(enemy.getPlayer().getLife());
+                enemy.getPlayer().getStats().getActualFight().currentRound().setRemaining_time(currentRound.getTimeLeft());
+                if (roundCounter < 4 && newRound){
+                    enemy.getPlayer().getStats().getActualFight().nextRound();
+                }
+                /////////////////////////////////////////////
+
                 startedVictoryAnimation = true;
             }
             // Pos de victoria de pelea

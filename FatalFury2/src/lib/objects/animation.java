@@ -1,6 +1,7 @@
 package lib.objects;
 
 import lib.Enums.Animation_type;
+import lib.Enums.box_type;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.utils.Pair;
