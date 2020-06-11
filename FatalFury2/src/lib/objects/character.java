@@ -675,7 +675,7 @@ public class character {
      * @param m the m
      * @return the boolean
      */
-    boolean isAttack(Movement m){
+    public static boolean isAttack(Movement m){
         Movement array[] = {Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH,
                 Movement.HARD_KICK, Movement.THROW, Movement.ATTACK_POKE,
                 Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.CHARGED_PUNCH_A,

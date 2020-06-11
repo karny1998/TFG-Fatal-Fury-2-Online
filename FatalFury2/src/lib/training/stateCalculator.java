@@ -26,6 +26,10 @@ public class stateCalculator {
      */
     private static Map<Movement, Integer> idAction = new HashMap<>();
     /**
+     * The inverse of idAction
+     */
+    private static Map<Integer, Movement> actionByID = new HashMap<>();
+    /**
      * The constant max.
      */
     private static int max = 0;
@@ -46,12 +50,13 @@ public class stateCalculator {
                 Movement.CROUCHING_HARD_PUNCH, Movement.CROUCHING_SOFT_PUNCH, Movement.HOOK, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK, Movement.DASH, Movement.CROUCHED_BLOCK_KNOCKBACK,
                 Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_HARD_PUNCH_DOWN};
         Movement aux2[] = new Movement[]{Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.JUMP_ROLL_LEFT, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
-        Movement aux3[] = new Movement[]{Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH, Movement.HARD_KICK, Movement.STANDING_BLOCK, Movement.CROUCHED_BLOCK,
+        Movement aux3[] = new Movement[]{Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH, Movement.HARD_KICK, Movement.CROUCHED_BLOCK,
                 Movement.NORMAL_JUMP, Movement.JUMP_ROLL_RIGHT, Movement.CROUCHED_WALKING, Movement.THROW, Movement.STANDING, Movement.WALKING, Movement.WALKING_BACK,
                 Movement.CROUCH, Movement.CROUCHING_HARD_PUNCH, Movement.CROUCHING_SOFT_PUNCH, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK, Movement.DASH,
                 Movement.CHARGED_PUNCH_A, Movement.REVERSE_KICK_B,  Movement.JUMP_ROLL_LEFT, Movement.SPIN_PUNCH_C};
         for(int i = 0; i < aux3.length; ++i){
             idAction.put(aux3[i], i);
+            actionByID.put(i, aux3[i]);
         }
         nActions = idAction.size();
 
@@ -108,6 +113,16 @@ public class stateCalculator {
     }
 
     /**
+     * Return the id of the action "m" int.
+     *
+     * @param m the m
+     * @return the int
+     */
+    public  static Movement actionById(int m){
+        return actionByID.get(m);
+    }
+
+    /**
      * Gets max.
      *
      * @return the max
@@ -123,5 +138,113 @@ public class stateCalculator {
      */
     public static int getnActions() {
         return nActions;
+    }
+
+    /**
+     * Gets life scale.
+     *
+     * @return the life scale
+     */
+    public static int getLifeScale() {
+        return lifeScale;
+    }
+
+    /**
+     * Sets life scale.
+     *
+     * @param lifeScale the life scale
+     */
+    public static void setLifeScale(int lifeScale) {
+        stateCalculator.lifeScale = lifeScale;
+    }
+
+    /**
+     * Gets distance scale.
+     *
+     * @return the distance scale
+     */
+    public static int getDistanceScale() {
+        return distanceScale;
+    }
+
+    /**
+     * Sets distance scale.
+     *
+     * @param distanceScale the distance scale
+     */
+    public static void setDistanceScale(int distanceScale) {
+        stateCalculator.distanceScale = distanceScale;
+    }
+
+    /**
+     * Gets id mov.
+     *
+     * @return the id mov
+     */
+    public static Map<Movement, Integer> getIdMov() {
+        return idMov;
+    }
+
+    /**
+     * Sets id mov.
+     *
+     * @param idMov the id mov
+     */
+    public static void setIdMov(Map<Movement, Integer> idMov) {
+        stateCalculator.idMov = idMov;
+    }
+
+    /**
+     * Gets id action.
+     *
+     * @return the id action
+     */
+    public static Map<Movement, Integer> getIdAction() {
+        return idAction;
+    }
+
+    /**
+     * Sets id action.
+     *
+     * @param idAction the id action
+     */
+    public static void setIdAction(Map<Movement, Integer> idAction) {
+        stateCalculator.idAction = idAction;
+    }
+
+    /**
+     * Gets action by id.
+     *
+     * @return the action by id
+     */
+    public static Map<Integer, Movement> getActionByID() {
+        return actionByID;
+    }
+
+    /**
+     * Sets action by id.
+     *
+     * @param actionByID the action by id
+     */
+    public static void setActionByID(Map<Integer, Movement> actionByID) {
+        stateCalculator.actionByID = actionByID;
+    }
+
+    /**
+     * Sets max.
+     *
+     * @param max the max
+     */
+    public static void setMax(int max) {
+        stateCalculator.max = max;
+    }
+
+    /**
+     * Sets actions.
+     *
+     * @param nActions the n actions
+     */
+    public static void setnActions(int nActions) {
+        stateCalculator.nActions = nActions;
     }
 }

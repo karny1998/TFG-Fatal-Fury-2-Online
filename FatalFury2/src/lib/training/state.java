@@ -30,23 +30,38 @@ public class state {
      * The num which represents the state.
      */
     private int stateNum;
+    /**
+     * The remaining time of the round
+     */
+    private int remainingTime = 0;
 
     /**
      * Instantiates a new State.
      *
-     * @param life        the life
-     * @param playerLife  the player life
-     * @param playerState the player state
-     * @param dis         the distance
-     * @param round       the round
+     * @param life          the life
+     * @param playerLife    the player life
+     * @param playerState   the player state
+     * @param dis           the distance
+     * @param round         the round
+     * @param remainingTime the remaining time
      */
-    public state(int life, int playerLife, Movement playerState, int dis, int round) {
+    public state(int life, int playerLife, Movement playerState, int dis, int round, int remainingTime) {
         this.life = life;
         this.playerLife = playerLife;
         this.playerState = playerState;
         this.dis = dis;
         this.round = round;
+        this.remainingTime = remainingTime;
         this.stateNum = stateCalculator.calculateNumState(this);
+    }
+
+    /**
+     * Is terminal state boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isTerminal(){
+        return remainingTime == 0  || life == 0 || playerLife == 0;
     }
 
     /**
@@ -152,4 +167,48 @@ public class state {
     public int getRound() {
         return round;
     }
+
+    /**
+     * Sets state num.
+     *
+     * @param stateNum the state num
+     */
+    public void setStateNum(int stateNum) {
+        this.stateNum = stateNum;
+    }
+
+    /**
+     * Gets remaining time.
+     *
+     * @return the remaining time
+     */
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
+    /**
+     * Sets remaining time.
+     *
+     * @param remainingTime the remaining time
+     */
+    public void setRemainingTime(int remainingTime) {
+        this.remainingTime = remainingTime;
+    }
+
+    /**
+     * To string string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return life +
+                "," + playerLife +
+                "," + playerState +
+                "," + dis +
+                "," + round +
+                "," + stateNum +
+                "," + remainingTime;
+    }
+
 }
