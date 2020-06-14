@@ -48,8 +48,8 @@ public class stateCalculator {
                 Movement.SOFT_KNOCKBACK, Movement.MEDIUM_KNOCKBACK, Movement.HARD_KNOCKBACK, Movement.CROUCHED_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.JUMP_KNOCKBACK, Movement.JUMP_PUNCH_DOWN, Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_FALL, Movement.JUMP_ROLL_FALL,
                 Movement.CROUCHING_HARD_PUNCH, Movement.CROUCHING_SOFT_PUNCH, Movement.HOOK, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK, Movement.DASH, Movement.CROUCHED_BLOCK_KNOCKBACK,
-                Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_HARD_PUNCH_DOWN};
-        Movement aux2[] = new Movement[]{Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.JUMP_ROLL_LEFT, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
+                 Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_HARD_PUNCH_DOWN};
+        Movement aux2[] = new Movement[]{Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         Movement aux3[] = new Movement[]{Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH, Movement.HARD_KICK, Movement.CROUCHED_BLOCK,
                 Movement.NORMAL_JUMP, Movement.JUMP_ROLL_RIGHT, Movement.CROUCHED_WALKING, Movement.THROW, Movement.STANDING, Movement.WALKING, Movement.WALKING_BACK,
                 Movement.CROUCH, Movement.CROUCHING_HARD_PUNCH, Movement.CROUCHING_SOFT_PUNCH, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK, Movement.DASH,
@@ -71,7 +71,7 @@ public class stateCalculator {
         idMov.put(aux2[4], i+2);
         idMov.put(aux2[5], i+2);
 
-        max = (2 + 200/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4;
+        max = (2 + 200/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2;
     }
 
     /**
@@ -85,14 +85,16 @@ public class stateCalculator {
         int pL = s.getPlayerLife()/lifeScale;
         int d = s.getDis()/distanceScale;
         int r = s.getRound() - 1;
+        int w = s.getPlayerVictories();
         int sPid = idMov.get(s.getPlayerState());
 
         int aux1 = idMov.size();
         int aux2 = (1 + 100/lifeScale) * aux1;
         int aux3 = (1 + 100/lifeScale) * aux2;
         int aux4 = (1 + 700/distanceScale) * aux3;
+        int aux5 = 4 * aux4;
 
-        int val = r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
+        int val = w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
 
         if (val > max){
             System.out.println("Out of bounds (stateCalculator)");

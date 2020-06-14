@@ -1,12 +1,22 @@
 package lib.objects;
 
 import lib.Enums.Playable_Character;
+import lib.training.agent_controller;
+
+import javax.swing.*;
 
 /**
  * The type Enemy controller.
  */
 // Clase que representa el control de un personaje por IA
 public class enemy_controller extends character_controller{
+
+    /**
+     * The Agent ia.
+     */
+    protected boolean agentIa = false;
+
+    private boolean training = false;
 
     /**
      * The Ia.
@@ -20,9 +30,26 @@ public class enemy_controller extends character_controller{
      * @param ch the ch
      * @param pN the p n
      */
-// Contructor que pide identificador de personaje y numero de personaje
     public enemy_controller(Playable_Character ch, int pN){
         super(ch, pN, 750, 290, 1);
+        if(pN == 1){
+            this.x = 500;
+            this.player.setOrientation(-1);
+            this.player.setX(500);
+        }
+    }
+
+    /**
+     * Instantiates a new Enemy controller.
+     *
+     * @param ch      the ch
+     * @param pN      the p n
+     * @param agentIa the agent Ia
+     */
+    public enemy_controller(Playable_Character ch, int pN, boolean agentIa, boolean training){
+        super(ch, pN, 750, 290, 1);
+        this.agentIa = agentIa;
+        this.training = training;
         if(pN == 1){
             this.x = 500;
             this.player.setOrientation(-1);
@@ -55,6 +82,7 @@ public class enemy_controller extends character_controller{
         // Si no se está esperando a que se terminen de mostrar los carteles de intro
         // se pide al personaje el frame correspondiente al movimiento decidido por la IA
         if(!standBy){
+            ia.getMove();
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
@@ -91,7 +119,12 @@ public class enemy_controller extends character_controller{
     public void setRival(character rival) {
         this.player.setRival(rival);
         this.rival = rival;
-        ia = new ia_controller(rival,this.player,ia_loader.dif.EASY);
+        if(agentIa){
+            ia = new agent_controller(rival, this.player,ia_loader.dif.HARD, training);
+        }
+        else {
+            ia = new ia_controller(rival, this.player, ia_loader.dif.EASY);
+        }
     }
 
     /**

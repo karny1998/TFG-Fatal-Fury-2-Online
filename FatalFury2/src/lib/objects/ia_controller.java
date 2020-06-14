@@ -19,86 +19,86 @@ public class ia_controller {
      * The Player.
      */
 // Jugador
-    private character player;
+    protected character player;
     /**
      * The Enemy.
      */
 // Personaje controlado por la IA
-    private character enemy;
+    protected character enemy;
     /**
      * The Mood.
      */
 // Caracteres de la IA durante las 4 rondas
-    private ia_type mood[][] = new ia_type[4][];
+    protected ia_type mood[][] = new ia_type[4][];
     /**
      * The Weights.
      */
 // Pesos de las variables de la IA durante las 4 rondas
-    private Double weights[][] = new Double[4][5];
+    protected Double weights[][] = new Double[4][5];
     /**
      * The Roulette.
      */
 // Ruleta rusa para decidir el movimiento
-    private russian_roulette roulette;
+    protected russian_roulette roulette;
     /**
      * The Processor.
      */
 // Procesadores de la IA que alteran las probabilidades según la situación
-    private ia_processor processor[];
+    protected ia_processor processor[];
     /**
      * The Control.
      */
 // Timer de control de referencia
-    private Timer control;
+    protected Timer control;
     /**
      * The Movements keys.
      */
 // Mapa de combos dado un movimiento
-    private Map<Movement, String> movementsKeys;
+    protected Map<Movement, String> movementsKeys;
     /**
      * The Move.
      */
 // Movimiento a ejecutar
-    private String move = "";
+    protected String move = "";
     /**
      * The Round.
      */
 // Número de ronda
-    private int round = 1;
+    protected int round = 1;
     /**
      * The P wins.
      */
 // Victorias del jugador
-    private int pWins = 0;
+    protected int pWins = 0;
     /**
      * The Time.
      */
 // Tiempo restante de la ronda
-    private int time = 90;
+    protected int time = 90;
     /**
      * The Time reference 1.
      */
 // Timers de referencia
-    private long timeReference1 = System.currentTimeMillis();
+    protected long timeReference1 = System.currentTimeMillis();
     /**
      * The Time reference 2.
      */
-    private long timeReference2 = System.currentTimeMillis();
+    protected long timeReference2 = System.currentTimeMillis();
     /**
      * The Dif.
      */
 // Dificultad de la IA
-    private ia_loader.dif dif = ia_loader.dif.EASY;
+    protected ia_loader.dif dif = ia_loader.dif.EASY;
     /**
      * The Prob block.
      */
 // Probabilidad de bloqueo (al final no se usa)
-    private double probBlock = 0.0;
+    protected double probBlock = 0.0;
     /**
      * The Read.
      */
 // Si se ha leído o no el movimiento
-    private boolean read = false;
+    protected boolean read = false;
 
     /**
      * Instantiates a new Ia controller.

@@ -65,6 +65,8 @@ public class IaVsIaTraining {
      */
     String filename = "";
 
+    agent agente;
+
     /**
      * Instantiates a new Ia vs ia training.
      *
@@ -81,6 +83,7 @@ public class IaVsIaTraining {
         this.lvlIa = lvlIa;
         this.times = times;
         filename =  ia.toString() + lvlIa.toString() + "vs" + charac.toString() + pLvl.toString() + ".xml";
+        stateCalculator.initialize();
     }
 
     /**
@@ -88,7 +91,7 @@ public class IaVsIaTraining {
      */
     private void generateFight(){
         player = new enemy_controller(charac, 1);
-        enemy = new enemy_controller(ia, 2);
+        enemy = new enemy_controller(ia, 2, true, true);
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());

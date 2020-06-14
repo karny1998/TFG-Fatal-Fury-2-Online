@@ -36,32 +36,55 @@ public class state {
     private int remainingTime = 0;
 
     /**
+     * The Ia victories.
+     */
+    private int iaVictories = 0;
+
+    /**
+     * The Player victories.
+     */
+    private int playerVictories = 0;
+
+    /**
      * Instantiates a new State.
      *
-     * @param life          the life
-     * @param playerLife    the player life
-     * @param playerState   the player state
-     * @param dis           the distance
-     * @param round         the round
-     * @param remainingTime the remaining time
+     * @param life            the life
+     * @param playerLife      the player life
+     * @param playerState     the player state
+     * @param dis             the distance
+     * @param round           the round
+     * @param remainingTime   the remaining time
+     * @param iaVictories     the ia victories
+     * @param playerVictories the player victories
      */
-    public state(int life, int playerLife, Movement playerState, int dis, int round, int remainingTime) {
+    public state(int life, int playerLife, Movement playerState, int dis, int round, int remainingTime, int iaVictories, int playerVictories) {
         this.life = life;
         this.playerLife = playerLife;
         this.playerState = playerState;
         this.dis = dis;
         this.round = round;
         this.remainingTime = remainingTime;
+        this.iaVictories = iaVictories;
+        this.playerVictories = playerVictories;
         this.stateNum = stateCalculator.calculateNumState(this);
     }
 
     /**
-     * Is terminal state boolean.
+     * Is round terminal state boolean.
      *
      * @return the boolean
      */
-    public boolean isTerminal(){
+    public boolean isRoundTerminal(){
         return remainingTime == 0  || life == 0 || playerLife == 0;
+    }
+
+    /**
+     * Is round terminal state boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isFightTerminal(){
+        return isRoundTerminal() && (round == 4 || iaVictories == 2 || playerVictories == 2);
     }
 
     /**
@@ -196,6 +219,42 @@ public class state {
     }
 
     /**
+     * Gets ia victories.
+     *
+     * @return the ia victories
+     */
+    public int getIaVictories() {
+        return iaVictories;
+    }
+
+    /**
+     * Sets ia victories.
+     *
+     * @param iaVictories the ia victories
+     */
+    public void setIaVictories(int iaVictories) {
+        this.iaVictories = iaVictories;
+    }
+
+    /**
+     * Gets player victories.
+     *
+     * @return the player victories
+     */
+    public int getPlayerVictories() {
+        return playerVictories;
+    }
+
+    /**
+     * Sets player victories.
+     *
+     * @param playerVictories the player victories
+     */
+    public void setPlayerVictories(int playerVictories) {
+        this.playerVictories = playerVictories;
+    }
+
+    /**
      * To string string.
      *
      * @return the string
@@ -208,7 +267,17 @@ public class state {
                 "," + dis +
                 "," + round +
                 "," + stateNum +
-                "," + remainingTime;
+                "," + remainingTime +
+                "," + iaVictories +
+                "," + playerVictories;
     }
 
+    /**
+     * Clone state.
+     *
+     * @return the state
+     */
+    public state clone(){
+        return new state(life,playerLife,playerState,dis,round,remainingTime,iaVictories,playerVictories);
+    }
 }
