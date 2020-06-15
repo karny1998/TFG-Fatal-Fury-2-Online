@@ -8,6 +8,7 @@ import lib.utils.Pair;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.MarshalledObject;
 import java.util.Map;
 
 /**
@@ -49,6 +50,10 @@ public class agent_controller extends ia_controller{
      * The Move agent.
      */
     private String moveAgent = "";
+
+    private long timeReferenceAgent = System.currentTimeMillis();
+
+    private boolean actionInExecution = false;
 
     /**
      * Instantiates a new Ia controller.
@@ -100,6 +105,7 @@ public class agent_controller extends ia_controller{
             }
         });
         ia_control.start();
+        timeReference1 = System.currentTimeMillis();
     }
 
     /**
@@ -128,11 +134,24 @@ public class agent_controller extends ia_controller{
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
         }
 
-        if(!actionExecuted || enemy.getState() != previousState) {
+        long actual = System.currentTimeMillis();
+
+        /*if(!actionExecuted || enemy.getMovement(enemy.getState()).ended() || enemy.getState() != previousState || actual - timeReferenceAgent > 300.0 && (enemy.getState() == Movement.STANDING
+                || enemy.getState() == Movement.WALKING || enemy.getState() == Movement.WALKING_BACK
+                || enemy.getState() == Movement.CROUCHED_WALKING || enemy.getState() == Movement.CROUCHED_BLOCK)) {*/
+        actionExecuted = enemy.getExecutedMoves().size() == 0 ||
+                    (enemy.getExecutedMoves().size() > 0 && enemy.getExecutedMoves().get(enemy.getExecutedMoves().size()-1) == previousState
+                    &&  enemy.getState() != agente.getActionToExecute())
+                    || (actual - timeReferenceAgent > 300.0 && (enemy.getState() == Movement.STANDING
+                        || enemy.getState() == Movement.WALKING || enemy.getState() == Movement.WALKING_BACK
+                        || enemy.getState() == Movement.CROUCHED_WALKING || enemy.getState() == Movement.CROUCHED_BLOCK));
+        System.out.println(enemy.getExecutedMoves());
+        System.out.println(agente.getActionToExecute());
+        if(actionExecuted){
             Movement m = Movement.STANDING;
             state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins);
             agente.notifyResult(s);
-            actionExecuted = true;
+            actionExecuted = false;
             if(training) {
                 m = agente.getActionToExecute();
             }
@@ -145,6 +164,8 @@ public class agent_controller extends ia_controller{
             else {
                 moveAgent = movementsKeys.get(m);
             }
+            previousState = m;
+            timeReferenceAgent = actual;
         }
     }
 

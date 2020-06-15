@@ -71,6 +71,8 @@ public class agent{
      */
     private boolean resultAssigned = false;
 
+    private boolean waitingResult = false;
+
     /**
      * Instantiates a new Agent.
      *
@@ -114,20 +116,19 @@ public class agent{
         // Mientras no haya terminado el entrenamiento
         if(!trainingEnded) {
             // Selecciona una acción a ejecutar
-            actionToExecute = selectAction();
-            try {
-                // Espera por el resultado de la acción
-                if(!resultAssigned) {
-                    return;
-                }
-                resultAssigned = false;
-                // Si se le indica que ha terminado el entrenamiento sale
-                if(trainingEnded){
-                    return;
-                }
-            } catch (Exception e) {
-                // Se reintenta
-                train_Q_Learning();
+            if(!waitingResult){
+                actionToExecute = selectAction();
+            }
+            // Espera por el resultado de la acción
+            if(!resultAssigned) {
+                waitingResult = true;
+                return;
+            }
+            resultAssigned = false;
+            waitingResult = false;
+            // Si se le indica que ha terminado el entrenamiento sale
+            if(trainingEnded){
+                return;
             }
             // Se da la recompensa correspondiente a la acción ejecutada en base al resultado
             giveReward(result);
@@ -407,27 +408,28 @@ public class agent{
             File f = new File(path);
             BufferedReader b = new BufferedReader(new FileReader(f));
             String aux = "";
-            while((aux = b.readLine()) != null){
-                aux = b.readLine();
-                aux = b.readLine();
-                aux = b.readLine();
-                aux = b.readLine();
-                String estado[] = aux.split(",");
-                state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                        Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                        Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
-                aux = b.readLine();
-                aux = b.readLine();
-                Movement action = Movement.valueOf(aux);
-                aux = b.readLine();
-                aux = b.readLine();
-                aux = b.readLine();
-                aux = b.readLine();
-                estado = aux.split(",");
-                state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                        Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                        Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
-                giveReward(s,s2,action, false);
+            while((aux = b.readLine()) != null) {
+                while ((aux = b.readLine()) != null) {
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    String estado[] = aux.split(",");
+                    state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                            Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
+                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    Movement action = Movement.valueOf(aux);
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    aux = b.readLine();
+                    estado = aux.split(",");
+                    state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                            Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
+                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
+                    giveReward(s, s2, action, false);
+                }
             }
             b.close();
         }catch (Exception e){}

@@ -25,7 +25,7 @@ public class IaVsIaTraining {
     /**
      * The Enemy.
      */
-    private enemy_controller enemy;
+    private enemy_controller enemy = null;
     /**
      * The Scene.
      */
@@ -91,7 +91,12 @@ public class IaVsIaTraining {
      */
     private void generateFight(){
         player = new enemy_controller(charac, 1);
-        enemy = new enemy_controller(ia, 2, true, true);
+        if(enemy == null) {
+            enemy = new enemy_controller(ia, 2, true, true);
+        }
+        else{
+            enemy.reset();
+        }
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
@@ -122,6 +127,7 @@ public class IaVsIaTraining {
         }
         else if(fight.getEnd()){
             //enemy.getPlayer().getStats().setFilename(filename);
+            enemy.getAgente().writeQTableAndRegister();
             enemy.getPlayer().getStats().saveUpdatedHistory();
             Fight_Results resultado = fight.getFight_result();
             audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);

@@ -44,11 +44,11 @@ public class stateCalculator {
     public static void initialize(){
         Movement aux[] = new Movement[]{Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH, Movement.HARD_KICK, Movement.STANDING_BLOCK, Movement.CROUCHED_BLOCK,
                 Movement.NORMAL_JUMP, Movement.JUMP_ROLL_RIGHT, Movement.CROUCHED_WALKING, Movement.THROW, Movement.STANDING, Movement.WALKING, Movement.WALKING_BACK,
-                Movement.CROUCH, Movement.UNDO_CROUCH, Movement.ATTACK_POKE, Movement.THROWN_OUT,
+                Movement.CROUCH, Movement.UNDO_CROUCH, Movement.ATTACK_POKE, Movement.THROWN_OUT,Movement.JUMP_ROLL_LEFT,
                 Movement.SOFT_KNOCKBACK, Movement.MEDIUM_KNOCKBACK, Movement.HARD_KNOCKBACK, Movement.CROUCHED_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.JUMP_KNOCKBACK, Movement.JUMP_PUNCH_DOWN, Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_FALL, Movement.JUMP_ROLL_FALL,
                 Movement.CROUCHING_HARD_PUNCH, Movement.CROUCHING_SOFT_PUNCH, Movement.HOOK, Movement.CROUCHING_HARD_KICK, Movement.CROUCHING_SOFT_KICK, Movement.DASH, Movement.CROUCHED_BLOCK_KNOCKBACK,
-                 Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_HARD_PUNCH_DOWN};
+                 Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK, Movement.JUMP_ROLL_HARD_PUNCH_DOWN, Movement.JUMP_HARD_PUNCH_DOWN, Movement.VICTORY_ROUND, Movement.VICTORY_FIGHT, Movement.DEFEAT};
         Movement aux2[] = new Movement[]{Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
         Movement aux3[] = new Movement[]{Movement.SOFT_PUNCH, Movement.SOFT_KICK, Movement.HARD_PUNCH, Movement.HARD_KICK, Movement.CROUCHED_BLOCK,
                 Movement.NORMAL_JUMP, Movement.JUMP_ROLL_RIGHT, Movement.CROUCHED_WALKING, Movement.THROW, Movement.STANDING, Movement.WALKING, Movement.WALKING_BACK,
@@ -71,7 +71,7 @@ public class stateCalculator {
         idMov.put(aux2[4], i+2);
         idMov.put(aux2[5], i+2);
 
-        max = (2 + 200/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2;
+        max = (1 + 100/lifeScale) * (1 + 100/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2;
     }
 
     /**

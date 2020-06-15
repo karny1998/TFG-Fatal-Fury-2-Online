@@ -61,7 +61,12 @@ public class state {
         this.life = life;
         this.playerLife = playerLife;
         this.playerState = playerState;
-        this.dis = dis;
+        if(dis > 0) {
+            this.dis = dis;
+        }
+        else{
+            this.dis = 0;
+        }
         this.round = round;
         this.remainingTime = remainingTime;
         this.iaVictories = iaVictories;
