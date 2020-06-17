@@ -55,6 +55,13 @@ public class agent_controller extends ia_controller{
 
     private boolean actionInExecution = false;
 
+    private Movement actionToExecute = Movement.STANDING;
+
+    private Movement previousAction = Movement.STANDING;
+
+    private int previousRound = 1;
+
+
     /**
      * Instantiates a new Ia controller.
      */
@@ -123,6 +130,17 @@ public class agent_controller extends ia_controller{
      */
 // Realiza la gestión de la IA, es decir, analizar la situación, evaluar, y decidir un movimiento
     private void agent_gestion(){
+
+        if(isStandBy()){
+            previousAction = Movement.STANDING;
+            previousState = Movement.STANDING;
+            actionToExecute = agente.getActionToExecute();
+            moveAgent = movementsKeys.get(actionToExecute);
+            actionExecuted = false;
+            actionInExecution = false;
+            return;
+        }
+
         hitBox pHurt = player.getHurtbox();
         hitBox eHurt = enemy.getHurtbox();
         // Distancia entre los personajes
@@ -136,36 +154,68 @@ public class agent_controller extends ia_controller{
 
         long actual = System.currentTimeMillis();
 
-        /*if(!actionExecuted || enemy.getMovement(enemy.getState()).ended() || enemy.getState() != previousState || actual - timeReferenceAgent > 300.0 && (enemy.getState() == Movement.STANDING
-                || enemy.getState() == Movement.WALKING || enemy.getState() == Movement.WALKING_BACK
-                || enemy.getState() == Movement.CROUCHED_WALKING || enemy.getState() == Movement.CROUCHED_BLOCK)) {*/
-        actionExecuted = enemy.getExecutedMoves().size() == 0 ||
-                    (enemy.getExecutedMoves().size() > 0 && enemy.getExecutedMoves().get(enemy.getExecutedMoves().size()-1) == previousState
-                    &&  enemy.getState() != agente.getActionToExecute())
-                    || (actual - timeReferenceAgent > 300.0 && (enemy.getState() == Movement.STANDING
-                        || enemy.getState() == Movement.WALKING || enemy.getState() == Movement.WALKING_BACK
-                        || enemy.getState() == Movement.CROUCHED_WALKING || enemy.getState() == Movement.CROUCHED_BLOCK));
-        System.out.println(enemy.getExecutedMoves());
-        System.out.println(agente.getActionToExecute());
+        if(!training) {
+            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins);
+            Movement m = agente.selectAction(s);
+            actionToExecute = agente.selectAction(s);
+            moveAgent = movementsKeys.get(m);
+            if(m == Movement.NONE){
+                actionToExecute = enemy.getCombos().get(move);
+                moveAgent = move;
+            }
+            return;
+        }
+
+        Movement actualState = enemy.getState();
+
+        if(!actionInExecution && !actionExecuted){
+            if(actionToExecute == Movement.THROW && dis >= 10){
+                actionInExecution = true;
+                actionExecuted = true;
+            }
+            else {
+                actionInExecution = previousState != actualState && actualState == actionToExecute
+                        || previousState == actionToExecute && actualState == actionToExecute
+                        || previousState == Movement.STANDING && actualState == Movement.STANDING && Movement.STANDING == actionToExecute;
+                if (actionInExecution && !(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK)) {
+                    moveAgent = "";
+                }
+            }
+        }
+        else if(!actionExecuted){
+            if(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK){
+                actionExecuted = System.currentTimeMillis() - timeReferenceAgent > 300.0;
+            }
+            else {
+                actionExecuted = (previousState != actualState && previousState == actionToExecute)
+                        || actionToExecute == Movement.STANDING
+                        || actionToExecute == Movement.THROW && dis >= 10 && player.getState() != Movement.THROWN_OUT;
+            }
+            if(actionExecuted){
+                previousAction = actionToExecute;
+                //System.out.println("Se ha ejecutado " + actionToExecute.toString());
+            }
+        }
+        previousState = actualState;
+
         if(actionExecuted){
-            Movement m = Movement.STANDING;
+            actionExecuted = false;
+            actionInExecution = false;
+
             state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins);
             agente.notifyResult(s);
-            actionExecuted = false;
-            if(training) {
-                m = agente.getActionToExecute();
-            }
-            else{
-                agente.selectAction(s);
-            }
+
+            Movement m = agente.getActionToExecute();
+            timeReferenceAgent = System.currentTimeMillis();
+
             if(m == Movement.NONE){
+                actionToExecute = enemy.getCombos().get(move);
                 moveAgent = move;
             }
             else {
+                actionToExecute = m;
                 moveAgent = movementsKeys.get(m);
             }
-            previousState = m;
-            timeReferenceAgent = actual;
         }
     }
 

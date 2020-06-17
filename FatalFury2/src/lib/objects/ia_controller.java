@@ -101,6 +101,11 @@ public class ia_controller {
     protected boolean read = false;
 
     /**
+     * The Stand by.
+     */
+    private boolean standBy = true;
+
+    /**
      * Instantiates a new Ia controller.
      */
 // Contructor por defecto
@@ -508,5 +513,59 @@ public class ia_controller {
      */
     public ia_loader.dif getDif() {
         return dif;
+    }
+
+    /**
+     * Gets prob block.
+     *
+     * @return the prob block
+     */
+    public double getProbBlock() {
+        return probBlock;
+    }
+
+    /**
+     * Sets prob block.
+     *
+     * @param probBlock the prob block
+     */
+    public void setProbBlock(double probBlock) {
+        this.probBlock = probBlock;
+    }
+
+    /**
+     * Is read boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isRead() {
+        return read;
+    }
+
+    /**
+     * Sets read.
+     *
+     * @param read the read
+     */
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    /**
+     * Is stand by boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isStandBy() {
+        return standBy;
+    }
+
+    /**
+     * Sets stand by.
+     *
+     * @param standBy the stand by
+     */
+    public void setStandBy(boolean standBy) {
+        this.standBy = standBy;
     }
 }

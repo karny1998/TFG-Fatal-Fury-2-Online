@@ -691,7 +691,7 @@ public class character {
      *
      * @return the boolean
      */
-    boolean isJumping(){
+    public boolean isJumping(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.JUMP_ROLL_RIGHT, Movement.NORMAL_JUMP,
                             Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN, Movement.JUMP_ROLL_FALL,
                             Movement.JUMP_FALL, Movement.DASH, Movement.JUMP_KICK_DOWN, Movement.JUMP_KICK,
@@ -707,7 +707,7 @@ public class character {
      *
      * @return the boolean
      */
-    boolean inKnockback(){
+    public boolean inKnockback(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.CROUCHED_BLOCK_KNOCKBACK};
@@ -720,7 +720,7 @@ public class character {
      *
      * @return the boolean
      */
-    boolean inDisplacement(){
+    public boolean inDisplacement(){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
                 Movement.HARD_KNOCKBACK, Movement.THROWN_OUT, Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
@@ -736,7 +736,7 @@ public class character {
      *
      * @return the boolean
      */
-    boolean isCombing(){
+    public boolean isCombing(){
         Movement array[] = {Movement.JUMP_KICK_DOWN, Movement.JUMP_PUNCH_DOWN,  Movement.JUMP_ROLL_PUNCH_DOWN,
                 Movement.CHARGED_PUNCH_A, Movement.JUMP_HARD_PUNCH_DOWN,  Movement.JUMP_ROLL_HARD_PUNCH_DOWN,
                 Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.DASH, Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
@@ -751,7 +751,7 @@ public class character {
      * @param m the m
      * @return the boolean
      */
-    boolean isSpecial(Movement m){
+    public boolean isSpecial(Movement m){
         Movement array[] = {Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK,
                 Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
                 Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};

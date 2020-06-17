@@ -97,7 +97,7 @@ public class stateCalculator {
         int val = w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
 
         if (val > max){
-            System.out.println("Out of bounds (stateCalculator)");
+            System.out.println("Out of bounds (stateCalculator) " + s.toString());
             return 0;
         }
 

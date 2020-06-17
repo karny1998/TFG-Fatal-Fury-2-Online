@@ -38,10 +38,6 @@ public class agent{
      */
     private state previousState = new state(-100,-100, Movement.SOFT_PUNCH, -700, -1, -1, -1, -1);
     /**
-     * The Executed action.
-     */
-    private Movement executedAction = Movement.STANDING;
-    /**
      * Epsilon, probabilidad de exploración.
      */
     private double epsilon = 0.5;
@@ -104,8 +100,6 @@ public class agent{
     public synchronized void restart(state initial){
         trainingEnded = true;
         trainingRegister.clear();
-        // Notifica el resultado por si se estaba esperando en train_Q_learning
-        notify();
         previousState = initial;
     }
 
@@ -117,23 +111,27 @@ public class agent{
         if(!trainingEnded) {
             // Selecciona una acción a ejecutar
             if(!waitingResult){
+                waitingResult = true;
+                resultAssigned = false;
                 actionToExecute = selectAction();
+                //System.out.println("Se ha seleccionado la accion " + actionToExecute.toString());
+                return;
             }
             // Espera por el resultado de la acción
             if(!resultAssigned) {
-                waitingResult = true;
                 return;
             }
-            resultAssigned = false;
-            waitingResult = false;
+
             // Si se le indica que ha terminado el entrenamiento sale
             if(trainingEnded){
                 return;
             }
-            // Se da la recompensa correspondiente a la acción ejecutada en base al resultado
-            giveReward(result);
+
             // Se actualiza el estado origen
             previousState = result;
+            resultAssigned = false;
+            waitingResult = false;
+            waitingResult = false;
         }
     }
 
@@ -144,9 +142,9 @@ public class agent{
      */
     public synchronized void notifyResult(state r){
         result = r;
+        // Se da la recompensa correspondiente a la acción ejecutada en base al resultado
+        giveReward(result);
         resultAssigned = true;
-        // Notifica que el resultado ha sido asignado
-        notify();
     }
 
     /**
@@ -155,8 +153,9 @@ public class agent{
      * @param newS the new s
      */
     public void giveReward(state newS){
-        // Da la recompensa a la acción executedAction previousState en base a newS
-        giveReward(previousState, newS, executedAction, false);
+        // Da la recompensa a la acción actionToExecute previousState en base a newS
+        //System.out.println("Se va a dar la recompensa a la accion " + actionToExecute.toString());
+        giveReward(previousState, newS, actionToExecute, false);
         // Aleatoriamente se comprueba si toca revivir alguna experiencia
         if(Math.random() > 1-experienceFrequency){
             // Se reviven 5 experiencias aleatorias del buffer
@@ -580,24 +579,6 @@ public class agent{
     }
 
     /**
-     * Gets executed action.
-     *
-     * @return the executed action
-     */
-    public Movement getExecutedAction() {
-        return executedAction;
-    }
-
-    /**
-     * Sets executed action.
-     *
-     * @param executedAction the executed action
-     */
-    public void setExecutedAction(Movement executedAction) {
-        this.executedAction = executedAction;
-    }
-
-    /**
      * Gets result.
      *
      * @return the result
@@ -620,7 +601,7 @@ public class agent{
      *
      * @return the action to execute
      */
-    public Movement getActionToExecute() {
+    public Movement  getActionToExecute() {
         return actionToExecute;
     }
 

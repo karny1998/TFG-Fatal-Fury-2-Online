@@ -218,4 +218,22 @@ public class enemy_controller extends character_controller{
     public void setIa(ia_controller ia) {
         this.ia = ia;
     }
+
+    /**
+     * Start stand by.
+     */
+    @Override
+    public void startStandBy(){
+        this.standBy = true;
+        this.ia.setStandBy(true);
+    }
+
+    /**
+     * End stand by.
+     */
+    @Override
+    public void endStandBy(){
+        this.standBy = false;
+        this.ia.setStandBy(false);
+    }
 }
