@@ -193,7 +193,6 @@ public class agent_controller extends ia_controller{
             }
             if(actionExecuted){
                 previousAction = actionToExecute;
-                //System.out.println("Se ha ejecutado " + actionToExecute.toString());
             }
         }
         previousState = actualState;
