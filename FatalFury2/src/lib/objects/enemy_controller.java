@@ -97,7 +97,6 @@ public class enemy_controller extends character_controller{
         // Si no se está esperando a que se terminen de mostrar los carteles de intro
         // se pide al personaje el frame correspondiente al movimiento decidido por la IA
         if(!standBy){
-            ia.getMove();
             return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
@@ -140,8 +139,13 @@ public class enemy_controller extends character_controller{
             agente = aux.getAgente();
             agentIaCreated = true;
         }
+        else if(agentIaCreated){
+            ia.setPlayer(rival);
+        }
         else {
-            ia = new ia_controller(rival, this.player, ia_loader.dif.EASY);
+            if(!agentIa){
+                ia = new ia_controller(rival, this.player, ia_loader.dif.EASY);
+            }
         }
     }
 

@@ -90,7 +90,7 @@ public class IaVsIaTraining {
      * Generate fight.
      */
     private void generateFight(){
-        player = new enemy_controller(charac, 1);
+        player = new user_controller(charac, 1);//enemy_controller(charac, 1);
         if(enemy == null) {
             enemy = new enemy_controller(ia, 2, true, true);
         }
@@ -100,7 +100,7 @@ public class IaVsIaTraining {
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
-        player.getIa().setDif(pLvl);
+        //player.getIa().setDif(pLvl);
         enemy.getIa().setDif(lvlIa);
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
@@ -132,6 +132,17 @@ public class IaVsIaTraining {
             Fight_Results resultado = fight.getFight_result();
             audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
             generateFight();
+
+            hitBox pHurt = player.getPlayer().getHurtbox();
+            hitBox eHurt = enemy.getPlayer().getHurtbox();
+            int dis = 0;
+            if (pHurt.getX() > eHurt.getX()){
+                dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
+            }
+            else if(pHurt.getX() < eHurt.getX()){
+                dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+            }
+            enemy.getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0));
             ++i;
         }
         else{

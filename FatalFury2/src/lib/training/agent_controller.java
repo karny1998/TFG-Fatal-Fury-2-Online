@@ -130,17 +130,6 @@ public class agent_controller extends ia_controller{
      */
 // Realiza la gestión de la IA, es decir, analizar la situación, evaluar, y decidir un movimiento
     private void agent_gestion(){
-
-        if(isStandBy()){
-            previousAction = Movement.STANDING;
-            previousState = Movement.STANDING;
-            actionToExecute = agente.getActionToExecute();
-            moveAgent = movementsKeys.get(actionToExecute);
-            actionExecuted = false;
-            actionInExecution = false;
-            return;
-        }
-
         hitBox pHurt = player.getHurtbox();
         hitBox eHurt = enemy.getHurtbox();
         // Distancia entre los personajes
@@ -150,6 +139,17 @@ public class agent_controller extends ia_controller{
         }
         else if(pHurt.getX() < eHurt.getX()){
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+
+        if(isStandBy()){
+            previousAction = Movement.STANDING;
+            previousState = Movement.STANDING;
+            agente.setPreviousState(new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins));
+            actionToExecute = agente.getActionToExecute();
+            moveAgent = movementsKeys.get(actionToExecute);
+            actionExecuted = false;
+            actionInExecution = false;
+            return;
         }
 
         long actual = System.currentTimeMillis();
@@ -197,7 +197,7 @@ public class agent_controller extends ia_controller{
         }
         previousState = actualState;
 
-        if(actionExecuted){
+        if(actionExecuted || (player.getLife() == 0 || enemy.getLife() == 0 || time == 0)){
             actionExecuted = false;
             actionInExecution = false;
 

@@ -98,7 +98,9 @@ public class agent{
      * @param initial the initial
      */
     public synchronized void restart(state initial){
-        trainingEnded = true;
+        trainingEnded = false;
+        waitingResult = false;
+        resultAssigned = false;
         trainingRegister.clear();
         previousState = initial;
     }
@@ -114,7 +116,6 @@ public class agent{
                 waitingResult = true;
                 resultAssigned = false;
                 actionToExecute = selectAction();
-                //System.out.println("Se ha seleccionado la accion " + actionToExecute.toString());
                 return;
             }
             // Espera por el resultado de la acción
@@ -154,7 +155,6 @@ public class agent{
      */
     public void giveReward(state newS){
         // Da la recompensa a la acción actionToExecute previousState en base a newS
-        //System.out.println("Se va a dar la recompensa a la accion " + actionToExecute.toString());
         giveReward(previousState, newS, actionToExecute, false);
         // Aleatoriamente se comprueba si toca revivir alguna experiencia
         if(Math.random() > 1-experienceFrequency){
@@ -351,10 +351,12 @@ public class agent{
                 }
             }
             bw.close();
+            fos.close();
 
             f = new File(path2);
-            fos = new FileOutputStream(f);
-            bw = new BufferedWriter(new OutputStreamWriter(fos));
+            FileWriter fr = new FileWriter(path2, true);
+            //fos = new FileOutputStream(fr);
+            bw = new BufferedWriter(fr);
             PrintWriter out = new PrintWriter(bw);
             out.println("#-----------#");
             out.println("# NEW FIGHT #");
@@ -372,6 +374,8 @@ public class agent{
                 out.println(aux.second.second.toString());
             }
             bw.close();
+            fr.close();
+            out.close();
             trainingRegister.clear();
         }
         catch (Exception e){}
@@ -468,6 +472,7 @@ public class agent{
      */
     public void setPreviousState(state previousState) {
         this.previousState = previousState;
+        this.actionToExecute = selectAction();
     }
 
     /**
