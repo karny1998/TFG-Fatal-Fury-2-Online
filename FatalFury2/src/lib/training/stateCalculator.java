@@ -71,7 +71,7 @@ public class stateCalculator {
         idMov.put(aux2[4], i+2);
         idMov.put(aux2[5], i+2);
 
-        max = (1 + 100/lifeScale) * (1 + 100/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2;
+        max = (1 + 100/lifeScale) * (1 + 100/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2 * 2;
     }
 
     /**
@@ -86,6 +86,8 @@ public class stateCalculator {
         int d = s.getDis()/distanceScale;
         int r = s.getRound() - 1;
         int w = s.getPlayerVictories();
+        int j = 0;
+        if(s.isJumping()){j = 1;}
         int sPid = idMov.get(s.getPlayerState());
 
         int aux1 = idMov.size();
@@ -93,8 +95,9 @@ public class stateCalculator {
         int aux3 = (1 + 100/lifeScale) * aux2;
         int aux4 = (1 + 700/distanceScale) * aux3;
         int aux5 = 4 * aux4;
+        int aux6 = 2 * aux5;
 
-        int val = w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
+        int val = j*aux6 + w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
 
         if (val > max){
             System.out.println("Out of bounds (stateCalculator) " + s.toString());

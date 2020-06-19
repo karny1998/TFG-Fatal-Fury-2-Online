@@ -46,6 +46,11 @@ public class state {
     private int playerVictories = 0;
 
     /**
+     * The Jumping.
+     */
+    private  boolean jumping = false;
+
+    /**
      * Instantiates a new State.
      *
      * @param life            the life
@@ -56,8 +61,9 @@ public class state {
      * @param remainingTime   the remaining time
      * @param iaVictories     the ia victories
      * @param playerVictories the player victories
+     * @param jumping         the jumping
      */
-    public state(int life, int playerLife, Movement playerState, int dis, int round, int remainingTime, int iaVictories, int playerVictories) {
+    public state(int life, int playerLife, Movement playerState, int dis, int round, int remainingTime, int iaVictories, int playerVictories, boolean jumping) {
         this.life = life;
         this.playerLife = playerLife;
         this.playerState = playerState;
@@ -71,6 +77,7 @@ public class state {
         this.remainingTime = remainingTime;
         this.iaVictories = iaVictories;
         this.playerVictories = playerVictories;
+        this.jumping = jumping;
         this.stateNum = stateCalculator.calculateNumState(this);
     }
 
@@ -89,7 +96,7 @@ public class state {
      * @return the boolean
      */
     public boolean isFightTerminal(){
-        return isRoundTerminal() && (round == 4 || iaVictories == 2 || playerVictories == 2);
+        return isRoundTerminal() && (round == 4 || iaVictories == 1 && playerLife == 0 || playerVictories == 1 && life == 0);
     }
 
     /**
@@ -260,6 +267,24 @@ public class state {
     }
 
     /**
+     * Is jumping boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isJumping() {
+        return jumping;
+    }
+
+    /**
+     * Sets jumping.
+     *
+     * @param jumping the jumping
+     */
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
+    }
+
+    /**
      * To string string.
      *
      * @return the string
@@ -274,7 +299,8 @@ public class state {
                 "," + stateNum +
                 "," + remainingTime +
                 "," + iaVictories +
-                "," + playerVictories;
+                "," + playerVictories+
+                "," + jumping;
     }
 
     /**
@@ -283,6 +309,6 @@ public class state {
      * @return the state
      */
     public state clone(){
-        return new state(life,playerLife,playerState,dis,round,remainingTime,iaVictories,playerVictories);
+        return new state(life,playerLife,playerState,dis,round,remainingTime,iaVictories,playerVictories, jumping);
     }
 }

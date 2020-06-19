@@ -142,7 +142,7 @@ public class IaVsIaTraining {
             else if(pHurt.getX() < eHurt.getX()){
                 dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
             }
-            enemy.getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0));
+            enemy.getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0, false));
             ++i;
         }
         else{

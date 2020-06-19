@@ -3,7 +3,6 @@ package lib.training;
 import lib.Enums.Movement;
 import lib.objects.character;
 import lib.utils.Pair;
-import netscape.javascript.JSObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,11 +31,11 @@ public class agent{
     /**
      * Frecuencia con la que se "reviven" experiencias.
      */
-    private double experienceFrequency = 0.1;
+    private double experienceFrequency = 0.05;
     /**
      * The Previous state.
      */
-    private state previousState = new state(-100,-100, Movement.SOFT_PUNCH, -700, -1, -1, -1, -1);
+    private state previousState = new state(-100,-100, Movement.SOFT_PUNCH, -700, -1, -1, -1, -1, false);
     /**
      * Epsilon, probabilidad de exploración.
      */
@@ -67,6 +66,9 @@ public class agent{
      */
     private boolean resultAssigned = false;
 
+    /**
+     * The Waiting result.
+     */
     private boolean waitingResult = false;
 
     /**
@@ -183,10 +185,10 @@ public class agent{
         // Si es terminal de la pelea, se recompensa mucho la victoria, se penaliza mucho la derrota, y
         // ni de compensa ni penaliza el empate
         if(newS.isFightTerminal()){
-            if(newS.getIaVictories() == 2){
+            if(newS.getIaVictories() == 1 && newS.getPlayerLife() == 0){
                 reward = 200;
             }
-            else if(newS.getPlayerVictories() == 2){
+            else if(newS.getPlayerVictories() == 1 && newS.getLife() == 0){
                 reward = -200;
             }
         }
@@ -419,7 +421,7 @@ public class agent{
                     String estado[] = aux.split(",");
                     state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
                             Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
+                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
                     aux = b.readLine();
                     aux = b.readLine();
                     Movement action = Movement.valueOf(aux);
@@ -430,7 +432,7 @@ public class agent{
                     estado = aux.split(",");
                     state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
                             Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]));
+                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
                     giveReward(s, s2, action, false);
                 }
             }

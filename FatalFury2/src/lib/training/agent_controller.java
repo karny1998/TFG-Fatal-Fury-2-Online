@@ -59,7 +59,8 @@ public class agent_controller extends ia_controller{
 
     private Movement previousAction = Movement.STANDING;
 
-    private int previousRound = 1;
+    private boolean roundEnded = false;
+
 
 
     /**
@@ -89,7 +90,7 @@ public class agent_controller extends ia_controller{
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
         }
 
-        state s = new state(100,100,player.getState(),dis,1,90,0,0);
+        state s = new state(100,100,player.getState(),dis,1,90,0,0, enemy.getY() > 40);
 
         this.agente = new agent(s,0.99,0.75,0.25);
 
@@ -144,18 +145,19 @@ public class agent_controller extends ia_controller{
         if(isStandBy()){
             previousAction = Movement.STANDING;
             previousState = Movement.STANDING;
-            agente.setPreviousState(new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins));
+            agente.setPreviousState(new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() > 40));
             actionToExecute = agente.getActionToExecute();
             moveAgent = movementsKeys.get(actionToExecute);
             actionExecuted = false;
             actionInExecution = false;
+            roundEnded = false;
             return;
         }
 
         long actual = System.currentTimeMillis();
 
         if(!training) {
-            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins);
+            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() > 40);
             Movement m = agente.selectAction(s);
             actionToExecute = agente.selectAction(s);
             moveAgent = movementsKeys.get(m);
@@ -167,6 +169,7 @@ public class agent_controller extends ia_controller{
         }
 
         Movement actualState = enemy.getState();
+        Movement jumpAttack = Movement.NONE;
 
         if(!actionInExecution && !actionExecuted){
             if(actionToExecute == Movement.THROW && dis >= 10){
@@ -182,6 +185,20 @@ public class agent_controller extends ia_controller{
                 }
             }
         }
+        else if(actionInExecution && !actionExecuted
+                && (actualState == Movement.NORMAL_JUMP || actualState == Movement.JUMP_ROLL_RIGHT)
+                && !enemy.isAttacking() && enemy.getY() > 40 && actual - timeReferenceAgent > 100.0){
+            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, true);
+            jumpAttack = agente.selectAction(s);
+            if(jumpAttack != Movement.SOFT_PUNCH && jumpAttack != Movement.HARD_PUNCH &&
+                    jumpAttack != Movement.SOFT_KICK && jumpAttack != Movement.HARD_KICK){
+                jumpAttack = Movement.NONE;
+            }
+            else{
+                actionExecuted = true;
+            }
+            timeReferenceAgent = actual;
+        }
         else if(!actionExecuted){
             if(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK){
                 actionExecuted = System.currentTimeMillis() - timeReferenceAgent > 300.0;
@@ -195,14 +212,19 @@ public class agent_controller extends ia_controller{
                 previousAction = actionToExecute;
             }
         }
+
         previousState = actualState;
 
-        if(actionExecuted || (player.getLife() == 0 || enemy.getLife() == 0 || time == 0)){
+        if(!roundEnded && (actionExecuted || (player.getLife() == 0 || enemy.getLife() == 0 || time == 0))){
             actionExecuted = false;
             actionInExecution = false;
 
-            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins);
+            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() > 40);
             agente.notifyResult(s);
+
+            if(jumpAttack != Movement.NONE){
+                agente.setActionToExecute(jumpAttack);
+            }
 
             Movement m = agente.getActionToExecute();
             timeReferenceAgent = System.currentTimeMillis();
@@ -214,6 +236,9 @@ public class agent_controller extends ia_controller{
             else {
                 actionToExecute = m;
                 moveAgent = movementsKeys.get(m);
+            }
+            if(s.isRoundTerminal() || s.isFightTerminal()){
+                roundEnded = true;
             }
         }
     }
