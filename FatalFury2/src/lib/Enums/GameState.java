@@ -85,5 +85,11 @@ public enum GameState {
     /**
      * Sure game state.
      */
-    SURE
+    SURE,
+    /**
+     * Online fight game state.
+     */
+    ONLINE_FIGHT,
+    ONLINE_MODE,
+    ONLINE_SEARCHING_FIGHT
 }

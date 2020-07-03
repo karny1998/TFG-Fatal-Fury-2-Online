@@ -20,27 +20,32 @@ public class user_controller extends character_controller{
      * The Inputs.
      */
 // Lista de inputs del usuario en los últimos dos segundos
-    private List<String> inputs = new ArrayList<String>();
+    protected List<String> inputs = new ArrayList<String>();
     /**
      * The Times.
      */
 // Tiempos de referencia de cada input
-    private List<Long> times = new ArrayList<Long>();
+    protected List<Long> times = new ArrayList<Long>();
     /**
      * The Time reference.
      */
 // Tiempo de referencia general
-    private long timeReference = System.currentTimeMillis();
+    protected long timeReference = System.currentTimeMillis();
     /**
      * The Last key.
      */
 // último input introducido
-    private String lastKey = "";
+    protected String lastKey = "";
     /**
      * The Mov.
      */
 // Movimiento a realizar
-    private String mov = "";
+    protected String mov = "";
+
+    /**
+     * The Input control.
+     */
+    protected Timer input_control;
 
     /**
      * Instantiates a new User controller.
@@ -52,13 +57,13 @@ public class user_controller extends character_controller{
     public user_controller(Playable_Character ch, int pN){
         super(ch, pN,500,290, -1);
         // Proceso encargado de la gestión de inputs del usuario
-        Timer inptut_control = new Timer(1, new ActionListener() {
+        input_control = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 inputsGestion();
             }
         });
-        inptut_control.start();
+        input_control.start();
     }
 
     /**
@@ -159,6 +164,16 @@ public class user_controller extends character_controller{
     void reset() {
         if(playerNum == 1){reset(this.player.getCharac(),500,290, -1);}
         else{reset(this.player.getCharac(),750,290, 1);}
+    }
+
+    /**
+     * Stops the input gestion.
+     */
+    @Override
+    public void stop(){
+        if(input_control != null){
+            input_control.stop();
+        }
     }
 
     /**

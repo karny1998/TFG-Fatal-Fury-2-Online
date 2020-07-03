@@ -37,7 +37,7 @@ public abstract  class character_controller {
      * The Stand by.
      */
 // Para las esperas
-    boolean standBy = true;
+    protected boolean standBy = true;
     /**
      * The Player num.
      */
@@ -119,7 +119,12 @@ public abstract  class character_controller {
      * @return animation
      */
 // Devuelve el frame del personaje teniendo en cuenta la colision de las hurtboxs
-    abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
+    public abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);
+
+    /**
+     * Stop launched threads.
+     */
+    public abstract void stop();
 
     /**
      * Gets charac.
@@ -277,7 +282,7 @@ public abstract  class character_controller {
      *
      * @param playerNum the player num
      */
-    void setPlayerNum(int playerNum) {
+    public void setPlayerNum(int playerNum) {
         this.playerNum = playerNum;
         if(playerNum == 2){
             player.setX(750);

@@ -33,122 +33,122 @@ public class round {
      * The Time left.
      */
 // Tiempo restante hasta final de ronda
-    private int timeLeft;
+    protected int timeLeft;
     /**
      * The Player.
      */
 // Controlador del usuario
-    private character_controller player;
+    protected character_controller player;
     /**
      * The Player old state.
      */
 // Anterior movimiento del jugador
-    private Movement player_old_state = Movement.STANDING;
+    protected Movement player_old_state = Movement.STANDING;
     /**
      * The Enemy.
      */
 // Controlador del enemigo
-    private character_controller enemy;
+    protected character_controller enemy;
     /**
      * The Enemy old state.
      */
 // Anterior movimiento del enemigo
-    private Movement enemy_old_state = Movement.STANDING;
+    protected Movement enemy_old_state = Movement.STANDING;
 
     /**
      * The Player hit.
      */
-    private Boolean playerHit = false;
+    protected Boolean playerHit = false;
     /**
      * The Enemy hit.
      */
-    private Boolean enemyHit = false;
+    protected Boolean enemyHit = false;
     /**
      * The Result.
      */
 // Resultado de la ronda
-    private Round_Results result;
+    protected Round_Results result;
     /**
      * The Listeners.
      */
 // Listeners de la ronda
-    private List<roundListener> listeners = new ArrayList<roundListener>();
+    protected List<roundListener> listeners = new ArrayList<roundListener>();
     /**
      * The Check lifes.
      */
 // Timers de la ronda
-    private Timer checkLifes = new Timer(1000, null);;
+    protected Timer checkLifes = new Timer(1000, null);;
     /**
      * The Round timer.
      */
-    private Timer roundTimer = new Timer(1000, null);;
+    protected Timer roundTimer = new Timer(1000, null);;
     /**
      * The Paused 1.
      */
 // Comprobación de parada de timers
-    private boolean paused1;
+    protected boolean paused1;
     /**
      * The Paused 2.
      */
-    private boolean paused2;
+    protected boolean paused2;
     /**
      * The Score player.
      */
 // Score p1
-    private score scorePlayer;
+    protected score scorePlayer;
     /**
      * The Score enemy.
      */
 // Score p2
-    private  score scoreEnemy;
+    protected  score scoreEnemy;
     /**
      * The Is perfect.
      */
 // Perfect
-    private boolean isPerfect;
+    protected boolean isPerfect;
     /**
      * The Is time out.
      */
 // Time Out
-    private boolean isTimeOut;
+    protected boolean isTimeOut;
     /**
      * The Is double ko.
      */
 // Double KO
-    boolean isDoubleKO;
+    protected boolean isDoubleKO;
     /**
      * The Enemy ended.
      */
-    private boolean enemyEnded = false;
+    protected boolean enemyEnded = false;
     /**
      * The Player ended.
      */
-    private boolean playerEnded = false;
+    protected boolean playerEnded = false;
     /**
      * The Shadow 1.
      */
-    private screenObject shadow1 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_1);
+    protected screenObject shadow1 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_1);
     /**
      * The Shadow 2.
      */
-    private screenObject shadow2 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_2);
+    protected screenObject shadow2 = new screenObject(136,670,207,39,new ImageIcon(this.getClass().getResource("/assets/sprites/characters/shadow.png")).getImage(), SHADOW_2);
 
     /**
      * The Map limit.
      */
-    private hitBox mapLimit = new hitBox(-145,0,1571,720, box_type.HURTBOX);
+    protected hitBox mapLimit = new hitBox(-145,0,1571,720, box_type.HURTBOX);
     /**
      * The Camera limit.
      */
-    private hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
+    protected hitBox cameraLimit = new hitBox(40,0,1200,720,box_type.HURTBOX);
     /**
      * The Scenary offset.
      */
-    private int scenaryOffset = 0;
+    protected int scenaryOffset = 0;
     /**
      * The Scenary offset y.
      */
-    private int scenaryOffsetY = 0;
+    protected int scenaryOffsetY = 0;
 
     /**
      * Instantiates a new Round.
@@ -285,7 +285,7 @@ public class round {
      * @param eHurt the e hurt
      */
 // Gestion de daños
-    void collidesManagement(hitBox pHurt, hitBox eHurt){
+    public void collidesManagement(hitBox pHurt, hitBox eHurt){
         // Estado actual de ambos
         Movement player_act_state = player.getPlayer().getState();
         Movement enemy_act_state = enemy.getPlayer().getState();
@@ -486,7 +486,7 @@ public class round {
      * @param eHurt the e hurt
      */
 // Gestión de colisiones, cambios de orientación y daños entre los personajes
-    void fightManagement(hitBox pHurt, hitBox eHurt){
+    public void fightManagement(hitBox pHurt, hitBox eHurt){
         // Gestiona las colisiones y daños
         collidesManagement(pHurt, eHurt);
         // EL 400 ES EL ANCHO DE LA IMAGEN
@@ -576,7 +576,7 @@ public class round {
      * @param eHurt the e hurt
      */
 // Gestiona la cámara (el escenario) en base a las posiciones de los personajes
-    void cameraManagement(hitBox pHurt,hitBox eHurt){
+    public void cameraManagement(hitBox pHurt,hitBox eHurt){
         int xP, xE;
         // La x de cada personaje en base a la oientación
         if(pHurt.getX() < eHurt.getX()){

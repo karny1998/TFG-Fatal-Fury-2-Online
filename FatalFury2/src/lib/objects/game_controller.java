@@ -7,6 +7,7 @@ import lib.menus.character_menu;
 import lib.menus.menu;
 import lib.menus.menu_generator;
 import lib.menus.options;
+import lib.objects.networking.online_mode;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
@@ -38,8 +39,8 @@ public class game_controller {
      * The training.
      */
 // Modo debug
-    boolean training = true;
-    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.EASY, ia_loader.dif.HARD, 10);
+    boolean training = false;
+    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.EASY, ia_loader.dif.EASY, 10);
     /**
      * The Debug.
      */
@@ -118,7 +119,7 @@ public class game_controller {
      * The State.
      */
 // Estado del juego, inicalmente en opening
-    private GameState state = GameState.OPENING_1;
+    private GameState state = GameState.ONLINE_MODE;
     /**
      * The Ranking.
      */
@@ -207,6 +208,8 @@ public class game_controller {
         }
     }
 
+    private online_mode online = new online_mode(false);
+
     /**
      * Instantiates a new Game controller.
      */
@@ -257,7 +260,10 @@ public class game_controller {
      */
 // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
-        if(training){
+        if(state == GameState.ONLINE_MODE){
+            online.online_game(screenObjects);
+        }
+        else if(training){
             fight = trainer.getFight();
             trainer.train(screenObjects);
         }
@@ -267,26 +273,6 @@ public class game_controller {
             optionsMenu.updateTime();
             state = GameState.OPTIONS;
         }
-/*
-        if(debug && state != GameState.FIGHT){
-            user = new user_controller(Playable_Character.MAI, 1);
-            enemy = new user_controller(Playable_Character.TERRY, 2);
-            enemy.setPlayerNum(2);
-            enemy.setRival(user.getPlayer());
-            enemy.getPlayer().setMapLimit(mapLimit);
-            user.setRival(enemy.getPlayer());
-            user.getPlayer().setMapLimit(mapLimit);
-            state = GameState.FIGHT;
-            scene = new scenary(Scenario_type.USA);
-            audio_manager.startFight(user.getPlayer().getCharac(), enemy.getPlayer().getCharac(), Scenario_type.USA);
-            fight = new fight_controller(user,enemy,scene);
-            fight.setMapLimit(mapLimit);
-            pvp = true;
-
-            fight.setVsIa(false);
-        }
-*/
-
         // Estado del juego de opening 1 (incial), se muestra un sprite en toda la pantalla
         else if(state == GameState.OPENING_1){
             screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(openings + "1.png")).getImage(), Item_Type.MENU);
@@ -944,7 +930,11 @@ public class game_controller {
      */
 // Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
-        if(training){
+        if(state == GameState.ONLINE_MODE && online.getFight() != null){
+            online.getFight().drawHpBarPlayer(g, offset);
+            online.getFight().drawHpBarEnemy(g, offset);
+        }
+        else if(training){
             trainer.getFight().drawHpBarPlayer(g, offset);
             trainer.getFight().drawHpBarEnemy(g, offset);
         }
