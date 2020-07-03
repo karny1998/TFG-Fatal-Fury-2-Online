@@ -1,0 +1,731 @@
+#-----------#
+# NEW FIGHT #
+#-----------#
+# Source state #
+100,100,STANDING,538,1,129615,90,0,0
+# Action #
+SOFT_PUNCH
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,538,1,129615,90,0,0
+# Source state #
+100,100,STANDING,538,1,129615,90,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,538,1,129615,90,0,0
+# Source state #
+100,100,STANDING,538,1,129615,90,0,0
+# Action #
+CROUCHING_SOFT_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,479,1,108006,89,0,0
+# Source state #
+100,100,STANDING,479,1,108006,89,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+SOFT_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+SOFT_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+STANDING
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,418,1,108006,88,0,0
+# Source state #
+100,100,STANDING,418,1,108006,88,0,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,418,1,108006,88,0,0
+# Source state #
+100,100,STANDING,418,1,108006,88,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,574,1,129615,88,0,0
+# Source state #
+100,100,STANDING,574,1,129615,88,0,0
+# Action #
+JUMP_ROLL_RIGHT
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,934,1,216051,87,0,0
+# Source state #
+100,100,STANDING,934,1,216051,87,0,0
+# Action #
+JUMP_ROLL_RIGHT
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,528,1,129615,86,0,0
+# Source state #
+100,100,STANDING,528,1,129615,86,0,0
+# Action #
+CROUCHING_SOFT_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,131,1,43179,85,0,0
+# Source state #
+100,100,STANDING,131,1,43179,85,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,131,1,43179,85,0,0
+# Source state #
+100,100,STANDING,131,1,43179,85,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+-14.0
+# Destiny state #
+100,86,WALKING_BACK,51,1,18485,84,0,0
+# Source state #
+100,86,WALKING_BACK,51,1,18485,84,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,86,WALKING_BACK,223,1,61703,83,0,0
+# Source state #
+100,86,WALKING_BACK,223,1,61703,83,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+-14.0
+# Destiny state #
+100,72,STANDING,178,1,37005,83,0,0
+# Source state #
+100,72,STANDING,178,1,37005,83,0,0
+# Action #
+WALKING
+# Reward #
+0.0
+# Destiny state #
+100,72,WALKING_BACK,299,1,58616,81,0,0
+# Source state #
+100,72,WALKING_BACK,299,1,58616,81,0,0
+# Action #
+NORMAL_JUMP
+# Reward #
+0.0
+# Destiny state #
+100,72,WALKING_BACK,299,1,58616,81,0,0
+# Source state #
+100,72,WALKING_BACK,299,1,58616,81,0,0
+# Action #
+CROUCHED_WALKING
+# Reward #
+0.0
+# Destiny state #
+100,72,WALKING_BACK,106,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,106,1,37007,80,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,72,WALKING_BACK,104,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,104,1,37007,80,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,72,WALKING_BACK,103,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,104,1,37007,80,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,72,WALKING_BACK,102,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,102,1,37007,80,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,72,WALKING_BACK,102,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,102,1,37007,80,0,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,72,WALKING_BACK,101,1,37007,80,0,0
+# Source state #
+100,72,WALKING_BACK,101,1,37007,80,0,0
+# Action #
+WALKING
+# Reward #
+0.0
+# Destiny state #
+100,72,STANDING,97,1,15396,80,0,0
+# Source state #
+100,72,STANDING,97,1,15396,80,0,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,72,STANDING,97,1,15396,80,0,0
+# Source state #
+100,72,STANDING,97,1,15396,80,0,0
+# Action #
+CHARGED_PUNCH_A
+# Reward #
+-5.0
+# Destiny state #
+100,72,STANDING,97,1,15396,80,0,0
+# Source state #
+100,72,STANDING,97,1,15396,80,0,0
+# Action #
+THROW
+# Reward #
+-20.0
+# Destiny state #
+100,52,STANDING,4,1,11280,79,0,0
+# Source state #
+100,52,STANDING,4,1,11280,79,0,0
+# Action #
+CROUCHING_HARD_KICK
+# Reward #
+-15.0
+# Destiny state #
+100,37,THROWN_OUT,597,1,116244,78,0,0
+# Source state #
+100,37,THROWN_OUT,597,1,116244,78,0,0
+# Action #
+HARD_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,37,THROWN_OUT,597,1,116244,77,0,0
+# Source state #
+100,37,THROWN_OUT,597,1,116244,77,0,0
+# Action #
+NORMAL_JUMP
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,597,1,116240,77,0,0
+# Source state #
+100,37,WALKING_BACK,597,1,116240,77,0,0
+# Action #
+REVERSE_KICK_B
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,581,1,116238,76,0,0
+# Source state #
+100,37,STANDING,581,1,116238,76,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,167,1,29804,75,0,0
+# Source state #
+100,37,WALKING_BACK,167,1,29804,75,0,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,263,1,51413,74,0,0
+# Source state #
+100,37,WALKING_BACK,263,1,51413,74,0,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,301,1,73022,74,0,0
+# Source state #
+100,37,WALKING_BACK,301,1,73022,74,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,37,WALKING_BACK,299,1,51413,74,0,0
+# Source state #
+100,37,WALKING_BACK,299,1,51413,74,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+0.0
+# Destiny state #
+100,37,STANDING,146,1,29802,73,0,0
+# Source state #
+100,37,STANDING,146,1,29802,73,0,0
+# Action #
+WALKING
+# Reward #
+0.0
+# Destiny state #
+100,37,STANDING,506,1,116238,72,0,0
+# Source state #
+100,37,STANDING,506,1,116238,72,0,0
+# Action #
+WALKING_BACK
+# Reward #
+0.0
+# Destiny state #
+100,37,STANDING,657,1,137847,72,0,0
+# Source state #
+100,37,STANDING,657,1,137847,72,0,0
+# Action #
+CROUCHED_BLOCK
+# Reward #
+0.0
+# Destiny state #
+100,37,STANDING,526,1,116238,72,0,0
+# Source state #
+100,37,STANDING,526,1,116238,72,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,526,1,116238,72,0,0
+# Source state #
+100,37,STANDING,526,1,116238,72,0,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,236,1,51413,71,0,0
+# Source state #
+100,37,WALKING_BACK,236,1,51413,71,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,142,1,29802,71,0,0
+# Source state #
+100,37,STANDING,142,1,29802,71,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,142,1,29802,71,0,0
+# Source state #
+100,37,STANDING,142,1,29802,71,0,0
+# Action #
+REVERSE_KICK_B
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,142,1,29802,71,0,0
+# Source state #
+100,72,WALKING_BACK,101,1,37007,80,0,0
+# Action #
+WALKING
+# Reward #
+0.0
+# Destiny state #
+100,72,STANDING,97,1,15396,80,0,0
+# Source state #
+100,100,STANDING,418,1,108006,88,0,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,100,STANDING,418,1,108006,88,0,0
+# Source state #
+100,37,WALKING_BACK,301,1,73022,74,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,37,WALKING_BACK,299,1,51413,74,0,0
+# Source state #
+100,72,WALKING_BACK,102,1,37007,80,0,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,72,WALKING_BACK,101,1,37007,80,0,0
+# Source state #
+100,100,STANDING,131,1,43179,85,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,131,1,43179,85,0,0
+# Source state #
+100,37,STANDING,142,1,29802,71,0,0
+# Action #
+SOFT_KICK
+# Reward #
+-16.0
+# Destiny state #
+100,21,WALKING_BACK,0,1,5108,71,0,0
+# Source state #
+100,21,WALKING_BACK,0,1,5108,71,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-8.0
+# Destiny state #
+100,13,SOFT_KNOCKBACK,45,1,3056,70,0,0
+# Source state #
+100,37,STANDING,526,1,116238,72,0,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,37,WALKING_BACK,236,1,51413,71,0,0
+# Source state #
+100,100,STANDING,479,1,108006,89,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,37,STANDING,526,1,116238,72,0,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,526,1,116238,72,0,0
+# Source state #
+100,13,SOFT_KNOCKBACK,45,1,3056,70,0,0
+# Action #
+DASH
+# Reward #
+100.0
+# Destiny state #
+100,0,MEDIUM_KNOCKBACK,0,1,999,70,0,0
+# Source state #
+100,100,STANDING,538,2,302487,70,1,0
+# Action #
+WALKING
+# Reward #
+0.0
+# Destiny state #
+100,100,WALKING_BACK,538,2,302489,90,1,0
+# Source state #
+100,100,WALKING_BACK,538,2,302489,90,1,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,100,WALKING_BACK,538,2,302489,90,1,0
+# Source state #
+100,100,WALKING_BACK,538,2,302489,90,1,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+0.0
+# Destiny state #
+100,100,WALKING_BACK,575,2,302489,90,1,0
+# Source state #
+100,100,WALKING_BACK,575,2,302489,90,1,0
+# Action #
+SOFT_PUNCH
+# Reward #
+-5.0
+# Destiny state #
+100,100,WALKING_BACK,241,2,237662,89,1,0
+# Source state #
+100,100,WALKING_BACK,241,2,237662,89,1,0
+# Action #
+CROUCHING_HARD_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,WALKING_BACK,132,2,216053,89,1,0
+# Source state #
+100,100,WALKING_BACK,132,2,216053,89,1,0
+# Action #
+STANDING
+# Reward #
+-10.0
+# Destiny state #
+100,90,SOFT_KNOCKBACK,143,2,214001,88,1,0
+# Source state #
+100,90,SOFT_KNOCKBACK,143,2,214001,88,1,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+0.0
+# Destiny state #
+100,90,WALKING_BACK,61,2,192386,88,1,0
+# Source state #
+100,90,WALKING_BACK,61,2,192386,88,1,0
+# Action #
+CROUCHED_BLOCK
+# Reward #
+0.0
+# Destiny state #
+100,90,STANDING,0,2,192384,87,1,0
+# Source state #
+100,90,STANDING,0,2,192384,87,1,0
+# Action #
+SPIN_PUNCH_C
+# Reward #
+-5.0
+# Destiny state #
+100,90,STANDING,0,2,192384,87,1,0
+# Source state #
+100,90,STANDING,0,2,192384,87,1,0
+# Action #
+NORMAL_JUMP
+# Reward #
+-14.0
+# Destiny state #
+100,76,STANDING,75,2,189297,87,1,0
+# Source state #
+100,76,STANDING,75,2,189297,87,1,0
+# Action #
+JUMP_ROLL_RIGHT
+# Reward #
+0.0
+# Destiny state #
+100,76,WALKING_BACK,3,2,189299,86,1,0
+# Source state #
+100,76,WALKING_BACK,3,2,189299,86,1,0
+# Action #
+STANDING
+# Reward #
+0.0
+# Destiny state #
+100,76,STANDING,46,2,189297,85,1,0
+# Source state #
+100,76,STANDING,46,2,189297,85,1,0
+# Action #
+CROUCHED_WALKING
+# Reward #
+0.0
+# Destiny state #
+100,76,STANDING,46,2,189297,85,1,0
+# Source state #
+100,76,STANDING,46,2,189297,85,1,0
+# Action #
+CHARGED_PUNCH_A
+# Reward #
+-5.0
+# Destiny state #
+100,76,STANDING,46,2,189297,85,1,0
+# Source state #
+100,76,STANDING,46,2,189297,85,1,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+-20.0
+# Destiny state #
+100,56,STANDING,3,2,185181,84,1,0
+# Source state #
+100,56,STANDING,3,2,185181,84,1,0
+# Action #
+CHARGED_PUNCH_A
+# Reward #
+-5.0
+# Destiny state #
+100,56,WALKING_BACK,353,2,250010,83,1,0
+# Source state #
+100,56,WALKING_BACK,353,2,250010,83,1,0
+# Action #
+THROW
+# Reward #
+-20.0
+# Destiny state #
+100,36,STANDING,3,2,181065,82,1,0
+# Source state #
+100,36,STANDING,3,2,181065,82,1,0
+# Action #
+CROUCH
+# Reward #
+-15.0
+# Destiny state #
+100,21,THROWN_OUT,600,2,307638,81,1,0
+# Source state #
+100,21,THROWN_OUT,600,2,307638,81,1,0
+# Action #
+JUMP_ROLL_RIGHT
+# Reward #
+0.0
+# Destiny state #
+100,21,THROWN_OUT,600,2,307638,81,1,0
+# Source state #
+100,21,THROWN_OUT,600,2,307638,81,1,0
+# Action #
+CROUCH
+# Reward #
+0.0
+# Destiny state #
+100,21,WALKING,88,2,177979,80,1,0
+# Source state #
+100,21,WALKING,88,2,177979,80,1,0
+# Action #
+STANDING
+# Reward #
+0.0
+# Destiny state #
+100,21,WALKING,86,2,177979,80,1,0
+# Source state #
+100,21,WALKING,86,2,177979,80,1,0
+# Action #
+DASH
+# Reward #
+0.0
+# Destiny state #
+100,21,WALKING,84,2,177979,80,1,0
+# Source state #
+100,21,WALKING,84,2,177979,80,1,0
+# Action #
+STANDING
+# Reward #
+0.0
+# Destiny state #
+100,21,WALKING_BACK,112,2,199589,80,1,0
+# Source state #
+100,21,WALKING_BACK,112,2,199589,80,1,0
+# Action #
+CROUCHING_HARD_PUNCH
+# Reward #
+-5.0
+# Destiny state #
+100,21,WALKING_BACK,110,2,199589,80,1,0
+# Source state #
+100,100,STANDING,418,1,108006,89,0,0
+# Action #
+SOFT_KICK
+# Reward #
+-5.0
+# Destiny state #
+100,100,STANDING,418,1,108006,89,0,0
+# Source state #
+100,21,WALKING,88,2,177979,80,1,0
+# Action #
+STANDING
+# Reward #
+0.0
+# Destiny state #
+100,21,WALKING,86,2,177979,80,1,0
+# Source state #
+100,72,STANDING,97,1,15396,80,0,0
+# Action #
+CHARGED_PUNCH_A
+# Reward #
+-5.0
+# Destiny state #
+100,72,STANDING,97,1,15396,80,0,0
+# Source state #
+100,86,WALKING_BACK,223,1,61703,83,0,0
+# Action #
+JUMP_ROLL_LEFT
+# Reward #
+-14.0
+# Destiny state #
+100,72,STANDING,178,1,37005,83,0,0
+# Source state #
+100,37,WALKING_BACK,236,1,51413,71,0,0
+# Action #
+THROW
+# Reward #
+-5.0
+# Destiny state #
+100,37,STANDING,142,1,29802,71,0,0
+# Source state #
+100,21,WALKING_BACK,110,2,199589,80,1,0
+# Action #
+CROUCHING_SOFT_PUNCH
+# Reward #
+-15.0
+# Destiny state #
+100,6,MEDIUM_KNOCKBACK,112,2,196509,79,1,0
+# Source state #
+100,6,MEDIUM_KNOCKBACK,112,2,196509,79,1,0
+# Action #
+HARD_KICK
+# Reward #
+200.0
+# Destiny state #
+100,0,SOFT_KNOCKBACK,18,2,173870,79,1,0

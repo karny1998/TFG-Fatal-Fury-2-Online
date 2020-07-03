@@ -231,11 +231,11 @@ public class agent{
             else if (newS.getLife() != ini.getLife() || newS.getPlayerLife() != ini.getPlayerLife()) {
                 // Si se estaba cubriento, se recompensa con el daño recibido (este es reducido)
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
-                    reward = (newS.getLife() - ini.getLife())/2;
+                    reward = 30*((newS.getLife() - ini.getLife())/2)/ini.getLife();
                 }
                 // Sino, recompensa con la diferencia entre el daño infligido y el recibido
                 else {
-                    reward = ((ini.getLife() - newS.getLife()) + (newS.getPlayerLife() - ini.getPlayerLife()));
+                    reward = (30*(ini.getLife() - newS.getLife())/ini.getLife() + 30*(newS.getPlayerLife() - ini.getPlayerLife())/ini.getPlayerLife());
                 }
             }
         }
