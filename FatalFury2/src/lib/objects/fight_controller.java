@@ -344,6 +344,8 @@ public class fight_controller implements roundListener {
     audio_draw_game = false;
     protected boolean difAssigned = false;
 
+    public fight_controller(){}
+
     /**
      * Instantiates a new Fight controller.
      *
@@ -477,7 +479,7 @@ public class fight_controller implements roundListener {
      * @param hasEnd the has end
      */
 // Empezar ronda nueva
-    void startNewRound(boolean hasEnd) {
+    public void startNewRound(boolean hasEnd) {
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(hasEnd);
@@ -607,13 +609,19 @@ public class fight_controller implements roundListener {
         }
     }
 
+    public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        fight_management(screenObjects);
+        // RONDA
+        currentRound.getAnimation(screenObjects);
+    }
+
     /**
      * Gets animation.
      *
      * @param screenObjects the screen objects
      */
 // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
-    public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+    public void fight_management(Map<Item_Type, screenObject> screenObjects) {
         // Actualizar valores de la ia
         if(vsIa){
             ia_controller iaAux = enemy.getIa();
@@ -1078,8 +1086,6 @@ public class fight_controller implements roundListener {
                 else { hasEnded = true; }
             }
         }
-        // RONDA
-        currentRound.getAnimation(screenObjects);
     }
 
     /**

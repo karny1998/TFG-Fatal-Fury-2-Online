@@ -15,6 +15,7 @@ public class online_round extends round {
     //private static network_manager networking;
     private connection con;
     private boolean isServer = false;
+    private int messageIdentifier = 3;
 
     /**
      * Instantiates a new Round.
@@ -25,12 +26,11 @@ public class online_round extends round {
      * @param sP   the s p
      * @param sE   the s e
      */
-    public online_round(character_controller p, character_controller e, int time, score sP, score sE, connection con, boolean isServer) {
+    public online_round(character_controller p, character_controller e, int time, score sP, score sE, connection con, boolean isServer, int mI) {
         super(p, e, time, sP, sE);
         this.con = con;
         this.isServer = isServer;
-        //networking = new network_manager(this, sc, ad, isServer);
-        //networking.start();
+        this.messageIdentifier = mI;
     }
 
     /**
@@ -39,6 +39,7 @@ public class online_round extends round {
      * @param screenObjects the screen objects
      */
 // Asigna a screenObjects las cosas a mostrar, relacionadas con la pelea
+    @Override
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         hitBox pHurt = player.getPlayer().getHurtbox();
         hitBox eHurt = enemy.getPlayer().getHurtbox();
@@ -46,24 +47,32 @@ public class online_round extends round {
         if(isServer) {
             fightManagement(pHurt, eHurt);
             character p = player.getPlayer(), e = enemy.getPlayer();
-            String msg = p.getState().toString() + ":" + p.getLife() + ":" + p.getX() + ":" + p.getY() + ":" +
-                    e.getState().toString()+ ":" + e.getLife() + ":" + e.getX() + ":" + e.getY();
+            String msg = p.getState().toString() + ":" + p.getOrientation() + ":" + p.getLife() + ":" + p.getX() + ":" + p.getY() + ":" +
+                    e.getState().toString() + ":" + e.getOrientation() + ":" + e.getLife() + ":" + e.getX() + ":" + e.getY() + ":" + timeLeft;
             System.out.println("Se envia: " + msg);
-            con.send(3, msg);
+            con.send(messageIdentifier, msg);
         }
         else{
             character p = player.getPlayer(), e = enemy.getPlayer();
-            String msg = con.receive(3);
-            if(!msg.equals("")){
+            String msg = con.receive(messageIdentifier);
+            if(!msg.equals("") && !msg.contains(":")){
+                System.out.println(msg);
+            }
+            if(!msg.equals("") && !msg.equals("NONE")){
                 String aux[] = msg.split(":");
-                Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[4]);
-                int pL = Integer.parseInt(aux[1]), eL = Integer.parseInt(aux[5]);
-                int pX = Integer.parseInt(aux[2]), eX = Integer.parseInt(aux[6]);
-                int pY = Integer.parseInt(aux[3]), eY = Integer.parseInt(aux[7]);
+                Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[5]);
+                int pO = Integer.parseInt(aux[1]), eO = Integer.parseInt(aux[6]);
+                int pL = Integer.parseInt(aux[2]), eL = Integer.parseInt(aux[7]);
+                int pX = Integer.parseInt(aux[3]), eX = Integer.parseInt(aux[8]);
+                int pY = Integer.parseInt(aux[4]), eY = Integer.parseInt(aux[9]);
+                int time = Integer.parseInt(aux[10]);
+                timeLeft = time;
                 p.applyDamage(p.getLife()-pL);
                 p.setX(pX);p.setY(pY);
-                e.applyDamage(e.getLife()+eL);
+                p.setOrientation(pO);
+                e.applyDamage(e.getLife()-eL);
                 e.setX(eX);e.setY(eY);
+                e.setOrientation(eO);
                 if(character.isKnockback(pS)){
                     p.setState(pS,pHurt,eHurt);
                 }

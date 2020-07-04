@@ -51,34 +51,37 @@ public class online_mode {
 
     private String serverIp = "fatalfury2.sytes.net";
 
-    private int serverPort = 5555, conToClientPort = 5556;
+    private int serverPort = 5555, conToClientPort = 5556,
+            characterMsgsID = 2, fightMsgsID = 3;
 
     public online_mode(boolean debug) {
         this.debug = debug;
         if(debug) {
-            String ip;
+            /*String ip;
             try (final DatagramSocket socket = new DatagramSocket()) {
                 socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
                 ip = socket.getLocalAddress().getHostAddress();
                 itsMe = ip.equals("192.168.1.3");
             } catch (UnknownHostException | SocketException e) {
                 e.printStackTrace();
-            }
+            }*/
             //itsMe = false;
             if (itsMe) {
                 System.out.println("ME RECONOCIO");
-                conToClient = new connection("127.0.0.1", 7778, 0,true);
-                conToClient.setPortSend(7777);
+                conToClient = new connection(serverIp, 3333, 0,true);
+                conToClient.setPortSend(3334);
             } else {
-                conToClient = new connection("127.0.0.1", 7777, 0,true);
-                conToClient.setPortSend(7778);
+                conToClient = new connection(serverIp, 3334, 0,true);
+                conToClient.setPortSend(3333);
             }
             System.out.println("Se está usando el puerto: " + conToClient.getPortReceive());
             conToClient.setBlockReception(true);
             System.out.println("Se han creado los sockets");
         }
-        conToServer = new connection(serverIp, serverPort, 0,false);
-        conToServer.setPortSend(serverPort);
+        else {
+            conToServer = new connection(serverIp, serverPort, 0, false);
+            conToServer.setPortSend(serverPort);
+        }
     }
 
     private void generateFight(){
@@ -86,12 +89,12 @@ public class online_mode {
         if (itsMe) {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, true);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, false);
-            enemy.setMenssageIdentifier(2);
+            enemy.setMenssageIdentifier(characterMsgsID);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, false);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, true);
-            enemy.setMenssageIdentifier(2);
+            enemy.setMenssageIdentifier(characterMsgsID);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -99,7 +102,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -138,12 +141,12 @@ public class online_mode {
         if (isHost) {
             player = new online_user_controller(pC, 1, conToClient, true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
-            enemy.setMenssageIdentifier(2);
+            enemy.setMenssageIdentifier(characterMsgsID);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(pC, 1, conToClient, false);
             enemy = new online_user_controller(pE, 2, conToClient, true);
-            enemy.setMenssageIdentifier(2);
+            enemy.setMenssageIdentifier(characterMsgsID);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -151,7 +154,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(sce);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -183,36 +186,60 @@ public class online_mode {
             conToServer.send(-1, "DISCONNECT");
             System.exit(0);
         }
-        switch (onlineState){
-            case ONLINE_FIGHT:
-                fight.getAnimation(screenObjects);
-                if(fight.getEnd()) {
-                    audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
-                    fight.getPlayer().stop();
-                    fight.getEnemy().stop();
-                    conToClient.close();
-                    fight = null;
-                    conToClient = null;
-                }
-                break;
-            case ONLINE_SEARCHING_FIGHT:
-                String msg = conToServer.receive(1);
-                if(msg.contains("SEARCH")){System.out.println("Se ha recibido "+msg);}
-                if(msg.contains("SEARCH GAME")){
-                    System.out.println("Ha sido emparejado con un rival, se va a crear la pelea");
-                    String aux[] = msg.split(":");
-                    generateFight(aux[2], Boolean.parseBoolean(aux[1]), Playable_Character.TERRY, Playable_Character.TERRY, Scenario_type.USA);
+        if(debug){
+            switch (onlineState) {
+                case ONLINE_FIGHT:
+                    fight.getAnimation(screenObjects);
+                    if (fight.getEnd()) {
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                        fight.getPlayer().stop();
+                        fight.getEnemy().stop();
+                        conToClient.close();
+                        fight = null;
+                        conToClient = null;
+                        onlineState = GameState.ONLINE_MODE;
+                    }
+                    break;
+                default:
+                    generateFight();
                     onlineState = GameState.ONLINE_FIGHT;
-                }
-                break;
-            default:
-                boolean ok = conToServer.reliableSend(1,"SEARCH GAME", 500);
-                System.out.println("El servidor ha recibido la request: "+ok);
-                if(ok){
-                    System.out.println("Se pasa a buscando partirda");
-                    onlineState = GameState.ONLINE_SEARCHING_FIGHT;
-                }
-                break;
+            }
+        }
+        else {
+            switch (onlineState) {
+                case ONLINE_FIGHT:
+                    fight.getAnimation(screenObjects);
+                    if (fight.getEnd()) {
+                        audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                        fight.getPlayer().stop();
+                        fight.getEnemy().stop();
+                        conToClient.close();
+                        fight = null;
+                        conToClient = null;
+                        onlineState = GameState.ONLINE_MODE;
+                    }
+                    break;
+                case ONLINE_SEARCHING_FIGHT:
+                    String msg = conToServer.receive(2);
+                    if (msg.contains("SEARCH")) {
+                        System.out.println("Se ha recibido " + msg);
+                    }
+                    if (msg.contains("SEARCH GAME")) {
+                        System.out.println("Ha sido emparejado con un rival, se va a crear la pelea");
+                        String aux[] = msg.split(":");
+                        generateFight(aux[2], Boolean.parseBoolean(aux[1]), Playable_Character.TERRY, Playable_Character.TERRY, Scenario_type.USA);
+                        onlineState = GameState.ONLINE_FIGHT;
+                    }
+                    break;
+                default:
+                    boolean ok = conToServer.reliableSend(1, "SEARCH GAME", 500);
+                    System.out.println("El servidor ha recibido la request: " + ok);
+                    if (ok) {
+                        System.out.println("Se pasa a buscando partida");
+                        onlineState = GameState.ONLINE_SEARCHING_FIGHT;
+                    }
+                    break;
+            }
         }
     }
 

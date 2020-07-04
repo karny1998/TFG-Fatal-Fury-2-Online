@@ -60,10 +60,10 @@ public class serverManager {
 
     protected boolean createGameBetweenPalyers(InetAddress p1, InetAddress p2){
         // Mensaje: eresHost?:direcciónRival
-        String msg1 = "SEARCH FIGHT:true:"+p2.getHostAddress();
-        String msg2 = "SEARCH FIGHT:false:"+p1.getHostAddress();
-        boolean okP1 =  connectedUsers.get(p1).reliableSend(1,msg1,500);
-        boolean okP2 =  connectedUsers.get(p2).reliableSend(1,msg2,500);
+        String msg1 = "SEARCH GAME:true:"+p2.getHostAddress();
+        String msg2 = "SEARCH GAME:false:"+p1.getHostAddress();
+        boolean okP1 =  connectedUsers.get(p1).reliableSend(2,msg1,500);
+        boolean okP2 =  connectedUsers.get(p2).reliableSend(2,msg2,500);
         return  okP1 && okP2;
     }
 

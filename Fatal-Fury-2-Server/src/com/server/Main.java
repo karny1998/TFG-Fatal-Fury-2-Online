@@ -94,7 +94,7 @@ public class Main {
                 }
                 else{
                     if(request.equals("SEARCH GAME")){
-                        waitConfirm();
+                        //waitConfirm();
                         manager.searchGame(client);
                     }
                 }

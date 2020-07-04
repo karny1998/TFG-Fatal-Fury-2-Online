@@ -191,6 +191,7 @@ public class Screen extends JPanel{
         else {
             game.writeDirecly(g2d, 0);
         }
+
     }
 
     /**
