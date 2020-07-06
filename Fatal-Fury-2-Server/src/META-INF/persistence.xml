@@ -1,0 +1,35 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+	<persistence-unit name="EjemploDeUnidadDePersistencia" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+		   <property name="hibernate.show_sql" value="true"/>		
+		   <property name="hibernate.hbm2ddl.auto" value="update"/>	
+		   <!-- <property name="hibernate.default_schema" value="public"/> -->
+		   
+		   <!-- ORACLE -->
+		   <!-- ++++++ -->
+		   
+		   <!-- En lugar de "usuario" poned vuestro nombre de usuario, y en lugar de "password" vuestra contraseña. !-->
+		   <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver"/>
+		   <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@hendrix-oracle.cps.unizar.es:1521:vicious"/>
+		   <property name="javax.persistence.jdbc.user" value="a740246"/>
+		   <property name="javax.persistence.jdbc.password" value="resurr30"/>
+		   
+		   <!-- MYSQL -->
+		   <!-- +++++ -->
+		   
+		   <!-- En lugar de "usuario" poned vuestro nombre de usuario, y en lugar de "password" vuestra contraseña. !-->
+		   <!-- Además, en lugar de "puerto" tenéis que poner el número de puerto donde está escuchando vuestro servidor MySQL. -->
+		   <!-- Por último, reemplazad "bd" con el nombre de BD deseado. -->
+		   <!--
+		   <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+		   <property name="javax.persistence.jdbc.url" value="jdbc:mysql://hendrix01.cps.unizar.es:puerto/bd"/>
+		   <property name="javax.persistence.jdbc.user" value="usuario"/>
+		   <property name="javax.persistence.jdbc.password" value="password"/>		   
+		   -->
+
+		</properties>
+	</persistence-unit>
+</persistence>
