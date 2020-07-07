@@ -1,6 +1,6 @@
-package lib.objects.networking;
+package server;
 
-import lib.utils.Pair;
+import utils.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;

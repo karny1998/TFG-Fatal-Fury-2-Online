@@ -933,6 +933,7 @@ public class game_controller {
         if(state == GameState.ONLINE_MODE && online.getFight() != null){
             online.getFight().drawHpBarPlayer(g, offset);
             online.getFight().drawHpBarEnemy(g, offset);
+            online.getFight().writeDirecly(g,offset);
         }
         else if(training){
             trainer.getFight().drawHpBarPlayer(g, offset);

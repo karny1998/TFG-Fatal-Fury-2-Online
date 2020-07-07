@@ -30,6 +30,7 @@ public class online_round extends round {
         super(p, e, time, sP, sE);
         this.con = con;
         this.isServer = isServer;
+        System.out.println("Soy server: " + isServer);
         this.messageIdentifier = mI;
     }
 
@@ -49,15 +50,11 @@ public class online_round extends round {
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = p.getState().toString() + ":" + p.getOrientation() + ":" + p.getLife() + ":" + p.getX() + ":" + p.getY() + ":" +
                     e.getState().toString() + ":" + e.getOrientation() + ":" + e.getLife() + ":" + e.getX() + ":" + e.getY() + ":" + timeLeft;
-            System.out.println("Se envia: " + msg);
             con.send(messageIdentifier, msg);
         }
         else{
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receive(messageIdentifier);
-            if(!msg.equals("") && !msg.contains(":")){
-                System.out.println(msg);
-            }
             if(!msg.equals("") && !msg.equals("NONE")){
                 String aux[] = msg.split(":");
                 Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[5]);
@@ -80,10 +77,6 @@ public class online_round extends round {
                     e.setState(eS,eHurt,pHurt);
                 }
             }
-            else{
-                // Es posible que convenga simplemente ignorar y ya
-                fightManagement(pHurt, eHurt);
-            }
         }
         cameraManagement(pHurt, eHurt);
 
@@ -101,42 +94,4 @@ public class online_round extends round {
         screenObjects.put(SHADOW_2,shadow2);
     }
 
-    /*
-    private class network_manager extends Thread{
-        private DatagramSocket socket;
-        private InetAddress address;
-        private boolean isServer = false;
-        private boolean stop = false;
-        private online_round currentRound;
-
-        private final Thread thread;
-
-        private network_manager(online_round currentRound, DatagramSocket sc, InetAddress ad, boolean isServer) {
-            this.thread = new Thread(this);
-            this.socket = sc;
-            this.address = ad;
-            this.isServer = isServer;
-            this.currentRound = currentRound;
-        }
-
-        @Override
-        public void start(){
-            this.start();
-        }
-
-        public synchronized void doStop() {
-            this.stop = true;
-        }
-
-        private synchronized boolean keepRunning() {
-            return this.stop == false;
-        }
-
-        @Override
-        public void run(){
-            while(keepRunning()) {
-                // gestion de la conexión
-            }
-        }
-    }*/
 }

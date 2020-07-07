@@ -1,4 +1,8 @@
-package com.server;
+import database.databaseManager;
+import database.models.Player;
+import database.models.RankedGame;
+import server.serverConnection;
+import server.serverManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,9 +10,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -19,7 +21,13 @@ public class Main {
     private static boolean  shutdown = false;
 
     public static void main(String[] args) {
-        try{
+        databaseManager dbm = new databaseManager();
+        Player u1 = (Player) dbm.find(Player.class, "kaka");
+        Player u2 = (Player) dbm.find(Player.class, "kakak");
+        RankedGame u = new RankedGame(u1,u2,0);
+        dbm.save(u);
+        dbm.close();
+        /*try{
             serverSocket = new ServerSocket(5555);
             com = new commander(threads,serverSocket);
             com.start();
@@ -42,7 +50,7 @@ public class Main {
         }catch (Exception e){
             e.printStackTrace();
             return;
-        }
+        }*/
     }
 
     protected static class clientHandler extends Thread{

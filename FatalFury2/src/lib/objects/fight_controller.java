@@ -1088,6 +1088,8 @@ public class fight_controller implements roundListener {
         }
     }
 
+    public void writeDirecly(Graphics2D g, int offset){}
+
     /**
      * Draw hp bar player.
      *

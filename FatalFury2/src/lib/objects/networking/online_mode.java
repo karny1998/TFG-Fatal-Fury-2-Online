@@ -52,7 +52,7 @@ public class online_mode {
     private String serverIp = "fatalfury2.sytes.net";
 
     private int serverPort = 5555, conToClientPort = 5556,
-            characterMsgsID = 2, fightMsgsID = 3;
+            tramitsClientsID = -2, characterMsgsID = 2, fightMsgsID = 3;
 
     public online_mode(boolean debug) {
         this.debug = debug;
@@ -102,7 +102,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -154,7 +154,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(sce);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, isHost, fightMsgsID, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -227,6 +227,7 @@ public class online_mode {
                     if (msg.contains("SEARCH GAME")) {
                         System.out.println("Ha sido emparejado con un rival, se va a crear la pelea");
                         String aux[] = msg.split(":");
+                        System.out.println("El emparejamiento es: " +msg);
                         generateFight(aux[2], Boolean.parseBoolean(aux[1]), Playable_Character.TERRY, Playable_Character.TERRY, Scenario_type.USA);
                         onlineState = GameState.ONLINE_FIGHT;
                     }
