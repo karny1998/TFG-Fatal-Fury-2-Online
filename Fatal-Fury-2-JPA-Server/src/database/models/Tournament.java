@@ -147,4 +147,14 @@ public class Tournament {
     public List<Player> getParticipants() {
         return participants;
     }
+
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "id=" + id +
+                ", organizer=" + organizer.getUsername() +
+                ", date=" + date +
+                ", winner=" + winner.getUsername() +
+                '}';
+    }
 }

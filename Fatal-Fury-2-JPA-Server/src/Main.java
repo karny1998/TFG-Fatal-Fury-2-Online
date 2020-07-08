@@ -1,12 +1,12 @@
 import database.databaseManager;
+import database.models.Game;
 import database.models.Player;
 import database.models.RankedGame;
+import server.requestManager;
 import server.serverConnection;
 import server.serverManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,20 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    private static serverManager manager = new serverManager();
+    private static databaseManager dbm = new databaseManager();
+    private static serverManager manager = new serverManager(dbm);
     private static ServerSocket serverSocket;
     private static commander com;
     private static Map<InetAddress, clientHandler> threads = new HashMap<>();
     private static boolean  shutdown = false;
 
     public static void main(String[] args) {
-        databaseManager dbm = new databaseManager();
-        Player u1 = (Player) dbm.find(Player.class, "kaka");
-        Player u2 = (Player) dbm.find(Player.class, "kakak");
-        RankedGame u = new RankedGame(u1,u2,0);
-        dbm.save(u);
-        dbm.close();
-        /*try{
+        try{
             serverSocket = new ServerSocket(5555);
             com = new commander(threads,serverSocket);
             com.start();
@@ -41,7 +36,7 @@ public class Main {
                     threads.get(newUser).setCon(con);
                 }
                 else {
-                    manager.connectUser(newUser,con);
+                    //manager.connectUser(newUser,con);
                     clientHandler c = new clientHandler(con, newUser);
                     threads.put(newUser, c);
                     c.start();
@@ -49,19 +44,19 @@ public class Main {
             }
         }catch (Exception e){
             e.printStackTrace();
+            dbm.close();
             return;
-        }*/
+        }
+        dbm.close();
     }
 
     protected static class clientHandler extends Thread{
-
         private serverConnection con;
-
         private InetAddress client;
-
         private boolean stop = false;
-
         private final Thread thread;
+        private int requestId = 1, tramitsId = -1;
+        private requestManager rqM = new requestManager(requestId,manager,con,client);
 
         public clientHandler(serverConnection con, InetAddress client) {
             System.out.println("Conectado con el usuario: " + client.getHostAddress());
@@ -87,17 +82,15 @@ public class Main {
         public void run(){
             while(keepRunning()) {
                 if(con.isConnected()) {
-                    String tramits = con.receive(-1);
-                    String request = con.receive(1);
+                    String tramits = con.receive(tramitsId);
+                    String request = con.receive(requestId);
                     if (tramits.equals("DISCONNECT")) {
                         threads.remove(client);
                         manager.desconnectUser(client);
                         con.close();
                         doStop();
                     } else {
-                        if (request.equals("SEARCH GAME")) {
-                            manager.searchGame(client);
-                        }
+                        rqM.manageRequest(request);
                     }
                 }
                 else{
@@ -174,6 +167,34 @@ public class Main {
                     System.out.println("No se ha reconocido el comando: " + cm +"\n");
                 }
             }
+        }
+    }
+
+    protected static class terminal{
+        Process p;
+        BufferedWriter w;
+        BufferedReader r;
+
+        public terminal(){
+            try{
+                p = Runtime.getRuntime().exec("cmd /c start cmd.exe");
+                w = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
+                r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            }catch (Exception e){e.printStackTrace();}
+        }
+
+        public void write(String msg){
+            try {
+                w.write(msg + System.lineSeparator());
+                w.flush();
+            }catch (Exception e){e.printStackTrace();}
+        }
+
+        public String readLine(){
+            try{
+                return r.readLine();
+            }catch (Exception e){e.printStackTrace();}
+            return "";
         }
     }
 }

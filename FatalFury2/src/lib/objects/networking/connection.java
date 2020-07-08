@@ -279,8 +279,8 @@ public class connection {
      * Recibe cualquier mensaje pendiente y lo guarda en pendingMessages.
      */
     public void receive(){
-        if(blockReception || !socketUDP.isConnected()){return;}
-        if(blockReception || !socketUDP.isConnected()){return;}
+        if(blockReception || socketUDP != null && !socketUDP.isConnected()){return;}
+        if(blockReception || socketUDP != null && !socketUDP.isConnected()){return;}
         try {
             String received = "";
             if(isUDP) {

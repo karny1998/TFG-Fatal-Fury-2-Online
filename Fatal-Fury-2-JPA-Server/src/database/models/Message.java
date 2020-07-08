@@ -150,4 +150,15 @@ public class Message implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", transmitter=" + transmitter.getUsername() +
+                ", receiver=" + receiver.getUsername() +
+                ", date=" + date +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

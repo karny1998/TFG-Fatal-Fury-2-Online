@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * The type Player.
@@ -13,10 +15,16 @@ import java.util.List;
 public class Player implements Serializable {
     @Id
     @Column(name = "username", nullable = false)
+    @Size(min = 3, max = 30, message="El nombre tiene que tener entre 3 y 30 caracteres.")
+    @Pattern(regexp = "[A-z,0-9,_,-]+", message="El nombre solo puede tener letras mayúsculas o minúsculas sin acentuar, números, y los caracteres \"_\" y \"-\".")
     private String username;
     @Column(name = "email", unique = true, nullable = false)
+    @Size(min = 3, max = 100, message="El correo tiene que tener entre 3 y 100 caracteres.")
+    @Pattern(regexp = "[^@]+@[A-z,0-9]+.[A-z]+", message="El correo tiene que seguir el patron example@example.example.")
     private String email;
     @Column(name = "password", nullable = false)
+    @Size(min = 8, max = 100, message="La contraseña tiene que tener entre 8 y 100 caracteres.")
+    @Pattern(regexp = "[A-z,0-9,_,-]+", message="La contraseña solo puede tener letras mayúsculas o minúsculas sin acentuar, números, y los caracteres \"_\" y \"-\".")
     private String password;
     @Column(name = "active", nullable = false)
     private boolean active;
@@ -34,7 +42,10 @@ public class Player implements Serializable {
     private List<Login> logins;
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     private List<Tournament> participatedTournaments;
-
+    @ManyToMany
+    private List<Player> friendsAsSoliciter;
+    @ManyToMany(mappedBy = "friendsAsSoliciter", fetch = FetchType.LAZY)
+    private List<Player> friendsAsReceiver;
 
     /**
      * Instantiates a new Player.
@@ -49,7 +60,7 @@ public class Player implements Serializable {
      * @param password the password
      * @param active   the active
      */
-    public Player(String email, String username, String password, boolean active) {
+    public Player(String username, String email, String password, boolean active) {
         super();
         this.email = email;
         this.username = username;
@@ -254,5 +265,32 @@ public class Player implements Serializable {
      */
     public void setParticipatedTournaments(List<Tournament> participatedTournaments) {
         this.participatedTournaments = participatedTournaments;
+    }
+
+    public List<Player> getFriendsAsSoliciter() {
+        return friendsAsSoliciter;
+    }
+
+    public void setFriendsAsSoliciter(List<Player> friendsAsSoliciter) {
+        this.friendsAsSoliciter = friendsAsSoliciter;
+    }
+
+    public List<Player> getFriendsAsReceiver() {
+        return friendsAsReceiver;
+    }
+
+    public void setFriendsAsReceiver(List<Player> friendsAsReceiver) {
+        this.friendsAsReceiver = friendsAsReceiver;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", rankScore=" + rankScore +
+                '}';
     }
 }

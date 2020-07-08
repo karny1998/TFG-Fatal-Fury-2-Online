@@ -82,4 +82,12 @@ public class Login implements Serializable {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Login{" +
+                "player=" + player.getUsername() +
+                ", date=" + date +
+                '}';
+    }
 }

@@ -1,5 +1,8 @@
 package server;
 
+import database.databaseManager;
+import database.models.Player;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,14 +10,31 @@ import java.util.List;
 import java.util.Map;
 
 public class serverManager {
+    private static databaseManager dbm;
     private Map<InetAddress, serverConnection> connectedUsers = new HashMap<>();
     private List<InetAddress> searchingGameUsers = new ArrayList<>();
     private boolean shutingDown = false;
 
-    public serverManager(){}
+    public serverManager(databaseManager dbm){
+        this.dbm = dbm;
+    }
 
     public synchronized void connectUser(InetAddress add, serverConnection sc){
         connectedUsers.put(add, sc);
+    }
+
+    public synchronized void connectUser(InetAddress add, serverConnection sc, String username, String pass){
+        Player p = (Player) dbm.findByKey(Player.class, username);
+        if(p == null){
+            sc.send(1,"ERROR:El nombre de usuario no existe.");
+        }
+        if(p.getPassword().equals(pass)) {
+            connectedUsers.put(add, sc);
+            sc.send(1,"LOGGED");
+        }
+        else {
+            sc.send(1,"ERROR:La contraseña introducirda es incorrecta.");
+        }
     }
 
     public synchronized void desconnectUser(InetAddress add){
@@ -64,6 +84,10 @@ public class serverManager {
         boolean okP1 =  connectedUsers.get(p1).reliableSend(2,msg1,500);
         boolean okP2 =  connectedUsers.get(p2).reliableSend(2,msg2,500);
         return  okP1 && okP2;
+    }
+
+    public String registerUser(String username, String email, String password){
+        return dbm.registerPlayer(username, email, password);
     }
 
     public synchronized void stopSearchingGame(InetAddress player){

@@ -26,6 +26,7 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, int result){
         super(player1,player2,result);
+        ranked = true;
     }
 
     /**
@@ -38,6 +39,7 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, int result, Tournament tournament){
         super(player1,player2,result, tournament);
+        ranked = true;
     }
 
     /**
@@ -51,6 +53,7 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, int result, int winnerPoints, int loserPoints){
         super(player1,player2,result, winnerPoints, loserPoints);
+        ranked = true;
     }
 
     /**
@@ -63,6 +66,7 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, LocalDateTime date, int result){
         super(player1,player2,date, result);
+        ranked = true;
     }
 
     /**
@@ -76,6 +80,7 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, LocalDateTime date, int result, Tournament tournament){
         super(player1,player2,date,result, tournament);
+        ranked = true;
     }
 
     /**
@@ -90,5 +95,6 @@ public class RankedGame extends Game{
      */
     public RankedGame(Player player1, Player player2, LocalDateTime date, int result, int winnerPoints, int loserPoints){
         super(player1,player2,date,result,winnerPoints,loserPoints);
+        ranked = true;
     }
 }

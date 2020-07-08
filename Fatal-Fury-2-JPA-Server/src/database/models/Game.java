@@ -14,17 +14,18 @@ import java.util.Objects;
 @Entity(name = "GAME")
 @Table(name = "game")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorFormula("case when ranked is FALSE then 'Game' else 'RankedGame' end")
+@DiscriminatorValue(value = "Game")
+@DiscriminatorFormula("case when ranked is false then 'Game' else 'RankedGame' end")
 public class Game implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Integer id;
+    @ManyToOne
     @JoinColumn(name = "player1", nullable = false)
-    @ManyToOne
     private Player player1;
-    @JoinColumn(name = "player2", nullable = false)
     @ManyToOne
+    @JoinColumn(name = "player2", nullable = false)
     private Player player2;
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
@@ -34,7 +35,7 @@ public class Game implements Serializable {
     @JoinColumn(name = "tournament", nullable = true)
     private Tournament tournament;
     @Column(name = "ranked", nullable = false)
-    private boolean ranked;
+    protected boolean ranked;
     @Column(name = "winnerPoints")
     private Integer winnerPoints;
     @Column(name = "loserPoints")
@@ -292,5 +293,20 @@ public class Game implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", player1=" + player1.getUsername() +
+                ", player2=" + player2.getUsername() +
+                ", date=" + date +
+                ", result=" + result +
+                ", tournament=" + tournament.getId() +
+                ", ranked=" + ranked +
+                ", winnerPoints=" + winnerPoints +
+                ", loserPoints=" + loserPoints +
+                '}';
     }
 }

@@ -11,6 +11,7 @@ import lib.training.state;
 import lib.training.stateCalculator;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -52,7 +53,7 @@ public class online_mode {
     private String serverIp = "fatalfury2.sytes.net";
 
     private int serverPort = 5555, conToClientPort = 5556,
-            tramitsClientsID = -2, characterMsgsID = 2, fightMsgsID = 3;
+            requestID = 1, tramitsClientsID = -2, characterMsgsID = 2, fightMsgsID = 3;
 
     public online_mode(boolean debug) {
         this.debug = debug;
@@ -179,7 +180,76 @@ public class online_mode {
         }
     }
 
+    private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+    void commander(){
+        String command = "";
+        boolean fight = false;
+        while(!fight) {
+            System.out.print("Command (LOGIN, REGISTER, FIGHT): ");
+            String cm = "";
+            try {
+                cm = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(cm.equals("exit")){
+                System.exit(0);
+            }
+            else if(cm.equals("LOGIN")){
+                String username = "";
+                String password = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Password: ");
+                    password = in.readLine();
+                    conToServer.send(requestID,"LOGIN:"+username+":"+password);
+                    Thread.sleep(2000);
+                    String res = conToServer.receive(requestID);
+                    if(res.equals("LOGGED")){
+                        System.out.println("Te has logeado");
+                    }
+                    else{
+                        System.out.println(res.split(":")[1]);
+                    }
+                }catch (Exception e){e.printStackTrace();};
+            }
+            else if(cm.equals("REGISTER")){
+                String username = "";
+                String password = "";
+                String email = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Password: ");
+                    password = in.readLine();
+                    System.out.print("Email: ");
+                    email = in.readLine();
+                    conToServer.send(requestID,"REGISTER:"+username+":"+email+":"+password);
+                    Thread.sleep(2000);
+                    String res = conToServer.receive(requestID);
+                    if(res.equals("REGISTERED")){
+                        System.out.println("Te has registrado");
+                    }
+                    else{
+                        System.out.println(res.split(":")[1]);
+                    }
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("FIGHT")){
+                fight = true;
+            }
+            else{
+                System.out.println("No se ha reconocido el comando: " + cm +"\n");
+            }
+        }
+    }
+
     public void online_game(Map<Item_Type, screenObject> screenObjects){
+        commander();
+
         if(controlListener.menuInput(1, controlListener.ESC_INDEX)
             || controlListener.menuInput(2, controlListener.ESC_INDEX)){
             if(conToClient != null){conToClient.close();}
