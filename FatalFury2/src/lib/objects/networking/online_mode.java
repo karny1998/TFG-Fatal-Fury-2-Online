@@ -66,7 +66,7 @@ public class online_mode {
             } catch (UnknownHostException | SocketException e) {
                 e.printStackTrace();
             }*/
-            //itsMe = false;
+            itsMe = false;
             if (itsMe) {
                 System.out.println("ME RECONOCIO");
                 conToClient = new connection(serverIp, 3333, 0,true);
@@ -248,7 +248,7 @@ public class online_mode {
     }
 
     public void online_game(Map<Item_Type, screenObject> screenObjects){
-        commander();
+        if(onlineState != GameState.ONLINE_FIGHT && onlineState != GameState.ONLINE_SEARCHING_FIGHT) {commander();}
 
         if(controlListener.menuInput(1, controlListener.ESC_INDEX)
             || controlListener.menuInput(2, controlListener.ESC_INDEX)){

@@ -158,10 +158,10 @@ public class serverConnection{
         public void run(){
             while(keepRunning()) {
                 con.receive();
-                if(con.isConnected()){
+                /*if(con.isConnected()){
                     doStop();
                     con.close();
-                }
+                }*/
             }
         }
     }

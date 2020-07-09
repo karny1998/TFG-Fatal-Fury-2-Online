@@ -90,7 +90,7 @@ public class IaVsIaTraining {
      * Generate fight.
      */
     private void generateFight(){
-        player = new user_controller(charac, 1);//enemy_controller(charac, 1);
+        player = new enemy_controller(charac, 1);//new user_controller(charac, 1);
         if(enemy == null) {
             enemy = new enemy_controller(ia, 2, true, true);
         }
@@ -100,7 +100,7 @@ public class IaVsIaTraining {
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
-        //player.getIa().setDif(pLvl);
+        player.getIa().setDif(pLvl);//comentar esto para jugadores
         enemy.getIa().setDif(lvlIa);
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);

@@ -56,13 +56,14 @@ public class Main {
         private boolean stop = false;
         private final Thread thread;
         private int requestId = 1, tramitsId = -1;
-        private requestManager rqM = new requestManager(requestId,manager,con,client);
+        private requestManager rqM;
 
         public clientHandler(serverConnection con, InetAddress client) {
             System.out.println("Conectado con el usuario: " + client.getHostAddress());
             this.thread = new Thread(this);
             this.con = con;
             this.client = client;
+            rqM = new requestManager(requestId,manager,con,client);
         }
 
         @Override

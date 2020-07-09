@@ -28,7 +28,7 @@ public class serverManager {
         if(p == null){
             sc.send(1,"ERROR:El nombre de usuario no existe.");
         }
-        if(p.getPassword().equals(pass)) {
+        else if(p.getPassword().equals(pass)) {
             connectedUsers.put(add, sc);
             sc.send(1,"LOGGED");
         }

@@ -39,8 +39,8 @@ public class game_controller {
      * The training.
      */
 // Modo debug
-    boolean training = false;
-    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.EASY, ia_loader.dif.EASY, 10);
+    boolean training = true;
+    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.HARD, ia_loader.dif.HARD, 10);
     /**
      * The Debug.
      */
@@ -208,7 +208,7 @@ public class game_controller {
         }
     }
 
-    private online_mode online = new online_mode(false);
+    private online_mode online;// = new online_mode(false);
 
     /**
      * Instantiates a new Game controller.
@@ -260,12 +260,12 @@ public class game_controller {
      */
 // Asigna a screenObjects las cosas a mostrar por pantalla
     public void getFrame(Map<Item_Type, screenObject> screenObjects){
-        if(state == GameState.ONLINE_MODE){
-            online.online_game(screenObjects);
-        }
-        else if(training){
+        if(training){
             fight = trainer.getFight();
             trainer.train(screenObjects);
+        }
+        else if(state == GameState.ONLINE_MODE){
+            online.online_game(screenObjects);
         }
         else if(debug && state != GameState.OPTIONS) {
             optionsMenu = new options();
@@ -930,14 +930,14 @@ public class game_controller {
      */
 // Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
-        if(state == GameState.ONLINE_MODE && online.getFight() != null){
+        if(training){
+            trainer.getFight().drawHpBarPlayer(g, offset);
+            trainer.getFight().drawHpBarEnemy(g, offset);
+        }
+        else if(state == GameState.ONLINE_MODE && online.getFight() != null){
             online.getFight().drawHpBarPlayer(g, offset);
             online.getFight().drawHpBarEnemy(g, offset);
             online.getFight().writeDirecly(g,offset);
-        }
-        else if(training){
-            trainer.getFight().drawHpBarPlayer(g, offset);
-            trainer.getFight().drawHpBarEnemy(g, offset);
         }
         else if(state == GameState.RANKING){
             ranking.printRanking(g);
