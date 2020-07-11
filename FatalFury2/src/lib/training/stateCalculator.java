@@ -38,6 +38,8 @@ public class stateCalculator {
      */
     private static int nActions = 0;
 
+    private static boolean simple = true;
+
     /**
      * Initialize the idMov map and max.
      */
@@ -71,7 +73,12 @@ public class stateCalculator {
         idMov.put(aux2[4], i+2);
         idMov.put(aux2[5], i+2);
 
-        max = (1 + 100/lifeScale) * (1 + 100/lifeScale) * idMov.size() * (1 + 700/distanceScale) * 4 * 2 * 2;
+        if(!simple) {
+            max = (1 + 100 / lifeScale) * (1 + 100 / lifeScale) * idMov.size() * (1 + 700 / distanceScale) * 4 * 2 * 2;
+        }
+        else{
+            max = 2 * 3 * 3 * idMov.size() * 3;
+        }
     }
 
     /**
@@ -81,23 +88,50 @@ public class stateCalculator {
      * @return the int
      */
     public static int calculateNumState(state s){
-        int l = s.getLife()/lifeScale;
-        int pL = s.getPlayerLife()/lifeScale;
-        int d = s.getDis()/distanceScale;
         int r = s.getRound() - 1;
         int w = s.getPlayerVictories();
         int j = 0;
         if(s.isJumping()){j = 1;}
         int sPid = idMov.get(s.getPlayerState());
 
-        int aux1 = idMov.size();
-        int aux2 = (1 + 100/lifeScale) * aux1;
-        int aux3 = (1 + 100/lifeScale) * aux2;
-        int aux4 = (1 + 700/distanceScale) * aux3;
-        int aux5 = 4 * aux4;
-        int aux6 = 2 * aux5;
+        int val = 0;
+        if(!simple){
+            int l = s.getLife()/lifeScale;
+            int pL = s.getPlayerLife()/lifeScale;
+            int d = s.getDis()/distanceScale;
 
-        int val = j*aux6 + w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
+            int aux1 = idMov.size();
+            int aux2 = (1 + 100/lifeScale) * aux1;
+            int aux3 = (1 + 100/lifeScale) * aux2;
+            int aux4 = (1 + 700/distanceScale) * aux3;
+            int aux5 = 4 * aux4;
+            int aux6 = 2 * aux5;
+            val = j*aux6 + w * aux5 + r * aux4 + d * aux3 + pL * aux2 + l * aux1 + sPid;
+        }
+        else {
+            int l = s.getLife();
+            int pL = s.getPlayerLife();
+            int d = s.getDis();
+
+            int val1 = 0, val2 = 0, val3 = 0;
+            if(l >= 70){val1 = 2;}
+            else if(l >= 30){val1 = 1;}
+            else{val1 = 0;}
+
+            if(pL >= 70){val2 = 2;}
+            else if(pL >= 30){val2 = 1;}
+            else{val2 = 0;}
+
+            if(d >= 400){val3 = 2;}
+            else if(d >= 120){val3 = 1;}
+            else{val3 = 0;}
+
+            int aux1 = idMov.size();
+            int aux2 = 3 * aux1;
+            int aux3 = 3 * aux2;
+            int aux4 = 2 * aux3;
+            val = j * aux4 + val3 * aux3 + val2 * aux2 + val1 * aux1 + sPid;
+        }
 
         if (val > max){
             System.out.println("Out of bounds (stateCalculator) " + s.toString());

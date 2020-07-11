@@ -31,7 +31,7 @@ public class agent{
     /**
      * Frecuencia con la que se "reviven" experiencias.
      */
-    private double experienceFrequency = 0.05;
+    private double experienceFrequency = 0.00;
     /**
      * The Previous state.
      */
@@ -43,7 +43,7 @@ public class agent{
     /**
      * Ganma, valoración de acciones futuras.
      */
-    private double ganma = 0.75;
+    private double ganma = 0.65;
     /**
      * Alpha, factor de aprendizaje.
      */
