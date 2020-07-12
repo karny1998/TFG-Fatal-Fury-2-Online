@@ -57,18 +57,16 @@ public class ia_stats {
         if(history == null){
             loadHistory();
         }
-        int maxId = 0;
-        for(int i = 0; i < history.getFights().size(); ++i){
-            if(history.getFights().get(i).getId() > maxId){
-                maxId = history.getFights().get(i).getId();
-            }
-        }
-        ++maxId;
+
+        int maxId = history.getFights().size();
+
         for(int i = 0; i < fights.size(); ++i){
             fights.get(i).setId(maxId);
             history.getFights().add(history.getFights().size(), fights.get(i));
             ++maxId;
         }
+        fights = new ArrayList<>();
+        actualFight = 0;
         try {
             File file = new File(filename);
             JAXBContext context = JAXBContext.newInstance(history_stats.class);
@@ -120,7 +118,9 @@ public class ia_stats {
      * Next fight.
      */
     public void nextFight(){
-        ++actualFight;
+        if(fights.size() > 0) {
+            ++actualFight;
+        }
         fights.add(actualFight, new fight_stats());
         fights.get(actualFight).setId(actualFight);
     }

@@ -740,6 +740,19 @@ public class character {
     }
 
     /**
+     * In displacement boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isDisplacement(Movement s){
+        Movement array[] = {Movement.WALKING_BACK, Movement.WALKING, Movement.JUMP_ROLL_RIGHT,
+                Movement.DASH, Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK, Movement.JUMP_ROLL_LEFT,
+                Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D, Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};
+        List<Movement> knock = Arrays.asList(array);
+        return knock.contains(s);
+    }
+
+    /**
      * Is combing boolean.
      *
      * @return the boolean

@@ -33,7 +33,7 @@
     <tipo_ia>
         <caracteres> 2 </caracteres>
         <ronda_1> A D </ronda_1>
-        <ronda_2> B A </ronda_2>
+        <ronda_2> A A </ronda_2>
         <ronda_3> A A  </ronda_3>
         <ronda_4> A A </ronda_4>
     </tipo_ia>
@@ -53,22 +53,22 @@
         
         <!--RONDA 2-->
         <tiempo> -0.2 </tiempo>
-        <vida_p1> -0.2 </vida_p1>
-        <vida_ia> 0.2  </vida_ia>
-        <ronda> 0.1 </ronda>
-        <victorias> 0.1 </victorias>
+        <vida_p1> 0.3 </vida_p1>
+        <vida_ia> 0.3  </vida_ia>
+        <ronda> 0 </ronda>
+        <victorias> 0 </victorias>
     
         <!--RONDA 3-->
-        <tiempo> 0.4 </tiempo>
-        <vida_p1> 0.2 </vida_p1>
-        <vida_ia> 0.2  </vida_ia>
+        <tiempo> -0.2 </tiempo>
+        <vida_p1> 0.3 </vida_p1>
+        <vida_ia> 0.3  </vida_ia>
         <ronda> 0 </ronda>
         <victorias> 0 </victorias>
 
         <!--RONDA 4-->
-        <tiempo> 0.3 </tiempo>
-        <vida_p1> -0.2 </vida_p1>
-        <vida_ia> 0.2  </vida_ia>
+        <tiempo> -0.2 </tiempo>
+        <vida_p1> 0.3 </vida_p1>
+        <vida_ia> 0.3  </vida_ia>
         <ronda> 0 </ronda>
         <victorias> 0 </victorias>
     </pesos>

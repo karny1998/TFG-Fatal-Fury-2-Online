@@ -2,27 +2,119 @@
 <history>
     <fights>
         <fight>
-            <currentRound>1</currentRound>
+            <accumulatedReward>-64</accumulatedReward>
+            <currentRound>2</currentRound>
             <id>0</id>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
                     <id>0</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>11</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>85</remaining_time>
-                    <result>1</result>
+                    <player_remaining_life>7</player_remaining_life>
+                    <realized_hits>26</realized_hits>
+                    <received_hits>7</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>68</remaining_time>
+                    <result>2</result>
                     <successful_hits>7</successful_hits>
                 </round>
                 <round>
                     <blocked_hits>0</blocked_hits>
                     <id>1</id>
                     <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>15</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
+                    <realized_hits>59</realized_hits>
+                    <received_hits>7</received_hits>
+                    <remaining_life>32</remaining_life>
+                    <remaining_time>46</remaining_time>
+                    <result>1</result>
+                    <successful_hits>9</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>2</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>21</realized_hits>
+                    <received_hits>3</received_hits>
+                    <remaining_life>75</remaining_life>
+                    <remaining_time>80</remaining_time>
+                    <result>1</result>
+                    <successful_hits>8</successful_hits>
+                </round>
+            </rounds>
+        </fight>
+        <fight>
+            <accumulatedReward>-226</accumulatedReward>
+            <currentRound>2</currentRound>
+            <id>1</id>
+            <rounds>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>0</id>
+                    <player_remaining_life>38</player_remaining_life>
+                    <realized_hits>23</realized_hits>
+                    <received_hits>8</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>74</remaining_time>
+                    <result>2</result>
+                    <successful_hits>4</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>1</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>40</realized_hits>
+                    <received_hits>7</received_hits>
+                    <remaining_life>33</remaining_life>
+                    <remaining_time>60</remaining_time>
+                    <result>1</result>
+                    <successful_hits>8</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>2</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>47</realized_hits>
+                    <received_hits>2</received_hits>
+                    <remaining_life>84</remaining_life>
+                    <remaining_time>58</remaining_time>
+                    <result>1</result>
+                    <successful_hits>8</successful_hits>
+                </round>
+            </rounds>
+        </fight>
+        <fight>
+            <accumulatedReward>189</accumulatedReward>
+            <currentRound>2</currentRound>
+            <id>2</id>
+            <rounds>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>0</id>
+                    <player_remaining_life>46</player_remaining_life>
+                    <realized_hits>24</realized_hits>
+                    <received_hits>7</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>73</remaining_time>
+                    <result>2</result>
+                    <successful_hits>5</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>1</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>14</realized_hits>
+                    <received_hits>1</received_hits>
+                    <remaining_life>90</remaining_life>
+                    <remaining_time>80</remaining_time>
+                    <result>1</result>
+                    <successful_hits>7</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>2</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>17</realized_hits>
+                    <received_hits>8</received_hits>
+                    <remaining_life>23</remaining_life>
                     <remaining_time>77</remaining_time>
                     <result>1</result>
                     <successful_hits>7</successful_hits>
@@ -30,112 +122,40 @@
             </rounds>
         </fight>
         <fight>
-            <currentRound>1</currentRound>
-            <id>1</id>
-            <rounds>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>0</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>36</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>64</remaining_time>
-                    <result>1</result>
-                    <successful_hits>6</successful_hits>
-                </round>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>1</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>12</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>82</remaining_time>
-                    <result>1</result>
-                    <successful_hits>7</successful_hits>
-                </round>
-            </rounds>
-        </fight>
-        <fight>
-            <currentRound>1</currentRound>
-            <id>2</id>
-            <rounds>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>0</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>11</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>84</remaining_time>
-                    <result>1</result>
-                    <successful_hits>10</successful_hits>
-                </round>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>1</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>14</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>82</remaining_time>
-                    <result>1</result>
-                    <successful_hits>11</successful_hits>
-                </round>
-            </rounds>
-        </fight>
-        <fight>
-            <currentRound>1</currentRound>
+            <accumulatedReward>147</accumulatedReward>
+            <currentRound>2</currentRound>
             <id>3</id>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
                     <id>0</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>11</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>83</remaining_time>
-                    <result>1</result>
-                    <successful_hits>8</successful_hits>
-                </round>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>1</id>
-                    <player_remaining_life>0</player_remaining_life>
+                    <player_remaining_life>64</player_remaining_life>
                     <realized_hits>9</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>84</remaining_time>
-                    <result>1</result>
-                    <successful_hits>7</successful_hits>
-                </round>
-            </rounds>
-        </fight>
-        <fight>
-            <currentRound>1</currentRound>
-            <id>4</id>
-            <rounds>
-                <round>
-                    <blocked_hits>0</blocked_hits>
-                    <id>0</id>
-                    <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>33</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>66</remaining_time>
-                    <result>1</result>
-                    <successful_hits>8</successful_hits>
+                    <received_hits>7</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>83</remaining_time>
+                    <result>2</result>
+                    <successful_hits>3</successful_hits>
                 </round>
                 <round>
                     <blocked_hits>0</blocked_hits>
                     <id>1</id>
                     <player_remaining_life>0</player_remaining_life>
-                    <realized_hits>48</realized_hits>
-                    <received_hits>0</received_hits>
-                    <remaining_life>100</remaining_life>
-                    <remaining_time>55</remaining_time>
+                    <realized_hits>41</realized_hits>
+                    <received_hits>8</received_hits>
+                    <remaining_life>26</remaining_life>
+                    <remaining_time>54</remaining_time>
+                    <result>1</result>
+                    <successful_hits>9</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>2</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>28</realized_hits>
+                    <received_hits>5</received_hits>
+                    <remaining_life>60</remaining_life>
+                    <remaining_time>71</remaining_time>
                     <result>1</result>
                     <successful_hits>7</successful_hits>
                 </round>

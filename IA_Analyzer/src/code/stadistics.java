@@ -80,6 +80,32 @@ public class stadistics {
     }
 
     /**
+     * Print accumulatedReward.
+     */
+    public void printAccumulatedReward(){
+        DefaultXYDataset dataset = new DefaultXYDataset();
+        int dim = stats.getHistory().getFights().size();
+        double mat[][] = new double[2][dim];
+        for(int i = 1; i <= dim; ++i){
+            mat[0][i-1] = i;
+            mat[1][i-1] = stats.getHistory().getFights().get(i-1).getAccumulatedReward();
+        }
+        dataset.addSeries("Efectivity", mat);
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.BLUE);
+        renderer.setSeriesStroke(0, new BasicStroke(2));
+        JFreeChart chart = ChartFactory.createXYLineChart("IA Accumulated Reward", "Iteration", "Accumulated Reward", dataset, PlotOrientation.VERTICAL, true, false, false);
+        chart.getXYPlot().getRangeAxis().setRange(-1000, 1000);
+        ((NumberAxis) chart.getXYPlot().getRangeAxis()).setNumberFormatOverride(new DecimalFormat());
+        chart.getXYPlot().setRenderer(renderer);
+
+        BufferedImage image = chart.createBufferedImage(600, 400);
+        try {
+            ImageIO.write(image, "png", new File("AccumulatedReward.png"));
+        }catch (Exception e){}
+    }
+
+    /**
      * Print stadistics.
      */
     public void printStadistics(){

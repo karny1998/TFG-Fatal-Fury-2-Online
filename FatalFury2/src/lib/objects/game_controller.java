@@ -40,7 +40,7 @@ public class game_controller {
      */
 // Modo debug
     boolean training = true;
-    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.HARD, ia_loader.dif.HARD, 10);
+    IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.HARD, ia_loader.dif.HARD, 10000);
     /**
      * The Debug.
      */

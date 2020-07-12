@@ -3,6 +3,7 @@ public class main {
         //random().saveUpdatedHistory();
         stadistics s = new stadistics("ia_stadistics.xml");
         s.printEfectivity();
+        s.printAccumulatedReward();
         s.printStadistics();
     }
 

@@ -72,6 +72,11 @@ public class agent{
     private boolean waitingResult = false;
 
     /**
+     * The Accumulated reward.
+     */
+    private int accumulatedReward = 0;
+
+    /**
      * Instantiates a new Agent.
      *
      * @param initialS the initial s
@@ -87,9 +92,11 @@ public class agent{
         int x = stateCalculator.getMax();
         int y = stateCalculator.getnActions();
         qTable = new Double[x][y];
-        for(int i = 0; i < x; ++i){
-            for(int j = 0; j < y; ++j){
-                qTable[i][j] = 0.0;
+        if(!loadQtable()) {
+            for (int i = 0; i < x; ++i) {
+                for (int j = 0; j < y; ++j) {
+                    qTable[i][j] = 0.0;
+                }
             }
         }
     }
@@ -105,6 +112,7 @@ public class agent{
         resultAssigned = false;
         trainingRegister.clear();
         previousState = initial;
+        accumulatedReward = 0;
     }
 
     /**
@@ -220,14 +228,23 @@ public class agent{
             if (newS.getLife() == ini.getLife() && newS.getPlayerLife() == ini.getPlayerLife()) {
                 // Si el jugador estaba atacando y la ia se defencio
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
+                    if(ini.getDis() > 200 && newS.getDis() > 200 && action == Movement.CROUCHED_BLOCK){
+                        reward = -5;
+                    }
+                    else {
+                        reward = 5;
+                    }
+                }
+                // Si se ha esquivado
+                else if (character.isAttack(ini.getPlayerState()) && character.isDisplacement(action)){
                     reward = 5;
                 }
                 // Si atacó al aire
-                else if (character.isAttack(action)) {
+                else if (character.isAttack(action) && newS.getDis() > 200 && ini.getDis() > 200) {
                     reward = -5;
                 }
             }
-            // Si a alguno de los dos le bajó la visa
+            // Si a alguno de los dos le bajó la vida
             else if (newS.getLife() != ini.getLife() || newS.getPlayerLife() != ini.getPlayerLife()) {
                 // Si se estaba cubriento, se recompensa con el daño recibido (este es reducido)
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
@@ -235,13 +252,15 @@ public class agent{
                 }
                 // Sino, recompensa con la diferencia entre el daño infligido y el recibido
                 else {
-                    reward = (30*(ini.getLife() - newS.getLife())/ini.getLife() + 30*(newS.getPlayerLife() - ini.getPlayerLife())/ini.getPlayerLife());
+                    reward = (30*(newS.getLife() - ini.getLife())/ini.getLife() + 30*(ini.getPlayerLife()-newS.getPlayerLife())/ini.getPlayerLife());
                 }
             }
         }
 
         // Función de actualización de la qTable
         qTable[i][j] = qTable[i][j] + alpha * (reward + ganma * futureReward - qTable[i][j]);
+
+        accumulatedReward += reward;
 
         // Registra la transición
         trainingRegister.add(new Pair<>(new Pair<>(ini, action), new Pair<>(reward, newS)));
@@ -386,8 +405,8 @@ public class agent{
     /**
      * Carga la tabla q del fichero correspondiente.
      */
-    public void loadQtable(){
-        String path =  System.getProperty("user.dir") + "/.files/trainingRegister.txt";
+    public boolean loadQtable(){
+        String path =  System.getProperty("user.dir") + "/.files/qTable.txt";
         try {
             File f = new File(path);
             BufferedReader b = new BufferedReader(new FileReader(f));
@@ -401,7 +420,11 @@ public class agent{
                 ++i;
             }
             b.close();
-        }catch (Exception e){}
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -637,5 +660,77 @@ public class agent{
      */
     public void setTrainingEnded(boolean trainingEnded) {
         this.trainingEnded = trainingEnded;
+    }
+
+    /**
+     * Gets training register.
+     *
+     * @return the training register
+     */
+    public List<Pair<Pair<state, Movement>, Pair<Double, state>>> getTrainingRegister() {
+        return trainingRegister;
+    }
+
+    /**
+     * Sets training register.
+     *
+     * @param trainingRegister the training register
+     */
+    public void setTrainingRegister(List<Pair<Pair<state, Movement>, Pair<Double, state>>> trainingRegister) {
+        this.trainingRegister = trainingRegister;
+    }
+
+    /**
+     * Is result assigned boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isResultAssigned() {
+        return resultAssigned;
+    }
+
+    /**
+     * Sets result assigned.
+     *
+     * @param resultAssigned the result assigned
+     */
+    public void setResultAssigned(boolean resultAssigned) {
+        this.resultAssigned = resultAssigned;
+    }
+
+    /**
+     * Is waiting result boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isWaitingResult() {
+        return waitingResult;
+    }
+
+    /**
+     * Sets waiting result.
+     *
+     * @param waitingResult the waiting result
+     */
+    public void setWaitingResult(boolean waitingResult) {
+        this.waitingResult = waitingResult;
+    }
+
+    /**
+     * Gets accumulated reward.
+     *
+     * @return the accumulated reward
+     */
+    public int getAccumulatedReward() {
+        return accumulatedReward;
+    }
+
+    /**
+     * Sets accumulated reward.
+     *
+     * @param accumulatedReward the accumulated reward
+     */
+    public void setAccumulatedReward(int accumulatedReward) {
+        this.accumulatedReward = accumulatedReward;
     }
 }

@@ -63,7 +63,7 @@ public class IaVsIaTraining {
     /**
      * The file name
      */
-    String filename = "";
+    String filename = System.getProperty("user.dir") + "/.files/q_learning_stats.xml";
 
     agent agente;
 
@@ -82,7 +82,6 @@ public class IaVsIaTraining {
         this.pLvl = pLvl;
         this.lvlIa = lvlIa;
         this.times = times;
-        filename =  ia.toString() + lvlIa.toString() + "vs" + charac.toString() + pLvl.toString() + ".xml";
         stateCalculator.initialize();
     }
 
@@ -90,7 +89,7 @@ public class IaVsIaTraining {
      * Generate fight.
      */
     private void generateFight(){
-        player = new user_controller(charac, 1);//new enemy_controller(charac, 1);//
+        player = new enemy_controller(charac, 1);// new user_controller(charac, 1);//
         if(enemy == null) {
             enemy = new enemy_controller(ia, 2, true, true);
         }
@@ -100,7 +99,7 @@ public class IaVsIaTraining {
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
-        //player.getIa().setDif(pLvl);//comentar esto para jugadores
+        player.getIa().setDif(pLvl);//comentar esto para jugadores
         enemy.getIa().setDif(lvlIa);
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
@@ -110,6 +109,13 @@ public class IaVsIaTraining {
         fight.setIaLvl(lvlIa);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
         audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+        double epsilon = 1.0 - (double)i/1000.0;
+        if(epsilon >= 0.05) {
+            enemy.getAgente().setEpsilon(epsilon);
+        }
+        else{
+            enemy.getAgente().setEpsilon(0.05);
+        }
     }
 
 
@@ -126,12 +132,14 @@ public class IaVsIaTraining {
             generateFight();
         }
         else if(fight.getEnd()){
-            //enemy.getPlayer().getStats().setFilename(filename);
+            enemy.getPlayer().getStats().setFilename(filename);
             enemy.getAgente().writeQTableAndRegister();
+            enemy.getPlayer().getStats().getActualFight().setAccumulatedReward(enemy.getAgente().getAccumulatedReward());
             enemy.getPlayer().getStats().saveUpdatedHistory();
             enemy.getPlayer().getStats().nextFight();
             Fight_Results resultado = fight.getFight_result();
             audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+            ++this.i;
             generateFight();
 
             hitBox pHurt = player.getPlayer().getHurtbox();
@@ -144,7 +152,6 @@ public class IaVsIaTraining {
                 dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
             }
             enemy.getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0, false));
-            ++i;
         }
         else{
             fight.getAnimation(screenObjects);

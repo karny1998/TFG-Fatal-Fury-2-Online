@@ -26,6 +26,11 @@ public class fight_stats {
     private int currentRound = 0;
 
     /**
+     * The accumulated reward.
+     */
+    private int accumulatedReward = 0;
+
+    /**
      * Instantiates a new Fight stats.
      */
     public fight_stats() {
@@ -266,5 +271,32 @@ public class fight_stats {
      */
     public void setCurrentRound(int currentRound) {
         this.currentRound = currentRound;
+    }
+
+    /**
+     * Gets accumulated reward.
+     *
+     * @return the accumulated reward
+     */
+    public int getAccumulatedReward() {
+        return accumulatedReward;
+    }
+
+    /**
+     * Sets accumulated reward.
+     *
+     * @param accumulatedReward the accumulated reward
+     */
+    public void setAccumulatedReward(int accumulatedReward) {
+        this.accumulatedReward = accumulatedReward;
+    }
+
+    /**
+     * Add reward to the accumulated reward.
+     *
+     * @param reward the reward
+     */
+    public void addReward(int reward) {
+        this.accumulatedReward += accumulatedReward;
     }
 }
