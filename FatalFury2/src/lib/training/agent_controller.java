@@ -76,6 +76,8 @@ public class agent_controller extends ia_controller{
      */
     private boolean roundEnded = false;
 
+    private boolean waitingEndKnockback = false;
+
 
     /**
      * Instantiates a new Ia controller.
@@ -167,6 +169,37 @@ public class agent_controller extends ia_controller{
             roundEnded = false;
             return;
         }
+        else if(waitingEndKnockback){
+            if(enemy.inKnockback()){
+                return;
+            }
+            else{
+                waitingEndKnockback = false;
+                actionExecuted = false;
+                actionInExecution = false;
+                state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
+                Movement m = agente.selectAction(s);
+                if(m == Movement.THROW && dis >= 10){
+                    m = Movement.HARD_PUNCH;
+                    agente.setActionToExecute(m);
+                }
+                agente.setActionToExecute(m);
+
+                timeReferenceAgent = System.currentTimeMillis();
+
+                if(m == Movement.NONE){
+                    actionToExecute = enemy.getCombos().get(move);
+                    moveAgent = move;
+                }
+                else {
+                    actionToExecute = m;
+                    moveAgent = movementsKeys.get(m);
+                }
+                if(s.isRoundTerminal() || s.isFightTerminal()){
+                    roundEnded = true;
+                }
+            }
+        }
 
         long actual = System.currentTimeMillis();
 
@@ -185,10 +218,20 @@ public class agent_controller extends ia_controller{
         Movement actualState = enemy.getState();
         Movement jumpAttack = Movement.NONE;
 
-        if(!actionInExecution && !actionExecuted){
-            if(actionToExecute == Movement.THROW && dis >= 10){
-                actionInExecution = true;
+        if(enemy.inKnockback() && previousState != actualState){
+            waitingEndKnockback = true;
+            if(actionInExecution){
                 actionExecuted = true;
+            }
+            else{
+                return;
+            }
+        }
+
+        if(!actionInExecution && !actionExecuted){
+            if(actionToExecute == Movement.THROW){
+                actionInExecution = previousState != actualState && (actualState == actionToExecute || actualState == Movement.HARD_PUNCH);
+                moveAgent = "";
             }
             else {
                 actionInExecution = previousState != actualState && actualState == actionToExecute
@@ -214,7 +257,9 @@ public class agent_controller extends ia_controller{
             timeReferenceAgent = actual;
         }
         else if(!actionExecuted){
-            if(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK){
+            if(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK
+                    || actionToExecute == Movement.CROUCH || actionToExecute == Movement.CROUCHED_BLOCK
+                    || actionToExecute == Movement.CROUCHED_WALKING){
                 actionExecuted = System.currentTimeMillis() - timeReferenceAgent > 300.0;
             }
             else {
@@ -226,7 +271,6 @@ public class agent_controller extends ia_controller{
                 previousAction = actionToExecute;
             }
         }
-
         previousState = actualState;
 
         if(!roundEnded && (actionExecuted || (player.getLife() == 0 || enemy.getLife() == 0 || time == 0))){
@@ -240,6 +284,11 @@ public class agent_controller extends ia_controller{
             }
 
             Movement m = agente.getActionToExecute();
+            if(m == Movement.THROW && dis >= 10){
+                m = Movement.HARD_PUNCH;
+                agente.setActionToExecute(m);
+            }
+
             timeReferenceAgent = System.currentTimeMillis();
 
             if(m == Movement.NONE){

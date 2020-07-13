@@ -286,4 +286,12 @@ public class stateCalculator {
     public static void setnActions(int nActions) {
         stateCalculator.nActions = nActions;
     }
+
+    public static boolean isSimple() {
+        return simple;
+    }
+
+    public static void setSimple(boolean simple) {
+        stateCalculator.simple = simple;
+    }
 }

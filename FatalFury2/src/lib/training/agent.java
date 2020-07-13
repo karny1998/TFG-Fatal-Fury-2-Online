@@ -165,13 +165,13 @@ public class agent{
      */
     public void giveReward(state newS){
         // Da la recompensa a la acción actionToExecute previousState en base a newS
-        giveReward(previousState, newS, actionToExecute, false);
+        giveReward(previousState, newS, actionToExecute, false, false);
         // Aleatoriamente se comprueba si toca revivir alguna experiencia
         if(Math.random() > 1-experienceFrequency){
             // Se reviven 5 experiencias aleatorias del buffer
             for(int h = 0; h < 5; ++h){
                 Pair<Pair<state,Movement>,Pair<Double,state>> aux = experienceBuffer.get((int) (experienceBuffer.size()*Math.random()));
-                giveReward(aux.first.first, aux.second.second, aux.first.second, true);
+                giveReward(aux.first.first, aux.second.second, aux.first.second, true, false);
             }
         }
     }
@@ -184,7 +184,7 @@ public class agent{
      * @param action     the action
      * @param experience the experience (indica si viene de experience replay o no)
      */
-    private void giveReward(state ini, state newS, Movement action, boolean experience){
+    private void giveReward(state ini, state newS, Movement action, boolean experience, boolean loading){
         // Se hallan los índices de la tabla en base al estado y la acción
         int i = ini.getStateNum(), j = stateCalculator.idAction(action);
         double reward = 0;
@@ -212,13 +212,15 @@ public class agent{
                 reward = -100;
                 aux.setPlayerVictories(aux.getPlayerVictories()+1);
             }
-            aux.setRound(aux.getRound()+1);
-            aux.setRemainingTime(90);
-            aux.setLife(100);
-            aux.setPlayerLife(100);
-            aux.setPlayerState(Movement.STANDING);
-            // Recompensa del estado inicial futuro
-            futureReward = maxFutureReward(aux);
+            if(!stateCalculator.isSimple()) {
+                aux.setRound(aux.getRound() + 1);
+                aux.setRemainingTime(90);
+                aux.setLife(100);
+                aux.setPlayerLife(100);
+                aux.setPlayerState(Movement.STANDING);
+                // Recompensa del estado inicial futuro
+                futureReward = maxFutureReward(aux);
+            }
         }
         // Caso genérico
         else {
@@ -228,7 +230,7 @@ public class agent{
             if (newS.getLife() == ini.getLife() && newS.getPlayerLife() == ini.getPlayerLife()) {
                 // Si el jugador estaba atacando y la ia se defencio
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
-                    if(ini.getDis() > 200 && newS.getDis() > 200 && action == Movement.CROUCHED_BLOCK){
+                    if(ini.getDis() > 200 && newS.getDis() > 200){
                         reward = -5;
                     }
                     else {
@@ -236,9 +238,9 @@ public class agent{
                     }
                 }
                 // Si se ha esquivado
-                else if (character.isAttack(ini.getPlayerState()) && character.isDisplacement(action)){
+                /*else if (character.isAttack(ini.getPlayerState()) && character.isDisplacement(action)){
                     reward = 5;
-                }
+                }*/
                 // Si atacó al aire
                 else if (character.isAttack(action) && newS.getDis() > 200 && ini.getDis() > 200) {
                     reward = -5;
@@ -248,11 +250,11 @@ public class agent{
             else if (newS.getLife() != ini.getLife() || newS.getPlayerLife() != ini.getPlayerLife()) {
                 // Si se estaba cubriento, se recompensa con el daño recibido (este es reducido)
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
-                    reward = 30*((newS.getLife() - ini.getLife())/2)/ini.getLife();
+                    reward = 30.0*(((double) newS.getLife() - (double) ini.getLife())/2)/(double) ini.getLife();
                 }
                 // Sino, recompensa con la diferencia entre el daño infligido y el recibido
                 else {
-                    reward = (30*(newS.getLife() - ini.getLife())/ini.getLife() + 30*(ini.getPlayerLife()-newS.getPlayerLife())/ini.getPlayerLife());
+                    reward = (30.0*((double) newS.getLife() - (double) ini.getLife())/(double) ini.getLife() + 30.0*((double) ini.getPlayerLife()-(double) newS.getPlayerLife())/(double) ini.getPlayerLife());
                 }
             }
         }
@@ -260,10 +262,14 @@ public class agent{
         // Función de actualización de la qTable
         qTable[i][j] = qTable[i][j] + alpha * (reward + ganma * futureReward - qTable[i][j]);
 
+        //System.out.println("action: " + action.toString() + " reward: " + reward + " future reward: " + futureReward + " q value: "+ qTable[i][j]);
+
         accumulatedReward += reward;
 
         // Registra la transición
-        trainingRegister.add(new Pair<>(new Pair<>(ini, action), new Pair<>(reward, newS)));
+        if(!loading) {
+            trainingRegister.add(new Pair<>(new Pair<>(ini, action), new Pair<>(reward, newS)));
+        }
 
         // SI no viene de esperience replay, se guarda en el buffer
         if(!experience) {
@@ -300,9 +306,16 @@ public class agent{
         Movement a = Movement.STANDING;
         int n = stateCalculator.getnActions();
         if(Math.random() <= epsilon) {
-            int m = (int) (Math.random() * n);
-            m = m % stateCalculator.getnActions();
-            a = stateCalculator.actionById(m);
+            if(previousState.isJumping()){
+                Movement aux[] = {Movement.HARD_PUNCH, Movement.SOFT_PUNCH, Movement.SOFT_KICK,
+                        Movement.HARD_KICK, Movement.STANDING};
+                a = aux[(int) ((Math.random() * 4.0)+0.5)];
+            }
+            else {
+                int m = (int) (Math.random() * n);
+                m = m % stateCalculator.getnActions();
+                a = stateCalculator.actionById(m);
+            }
         }
         else{
             int best = 0, s = previousState.getStateNum();
@@ -314,7 +327,9 @@ public class agent{
                 }
             }
             a = stateCalculator.actionById(best);
+
         }
+        //System.out.println(a + " seleccionada");
         return a;
     }
 
@@ -326,22 +341,21 @@ public class agent{
      */
     public Movement selectAction(state st){
         Movement a = Movement.STANDING;
+
         int n = stateCalculator.getnActions();
         int best = 0, s = st.getStateNum();
         double max = qTable[s][0];
-        boolean allZeros = true;
-        for(int i = 1; i < n; ++i){
-            allZeros = allZeros && qTable[s][i] == 0.0;
-            if(qTable[s][i] > max){
+        for (int i = 1; i < n; ++i) {
+            if (qTable[s][i] > max) {
                 max = qTable[s][i];
                 best = i;
             }
         }
-        if(allZeros){
-            a = Movement.NONE;
-        }
-        else{
-            a = stateCalculator.actionById(best);
+        a = stateCalculator.actionById(best);
+
+        if(st.isJumping() &&
+                (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
+            a = Movement.STANDING;
         }
         return a;
     }
@@ -421,7 +435,7 @@ public class agent{
             }
             b.close();
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println("No se ha encontrado la q table, por lo que se empezará de 0");
             return false;
         }
         return true;
@@ -430,37 +444,46 @@ public class agent{
     /**
      * Load training.
      */
-    public void loadTraining(){
-        String path =  System.getProperty("user.dir") + "/.files/trainingRegister.txt";
+    public void loadTraining(String file){
+        String path =  System.getProperty("user.dir") + "/.files/"+file;
         try {
             File f = new File(path);
             BufferedReader b = new BufferedReader(new FileReader(f));
             String aux = "";
-            while((aux = b.readLine()) != null) {
-                while ((aux = b.readLine()) != null) {
+            boolean nextFight = false;
+            aux = b.readLine();
+            while(aux != null) {
+                nextFight = false;
+                aux = b.readLine();
+                aux = b.readLine();
+                while (!nextFight) {
                     aux = b.readLine();
-                    aux = b.readLine();
-                    aux = b.readLine();
-                    String estado[] = aux.split(",");
-                    state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                            Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
-                    aux = b.readLine();
-                    aux = b.readLine();
-                    Movement action = Movement.valueOf(aux);
-                    aux = b.readLine();
-                    aux = b.readLine();
-                    aux = b.readLine();
-                    aux = b.readLine();
-                    estado = aux.split(",");
-                    state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                            Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                            Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
-                    giveReward(s, s2, action, false);
+                    if(aux == null || aux.equals("#-----------#")){nextFight = true;}
+                    else {
+                        aux = b.readLine();
+                        String estado[] = aux.split(",");
+                        state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
+                                Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
+                        aux = b.readLine();
+                        aux = b.readLine();
+                        Movement action = Movement.valueOf(aux);
+                        aux = b.readLine();
+                        aux = b.readLine();
+                        aux = b.readLine();
+                        aux = b.readLine();
+                        estado = aux.split(",");
+                        state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
+                                Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
+                        giveReward(s, s2, action, false, true);
+                    }
                 }
             }
             b.close();
-        }catch (Exception e){}
+        }catch (Exception e){
+            System.out.println("No se ha encontrado el fichero de entrenamiento");
+        }
     }
 
     /**

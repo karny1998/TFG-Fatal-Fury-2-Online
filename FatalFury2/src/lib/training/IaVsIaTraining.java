@@ -67,6 +67,8 @@ public class IaVsIaTraining {
 
     agent agente;
 
+    private boolean loadTraining = false;
+
     /**
      * Instantiates a new Ia vs ia training.
      *
@@ -76,12 +78,13 @@ public class IaVsIaTraining {
      * @param lvlIa  the lvl ia
      * @param times  the times
      */
-    public IaVsIaTraining(Playable_Character charac, Playable_Character ia, ia_loader.dif pLvl, ia_loader.dif lvlIa, int times) {
+    public IaVsIaTraining(Playable_Character charac, Playable_Character ia, ia_loader.dif pLvl, ia_loader.dif lvlIa, int times, boolean loadTraining) {
         this.charac = charac;
         this.ia = ia;
         this.pLvl = pLvl;
         this.lvlIa = lvlIa;
         this.times = times;
+        this.loadTraining = loadTraining;
         stateCalculator.initialize();
     }
 
@@ -109,13 +112,20 @@ public class IaVsIaTraining {
         fight.setIaLvl(lvlIa);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
         audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-        double epsilon = 1.0 - (double)i/1000.0;
+        double epsilon = 1.0 - (double)i/2000.0;
+        agente = enemy.getAgente();
         if(epsilon >= 0.05) {
             enemy.getAgente().setEpsilon(epsilon);
         }
         else{
             enemy.getAgente().setEpsilon(0.05);
         }
+        if(loadTraining){
+            enemy.getAgente().loadTraining("trainingRegister.txt");
+            loadTraining = false;
+        }
+
+        //enemy.getAgente().setEpsilon(0.0);
     }
 
 
