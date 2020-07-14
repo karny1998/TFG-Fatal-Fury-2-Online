@@ -22,11 +22,6 @@ public class agent_controller extends ia_controller{
     private Timer ia_control;
 
     /**
-     * The Ia training.
-     */
-    private Timer ia_training;
-
-    /**
      * The Agente.
      */
     private agent agente;
@@ -110,17 +105,6 @@ public class agent_controller extends ia_controller{
 
         this.agente = new agent(s,0.99,0.75,0.25);
 
-        if(training){
-            ia_training = new Timer(1, new ActionListener() {
-                @Override
-                // Realiza las comprobaciones y gestión de la IA periódicamente
-                public void actionPerformed(ActionEvent e) {
-                    agente.train_Q_Learning();
-                }
-            });
-            ia_training.start();
-        }
-
         ia_control = new Timer(1, new ActionListener() {
             @Override
             // Realiza las comprobaciones y gestión de la IA periódicamente
@@ -136,9 +120,6 @@ public class agent_controller extends ia_controller{
      * Para la gestión de la IA
      */
     public void stopIA(){
-        if(training){
-            ia_training.stop();
-        }
         ia_control.stop();
     }
 
@@ -156,6 +137,18 @@ public class agent_controller extends ia_controller{
         }
         else if(pHurt.getX() < eHurt.getX()){
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
+        }
+
+        if(!training) {
+            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
+            Movement m = agente.selectAction(s);
+            actionToExecute = agente.selectAction(s);
+            moveAgent = movementsKeys.get(m);
+            if(m == Movement.NONE){
+                actionToExecute = enemy.getCombos().get(move);
+                moveAgent = move;
+            }
+            return;
         }
 
         if(isStandBy()){
@@ -178,12 +171,14 @@ public class agent_controller extends ia_controller{
                 actionExecuted = false;
                 actionInExecution = false;
                 state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
-                Movement m = agente.selectAction(s);
+                agente.setPreviousState(s);
+                Movement m = agente.getActionToExecute();
                 if(m == Movement.THROW && dis >= 10){
                     m = Movement.HARD_PUNCH;
                     agente.setActionToExecute(m);
                 }
-                agente.setActionToExecute(m);
+
+                actionToExecute = m;
 
                 timeReferenceAgent = System.currentTimeMillis();
 
@@ -203,18 +198,6 @@ public class agent_controller extends ia_controller{
 
         long actual = System.currentTimeMillis();
 
-        if(!training) {
-            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
-            Movement m = agente.selectAction(s);
-            actionToExecute = agente.selectAction(s);
-            moveAgent = movementsKeys.get(m);
-            if(m == Movement.NONE){
-                actionToExecute = enemy.getCombos().get(move);
-                moveAgent = move;
-            }
-            return;
-        }
-
         Movement actualState = enemy.getState();
         Movement jumpAttack = Movement.NONE;
 
@@ -230,8 +213,15 @@ public class agent_controller extends ia_controller{
 
         if(!actionInExecution && !actionExecuted){
             if(actionToExecute == Movement.THROW){
-                actionInExecution = previousState != actualState && (actualState == actionToExecute || actualState == Movement.HARD_PUNCH);
-                moveAgent = "";
+                if(dis >= 10){
+                    agente.setActionToExecute(Movement.HARD_PUNCH);
+                    actionToExecute = Movement.HARD_PUNCH;
+                    moveAgent = movementsKeys.get(actionToExecute);
+                }
+                else {
+                    actionInExecution = previousState != actualState && (actualState == actionToExecute || actualState == Movement.HARD_PUNCH);
+                    moveAgent = "";
+                }
             }
             else {
                 actionInExecution = previousState != actualState && actualState == actionToExecute
@@ -241,6 +231,10 @@ public class agent_controller extends ia_controller{
                     moveAgent = "";
                 }
             }
+
+            /*if(actionInExecution){
+                System.out.println("Se ha comenzado a ejecutar " + actionToExecute.toString() + " y el agente cree que es " + agente.getActionToExecute().toString());
+            }*/
         }
         else if(actionInExecution && !actionExecuted
                 && (actualState == Movement.NORMAL_JUMP || actualState == Movement.JUMP_ROLL_RIGHT)
@@ -258,9 +252,11 @@ public class agent_controller extends ia_controller{
         }
         else if(!actionExecuted){
             if(actionToExecute == Movement.WALKING || actionToExecute == Movement.WALKING_BACK
-                    || actionToExecute == Movement.CROUCH || actionToExecute == Movement.CROUCHED_BLOCK
                     || actionToExecute == Movement.CROUCHED_WALKING){
                 actionExecuted = System.currentTimeMillis() - timeReferenceAgent > 300.0;
+            }
+            else if( actionToExecute == Movement.CROUCH || actionToExecute == Movement.CROUCHED_BLOCK){
+                actionExecuted = System.currentTimeMillis() - timeReferenceAgent > 500.0;
             }
             else {
                 actionExecuted = (previousState != actualState && previousState == actionToExecute)
@@ -271,9 +267,11 @@ public class agent_controller extends ia_controller{
                 previousAction = actionToExecute;
             }
         }
+
         previousState = actualState;
 
         if(!roundEnded && (actionExecuted || (player.getLife() == 0 || enemy.getLife() == 0 || time == 0))){
+            //System.out.println("Se ha ejecutado " + actionToExecute.toString() + " y el agente cree que es " + agente.getActionToExecute().toString());
             actionExecuted = false;
             actionInExecution = false;
             state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
@@ -332,24 +330,6 @@ public class agent_controller extends ia_controller{
      */
     public void setIa_control(Timer ia_control) {
         this.ia_control = ia_control;
-    }
-
-    /**
-     * Gets ia training.
-     *
-     * @return the ia training
-     */
-    public Timer getIa_training() {
-        return ia_training;
-    }
-
-    /**
-     * Sets ia training.
-     *
-     * @param ia_training the ia training
-     */
-    public void setIa_training(Timer ia_training) {
-        this.ia_training = ia_training;
     }
 
     /**

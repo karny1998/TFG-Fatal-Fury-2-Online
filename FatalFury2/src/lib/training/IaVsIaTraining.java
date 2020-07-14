@@ -92,7 +92,7 @@ public class IaVsIaTraining {
      * Generate fight.
      */
     private void generateFight(){
-        player = new enemy_controller(charac, 1);// new user_controller(charac, 1);//
+        player = new enemy_controller(charac, 1);//new user_controller(charac, 1);//
         if(enemy == null) {
             enemy = new enemy_controller(ia, 2, true, true);
         }
@@ -112,7 +112,7 @@ public class IaVsIaTraining {
         fight.setIaLvl(lvlIa);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
         audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-        double epsilon = 1.0 - (double)i/2000.0;
+        double epsilon = 1.0 - (double)i/3000.0;
         agente = enemy.getAgente();
         if(epsilon >= 0.05) {
             enemy.getAgente().setEpsilon(epsilon);

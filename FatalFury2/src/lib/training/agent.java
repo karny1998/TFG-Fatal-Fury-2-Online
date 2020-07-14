@@ -116,37 +116,6 @@ public class agent{
     }
 
     /**
-     * Se ejecuta el algoritmo de entrenamiento de Q-Learning.
-     */
-    public synchronized void train_Q_Learning(){
-        // Mientras no haya terminado el entrenamiento
-        if(!trainingEnded) {
-            // Selecciona una acción a ejecutar
-            if(!waitingResult){
-                waitingResult = true;
-                resultAssigned = false;
-                actionToExecute = selectAction();
-                return;
-            }
-            // Espera por el resultado de la acción
-            if(!resultAssigned) {
-                return;
-            }
-
-            // Si se le indica que ha terminado el entrenamiento sale
-            if(trainingEnded){
-                return;
-            }
-
-            // Se actualiza el estado origen
-            previousState = result;
-            resultAssigned = false;
-            waitingResult = false;
-            waitingResult = false;
-        }
-    }
-
-    /**
      * Notify result.
      *
      * @param r the r
@@ -156,6 +125,10 @@ public class agent{
         // Se da la recompensa correspondiente a la acción ejecutada en base al resultado
         giveReward(result);
         resultAssigned = true;
+
+        ////////////////////////////////////
+        previousState = result;
+        actionToExecute = selectAction();
     }
 
     /**
@@ -231,7 +204,7 @@ public class agent{
                 // Si el jugador estaba atacando y la ia se defencio
                 if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
                     if(ini.getDis() > 200 && newS.getDis() > 200){
-                        reward = -5;
+                        reward = -1;
                     }
                     else {
                         reward = 5;
@@ -243,14 +216,14 @@ public class agent{
                 }*/
                 // Si atacó al aire
                 else if (character.isAttack(action) && newS.getDis() > 200 && ini.getDis() > 200) {
-                    reward = -5;
+                    reward = -1;
                 }
             }
             // Si a alguno de los dos le bajó la vida
             else if (newS.getLife() != ini.getLife() || newS.getPlayerLife() != ini.getPlayerLife()) {
                 // Si se estaba cubriento, se recompensa con el daño recibido (este es reducido)
-                if (character.isAttack(ini.getPlayerState()) && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
-                    reward = 30.0*(((double) newS.getLife() - (double) ini.getLife())/2)/(double) ini.getLife();
+                if (newS.getLife() < ini.getLife()  && (action == Movement.WALKING || action == Movement.CROUCHED_BLOCK)) {
+                    reward = 30.0*(((double) ini.getLife()-(double) newS.getLife())/2)/(double) ini.getLife();
                 }
                 // Sino, recompensa con la diferencia entre el daño infligido y el recibido
                 else {
