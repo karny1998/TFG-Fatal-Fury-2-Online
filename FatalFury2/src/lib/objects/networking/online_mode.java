@@ -53,7 +53,7 @@ public class online_mode {
     private String serverIp = "fatalfury2.sytes.net";
 
     private int serverPort = 5555, conToClientPort = 5556,
-            requestID = 1, tramitsClientsID = -2, characterMsgsID = 2, fightMsgsID = 3;
+            requestID = 1, tramitsID = -1, tramitsClientsID = -2, characterMsgsID = 2, fightMsgsID = 3;
 
     public online_mode(boolean debug) {
         this.debug = debug;
@@ -186,7 +186,7 @@ public class online_mode {
         String command = "";
         boolean fight = false;
         while(!fight) {
-            System.out.print("Command (LOGIN, REGISTER, FIGHT): ");
+            System.out.print("Command (LOGIN, REGISTER, FIGHT, ADD FRIEND, ACCEPT FRIEND, REJECT FRIEND): ");
             String cm = "";
             try {
                 cm = in.readLine();
@@ -194,6 +194,8 @@ public class online_mode {
                 e.printStackTrace();
             }
             if(cm.equals("exit")){
+                conToServer.send(tramitsID,"DISCONNECT");
+                conToServer.close();
                 System.exit(0);
             }
             else if(cm.equals("LOGIN")){
@@ -235,6 +237,58 @@ public class online_mode {
                     else{
                         System.out.println(res.split(":")[1]);
                     }
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("ADD FRIEND")){
+                String username = "";
+                String password = "";
+                String email = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Friend: ");
+                    password = in.readLine();
+                    conToServer.send(requestID,"SEND FRIEND REQUEST:"+username+":"+password);
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("ACCEPT FRIEND")){
+                String username = "";
+                String password = "";
+                String email = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Friend: ");
+                    password = in.readLine();
+                    conToServer.send(requestID,"ACCEPT FRIEND REQUEST:"+username+":"+password);
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("REJECT FRIEND")){
+                String username = "";
+                String password = "";
+                String email = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Friend: ");
+                    password = in.readLine();
+                    conToServer.send(requestID,"REJECT FRIEND REQUEST:"+username+":"+password);
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("REMOVE FRIEND")){
+                String username = "";
+                String password = "";
+                String email = "";
+                try {
+                    System.out.print("Username: ");
+                    username = in.readLine();
+                    System.out.print("Friend: ");
+                    password = in.readLine();
+                    conToServer.send(requestID,"REMOVE FRIEND:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }

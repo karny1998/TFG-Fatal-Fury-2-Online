@@ -3,6 +3,7 @@ package database.models;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -31,21 +32,27 @@ public class Player implements Serializable {
     @Column(name = "rankScore", nullable = false)
     private int rankScore;
     @OneToMany(mappedBy = "player1", fetch = FetchType.LAZY)
-    private List<Game> gamesAsP1;
+    private List<Game> gamesAsP1 = new ArrayList<>();
     @OneToMany(mappedBy = "player2", fetch = FetchType.LAZY)
-    private List<Game> gamesAsP2;
+    private List<Game> gamesAsP2 = new ArrayList<>();;
     @OneToMany(mappedBy = "transmitter", fetch = FetchType.LAZY)
-    private List<Message> messagesAsTransmitter;
+    private List<Message> messagesAsTransmitter = new ArrayList<>();;
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
-    private List<Message> messagesAsReceiver;
+    private List<Message> messagesAsReceiver = new ArrayList<>();;
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    private List<Login> logins;
+    private List<Login> logins = new ArrayList<>();;
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
-    private List<Tournament> participatedTournaments;
+    private List<Tournament> participatedTournaments = new ArrayList<>();;
     @ManyToMany
-    private List<Player> friendsAsSoliciter;
+    @JoinTable(name = "friends")
+    private List<Player> friendsAsSoliciter = new ArrayList<>();;
     @ManyToMany(mappedBy = "friendsAsSoliciter", fetch = FetchType.LAZY)
-    private List<Player> friendsAsReceiver;
+    private List<Player> friendsAsReceiver = new ArrayList<>();;
+    @ManyToMany
+    @JoinTable(name = "friend_request")
+    private List<Player> sentFriendRequest = new ArrayList<>();;
+    @ManyToMany(mappedBy = "sentFriendRequest", fetch = FetchType.LAZY)
+    private List<Player> receivedFriendRequest = new ArrayList<>();;
 
     /**
      * Instantiates a new Player.
@@ -281,6 +288,22 @@ public class Player implements Serializable {
 
     public void setFriendsAsReceiver(List<Player> friendsAsReceiver) {
         this.friendsAsReceiver = friendsAsReceiver;
+    }
+
+    public List<Player> getSentFriendRequest() {
+        return sentFriendRequest;
+    }
+
+    public void setSentFriendRequest(List<Player> sentFriendRequest) {
+        this.sentFriendRequest = sentFriendRequest;
+    }
+
+    public List<Player> getReceivedFriendRequest() {
+        return receivedFriendRequest;
+    }
+
+    public void setReceivedFriendRequest(List<Player> receivedFriendRequest) {
+        this.receivedFriendRequest = receivedFriendRequest;
     }
 
     @Override

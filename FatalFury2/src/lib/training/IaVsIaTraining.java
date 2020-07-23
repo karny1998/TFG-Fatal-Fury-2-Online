@@ -144,7 +144,7 @@ public class IaVsIaTraining {
         else if(fight.getEnd()){
             enemy.getPlayer().getStats().setFilename(filename);
             enemy.getAgente().writeQTableAndRegister();
-            enemy.getPlayer().getStats().getActualFight().setAccumulatedReward(enemy.getAgente().getAccumulatedReward());
+            enemy.getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
             enemy.getPlayer().getStats().saveUpdatedHistory();
             enemy.getPlayer().getStats().nextFight();
             Fight_Results resultado = fight.getFight_result();

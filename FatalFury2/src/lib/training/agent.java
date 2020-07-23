@@ -74,7 +74,7 @@ public class agent{
     /**
      * The Accumulated reward.
      */
-    private int accumulatedReward = 0;
+    private double accumulatedReward = 0;
 
     /**
      * Instantiates a new Agent.
@@ -210,10 +210,6 @@ public class agent{
                         reward = 5;
                     }
                 }
-                // Si se ha esquivado
-                /*else if (character.isAttack(ini.getPlayerState()) && character.isDisplacement(action)){
-                    reward = 5;
-                }*/
                 // Si atacó al aire
                 else if (character.isAttack(action) && newS.getDis() > 200 && ini.getDis() > 200) {
                     reward = -1;
@@ -238,6 +234,7 @@ public class agent{
         //System.out.println("action: " + action.toString() + " reward: " + reward + " future reward: " + futureReward + " q value: "+ qTable[i][j]);
 
         accumulatedReward += reward;
+        //System.out.println("accumulated Reward: " + accumulatedReward);
 
         // Registra la transición
         if(!loading) {
@@ -717,7 +714,7 @@ public class agent{
      *
      * @return the accumulated reward
      */
-    public int getAccumulatedReward() {
+    public double getAccumulatedReward() {
         return accumulatedReward;
     }
 
@@ -726,7 +723,7 @@ public class agent{
      *
      * @param accumulatedReward the accumulated reward
      */
-    public void setAccumulatedReward(int accumulatedReward) {
+    public void setAccumulatedReward(double accumulatedReward) {
         this.accumulatedReward = accumulatedReward;
     }
 }

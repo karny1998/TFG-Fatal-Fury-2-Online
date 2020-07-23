@@ -313,7 +313,7 @@ public class connection {
                 else {
                     pendingMsgs.put(idM, aux[2]);
                 }
-                //System.out.println("Se recibe: " + aux[2]);
+                System.out.println("Se recibe: " + aux[2]);
             }catch (Exception e){
                 e.printStackTrace();
                 sm.release();

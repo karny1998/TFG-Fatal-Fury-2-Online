@@ -90,6 +90,144 @@ public class serverManager {
         return dbm.registerPlayer(username, email, password);
     }
 
+    public String friendsRequest(String user1, String user2){
+        Player p1 = (Player) dbm.findByKey(Player.class, user1);
+        if (p1 == null){
+            return "ERROR:El jugador solicitante no existe.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, user2);
+        if (p2 == null){
+            return "ERROR:El jugador no existe.";
+        }
+
+        boolean areFriends = false;
+        for(int i = 0; !areFriends && i < p1.getFriendsAsSoliciter().size();++i){
+            areFriends = p1.getFriendsAsSoliciter().get(i).getUsername().equals(user2);
+        }
+        for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
+            areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
+        }
+        if(areFriends){
+            return "ERROR:Los dos jugadores ya son amigos.";
+        }
+
+        areFriends = false;
+        for(int i = 0; !areFriends && i < p1.getSentFriendRequest().size();++i){
+            areFriends = p1.getSentFriendRequest().get(i).getUsername().equals(user2);
+        }
+        for(int i = 0; !areFriends && i < p1.getReceivedFriendRequest().size();++i){
+            areFriends = p1.getReceivedFriendRequest().get(i).getUsername().equals(user2);
+        }
+        if(areFriends){
+            return "ERROR:Ya se ha enviado la solicitud de amistad.";
+        }
+
+        p1.getSentFriendRequest().add(p2);
+        p2.getReceivedFriendRequest().add(p1);
+        dbm.save(p1);
+        dbm.save(p2);
+        return "FRIEND REQUEST SENT";
+    }
+
+    public String answerFriendsRequest(String user1, String user2, boolean ok){
+        Player p1 = (Player) dbm.findByKey(Player.class, user1);
+        if (p1 == null){
+            return "ERROR:El jugador solicitante no existe.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, user2);
+        if (p2 == null){
+            return "ERROR:El jugador no existe.";
+        }
+
+        boolean areFriends = false;
+        for(int i = 0; !areFriends && i < p1.getFriendsAsSoliciter().size();++i){
+            areFriends = p1.getFriendsAsSoliciter().get(i).getUsername().equals(user2);
+        }
+        for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
+            areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
+        }
+        if(areFriends){
+            return "ERROR:Los dos jugadores ya son amigos.";
+        }
+
+        boolean hasSolicitude = false;
+        int sol = 0;
+        for(int i = 0; !hasSolicitude && i < p1.getReceivedFriendRequest().size();++i){
+            hasSolicitude = p1.getReceivedFriendRequest().get(i).getUsername().equals(user2);
+            sol = i;
+        }
+        if(!hasSolicitude){
+            return "ERROR:No se ha podido responder a la solicitud de amistad.";
+        }
+        p1.getReceivedFriendRequest().remove(sol);
+        sol = 0;
+        hasSolicitude = false;
+        for(int i = 0; !hasSolicitude && i < p2.getSentFriendRequest().size();++i){
+            hasSolicitude = p2.getSentFriendRequest().get(i).getUsername().equals(user1);
+            sol = i;
+        }
+        p2.getSentFriendRequest().remove(sol);
+
+        if(ok) {
+            p2.getFriendsAsSoliciter().add(p1);
+            p1.getFriendsAsReceiver().add(p2);
+            dbm.save(p1);
+            dbm.save(p2);
+            return "FRIEND REQUEST ACCEPTED";
+        }
+        dbm.save(p1);
+        dbm.save(p2);
+        return "FRIEND REQUEST REJECTED";
+    }
+
+    public String removeFriend(String user1, String user2){
+        Player p1 = (Player) dbm.findByKey(Player.class, user1);
+        if (p1 == null){
+            return "ERROR:El jugador solicitante no existe.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, user2);
+        if (p2 == null){
+            return "ERROR:El jugador no existe.";
+        }
+        boolean areFriends = false;
+        int x = 0;
+        for(int i = 0; !areFriends && i < p1.getFriendsAsSoliciter().size();++i){
+            areFriends = p1.getFriendsAsSoliciter().get(i).getUsername().equals(user2);
+            x = i;
+        }
+        if(areFriends){
+            p1.getFriendsAsSoliciter().remove(x);
+            x = 0;
+            for(int i = 0; !areFriends && i < p2.getFriendsAsReceiver().size();++i){
+                areFriends = p2.getFriendsAsReceiver().get(i).getUsername().equals(user1);
+                x = i;
+            }
+            p2.getFriendsAsReceiver().remove(x);
+            dbm.save(p1);
+            dbm.save(p2);
+            return "FRIEND REMOVED";
+        }
+        for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
+            areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
+            x = i;
+        }
+        if(!areFriends){
+            return "ERROR:Los dos jugadores no son amigos.";
+        }
+        else{
+            p1.getFriendsAsReceiver().remove(x);
+            x = 0;
+            for(int i = 0; !areFriends && i < p2.getFriendsAsSoliciter().size();++i){
+                areFriends = p2.getFriendsAsSoliciter().get(i).getUsername().equals(user1);
+                x = i;
+            }
+            p2.getFriendsAsSoliciter().remove(x);
+            dbm.save(p1);
+            dbm.save(p2);
+            return "FRIEND REMOVED";
+        }
+    }
+
     public synchronized void stopSearchingGame(InetAddress player){
         searchingGameUsers.remove(player);
     }
