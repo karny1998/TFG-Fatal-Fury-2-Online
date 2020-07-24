@@ -48,7 +48,13 @@ public class state {
     /**
      * The Jumping.
      */
-    private  boolean jumping = false;
+    private boolean jumping = false;
+
+    private int simpleLife = 0;
+
+    private int simplePlayerLife = 0;
+
+    private int simpleDistance = 0;
 
     /**
      * Instantiates a new State.
@@ -79,7 +85,20 @@ public class state {
         this.playerVictories = playerVictories;
         this.jumping = jumping;
         this.stateNum = stateCalculator.calculateNumState(this);
+
+        if(life >= 70){simpleLife = 2;}
+        else if(life >= 30){simpleLife = 1;}
+        else{simpleLife = 0;}
+
+        if(playerLife >= 70){simplePlayerLife = 2;}
+        else if(playerLife >= 30){simplePlayerLife = 1;}
+        else{simplePlayerLife = 0;}
+
+        if(dis >= 400){simpleDistance = 2;}
+        else if(dis >= 120){simpleDistance = 1;}
+        else{simpleDistance = 0;}
     }
+
 
     /**
      * Is round terminal state boolean.
@@ -311,4 +330,29 @@ public class state {
     public state clone(){
         return new state(life,playerLife,playerState,dis,round,remainingTime,iaVictories,playerVictories, jumping);
     }
+
+    public int getSimpleLife() {
+        return simpleLife;
+    }
+
+    public void setSimpleLife(int simpleLife) {
+        this.simpleLife = simpleLife;
+    }
+
+    public int getSimplePlayerLife() {
+        return simplePlayerLife;
+    }
+
+    public void setSimplePlayerLife(int simplePlayerLife) {
+        this.simplePlayerLife = simplePlayerLife;
+    }
+
+    public int getSimpleDistance() {
+        return simpleDistance;
+    }
+
+    public void setSimpleDistance(int simpleDistance) {
+        this.simpleDistance = simpleDistance;
+    }
+
 }

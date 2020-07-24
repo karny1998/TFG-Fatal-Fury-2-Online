@@ -21,7 +21,7 @@ public class IaVsIaTraining {
      * The Player.
      */
 // Controladores de los personajes
-    private character_controller player;
+    private enemy_controller player;
     /**
      * The Enemy.
      */
@@ -92,11 +92,13 @@ public class IaVsIaTraining {
      * Generate fight.
      */
     private void generateFight(){
-        player = new enemy_controller(charac, 1);//new user_controller(charac, 1);//
+        //player = new enemy_controller(charac, 1);//new user_controller(charac, 1);//
         if(enemy == null) {
+            player = new enemy_controller(ia, 1, true, true);
             enemy = new enemy_controller(ia, 2, true, true);
         }
         else{
+            player.reset();
             enemy.reset();
         }
         enemy.setRival(player.getPlayer());
@@ -124,8 +126,8 @@ public class IaVsIaTraining {
             enemy.getAgente().loadTraining("trainingRegister.txt");
             loadTraining = false;
         }
-
-        //enemy.getAgente().setEpsilon(0.0);
+        player.getAgente().setEpsilon(0.0);
+        enemy.getAgente().setEpsilon(0.0);
     }
 
 
@@ -200,9 +202,9 @@ public class IaVsIaTraining {
      *
      * @param player the player
      */
-    public void setPlayer(character_controller player) {
+    /*public void setPlayer(character_controller player) {
         this.player = player;
-    }
+    }*/
 
     /**
      * Gets enemy.

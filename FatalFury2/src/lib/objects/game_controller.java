@@ -39,7 +39,7 @@ public class game_controller {
      * The training.
      */
 // Modo debug
-    boolean training = false;
+    boolean training = true;
     IaVsIaTraining trainer = new IaVsIaTraining(Playable_Character.TERRY, Playable_Character.TERRY, ia_loader.dif.HARD, ia_loader.dif.HARD, 20000, false);
     /**
      * The Debug.
@@ -208,7 +208,7 @@ public class game_controller {
         }
     }
 
-    private online_mode online = new online_mode(false);
+    private online_mode online;// = new online_mode(false);
 
     /**
      * Instantiates a new Game controller.

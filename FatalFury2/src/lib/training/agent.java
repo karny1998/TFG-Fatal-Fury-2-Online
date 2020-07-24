@@ -433,8 +433,8 @@ public class agent{
                         aux = b.readLine();
                         String estado[] = aux.split(",");
                         state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                                Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
+                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[6]),
+                                Integer.parseInt(estado[7]), Integer.parseInt(estado[8]), Boolean.parseBoolean(estado[9]));
                         aux = b.readLine();
                         aux = b.readLine();
                         Movement action = Movement.valueOf(aux);
@@ -444,8 +444,8 @@ public class agent{
                         aux = b.readLine();
                         estado = aux.split(",");
                         state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
-                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[5]),
-                                Integer.parseInt(estado[6]), Integer.parseInt(estado[7]), Boolean.parseBoolean(estado[8]));
+                                Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[6]),
+                                Integer.parseInt(estado[7]), Integer.parseInt(estado[8]), Boolean.parseBoolean(estado[9]));
                         giveReward(s, s2, action, false, true);
                     }
                 }

@@ -118,6 +118,7 @@ public class stadistics {
         double playerLife[][] = new double[2][dim];
         double time[][] = new double[2][dim];
         double hitPerReceived[][] = new double[2][dim];
+        int wins = 0;
         for(int i = 1; i <= dim; ++i){
             win[0][i-1] = i;
             block[0][i-1] = i;
@@ -127,6 +128,9 @@ public class stadistics {
             time[0][i-1] = i;
             hitPerReceived[0][i-1] = i;
             win[1][i-1] = 100*stats.getHistory().getFights().get(i-1).winRatio();
+            if(win[1][i-1] > 50.0){
+                ++wins;
+            }
             block[1][i-1] = 100*stats.getHistory().getFights().get(i-1).blockRatio();
             hit[1][i-1] = 100*stats.getHistory().getFights().get(i-1).hitRatio();
             life[1][i-1] = stats.getHistory().getFights().get(i-1).remainingLifeMean();
@@ -134,6 +138,7 @@ public class stadistics {
             time[1][i-1] = 100*stats.getHistory().getFights().get(i-1).remainingTimeMean()/90;
             hitPerReceived[1][i-1] = 100*stats.getHistory().getFights().get(i-1).successfulHitPerReceivedRatio();
         }
+        System.out.println("Ganadas: " + wins);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
