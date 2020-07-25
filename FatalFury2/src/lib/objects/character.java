@@ -772,7 +772,7 @@ public class character {
      * @param m the m
      * @return the boolean
      */
-    public boolean isSpecial(Movement m){
+    public static boolean isSpecial(Movement m){
         Movement array[] = {Movement.CHARGED_PUNCH_A, Movement.CHARGED_PUNCH_C, Movement.JUMP_KICK,
                 Movement.REVERSE_KICK_B, Movement.REVERSE_KICK_D,
                 Movement.SPIN_PUNCH_A, Movement.SPIN_PUNCH_C};

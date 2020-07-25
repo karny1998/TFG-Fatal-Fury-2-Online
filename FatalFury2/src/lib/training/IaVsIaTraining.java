@@ -6,6 +6,8 @@ import lib.objects.*;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 /**
@@ -21,7 +23,7 @@ public class IaVsIaTraining {
      * The Player.
      */
 // Controladores de los personajes
-    private enemy_controller player;
+    private character_controller player;
     /**
      * The Enemy.
      */
@@ -69,42 +71,139 @@ public class IaVsIaTraining {
 
     private boolean loadTraining = false;
 
+    private boolean random = false, againstHimself = false, againstPerson = false, training = true;
+
     /**
      * Instantiates a new Ia vs ia training.
      *
-     * @param charac the charac
-     * @param ia     the ia
-     * @param pLvl   the p lvl
-     * @param lvlIa  the lvl ia
-     * @param times  the times
      */
-    public IaVsIaTraining(Playable_Character charac, Playable_Character ia, ia_loader.dif pLvl, ia_loader.dif lvlIa, int times, boolean loadTraining) {
-        this.charac = charac;
-        this.ia = ia;
-        this.pLvl = pLvl;
-        this.lvlIa = lvlIa;
-        this.times = times;
-        this.loadTraining = loadTraining;
+    public IaVsIaTraining() {
         stateCalculator.initialize();
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String aux = "";
+            do{
+                System.out.print("Training (true, false): ");
+                aux = in.readLine();
+            }while (!aux.equals("true") && !(aux.equals("false")));
+            training = Boolean.parseBoolean(aux);
+            do{
+                System.out.print("Aleatory fights (true, false): ");
+                aux = in.readLine();
+            }while (!aux.equals("true") && !(aux.equals("false")));
+            random = Boolean.parseBoolean(aux);
+            if(!random){
+                do{
+                    System.out.print("Against himself (true,false): ");
+                    aux = in.readLine();
+                }while (!aux.equals("true") && !(aux.equals("false")));
+                againstHimself = Boolean.parseBoolean(aux);
+                if(againstHimself){
+                    this.charac = Playable_Character.TERRY;
+                    this.pLvl = ia_loader.dif.HARD;
+                }
+                else {
+                    do {
+                        System.out.print("Rival (TERRY, MAI, ANDY): ");
+                        aux = in.readLine();
+                    } while (!aux.equals("TERRY") && !(aux.equals("MAI")) && !(aux.equals("ANDY")));
+                    this.charac = Playable_Character.valueOf(aux);
+
+                    do{
+                        System.out.print("Against person (true,false): ");
+                        aux = in.readLine();
+                    }while (!aux.equals("true") && !(aux.equals("false")));
+                    againstPerson = Boolean.parseBoolean(aux);
+
+                    if(!againstPerson) {
+                        do {
+                            System.out.print("Level (EASY, NORMAL, HARD): ");
+                            aux = in.readLine();
+                        } while (!aux.equals("EASY") && !(aux.equals("NORMAL")) && !(aux.equals("HARD")));
+                        this.pLvl = ia_loader.dif.valueOf(aux);
+                    }
+                }
+            }
+            this.ia = Playable_Character.TERRY;
+            this.lvlIa = ia_loader.dif.HARD;
+
+            System.out.print("Iterations (integer): ");
+            aux = in.readLine();
+            this.times = Integer.parseInt(aux);
+
+            System.out.print("Starting teration (integer): ");
+            aux = in.readLine();
+            this.i = Integer.parseInt(aux);
+
+            do{
+                System.out.print("Load training (true,false): ");
+                aux = in.readLine();
+            }while (!aux.equals("true") && !(aux.equals("false")));
+            this.loadTraining = Boolean.parseBoolean(aux);
+            in.close();
+        }catch (Exception e){e.printStackTrace();}
     }
 
     /**
      * Generate fight.
      */
     private void generateFight(){
-        //player = new enemy_controller(charac, 1);//new user_controller(charac, 1);//
+        if (againstPerson) {
+            player = new user_controller(charac, 1);
+        }
+        else if(!againstHimself) {
+            if(random) {
+                int r = ((int) (Math.random() * 3.0)) % 3;
+                switch (r) {
+                    case 0:
+                        charac = Playable_Character.TERRY;
+                        break;
+                    case 1:
+                        charac = Playable_Character.MAI;
+                        break;
+                    case 2:
+                        charac = Playable_Character.ANDY;
+                        break;
+                    default:
+                        charac = Playable_Character.TERRY;
+                        break;
+                }
+                r = ((int) (Math.random() * 3.0)) % 3;
+                switch (r) {
+                    case 0:
+                        pLvl = ia_loader.dif.EASY;
+                        break;
+                    case 1:
+                        pLvl = ia_loader.dif.NORMAL;
+                        break;
+                    case 2:
+                        pLvl = ia_loader.dif.HARD;
+                        break;
+                    default:
+                        pLvl = ia_loader.dif.HARD;
+                        break;
+                }
+            }
+            player = new enemy_controller(charac, 1);
+        }
         if(enemy == null) {
-            player = new enemy_controller(ia, 1, true, true);
-            enemy = new enemy_controller(ia, 2, true, true);
+            if(againstHimself) {
+                player = new enemy_controller(ia, 1, true, false);
+            }
+            enemy = new enemy_controller(ia, 2, true, training);
         }
         else{
-            player.reset();
+            if(againstHimself) {
+                ((enemy_controller) player).reset();
+            }
             enemy.reset();
         }
         enemy.setRival(player.getPlayer());
         enemy.getPlayer().setMapLimit(mapLimit);
         player.setRival(enemy.getPlayer());
-        player.getIa().setDif(pLvl);//comentar esto para jugadores
+        if(!againstPerson) {
+            player.getIa().setDif(pLvl);
+        }
         enemy.getIa().setDif(lvlIa);
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
@@ -126,8 +225,12 @@ public class IaVsIaTraining {
             enemy.getAgente().loadTraining("trainingRegister.txt");
             loadTraining = false;
         }
-        player.getAgente().setEpsilon(0.0);
-        enemy.getAgente().setEpsilon(0.0);
+        if(againstHimself) {
+            ((enemy_controller)player).getAgente().setEpsilon(0.0);
+        }
+        if(!training) {
+            enemy.getAgente().setEpsilon(0.0);
+        }
     }
 
 
@@ -142,6 +245,8 @@ public class IaVsIaTraining {
         }
         else if(fight == null && i == 0){
             generateFight();
+            enemy.getPlayer().getStats().getActualFight().setRival(charac);
+            enemy.getPlayer().getStats().getActualFight().setLvlRival(pLvl);
         }
         else if(fight.getEnd()){
             enemy.getPlayer().getStats().setFilename(filename);
@@ -153,7 +258,8 @@ public class IaVsIaTraining {
             audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
             ++this.i;
             generateFight();
-
+            enemy.getPlayer().getStats().getActualFight().setRival(charac);
+            enemy.getPlayer().getStats().getActualFight().setLvlRival(pLvl);
             hitBox pHurt = player.getPlayer().getHurtbox();
             hitBox eHurt = enemy.getPlayer().getHurtbox();
             int dis = 0;

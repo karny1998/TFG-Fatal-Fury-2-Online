@@ -28,36 +28,6 @@ public class qTableToCSV {
         }
     }
 
-    /*public void generateCSV(){
-        loadQtable();
-        loadTraining(training);
-        String path =  System.getProperty("user.dir") + "/.files/" + qtable.substring(0,qtable.length()-4) + ".csv";
-        File f = new File(path);
-        f.delete();
-        f = new File(path);
-        try {
-            FileOutputStream fos = new FileOutputStream(f);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-            bw.write("Action,Reward,Jumping,Enemy state,Distance,Life,EnemyLife\n");
-            for (int a = 0; a < stateCalculator.getnActions(); ++a) {
-                for (int s = 0; s < stateCalculator.getMax(); ++s) {
-                    if (visited[s][a] != null) {
-                        state aux = visited[s][a];
-                        int j = 0;
-                        if (aux.isJumping()) {
-                            j = 1;
-                        }
-                        String line = a + "," + table[s][a] + "," + j + "," + stateCalculator.getIdMov().get(aux.getPlayerState()) + "," + aux.getSimpleDistance()
-                                + "," + aux.getSimpleLife() + "," + aux.getSimplePlayerLife() +"\n";
-                        bw.write(line);
-                    }
-                }
-            }
-            bw.close();
-        }catch (Exception e){e.printStackTrace();};
-    }*/
-
-
     public void generateCSV(int grade){
         if(!fromTraining) {
             loadQtable();
@@ -162,20 +132,23 @@ public class qTableToCSV {
                         visited[s.getStateNum()][stateCalculator.getIdAction().get(action)] = s;
 
                         if(generateQtable) {
-                            ++times[s.getStateNum()][stateCalculator.getIdAction().get(action)];
-                            table[s.getStateNum()][stateCalculator.getIdAction().get(action)] += reward;
+                            double aux2 = table[s.getStateNum()][stateCalculator.getIdAction().get(action)];
+                            table[s.getStateNum()][stateCalculator.getIdAction().get(action)] = aux2 + 0.1 * (reward - aux2);
+
+                            //++times[s.getStateNum()][stateCalculator.getIdAction().get(action)];
+                            //table[s.getStateNum()][stateCalculator.getIdAction().get(action)] += reward;
                         }
                     }
                 }
             }
 
-            for (int a = 0; a < stateCalculator.getnActions(); ++a) {
+            /*for (int a = 0; a < stateCalculator.getnActions(); ++a) {
                 for (int s = 0; s < stateCalculator.getMax(); ++s) {
                     if (times[s][a] > 0) {
                         table[s][a] /= times[s][a];
                     }
                 }
-            }
+            }*/
 
             b.close();
         }catch (Exception e){

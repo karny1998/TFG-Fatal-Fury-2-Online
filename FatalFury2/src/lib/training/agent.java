@@ -76,6 +76,8 @@ public class agent{
      */
     private double accumulatedReward = 0;
 
+    private double optimalDecision = 0.8;
+
     /**
      * Instantiates a new Agent.
      *
@@ -288,16 +290,7 @@ public class agent{
             }
         }
         else{
-            int best = 0, s = previousState.getStateNum();
-            double max = qTable[s][0];
-            for(int i = 1; i < n; ++i){
-                if(qTable[s][i] > max){
-                    max = qTable[s][i];
-                    best = i;
-                }
-            }
-            a = stateCalculator.actionById(best);
-
+            a = selectAction(previousState);
         }
         //System.out.println(a + " seleccionada");
         return a;
@@ -725,5 +718,13 @@ public class agent{
      */
     public void setAccumulatedReward(double accumulatedReward) {
         this.accumulatedReward = accumulatedReward;
+    }
+
+    public double getOptimalDecision() {
+        return optimalDecision;
+    }
+
+    public void setOptimalDecision(double optimalDecision) {
+        this.optimalDecision = optimalDecision;
     }
 }

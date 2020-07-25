@@ -1,5 +1,8 @@
 package lib.analysis;
 
+import lib.Enums.Playable_Character;
+import lib.objects.ia_loader;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -29,6 +32,10 @@ public class fight_stats {
      * The accumulated reward.
      */
     private int accumulatedReward = 0;
+
+    private Playable_Character rival = Playable_Character.TERRY;
+
+    private ia_loader.dif lvlRival = ia_loader.dif.HARD;
 
     /**
      * Instantiates a new Fight stats.
@@ -298,5 +305,21 @@ public class fight_stats {
      */
     public void addReward(int reward) {
         this.accumulatedReward += accumulatedReward;
+    }
+
+    public Playable_Character getRival() {
+        return rival;
+    }
+
+    public void setRival(Playable_Character rival) {
+        this.rival = rival;
+    }
+
+    public ia_loader.dif getLvlRival() {
+        return lvlRival;
+    }
+
+    public void setLvlRival(ia_loader.dif lvlRival) {
+        this.lvlRival = lvlRival;
     }
 }

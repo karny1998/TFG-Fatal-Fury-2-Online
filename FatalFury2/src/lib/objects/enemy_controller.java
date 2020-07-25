@@ -1,5 +1,6 @@
 package lib.objects;
 
+import lib.Enums.Movement;
 import lib.Enums.Playable_Character;
 import lib.training.agent;
 import lib.training.agent_controller;
@@ -37,6 +38,12 @@ public class enemy_controller extends character_controller{
      */
 // Controlador de la inteligencia artificial
     ia_controller ia = new ia_controller();
+
+    private long specialAttackTimer = 0;
+
+    private String movementToExecute ="";
+
+    private boolean inExecution = false, executed = false;
 
     /**
      * Instantiates a new Enemy controller.
@@ -97,7 +104,45 @@ public class enemy_controller extends character_controller{
         // Si no se está esperando a que se terminen de mostrar los carteles de intro
         // se pide al personaje el frame correspondiente al movimiento decidido por la IA
         if(!standBy){
-            return player.getFrame(ia.getMove(), pHurt, eHurt, rival.isAttacking());
+            if(character.isSpecial(player.getState()) && !inExecution || player.getState() == Movement.JUMP_FALL || player.getState() == Movement.JUMP_ROLL_FALL){
+                return player.getFrame("", pHurt, eHurt, rival.isAttacking());
+            }
+            else if(!player.isJumping() || inExecution) {
+                String m = ia.getMove();
+                if(!inExecution && player.endedMovement() && (character.isSpecial(player.getCombos().get(m)))){
+                    inExecution = true;
+                    movementToExecute = m;
+                    specialAttackTimer = System.currentTimeMillis();
+                }
+                if(inExecution){
+                    if(player.inKnockback()){
+                        inExecution = false;
+                    }
+                    else {
+                        if(System.currentTimeMillis() > specialAttackTimer+350.0){
+                            if(player.getState() == player.getCombos().get(movementToExecute)){
+                                inExecution = false;
+                            }
+                            else {
+                                return player.getFrame(movementToExecute, pHurt, eHurt, rival.isAttacking());
+                            }
+                        }
+                        else {
+                            return player.getFrame("", pHurt, eHurt, rival.isAttacking());
+                        }
+                    }
+                }
+                return player.getFrame(m, pHurt, eHurt, rival.isAttacking());
+            }
+            else{
+                String m = ia.getMove();
+                if(character.isSpecial(player.getCombos().get(m))){
+                    return player.getFrame("", pHurt, eHurt, rival.isAttacking());
+                }
+                else {
+                    return player.getFrame(m, pHurt, eHurt, rival.isAttacking());
+                }
+            }
         }
         return player.getFrame("", pHurt, eHurt, rival.isAttacking());
     }
