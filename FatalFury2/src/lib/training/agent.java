@@ -303,24 +303,71 @@ public class agent{
      * @return the movement
      */
     public Movement selectAction(state st){
-        Movement a = Movement.STANDING;
-
-        int n = stateCalculator.getnActions();
-        int best = 0, s = st.getStateNum();
-        double max = qTable[s][0];
-        for (int i = 1; i < n; ++i) {
-            if (qTable[s][i] > max) {
-                max = qTable[s][i];
-                best = i;
+        if(Math.random() <= optimalDecision) {
+            Movement a = Movement.STANDING;
+            int n = stateCalculator.getnActions();
+            int best = 0, s = st.getStateNum();
+            double max = qTable[s][0];
+            for (int i = 1; i < n; ++i) {
+                if (qTable[s][i] > max) {
+                    max = qTable[s][i];
+                    best = i;
+                }
             }
-        }
-        a = stateCalculator.actionById(best);
+            a = stateCalculator.actionById(best);
 
-        if(st.isJumping() &&
-                (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
-            a = Movement.STANDING;
+            if (st.isJumping() &&
+                    (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
+                a = Movement.STANDING;
+            }
+            return a;
         }
-        return a;
+        else{
+            Movement a = Movement.STANDING;
+            int n = stateCalculator.getnActions();
+            int best = 0, s = st.getStateNum();
+            double max = qTable[s][0];
+
+            List<Pair<Integer, Double>> top4 = new ArrayList<>();
+
+            for (int i = 1; i < n; ++i) {
+                if(top4.size() < 4){
+                    top4.add(new Pair<Integer, Double>(i,qTable[s][i]));
+                }
+                else {
+                    boolean done = false;
+                    for (int j = 0; !done && j < 4; ++j) {
+                        if (qTable[s][i] > top4.get(j).second) {
+                            top4.remove(j);
+                            top4.add(new Pair<Integer, Double>(i,qTable[s][i]));
+                            done = true;
+                        }
+                    }
+                }
+                if (qTable[s][i] > max) {
+                    max = qTable[s][i];
+                    best = i;
+                }
+            }
+            boolean done = false;
+            for(int i = 0; !done && i < 4; ++i){
+                if(top4.get(i).first == best){
+                    done = true;
+                    top4.remove(i);
+                }
+            }
+
+            try {
+                int idAct = top4.get(((int) (Math.random() * 3)) % 3).first;
+                a = stateCalculator.actionById(idAct);
+            }catch (Exception e){e.printStackTrace();}
+
+            if (st.isJumping() &&
+                    (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
+                a = Movement.STANDING;
+            }
+            return a;
+        }
     }
 
     /**
