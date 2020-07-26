@@ -235,10 +235,10 @@ public class ia_controller {
                 probBlock = 1.0;
                 // Rebalancea los personajes en cuanto a daño y tiempos de ataques
                 // para aumentar la dificultad
-                if(!player.isRebalanced() &&  !enemy.isRebalanced()) {
+                /*if(!player.isRebalanced() &&  !enemy.isRebalanced()) {
                     player.rebalance(0.7, 1.0);
                     enemy.rebalance(1.3, 0.7);
-                }
+                }*/
                 break;
         }
     }

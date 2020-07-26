@@ -40,7 +40,7 @@
 
     <tipo_procesamiento>
         <processor_life_round_based> true </processor_life_round_based>
-        <processor_tendencies_player_based> true </processor_tendencies_player_based>
+        <processor_tendencies_player_based> false </processor_tendencies_player_based>
     </tipo_procesamiento>
 
     <pesos>

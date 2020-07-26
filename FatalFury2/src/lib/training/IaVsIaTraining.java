@@ -71,7 +71,7 @@ public class IaVsIaTraining {
 
     private boolean loadTraining = false;
 
-    private boolean random = false, againstHimself = false, againstPerson = false, training = true;
+    private boolean random = false, againstHimself = false, againstPerson = false, training = true, useRegression = false;
 
     /**
      * Instantiates a new Ia vs ia training.
@@ -87,6 +87,11 @@ public class IaVsIaTraining {
                 aux = in.readLine();
             }while (!aux.equals("true") && !(aux.equals("false")));
             training = Boolean.parseBoolean(aux);
+            do{
+                System.out.print("Use regression (true, false): ");
+                aux = in.readLine();
+            }while (!aux.equals("true") && !(aux.equals("false")));
+            useRegression = Boolean.parseBoolean(aux);
             do{
                 System.out.print("Aleatory fights (true, false): ");
                 aux = in.readLine();
@@ -117,9 +122,9 @@ public class IaVsIaTraining {
 
                     if(!againstPerson) {
                         do {
-                            System.out.print("Level (EASY, NORMAL, HARD): ");
+                            System.out.print("Level (EASY, NORMAL, HARD, VERY_HARD): ");
                             aux = in.readLine();
-                        } while (!aux.equals("EASY") && !(aux.equals("NORMAL")) && !(aux.equals("HARD")));
+                        } while (!aux.equals("EASY") && !(aux.equals("NORMAL")) && !(aux.equals("HARD")) && !(aux.equals("VERY_HARD")));
                         this.pLvl = ia_loader.dif.valueOf(aux);
                     }
                 }
@@ -131,7 +136,7 @@ public class IaVsIaTraining {
             aux = in.readLine();
             this.times = Integer.parseInt(aux);
 
-            System.out.print("Starting teration (integer): ");
+            System.out.print("Starting iteration (integer): ");
             aux = in.readLine();
             this.i = Integer.parseInt(aux);
 
@@ -171,13 +176,13 @@ public class IaVsIaTraining {
                 r = ((int) (Math.random() * 3.0)) % 3;
                 switch (r) {
                     case 0:
-                        pLvl = ia_loader.dif.EASY;
-                        break;
-                    case 1:
                         pLvl = ia_loader.dif.NORMAL;
                         break;
-                    case 2:
+                    case 1:
                         pLvl = ia_loader.dif.HARD;
+                        break;
+                    case 2:
+                        pLvl = ia_loader.dif.VERY_HARD;
                         break;
                     default:
                         pLvl = ia_loader.dif.HARD;
@@ -231,6 +236,7 @@ public class IaVsIaTraining {
         if(!training) {
             enemy.getAgente().setEpsilon(0.0);
         }
+        enemy.getAgente().setUseRegression(useRegression);
     }
 
 
@@ -243,12 +249,13 @@ public class IaVsIaTraining {
         if(i == times){
             System.exit(0);
         }
-        else if(fight == null && i == 0){
+        else if(fight == null){
             generateFight();
             enemy.getPlayer().getStats().getActualFight().setRival(charac);
             enemy.getPlayer().getStats().getActualFight().setLvlRival(pLvl);
         }
         else if(fight.getEnd()){
+            enemy.getAgente().trainRegression();
             enemy.getPlayer().getStats().setFilename(filename);
             enemy.getAgente().writeQTableAndRegister();
             enemy.getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());

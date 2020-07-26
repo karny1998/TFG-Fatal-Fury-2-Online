@@ -78,6 +78,12 @@ public class agent{
 
     private double optimalDecision = 0.8;
 
+    private boolean useRegression = false;
+
+    private Regression regression = null;
+
+    private double model[];
+
     /**
      * Instantiates a new Agent.
      *
@@ -303,10 +309,34 @@ public class agent{
      * @return the movement
      */
     public Movement selectAction(state st){
+        boolean allZeros = true;
+        int n = stateCalculator.getnActions(), s = st.getStateNum();
+        if(useRegression && regression != null) {
+            for (int i = 1; allZeros && i < n; ++i) {
+                allZeros = qTable[s][i] == 0;
+            }
+            if (allZeros) {
+                double max = evalueWithRegression(st,0);
+                int best = 0;
+                for (int i = 1; i < n; ++i) {
+                    double val = evalueWithRegression(st,i);
+                    if (val > max) {
+                        max = val;
+                        best = i;
+                    }
+                }
+                Movement a = stateCalculator.actionById(best);
+                if (st.isJumping() &&
+                        (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
+                    a = Movement.STANDING;
+                }
+                return a;
+            }
+        }
+
         if(Math.random() <= optimalDecision) {
             Movement a = Movement.STANDING;
-            int n = stateCalculator.getnActions();
-            int best = 0, s = st.getStateNum();
+            int best = 0;
             double max = qTable[s][0];
             for (int i = 1; i < n; ++i) {
                 if (qTable[s][i] > max) {
@@ -324,19 +354,18 @@ public class agent{
         }
         else{
             Movement a = Movement.STANDING;
-            int n = stateCalculator.getnActions();
-            int best = 0, s = st.getStateNum();
+            int best = 0;
             double max = qTable[s][0];
 
             List<Pair<Integer, Double>> top4 = new ArrayList<>();
 
             for (int i = 1; i < n; ++i) {
-                if(top4.size() < 4){
+                if(top4.size() < 4 && qTable[s][i] > 0){
                     top4.add(new Pair<Integer, Double>(i,qTable[s][i]));
                 }
                 else {
                     boolean done = false;
-                    for (int j = 0; !done && j < 4; ++j) {
+                    for (int j = 0; !done && j < top4.size(); ++j) {
                         if (qTable[s][i] > top4.get(j).second) {
                             top4.remove(j);
                             top4.add(new Pair<Integer, Double>(i,qTable[s][i]));
@@ -349,18 +378,25 @@ public class agent{
                     best = i;
                 }
             }
+
             boolean done = false;
-            for(int i = 0; !done && i < 4; ++i){
+            for(int i = 0; !done && i < top4.size(); ++i){
                 if(top4.get(i).first == best){
                     done = true;
                     top4.remove(i);
                 }
             }
-
-            try {
-                int idAct = top4.get(((int) (Math.random() * 3)) % 3).first;
-                a = stateCalculator.actionById(idAct);
-            }catch (Exception e){e.printStackTrace();}
+            if(top4.size() == 0){
+                a = stateCalculator.actionById(best);;
+            }
+            else {
+                try {
+                    int idAct = top4.get(((int) (Math.random() * top4.size())) % top4.size()).first;
+                    a = stateCalculator.actionById(idAct);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (st.isJumping() &&
                     (a != Movement.HARD_PUNCH && a != Movement.SOFT_PUNCH && a != Movement.SOFT_KICK && a != Movement.HARD_KICK)) {
@@ -493,6 +529,46 @@ public class agent{
             b.close();
         }catch (Exception e){
             System.out.println("No se ha encontrado el fichero de entrenamiento");
+        }
+    }
+
+    public double evalueWithRegression(state s, int a){
+        int grade = (model.length -1)/6;
+        List<Double> values = new ArrayList<>();
+        for (double i = 1; i <= grade; ++i) {
+            values.add(Math.pow(a,i));
+            double j = 0;
+            if (s.isJumping()) {
+                j = 1;
+            }
+            values.add(Math.pow(j,i));
+            values.add(Math.pow((double)stateCalculator.getIdMov().get(s.getPlayerState()),i));
+            values.add(Math.pow(s.getSimpleDistance(),i));
+            values.add(Math.pow(s.getSimpleLife(),i));
+            values.add(Math.pow(s.getSimplePlayerLife(),i));
+        }
+        values.add(1,0.0);
+        double reward  = 0.0;
+        for(int i = 0; i < model.length-1;++i){
+            reward += (values.get(i)*model[i]);
+        }
+        reward += model[model.length-1];
+        return reward;
+    }
+
+    public void trainRegression(){
+        if(useRegression){
+            try {
+                if (regression == null) {
+                    regression = new Regression(5, 1, 10, "trainingRegister.txt", "qTable.txt", 0);
+                }
+                regression.calculateModel();
+                regression.loadModel();
+                model = regression.getFinalModel().coefficients();
+            }catch (Exception e){
+                regression = null;
+                e.printStackTrace();
+            }
         }
     }
 
@@ -773,5 +849,35 @@ public class agent{
 
     public void setOptimalDecision(double optimalDecision) {
         this.optimalDecision = optimalDecision;
+    }
+
+    public boolean isUseRegression() {
+        return useRegression;
+    }
+
+    public void setUseRegression(boolean useRegression) {
+        this.useRegression = useRegression;
+        if(useRegression){
+            try {
+                regression = new Regression(5, 1, 10, "trainingRegister.txt", "qTable.txt", 0);
+                regression.loadModel();
+                model = regression.getFinalModel().coefficients();
+            }catch (Exception e){
+                //e.printStackTrace();
+                regression = null;
+            }
+        }
+        else{
+            regression = null;
+            model = null;
+        }
+    }
+
+    public Regression getRegression() {
+        return regression;
+    }
+
+    public void setRegression(Regression regression) {
+        this.regression = regression;
     }
 }
