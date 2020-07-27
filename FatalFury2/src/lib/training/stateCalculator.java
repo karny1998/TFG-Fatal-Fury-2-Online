@@ -38,6 +38,9 @@ public class stateCalculator {
      */
     private static int nActions = 0;
 
+    /**
+     * The constant simple.
+     */
     private static boolean simple = true;
 
     /**
@@ -287,10 +290,20 @@ public class stateCalculator {
         stateCalculator.nActions = nActions;
     }
 
+    /**
+     * Is simple boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isSimple() {
         return simple;
     }
 
+    /**
+     * Sets simple.
+     *
+     * @param simple the simple
+     */
     public static void setSimple(boolean simple) {
         stateCalculator.simple = simple;
     }

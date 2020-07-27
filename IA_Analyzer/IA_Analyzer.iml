@@ -39,6 +39,7 @@
     <orderEntry type="library" exported="" name="javax.xml.bind:jaxb-api:2.3.1" level="project" />
     <orderEntry type="library" exported="" name="com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
     <orderEntry type="library" exported="" name="com.sun.xml.bind:jaxb-impl:2.3.0.1" level="project" />
-    <orderEntry type="library" exported="" name="jfree:jfreechart:1.0.13" level="project" />
+    <orderEntry type="library" name="jfreechart-1.0.14" level="project" />
+    <orderEntry type="library" name="commons-math3-3.6" level="project" />
   </component>
 </module>

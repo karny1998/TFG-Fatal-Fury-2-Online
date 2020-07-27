@@ -342,8 +342,14 @@ public class fight_controller implements roundListener {
      * The Audio draw game.
      */
     audio_draw_game = false;
+    /**
+     * The Dif assigned.
+     */
     protected boolean difAssigned = false;
 
+    /**
+     * Instantiates a new Fight controller.
+     */
     public fight_controller(){}
 
     /**
@@ -609,6 +615,11 @@ public class fight_controller implements roundListener {
         }
     }
 
+    /**
+     * Gets animation.
+     *
+     * @param screenObjects the screen objects
+     */
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         fight_management(screenObjects);
         // RONDA
@@ -1088,6 +1099,12 @@ public class fight_controller implements roundListener {
         }
     }
 
+    /**
+     * Write direcly.
+     *
+     * @param g      the g
+     * @param offset the offset
+     */
     public void writeDirecly(Graphics2D g, int offset){}
 
     /**

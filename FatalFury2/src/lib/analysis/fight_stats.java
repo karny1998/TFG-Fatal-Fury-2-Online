@@ -33,8 +33,14 @@ public class fight_stats {
      */
     private int accumulatedReward = 0;
 
+    /**
+     * The Rival.
+     */
     private Playable_Character rival = Playable_Character.TERRY;
 
+    /**
+     * The Lvl rival.
+     */
     private ia_loader.dif lvlRival = ia_loader.dif.HARD;
 
     /**
@@ -307,18 +313,38 @@ public class fight_stats {
         this.accumulatedReward += accumulatedReward;
     }
 
+    /**
+     * Gets rival.
+     *
+     * @return the rival
+     */
     public Playable_Character getRival() {
         return rival;
     }
 
+    /**
+     * Sets rival.
+     *
+     * @param rival the rival
+     */
     public void setRival(Playable_Character rival) {
         this.rival = rival;
     }
 
+    /**
+     * Gets lvl rival.
+     *
+     * @return the lvl rival
+     */
     public ia_loader.dif getLvlRival() {
         return lvlRival;
     }
 
+    /**
+     * Sets lvl rival.
+     *
+     * @param lvlRival the lvl rival
+     */
     public void setLvlRival(ia_loader.dif lvlRival) {
         this.lvlRival = lvlRival;
     }

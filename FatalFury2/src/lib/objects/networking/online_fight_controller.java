@@ -16,15 +16,53 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * The type Online fight controller.
+ */
 public class online_fight_controller extends fight_controller {
+    /**
+     * The Con.
+     */
     private connection con;
+    /**
+     * The Is server.
+     */
     private boolean isServer = false;
+    /**
+     * The Current round online.
+     */
     private online_round currentRoundOnline;
-    private int messageIdentifier = 3, tramitsIdentifier = -2;
+    /**
+     * The Message identifier.
+     */
+    private int messageIdentifier = 3, /**
+     * The Tramits identifier.
+     */
+    tramitsIdentifier = -2;
+    /**
+     * The Reconnecting.
+     */
     private boolean reconnecting = true;
+    /**
+     * The F.
+     */
     private Font f = null;
+    /**
+     * The Font stream.
+     */
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
 
+    /**
+     * Instantiates a new Online fight controller.
+     *
+     * @param p        the p
+     * @param e        the e
+     * @param s        the s
+     * @param con      the con
+     * @param isServer the is server
+     * @param mI       the m i
+     * @param tID      the t id
+     */
     public online_fight_controller(character_controller p, character_controller e, scenary s, connection con, boolean isServer, int mI, int tID){
         super(p, e, s);
         try {
@@ -39,6 +77,11 @@ public class online_fight_controller extends fight_controller {
         showIntro();
     }
 
+    /**
+     * Gets animation.
+     *
+     * @param screenObjects the screen objects
+     */
     @Override
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
         if(con.isConnected()) {
@@ -58,6 +101,11 @@ public class online_fight_controller extends fight_controller {
         }
     }
 
+    /**
+     * Start new round.
+     *
+     * @param hasEnd the has end
+     */
     @Override
     public void startNewRound(boolean hasEnd) {
         currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
@@ -65,6 +113,12 @@ public class online_fight_controller extends fight_controller {
         currentRound.startRound(hasEnd);
     }
 
+    /**
+     * Write direcly.
+     *
+     * @param g      the g
+     * @param offset the offset
+     */
     @Override
     public void writeDirecly(Graphics2D g, int offset){
         if(reconnecting){

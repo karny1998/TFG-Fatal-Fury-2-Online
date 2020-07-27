@@ -40,6 +40,9 @@ public class game_controller {
      */
 // Modo debug
     boolean training = true;
+    /**
+     * The Trainer.
+     */
     IaVsIaTraining trainer = new IaVsIaTraining();
     /**
      * The Debug.
@@ -64,10 +67,12 @@ public class game_controller {
      * The Principal.
      */
 // Menus
-    private menu principal, /**
+    private menu principal,
+    /**
      * The Basic menu.
      */
-    basicMenu, /**
+    basicMenu,
+    /**
      * The Game menu.
      */
     gameMenu;
@@ -208,6 +213,9 @@ public class game_controller {
         }
     }
 
+    /**
+     * The Online.
+     */
     private online_mode online;// = new online_mode(false);
 
     /**

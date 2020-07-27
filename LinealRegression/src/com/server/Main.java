@@ -9,7 +9,7 @@ public class Main {
             reg.calculateModel();
             //Regression reg = new Regression();
             //reg.loadModel();
-            System.out.println(reg.getFinalModel().toString());
+            //System.out.println(reg.getFinalModel().toString());
         }catch (Exception e){e.printStackTrace();}
     }
 }

@@ -1,10 +1,11 @@
 public class main {
     public static void main(String[] args){
-        //random().saveUpdatedHistory();
+        boolean simple = false;
         stadistics s = new stadistics("ia_stadistics.xml");
-        s.printEfectivity();
-        s.printAccumulatedReward();
-        s.printStadistics();
-        s.printStadistics2();
+        s.printEfectivity(simple);
+        s.printAccumulatedReward(simple);
+        s.printStadistics(simple);
+        s.printStadistics2(simple);
+        s.printAccumulatedWinsGeneral();
     }
 }

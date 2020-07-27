@@ -39,11 +39,23 @@ public class enemy_controller extends character_controller{
 // Controlador de la inteligencia artificial
     ia_controller ia = new ia_controller();
 
+    /**
+     * The Special attack timer.
+     */
     private long specialAttackTimer = 0;
 
+    /**
+     * The Movement to execute.
+     */
     private String movementToExecute ="";
 
-    private boolean inExecution = false, executed = false;
+    /**
+     * The In execution.
+     */
+    private boolean inExecution = false, /**
+     * The Executed.
+     */
+    executed = false;
 
     /**
      * Instantiates a new Enemy controller.

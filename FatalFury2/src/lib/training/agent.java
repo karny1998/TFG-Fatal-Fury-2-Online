@@ -76,12 +76,24 @@ public class agent{
      */
     private double accumulatedReward = 0;
 
+    /**
+     * The Optimal decision.
+     */
     private double optimalDecision = 0.8;
 
+    /**
+     * The Use regression.
+     */
     private boolean useRegression = false;
 
+    /**
+     * The Regression.
+     */
     private Regression regression = null;
 
+    /**
+     * The Model.
+     */
     private double model[];
 
     /**
@@ -164,6 +176,7 @@ public class agent{
      * @param newS       the new s
      * @param action     the action
      * @param experience the experience (indica si viene de experience replay o no)
+     * @param loading    the loading
      */
     private void giveReward(state ini, state newS, Movement action, boolean experience, boolean loading){
         // Se hallan los índices de la tabla en base al estado y la acción
@@ -464,6 +477,8 @@ public class agent{
 
     /**
      * Carga la tabla q del fichero correspondiente.
+     *
+     * @return the boolean
      */
     public boolean loadQtable(){
         String path =  System.getProperty("user.dir") + "/.files/qTable.txt";
@@ -489,6 +504,8 @@ public class agent{
 
     /**
      * Load training.
+     *
+     * @param file the file
      */
     public void loadTraining(String file){
         String path =  System.getProperty("user.dir") + "/.files/"+file;
@@ -532,6 +549,13 @@ public class agent{
         }
     }
 
+    /**
+     * Evalue with regression double.
+     *
+     * @param s the s
+     * @param a the a
+     * @return the double
+     */
     public double evalueWithRegression(state s, int a){
         int grade = (model.length -1)/6;
         List<Double> values = new ArrayList<>();
@@ -556,6 +580,9 @@ public class agent{
         return reward;
     }
 
+    /**
+     * Train regression.
+     */
     public void trainRegression(){
         if(useRegression){
             try {
@@ -843,18 +870,38 @@ public class agent{
         this.accumulatedReward = accumulatedReward;
     }
 
+    /**
+     * Gets optimal decision.
+     *
+     * @return the optimal decision
+     */
     public double getOptimalDecision() {
         return optimalDecision;
     }
 
+    /**
+     * Sets optimal decision.
+     *
+     * @param optimalDecision the optimal decision
+     */
     public void setOptimalDecision(double optimalDecision) {
         this.optimalDecision = optimalDecision;
     }
 
+    /**
+     * Is use regression boolean.
+     *
+     * @return the boolean
+     */
     public boolean isUseRegression() {
         return useRegression;
     }
 
+    /**
+     * Sets use regression.
+     *
+     * @param useRegression the use regression
+     */
     public void setUseRegression(boolean useRegression) {
         this.useRegression = useRegression;
         if(useRegression){
@@ -873,10 +920,20 @@ public class agent{
         }
     }
 
+    /**
+     * Gets regression.
+     *
+     * @return the regression
+     */
     public Regression getRegression() {
         return regression;
     }
 
+    /**
+     * Sets regression.
+     *
+     * @param regression the regression
+     */
     public void setRegression(Regression regression) {
         this.regression = regression;
     }

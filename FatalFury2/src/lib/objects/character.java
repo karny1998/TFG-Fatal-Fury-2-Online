@@ -686,6 +686,12 @@ public class character {
         return attacks.contains(m);
     }
 
+    /**
+     * Is knockback boolean.
+     *
+     * @param m the m
+     * @return the boolean
+     */
     public static boolean isKnockback(Movement m){
         Movement array[] = {Movement.JUMP_KNOCKBACK, Movement.STANDING_BLOCK_KNOCKBACK_HARD, Movement.STANDING_BLOCK_KNOCKBACK_SOFT,
                 Movement.CROUCHED_KNOCKBACK,  Movement.MEDIUM_KNOCKBACK, Movement.SOFT_KNOCKBACK,
@@ -742,6 +748,7 @@ public class character {
     /**
      * In displacement boolean.
      *
+     * @param s the s
      * @return the boolean
      */
     public static boolean isDisplacement(Movement s){

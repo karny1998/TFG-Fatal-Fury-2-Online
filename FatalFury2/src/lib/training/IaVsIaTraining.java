@@ -67,15 +67,35 @@ public class IaVsIaTraining {
      */
     String filename = System.getProperty("user.dir") + "/.files/q_learning_stats.xml";
 
+    /**
+     * The Agente.
+     */
     agent agente;
 
+    /**
+     * The Load training.
+     */
     private boolean loadTraining = false;
 
-    private boolean random = false, againstHimself = false, againstPerson = false, training = true, useRegression = false;
+    /**
+     * The Random.
+     */
+    private boolean random = false, /**
+     * The Against himself.
+     */
+    againstHimself = false, /**
+     * The Against person.
+     */
+    againstPerson = false, /**
+     * The Training.
+     */
+    training = true, /**
+     * The Use regression.
+     */
+    useRegression = false;
 
     /**
      * Instantiates a new Ia vs ia training.
-     *
      */
     public IaVsIaTraining() {
         stateCalculator.initialize();
@@ -255,9 +275,9 @@ public class IaVsIaTraining {
             enemy.getPlayer().getStats().getActualFight().setLvlRival(pLvl);
         }
         else if(fight.getEnd()){
-            enemy.getAgente().trainRegression();
             enemy.getPlayer().getStats().setFilename(filename);
             enemy.getAgente().writeQTableAndRegister();
+            enemy.getAgente().trainRegression();
             enemy.getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
             enemy.getPlayer().getStats().saveUpdatedHistory();
             enemy.getPlayer().getStats().nextFight();

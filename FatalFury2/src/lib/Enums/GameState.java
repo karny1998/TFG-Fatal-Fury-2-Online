@@ -90,6 +90,12 @@ public enum GameState {
      * Online fight game state.
      */
     ONLINE_FIGHT,
+    /**
+     * Online mode game state.
+     */
     ONLINE_MODE,
+    /**
+     * Online searching fight game state.
+     */
     ONLINE_SEARCHING_FIGHT
 }

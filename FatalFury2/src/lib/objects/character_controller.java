@@ -116,7 +116,7 @@ public abstract  class character_controller {
      *
      * @param pHurt the p hurt
      * @param eHurt the e hurt
-     * @return animation
+     * @return animation animation
      */
 // Devuelve el frame del personaje teniendo en cuenta la colision de las hurtboxs
     public abstract screenObject getAnimation(hitBox pHurt, hitBox eHurt);

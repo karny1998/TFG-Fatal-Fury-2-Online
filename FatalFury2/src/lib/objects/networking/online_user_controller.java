@@ -6,11 +6,31 @@ import lib.objects.screenObject;
 import lib.objects.user_controller;
 import lib.utils.Pair;
 
+/**
+ * The type Online user controller.
+ */
 public class online_user_controller extends user_controller {
+    /**
+     * The Con.
+     */
     private connection con;
+    /**
+     * The Is local.
+     */
     private boolean isLocal = false;
+    /**
+     * The Menssage identifier.
+     */
     private int menssageIdentifier = 1;
 
+    /**
+     * Instantiates a new Online user controller.
+     *
+     * @param ch      the ch
+     * @param pN      the p n
+     * @param con     the con
+     * @param isLocal the is local
+     */
     public online_user_controller(Playable_Character ch, int pN, connection con, boolean isLocal){
         super(ch, pN);
         this.con = con;
@@ -20,6 +40,13 @@ public class online_user_controller extends user_controller {
         }
     }
 
+    /**
+     * Get animation screen object.
+     *
+     * @param pHurt the p hurt
+     * @param eHurt the e hurt
+     * @return the screen object
+     */
     @Override
     public screenObject getAnimation(hitBox pHurt, hitBox eHurt){
         this.x = this.player.getX();
@@ -43,26 +70,56 @@ public class online_user_controller extends user_controller {
         }
     }
 
+    /**
+     * Gets con.
+     *
+     * @return the con
+     */
     public connection getCon() {
         return con;
     }
 
+    /**
+     * Sets con.
+     *
+     * @param con the con
+     */
     public void setCon(connection con) {
         this.con = con;
     }
 
+    /**
+     * Is local boolean.
+     *
+     * @return the boolean
+     */
     public boolean isLocal() {
         return isLocal;
     }
 
+    /**
+     * Sets local.
+     *
+     * @param local the local
+     */
     public void setLocal(boolean local) {
         isLocal = local;
     }
 
+    /**
+     * Gets menssage identifier.
+     *
+     * @return the menssage identifier
+     */
     public int getMenssageIdentifier() {
         return menssageIdentifier;
     }
 
+    /**
+     * Sets menssage identifier.
+     *
+     * @param menssageIdentifier the menssage identifier
+     */
     public void setMenssageIdentifier(int menssageIdentifier) {
         this.menssageIdentifier = menssageIdentifier;
     }

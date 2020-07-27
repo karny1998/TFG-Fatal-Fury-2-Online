@@ -7,15 +7,46 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Q table to csv.
+ */
 public class qTableToCSV {
+    /**
+     * The Training.
+     */
     private String training;
+    /**
+     * The Qtable.
+     */
     private String qtable;
+    /**
+     * The Table.
+     */
     private double table[][];
+    /**
+     * The Visited.
+     */
     private state visited[][];
+    /**
+     * The Times.
+     */
     private double times[][];
+    /**
+     * The From training.
+     */
     private int fromTraining = 0;
+    /**
+     * The Train register.
+     */
     private List<Pair<state, Pair<Movement,Double>>> trainRegister = new ArrayList<>();
 
+    /**
+     * Instantiates a new Q table to csv.
+     *
+     * @param t            the t
+     * @param q            the q
+     * @param fromTraining the from training
+     */
     public qTableToCSV(String t, String q, int fromTraining){
         this.fromTraining = fromTraining;
         training = t;
@@ -33,6 +64,11 @@ public class qTableToCSV {
         }
     }
 
+    /**
+     * Generate csv.
+     *
+     * @param grade the grade
+     */
     public void generateCSV(int grade){
         if(fromTraining == 0) {
             loadQtable();
@@ -97,6 +133,8 @@ public class qTableToCSV {
 
     /**
      * Carga la tabla q del fichero correspondiente.
+     *
+     * @return the boolean
      */
     public boolean loadQtable(){
         String path =  System.getProperty("user.dir") + "/.files/" +qtable;
@@ -122,6 +160,9 @@ public class qTableToCSV {
 
     /**
      * Load training.
+     *
+     * @param file           the file
+     * @param generateQtable the generate qtable
      */
     public void loadTraining(String file, int generateQtable){
         String path =  System.getProperty("user.dir") + "/.files/" + file;

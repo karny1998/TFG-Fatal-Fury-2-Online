@@ -83,7 +83,7 @@ public class Regression {
             Evaluation eval = new Evaluation(trainDataSet);
             eval.crossValidateModel(model, validateDataSet, foldsCV, new Random(1));
 
-            //System.out.println("Grade: " + i + " Relative absolute error: " + eval.relativeAbsoluteError());
+            System.out.println("Grade: " + i + " Relative absolute error: " + eval.relativeAbsoluteError());
 
             if(eval.relativeAbsoluteError() < betterError){
                 betterError = eval.relativeAbsoluteError();
@@ -93,11 +93,11 @@ public class Regression {
             }
         }
 
-        /*System.out.println("\nBetter grade: " + betterGrade);
+        System.out.println("\nBetter grade: " + betterGrade);
         System.out.println("** Linear Regression Evaluation with Datasets **");
         System.out.println(betterEval.toSummaryString());
         System.out.print(" the expression for the input data as per alogorithm is ");
-        System.out.println(betterModel);*/
+        System.out.println(betterModel);
         saveModel(betterModel);
         finalModel  = betterModel;
     }

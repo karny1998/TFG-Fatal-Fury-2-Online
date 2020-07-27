@@ -28,6 +28,9 @@ public class connection {
      */
     protected DatagramSocket socketUDP;
 
+    /**
+     * The Socket tcp.
+     */
     protected Socket socketTCP;
     /**
      * The Address.
@@ -67,21 +70,38 @@ public class connection {
      */
     protected boolean blockReception = false;
 
+    /**
+     * The Sm.
+     */
     protected Semaphore sm = new Semaphore(1);
 
+    /**
+     * The Out.
+     */
     private PrintWriter out;
 
+    /**
+     * The In.
+     */
     private BufferedReader in;
 
+    /**
+     * The Is udp.
+     */
     boolean isUDP = true;
 
+    /**
+     * Instantiates a new Connection.
+     */
     public connection() {}
 
     /**
      * Instantiates a new Connection.
      * Por defecto 50 segundos de timeout, y puerto de envío y recepción el mismo
      *
-     * @param ip   the ip
+     * @param ip    the ip
+     * @param port  the port
+     * @param isUDP the is udp
      */
     public connection(String ip, int port, boolean isUDP) {
         this.isUDP = isUDP;
@@ -108,8 +128,10 @@ public class connection {
     /**
      * Instantiates a new Connection.
      *
-     * @param ip          the ip
-     * @param timeout     the timeout
+     * @param ip      the ip
+     * @param port    the port
+     * @param timeout the timeout
+     * @param isUDP   the is udp
      */
     public connection(String ip, int port, int timeout, boolean isUDP) {
         this.isUDP = isUDP;
@@ -159,7 +181,14 @@ public class connection {
         }
     }
 
-    // Tener cuidao con esta
+    /**
+     * Send through server.
+     *
+     * @param id   the id
+     * @param dest the dest
+     * @param msg  the msg
+     */
+// Tener cuidao con esta
     public void sendThroughServer(int id, InetAddress dest, String msg){
         if(isUDP) {
             bufSend = (dest.getHostAddress() + "/" + Integer.toString(id) + ";NR;" + msg).getBytes();
@@ -195,6 +224,9 @@ public class connection {
         }
     }
 
+    /**
+     * Send hi.
+     */
     public void sendHi(){
         if(isUDP) {
             bufSend = ("HI").getBytes();
@@ -326,8 +358,9 @@ public class connection {
      * Envía el mensaje msg con identificador id esperando que confirmen la recepción.
      * Devolverá true si en alguno de los 5 intentos ha recibido confirmación, fasle en caso contrario.
      *
-     * @param id  the id
-     * @param msg the msg
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
      * @return the boolean
      */
     public boolean reliableSend(int id, String msg, int timeout){
@@ -377,6 +410,11 @@ public class connection {
         rec.doStop();
     }
 
+    /**
+     * Is connected boolean.
+     *
+     * @return the boolean
+     */
     public  boolean isConnected(){
         if(isUDP){
             return socketUDP.isConnected();

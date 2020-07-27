@@ -71,6 +71,9 @@ public class agent_controller extends ia_controller{
      */
     private boolean roundEnded = false;
 
+    /**
+     * The Waiting end knockback.
+     */
     private boolean waitingEndKnockback = false;
 
 

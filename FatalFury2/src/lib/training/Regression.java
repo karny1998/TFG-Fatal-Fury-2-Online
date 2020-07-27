@@ -9,19 +9,71 @@ import java.io.*;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * The type Regression.
+ */
 public class Regression {
+    /**
+     * The Data.
+     */
     private String data = System.getProperty("user.dir") + "/.files/qTable.csv";
+    /**
+     * The Model path.
+     */
     private String modelPath =  System.getProperty("user.dir") + "/.files/regressionModel.model";
+    /**
+     * The Data set.
+     */
     private Instances dataSet;
+    /**
+     * The Train data set.
+     */
     private Instances trainDataSet;
+    /**
+     * The Validate data set.
+     */
     private Instances validateDataSet;
+    /**
+     * The Simple.
+     */
     private boolean simple = true;
-    private int grade = 1, maxGrade = 1, folds = 5, foldsCV = 10;
+    /**
+     * The Grade.
+     */
+    private int grade = 1, /**
+     * The Max grade.
+     */
+    maxGrade = 1, /**
+     * The Folds.
+     */
+    folds = 5, /**
+     * The Folds cv.
+     */
+    foldsCV = 10;
+    /**
+     * The Csv generator.
+     */
     private  qTableToCSV csvGenerator;
+    /**
+     * The Final model.
+     */
     private LinearRegression finalModel;
 
+    /**
+     * Instantiates a new Regression.
+     */
     public Regression(){}
 
+    /**
+     * Instantiates a new Regression.
+     *
+     * @param folds        the folds
+     * @param grade        the grade
+     * @param t            the t
+     * @param q            the q
+     * @param fromTraining the from training
+     * @throws IOException the io exception
+     */
     public Regression(int folds, int grade, String t, String q, int fromTraining) throws IOException {
         csvGenerator =  new qTableToCSV(t,q, fromTraining);
 
@@ -31,6 +83,17 @@ public class Regression {
         this.simple = true;
     }
 
+    /**
+     * Instantiates a new Regression.
+     *
+     * @param folds        the folds
+     * @param grade        the grade
+     * @param maxGrade     the max grade
+     * @param t            the t
+     * @param q            the q
+     * @param fromTraining the from training
+     * @throws IOException the io exception
+     */
     public Regression(int folds, int grade, int maxGrade, String t, String q, int fromTraining) throws IOException {
         csvGenerator =  new qTableToCSV(t,q, fromTraining);
 
@@ -40,6 +103,11 @@ public class Regression {
         this.simple = false;
     }
 
+    /**
+     * Load dataset.
+     *
+     * @throws IOException the io exception
+     */
     private void loadDataset() throws IOException {
         CSVLoader loader = new CSVLoader();
         loader.setFieldSeparator(",");
@@ -54,6 +122,11 @@ public class Regression {
         this.validateDataSet = dataSet.testCV(folds,f);
     }
 
+    /**
+     * Calculate model.
+     *
+     * @throws Exception the exception
+     */
     public void calculateModel() throws Exception {
         if(simple){
             simpleRegression();
@@ -63,6 +136,11 @@ public class Regression {
         }
     }
 
+    /**
+     * K fold cross validation polynomial regression.
+     *
+     * @throws Exception the exception
+     */
     public void kFoldCrossValidationPolynomialRegression() throws Exception {
         double betterError = 1000.0;
         int betterGrade = 1;
@@ -98,6 +176,11 @@ public class Regression {
         finalModel  = betterModel;
     }
 
+    /**
+     * Simple regression.
+     *
+     * @throws Exception the exception
+     */
     public void simpleRegression() throws Exception {
         csvGenerator.generateCSV(grade);
         loadDataset();
@@ -117,6 +200,12 @@ public class Regression {
         finalModel = model;
     }
 
+    /**
+     * Save model.
+     *
+     * @param model the model
+     * @throws IOException the io exception
+     */
     private void saveModel(LinearRegression model) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(modelPath));
@@ -125,6 +214,9 @@ public class Regression {
         oos.close();
     }
 
+    /**
+     * Load model.
+     */
     public void loadModel()  {
         try {
             ObjectInputStream ois = new ObjectInputStream(
@@ -138,98 +230,218 @@ public class Regression {
         }
     }
 
+    /**
+     * Gets data.
+     *
+     * @return the data
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Sets data.
+     *
+     * @param data the data
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     * Gets model path.
+     *
+     * @return the model path
+     */
     public String getModelPath() {
         return modelPath;
     }
 
+    /**
+     * Sets model path.
+     *
+     * @param modelPath the model path
+     */
     public void setModelPath(String modelPath) {
         this.modelPath = modelPath;
     }
 
+    /**
+     * Gets data set.
+     *
+     * @return the data set
+     */
     public Instances getDataSet() {
         return dataSet;
     }
 
+    /**
+     * Sets data set.
+     *
+     * @param dataSet the data set
+     */
     public void setDataSet(Instances dataSet) {
         this.dataSet = dataSet;
     }
 
+    /**
+     * Gets train data set.
+     *
+     * @return the train data set
+     */
     public Instances getTrainDataSet() {
         return trainDataSet;
     }
 
+    /**
+     * Sets train data set.
+     *
+     * @param trainDataSet the train data set
+     */
     public void setTrainDataSet(Instances trainDataSet) {
         this.trainDataSet = trainDataSet;
     }
 
+    /**
+     * Gets validate data set.
+     *
+     * @return the validate data set
+     */
     public Instances getValidateDataSet() {
         return validateDataSet;
     }
 
+    /**
+     * Sets validate data set.
+     *
+     * @param validateDataSet the validate data set
+     */
     public void setValidateDataSet(Instances validateDataSet) {
         this.validateDataSet = validateDataSet;
     }
 
+    /**
+     * Is simple boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSimple() {
         return simple;
     }
 
+    /**
+     * Sets simple.
+     *
+     * @param simple the simple
+     */
     public void setSimple(boolean simple) {
         this.simple = simple;
     }
 
+    /**
+     * Gets grade.
+     *
+     * @return the grade
+     */
     public int getGrade() {
         return grade;
     }
 
+    /**
+     * Sets grade.
+     *
+     * @param grade the grade
+     */
     public void setGrade(int grade) {
         this.grade = grade;
     }
 
+    /**
+     * Gets max grade.
+     *
+     * @return the max grade
+     */
     public int getMaxGrade() {
         return maxGrade;
     }
 
+    /**
+     * Sets max grade.
+     *
+     * @param maxGrade the max grade
+     */
     public void setMaxGrade(int maxGrade) {
         this.maxGrade = maxGrade;
     }
 
+    /**
+     * Gets folds.
+     *
+     * @return the folds
+     */
     public int getFolds() {
         return folds;
     }
 
+    /**
+     * Sets folds.
+     *
+     * @param folds the folds
+     */
     public void setFolds(int folds) {
         this.folds = folds;
     }
 
+    /**
+     * Gets folds cv.
+     *
+     * @return the folds cv
+     */
     public int getFoldsCV() {
         return foldsCV;
     }
 
+    /**
+     * Sets folds cv.
+     *
+     * @param foldsCV the folds cv
+     */
     public void setFoldsCV(int foldsCV) {
         this.foldsCV = foldsCV;
     }
 
+    /**
+     * Gets csv generator.
+     *
+     * @return the csv generator
+     */
     public qTableToCSV getCsvGenerator() {
         return csvGenerator;
     }
 
+    /**
+     * Sets csv generator.
+     *
+     * @param csvGenerator the csv generator
+     */
     public void setCsvGenerator(qTableToCSV csvGenerator) {
         this.csvGenerator = csvGenerator;
     }
 
+    /**
+     * Gets final model.
+     *
+     * @return the final model
+     */
     public LinearRegression getFinalModel() {
         return finalModel;
     }
 
+    /**
+     * Sets final model.
+     *
+     * @param finalModel the final model
+     */
     public void setFinalModel(LinearRegression finalModel) {
         this.finalModel = finalModel;
     }

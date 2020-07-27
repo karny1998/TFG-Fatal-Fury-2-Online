@@ -11,20 +11,35 @@ import java.util.Map;
 import static lib.Enums.Item_Type.SHADOW_1;
 import static lib.Enums.Item_Type.SHADOW_2;
 
+/**
+ * The type Online round.
+ */
 public class online_round extends round {
-    //private static network_manager networking;
+    /**
+     * The constant con.
+     */
+//private static network_manager networking;
     private connection con;
+    /**
+     * The Is server.
+     */
     private boolean isServer = false;
+    /**
+     * The Message identifier.
+     */
     private int messageIdentifier = 3;
 
     /**
      * Instantiates a new Round.
      *
-     * @param p    the p
-     * @param e    the e
-     * @param time the time
-     * @param sP   the s p
-     * @param sE   the s e
+     * @param p        the p
+     * @param e        the e
+     * @param time     the time
+     * @param sP       the s p
+     * @param sE       the s e
+     * @param con      the con
+     * @param isServer the is server
+     * @param mI       the m i
      */
     public online_round(character_controller p, character_controller e, int time, score sP, score sE, connection con, boolean isServer, int mI) {
         super(p, e, time, sP, sE);
