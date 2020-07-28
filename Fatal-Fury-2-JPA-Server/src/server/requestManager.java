@@ -20,10 +20,10 @@ public class requestManager {
             String aux[] = request.split(":");
             String res = manager.registerUser(aux[1],aux[2],aux[3]);
             if(res.equals("OK")) {
-                con.send(messagesId, "REGISTERED");
+                con.sendString(messagesId, "REGISTERED");
             }
             else{
-                con.send(messagesId, res);
+                con.sendString(messagesId, res);
             }
         }
         else if(request.contains("LOGIN")){
@@ -36,22 +36,22 @@ public class requestManager {
         else if(request.contains("SEND FRIEND REQUEST")){
             String aux[] = request.split(":");
             String res = manager.friendsRequest(aux[1],aux[2]);
-            con.send(messagesId, res);
+            con.sendString(messagesId, res);
         }
         else if(request.contains("ACCEPT FRIEND REQUEST")){
             String aux[] = request.split(":");
             String res = manager.answerFriendsRequest(aux[1],aux[2], true);
-            con.send(messagesId, res);
+            con.sendString(messagesId, res);
         }
         else if(request.contains("REJECT FRIEND REQUEST")){
             String aux[] = request.split(":");
             String res = manager.answerFriendsRequest(aux[1],aux[2], false);
-            con.send(messagesId, res);
+            con.sendString(messagesId, res);
         }
         else if(request.contains("REMOVE FRIEND")){
             String aux[] = request.split(":");
             String res = manager.removeFriend(aux[1],aux[2]);
-            con.send(messagesId, res);
+            con.sendString(messagesId, res);
         }
     }
 }

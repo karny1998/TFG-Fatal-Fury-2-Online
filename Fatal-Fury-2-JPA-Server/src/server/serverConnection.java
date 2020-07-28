@@ -1,8 +1,9 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import server.sendableObjects.sendableObject;
+import lib.utils.packet;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +11,10 @@ import java.util.concurrent.Semaphore;
 
 public class serverConnection{
     protected Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     protected int portReceive;
+    protected Map<Integer, sendableObject> serverPendingObjects = new HashMap<>();
     protected Map<Integer,String> serverPendingMessages = new HashMap<>();
     protected receiver rec;
     protected  boolean blockReception = false;
@@ -21,29 +23,63 @@ public class serverConnection{
     public serverConnection(Socket socket) {
         this.socket = socket;
         try {
-            this.out = new PrintWriter(socket.getOutputStream(), true);
-            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
         }catch (Exception e){e.printStackTrace();}
         this.portReceive = socket.getLocalPort();
         this.rec = new receiver(this);
         this.rec.start();
     }
 
-    public void send(int id, String msg){
-        out.println(Integer.toString(id) + ";NR;"+msg);
+    public void sendString(int id, Object msg){
+        send(id,msg,true);
     }
 
-    public boolean reliableSend(int id, String msg, int timeout){
+    public void sendObject(int id, Object msg){
+        send(id,msg,false);
+    }
+
+    private void send(int id, Object msg, boolean string){
+        try{
+            packet p = null;
+            if(string){
+                p = new packet(id, false, (String)msg);
+            }
+            else{
+                //p = new packet(id, false, (sendableObject)msg);
+            }
+            out.writeObject(p);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    public boolean reliableSendString(int id, Object msg, int timeout){
+        return reliableSend(id, (String)msg,timeout, true);
+    }
+
+    public boolean reliableSendObject(int id, Object msg, int timeout){
+        return reliableSend(id, (String)msg,timeout, false);
+    }
+
+    private boolean reliableSend(int id, Object msg, int timeout, boolean string){
         boolean ok = false;
         for(int i = 0; i < 10 && !ok; ++i){
-            out.println(Integer.toString(id) + ";R;"+msg);
+            try{
+                packet p = null;
+                if(string){
+                    p = new packet(id, true, (String)msg);
+                }
+                else {
+                    //p = new packet(id, true, (sendableObject)msg);
+                }
+                out.writeObject(p);
+            }catch (Exception e){e.printStackTrace();}
             try {
                 Thread.sleep(timeout);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println(serverPendingMessages);
-            String rec = receive(id);
+            String rec = receiveString(id);
             if(rec.equals("ACK")){
                 ok = true;
             }
@@ -57,15 +93,33 @@ public class serverConnection{
      * @param id the id
      */
     public void sendAck(int id){
-        out.println(Integer.toString(id) + ";NR;ACK");
+        try{
+            packet p = new packet(id, false, "ACK");
+            out.writeObject(p);
+        }catch (Exception e){e.printStackTrace();}
     }
 
-    public String receive(int id){
+    public String receiveString(int id){
+        return (String)receive(id, true);
+    }
+
+    public Object receiveObject(int id){
+        return receive(id, false);
+    }
+
+    public Object receive(int id, boolean string){
         if(blockReception || !socket.isConnected()){return "";}
         try {
             sm.acquire();
-            if(serverPendingMessages.containsKey(id)){
-                String msg = serverPendingMessages.get(id);
+            Object msg;
+            if(string && serverPendingMessages.containsKey(id)){
+                msg = serverPendingMessages.get(id);
+                serverPendingMessages.remove(id);
+                sm.release();
+                return msg;
+            }
+            else if(!string && serverPendingObjects.containsKey(id)){
+                msg = serverPendingObjects.get(id);
                 serverPendingMessages.remove(id);
                 sm.release();
                 return msg;
@@ -83,19 +137,22 @@ public class serverConnection{
     public void receive(){
         if(blockReception){return;}
         try {
-            String received = in.readLine();
-            System.out.println("Se ha recibido: " + received);
-            if(received.equals("HI")){
+            packet received = (packet) in.readObject();
+            System.out.println("Se ha recibido: " + received.toString());
+            if(!received.isObject() && received.getMessage().equals("HI")){
                 sendAck(-1);
                 return;
             }
-            String aux[] = received.split(";");
-            boolean reliable = aux[1].equals("R");
-            if(reliable){
-                sendAck(Integer.parseInt(aux[0]));
+            if(received.isReliable()){
+                sendAck(received.getId());
             }
-            serverPendingMessages.put(Integer.parseInt(aux[0]), aux[2]);
-        }catch (Exception e){}
+            if(received.isObject()){
+                //serverPendingObjects.put(received.getId(), received.getObject());
+            }
+            else {
+                serverPendingMessages.put(received.getId(), received.getMessage());
+            }
+        }catch (Exception e){e.printStackTrace();}
     }
 
     public boolean isConnected(){return socket.isConnected();}

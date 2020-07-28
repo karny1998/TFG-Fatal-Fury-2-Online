@@ -1,13 +1,10 @@
 package lib.objects.networking;
 
-import lib.utils.Pair;
+import lib.objects.networking.sendableObjects.sendableObject;
+import lib.utils.packet;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -60,6 +57,8 @@ public class connection {
      * The Pending messages.
      */
     protected Map<Integer, String> pendingMsgs = new HashMap<>();
+
+    protected Map<Integer, sendableObject> pendingObjects = new HashMap<>();
     /**
      * The proccess which receives messages constantly.
      */
@@ -78,12 +77,12 @@ public class connection {
     /**
      * The Out.
      */
-    private PrintWriter out;
+    private ObjectOutputStream out;
 
     /**
      * The In.
      */
-    private BufferedReader in;
+    private ObjectInputStream in;
 
     /**
      * The Is udp.
@@ -115,8 +114,8 @@ public class connection {
             else{
                 socketTCP = new Socket(ip, port);
                 socketTCP.setSoTimeout(50);
-                out = new PrintWriter(socketTCP.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));
+                out = new ObjectOutputStream (socketTCP.getOutputStream());
+                in = new ObjectInputStream(socketTCP.getInputStream());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,8 +149,8 @@ public class connection {
                 if (timeout > 0) {
                     socketTCP.setSoTimeout(timeout);
                 }
-                out = new PrintWriter(socketTCP.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));
+                out = new ObjectOutputStream (socketTCP.getOutputStream());
+                in = new ObjectInputStream(socketTCP.getInputStream());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -160,15 +159,23 @@ public class connection {
         this.rec.start();
     }
 
+    public void sendString(int id, String msg){
+        send(id, msg, true);
+    }
+
+    public void sendObject(int id, Object msg){
+        send(id, msg, false);
+    }
+
     /**
      * Envía el mensaje msg con identificador id sin confirmar la recepción
      *
      * @param id  the id
      * @param msg the msg
      */
-    public void send(int id, String msg){
+    private void send(int id, Object msg, boolean string){
         if(isUDP) {
-            bufSend = (Integer.toString(id) + ";NR;" + msg).getBytes();
+            bufSend = (Integer.toString(id) + ";NR;" + (String)msg).getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
                 socketUDP.send(packet);
@@ -177,30 +184,16 @@ public class connection {
             }
         }
         else {
-            out.println(Integer.toString(id) + ";NR;" + msg);
-        }
-    }
-
-    /**
-     * Send through server.
-     *
-     * @param id   the id
-     * @param dest the dest
-     * @param msg  the msg
-     */
-// Tener cuidao con esta
-    public void sendThroughServer(int id, InetAddress dest, String msg){
-        if(isUDP) {
-            bufSend = (dest.getHostAddress() + "/" + Integer.toString(id) + ";NR;" + msg).getBytes();
-            DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
-                socketUDP.send(packet);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else{
-            out.println(dest.getHostAddress() + "/" + Integer.toString(id) + ";NR;" + msg);
+                packet p = null;
+                if(string){
+                    p = new packet(id, false, (String)msg);
+                }
+                else {
+                    //p = new packet(id, false, (sendableObject)msg);
+                }
+                out.writeObject(p);
+            }catch (Exception e){e.printStackTrace();}
         }
     }
 
@@ -220,7 +213,10 @@ public class connection {
             }
         }
         else{
-            out.println(Integer.toString(id) + ";NR;ACK");
+            try{
+                packet p = new packet(id, false, "ACK");
+                out.writeObject(p);
+            }catch (Exception e){e.printStackTrace();}
         }
     }
 
@@ -236,7 +232,7 @@ public class connection {
                 while (!ok) {
                     socketUDP.send(packet);
                     Thread.sleep(50);
-                    String ack = receive(-1);
+                    String ack = receiveString(-1);
                     if (ack.equals("ACK")) {
                         ok = true;
                     }
@@ -246,25 +242,42 @@ public class connection {
             }
         }
         else{
-            out.println("HI");
+            try{
+                packet p = new packet(0, false, "HI");
+                out.writeObject(p);
+            }catch (Exception e){e.printStackTrace();}
         }
+    }
+
+    public String receiveString(int id){
+        return (String)receive(id,true);
+    }
+
+    public Object receiveObject(int id){
+        return receive(id,false);
     }
 
     /**
      * Devuelve el mensaje asociando al identificador id  (cadena vacía si no se ha recibido) string.
      *
      * @param id the id
-     * @return the string
+     * @return the object
      */
-    public String receive(int id){
+    private Object receive(int id, boolean string){
         if(blockReception){return "";}
         try {
             sm.acquire();
-            if(pendingMsgs.containsKey(id)){
+            if((string || isUDP) && pendingMsgs.containsKey(id)){
                 String msg = pendingMsgs.get(id);
                 pendingMsgs.remove(id);
                 sm.release();
                 return msg;
+            }
+            else if(!string && pendingObjects.containsKey(id)){
+                Object obj = pendingObjects.get(id);
+                pendingObjects.remove(id);
+                sm.release();
+                return  obj;
             }
             sm.release();
             return "NONE";
@@ -273,38 +286,7 @@ public class connection {
             sm.release();
         }
         sm.release();
-        return "";
-    }
-
-    /**
-     * Devuelve el mensaje asociando al identificador id  (cadena vacía si no se ha recibido) string.
-     *
-     * @param id the id
-     * @return the string
-     */
-    public Pair<Integer,String> receivePermissive(int id){
-        if(blockReception){return new Pair<>(0,"");}
-        String msg = receive(id);
-        try {
-            sm.acquire();
-            if (msg.equals("") && !pendingMsgs.isEmpty()) {
-                int maxKey = Collections.max(pendingMsgs.keySet());
-                if (maxKey > id) {
-                    msg = pendingMsgs.get(maxKey);
-                    pendingMsgs.remove(maxKey);
-                    sm.release();
-                    return new Pair<>(maxKey, msg);
-                } else {
-                    sm.release();
-                    return new Pair<>(0, "");
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            sm.release();
-        }
-        sm.release();
-        return new Pair<>(id,msg);
+        return "NONE";
     }
 
     /**
@@ -312,46 +294,72 @@ public class connection {
      */
     public void receive(){
         if(blockReception || socketUDP != null && !socketUDP.isConnected()){return;}
-        if(blockReception || socketUDP != null && !socketUDP.isConnected()){return;}
         try {
-            String received = "";
             if(isUDP) {
+                String received = "";
                 DatagramPacket packet
                         = new DatagramPacket(bufReceive, bufReceive.length);
                 socketUDP.receive(packet);
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
                 received = new String(packet.getData(), 0, packet.getLength());
-            }
-            else{
-                received = in.readLine();
-            }
-            if(received.equals("HI")){
-                sendAck(-1);
-                return;
-            }
-            String aux[] = received.split(";");
-            int idM = Integer.parseInt(aux[0]);
-            boolean reliable = aux[1].equals("R");
-            // Envía la confirmación si corresponde
-            if(reliable){
-                sendAck(idM);
-            }
-            try {
-                sm.acquire();
-                if(aux.length == 2){
-                    pendingMsgs.put(idM, "");
+                if(received.equals("HI")){
+                    sendAck(-1);
+                    return;
                 }
-                else {
-                    pendingMsgs.put(idM, aux[2]);
+                String aux[] = received.split(";");
+                int idM = Integer.parseInt(aux[0]);
+                boolean reliable = aux[1].equals("R");
+                // Envía la confirmación si corresponde
+                if(reliable){
+                    sendAck(idM);
                 }
-                System.out.println("Se recibe: " + aux[2]);
-            }catch (Exception e){
-                e.printStackTrace();
+                try {
+                    sm.acquire();
+                    if(aux.length == 2){
+                        pendingMsgs.put(idM, "");
+                    }
+                    else {
+                        pendingMsgs.put(idM, aux[2]);
+                    }
+                    System.out.println("Se recibe: " + aux[2]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    sm.release();
+                }
                 sm.release();
             }
-            sm.release();
+            else{
+                packet received = (packet) in.readObject();
+                if(received.isReliable()){
+                    sendAck(received.getId());
+                }
+                try {
+                    sm.acquire();
+                    if(received.isObject()){
+                        //pendingObjects.put(received.getId(), received.getObject());
+                        //System.out.println("Se recibe: " + received.getObject().toString());
+                    }
+                    else {
+                        pendingMsgs.put(received.getId(), received.getMessage());
+                        System.out.println("Se recibe: " + received.getMessage());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    sm.release();
+                }
+                sm.release();
+            }
+
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    public boolean reliableSendString(int id, String msg, int timeout){
+        return reliableSend(id, msg, timeout, true);
+    }
+
+    public boolean reliableSendObject(int id, Object msg, int timeout){
+        return reliableSend(id, msg, timeout, true);
     }
 
     /**
@@ -363,20 +371,29 @@ public class connection {
      * @param timeout the timeout
      * @return the boolean
      */
-    public boolean reliableSend(int id, String msg, int timeout){
-        bufSend = (Integer.toString(id) + ";R;" + msg).getBytes();
-        DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
+    private boolean reliableSend(int id, Object msg, int timeout, boolean string){
         try {
             for(int i = 0; i < 10; ++i){
                 if(isUDP) {
+                    bufSend = (Integer.toString(id) + ";R;" + (String)msg).getBytes();
+                    DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
                     socketUDP.send(packet);
                 }
                 else{
-                    out.println(Integer.toString(id) + ";R;" + msg);
+                    try{
+                        packet p = null;
+                        if(string){
+                            p = new packet(0, true, (String)msg);
+                        }
+                        else{
+                            //p = new packet(0, true, (sendableObject)msg);
+                        }
+                        out.writeObject(p);
+                    }catch (Exception e){e.printStackTrace();}
                 }
                 Thread.sleep(timeout);
-                String ack = receive(id);
-                if(!ack.equals("")) {
+                String ack = receiveString(id);
+                if(!ack.equals("") && !ack.equals("NONE")) {
                     if (ack.equals("ACK")){
                         return true;
                     }

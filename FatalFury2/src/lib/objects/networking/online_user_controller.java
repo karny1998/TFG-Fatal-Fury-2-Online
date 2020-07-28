@@ -53,14 +53,14 @@ public class online_user_controller extends user_controller {
         this.y = this.player.getY();
         if(!isLocal){
             if(!standBy) {
-                String newMov = con.receive(menssageIdentifier);
+                String newMov = con.receiveString(menssageIdentifier);
                 if (!newMov.equals("NONE")) {
                     mov = newMov;
                 }
             }
         }
         else{
-            con.send(menssageIdentifier, mov);
+            con.sendString(menssageIdentifier, mov);
         }
         if(rival == null) {
             return player.getFrame(mov, pHurt, eHurt, false);

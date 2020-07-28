@@ -83,8 +83,8 @@ public class Main {
         public void run(){
             while(keepRunning()) {
                 if(con.isConnected()) {
-                    String tramits = con.receive(tramitsId);
-                    String request = con.receive(requestId);
+                    String tramits = con.receiveString(tramitsId);
+                    String request = con.receiveString(requestId);
                     if (tramits.equals("DISCONNECT")) {
                         threads.remove(client);
                         manager.desconnectUser(client);

@@ -171,13 +171,13 @@ public class online_mode {
             boolean ok = false;
             do {
                 System.out.println("Se ha enviado el READY");
-                ok = conToClient.reliableSend(0, "READY", 100);
+                ok = conToClient.reliableSendString(0, "READY", 100);
             } while (!ok);
         } else {
-            String msg = conToClient.receive(0);
+            String msg = conToClient.receiveString(0);
             System.out.println("Se esta esperando el ready");
             while (!msg.equals("READY")) {
-                msg = conToClient.receive(0);
+                msg = conToClient.receiveString(0);
             }
             System.out.println("Se ha recibido el ready");
             for (int i = 0; i < 5; ++i) {
@@ -229,12 +229,12 @@ public class online_mode {
         if (isHost) {
             boolean ok = false;
             do {
-                ok = conToClient.reliableSend(0, "READY", 100);
+                ok = conToClient.reliableSendString(0, "READY", 100);
             } while (!ok);
         } else {
-            String msg = conToClient.receive(0);
+            String msg = conToClient.receiveString(0);
             while (!msg.equals("READY")) {
-                msg = conToClient.receive(0);
+                msg = conToClient.receiveString(0);
                 try {
                     Thread.sleep(100);
                 } catch (Exception e) {}
@@ -262,7 +262,7 @@ public class online_mode {
                 e.printStackTrace();
             }
             if(cm.equals("exit")){
-                conToServer.send(tramitsID,"DISCONNECT");
+                conToServer.sendString(tramitsID,"DISCONNECT");
                 conToServer.close();
                 System.exit(0);
             }
@@ -274,9 +274,9 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Password: ");
                     password = in.readLine();
-                    conToServer.send(requestID,"LOGIN:"+username+":"+password);
+                    conToServer.sendString(requestID,"LOGIN:"+username+":"+password);
                     Thread.sleep(2000);
-                    String res = conToServer.receive(requestID);
+                    String res = conToServer.receiveString(requestID);
                     if(res.equals("LOGGED")){
                         System.out.println("Te has logeado");
                     }
@@ -296,11 +296,14 @@ public class online_mode {
                     password = in.readLine();
                     System.out.print("Email: ");
                     email = in.readLine();
-                    conToServer.send(requestID,"REGISTER:"+username+":"+email+":"+password);
+                    conToServer.sendString(requestID,"REGISTER:"+username+":"+email+":"+password);
                     Thread.sleep(2000);
-                    String res = conToServer.receive(requestID);
+                    String res = conToServer.receiveString(requestID);
                     if(res.equals("REGISTERED")){
                         System.out.println("Te has registrado");
+                    }
+                    else if(res.equals("NONE") || res.equals("")){
+                        System.out.println("No se ha recibido respuesta");
                     }
                     else{
                         System.out.println(res.split(":")[1]);
@@ -317,7 +320,7 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.send(requestID,"SEND FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(requestID,"SEND FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
@@ -330,7 +333,7 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.send(requestID,"ACCEPT FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(requestID,"ACCEPT FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
@@ -343,7 +346,7 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.send(requestID,"REJECT FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(requestID,"REJECT FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
@@ -356,7 +359,7 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.send(requestID,"REMOVE FRIEND:"+username+":"+password);
+                    conToServer.sendString(requestID,"REMOVE FRIEND:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
@@ -380,7 +383,7 @@ public class online_mode {
         if(controlListener.menuInput(1, controlListener.ESC_INDEX)
             || controlListener.menuInput(2, controlListener.ESC_INDEX)){
             if(conToClient != null){conToClient.close();}
-            conToServer.send(-1, "DISCONNECT");
+            conToServer.sendString(-1, "DISCONNECT");
             System.exit(0);
         }
         if(debug){
@@ -417,7 +420,7 @@ public class online_mode {
                     }
                     break;
                 case ONLINE_SEARCHING_FIGHT:
-                    String msg = conToServer.receive(2);
+                    String msg = conToServer.receiveString(2);
                     if (msg.contains("SEARCH")) {
                         System.out.println("Se ha recibido " + msg);
                     }
@@ -430,7 +433,7 @@ public class online_mode {
                     }
                     break;
                 default:
-                    boolean ok = conToServer.reliableSend(1, "SEARCH GAME", 500);
+                    boolean ok = conToServer.reliableSendString(1, "SEARCH GAME", 500);
                     System.out.println("El servidor ha recibido la request: " + ok);
                     if (ok) {
                         System.out.println("Se pasa a buscando partida");

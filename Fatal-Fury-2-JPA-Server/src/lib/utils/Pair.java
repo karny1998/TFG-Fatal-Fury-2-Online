@@ -1,12 +1,12 @@
-package utils;
+package lib.utils;
 
 /**
- * The type utils.Pair.
+ * The type lib.utils.Pair.
  *
  * @param <T> the type parameter
  * @param <V> the type parameter
  */
-// Implementación de la clase utils.Pair para evitar el uso de JavaFX
+// Implementación de la clase lib.utils.Pair para evitar el uso de JavaFX
 public class Pair<T, V> {
 
     /**
@@ -19,7 +19,7 @@ public class Pair<T, V> {
     public V second;
 
     /**
-     * Instantiates a new utils.Pair.
+     * Instantiates a new lib.utils.Pair.
      *
      * @param f the f
      * @param s the s

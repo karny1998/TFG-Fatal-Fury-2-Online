@@ -26,14 +26,14 @@ public class serverManager {
     public synchronized void connectUser(InetAddress add, serverConnection sc, String username, String pass){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(p == null){
-            sc.send(1,"ERROR:El nombre de usuario no existe.");
+            sc.sendString(1,"ERROR:El nombre de usuario no existe.");
         }
         else if(p.getPassword().equals(pass)) {
             connectedUsers.put(add, sc);
-            sc.send(1,"LOGGED");
+            sc.sendString(1,"LOGGED");
         }
         else {
-            sc.send(1,"ERROR:La contraseña introducirda es incorrecta.");
+            sc.sendString(1,"ERROR:La contraseña introducirda es incorrecta.");
         }
     }
 
@@ -81,8 +81,8 @@ public class serverManager {
         // Mensaje: eresHost?:direcciónRival
         String msg1 = "SEARCH GAME:true:"+p2.getHostAddress();
         String msg2 = "SEARCH GAME:false:"+p1.getHostAddress();
-        boolean okP1 =  connectedUsers.get(p1).reliableSend(2,msg1,500);
-        boolean okP2 =  connectedUsers.get(p2).reliableSend(2,msg2,500);
+        boolean okP1 =  connectedUsers.get(p1).reliableSendString(2,msg1,500);
+        boolean okP2 =  connectedUsers.get(p2).reliableSendString(2,msg2,500);
         return  okP1 && okP2;
     }
 
