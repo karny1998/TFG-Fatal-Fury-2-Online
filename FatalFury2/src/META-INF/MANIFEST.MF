@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
+Class-Path: jarFiles jarFiles/weka.jar jarFiles/mtj.jar
 Main-Class: videojuegos.Principal
 

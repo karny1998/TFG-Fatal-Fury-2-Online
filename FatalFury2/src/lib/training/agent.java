@@ -326,7 +326,7 @@ public class agent{
         int n = stateCalculator.getnActions(), s = st.getStateNum();
         if(useRegression && regression != null) {
             for (int i = 1; allZeros && i < n; ++i) {
-                allZeros = qTable[s][i] == 0;
+                allZeros = qTable[s][i] == 0.0;
             }
             if (allZeros) {
                 double max = evalueWithRegression(st,0);
@@ -577,6 +577,9 @@ public class agent{
             reward += (values.get(i)*model[i]);
         }
         reward += model[model.length-1];
+        if(reward > 200.0){
+            reward = 200.0;
+        }
         return reward;
     }
 

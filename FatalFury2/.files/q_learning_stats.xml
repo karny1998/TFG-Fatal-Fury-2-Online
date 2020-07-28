@@ -1,3 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <history>
+    <fights>
+        <fight>
+            <accumulatedReward>-386</accumulatedReward>
+            <currentRound>1</currentRound>
+            <id>0</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
+            <rounds>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>0</id>
+                    <player_remaining_life>52</player_remaining_life>
+                    <realized_hits>32</realized_hits>
+                    <received_hits>6</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>80</remaining_time>
+                    <result>2</result>
+                    <successful_hits>6</successful_hits>
+                </round>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>1</id>
+                    <player_remaining_life>47</player_remaining_life>
+                    <realized_hits>148</realized_hits>
+                    <received_hits>5</received_hits>
+                    <remaining_life>35</remaining_life>
+                    <remaining_time>0</remaining_time>
+                    <result>2</result>
+                    <successful_hits>7</successful_hits>
+                </round>
+            </rounds>
+        </fight>
+    </fights>
 </history>
