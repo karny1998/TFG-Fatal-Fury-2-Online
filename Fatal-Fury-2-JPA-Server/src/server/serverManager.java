@@ -1,7 +1,13 @@
 package server;
 
 import database.databaseManager;
+import database.models.Login;
+import database.models.Message;
 import database.models.Player;
+import lib.utils.converter;
+import lib.utils.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.sendableObjectsList;
+import lib.utils.sendableObjects.simpleObjects.message;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -12,8 +18,9 @@ import java.util.Map;
 public class serverManager {
     private static databaseManager dbm;
     private Map<InetAddress, serverConnection> connectedUsers = new HashMap<>();
+    private Map<String, serverConnection> loggedUsers = new HashMap<>();
     private List<InetAddress> searchingGameUsers = new ArrayList<>();
-    private boolean shutingDown = false;
+    private boolean shuttingDown = false;
 
     public serverManager(databaseManager dbm){
         this.dbm = dbm;
@@ -23,17 +30,23 @@ public class serverManager {
         connectedUsers.put(add, sc);
     }
 
-    public synchronized void connectUser(InetAddress add, serverConnection sc, String username, String pass){
+    public synchronized boolean connectUser(InetAddress add, serverConnection sc, String username, String pass){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(p == null){
-            sc.sendString(1,"ERROR:El nombre de usuario no existe.");
+            sc.sendString(msgID.toServer.request,"ERROR:El nombre de usuario no existe.");
+            return false;
         }
         else if(p.getPassword().equals(pass)) {
             connectedUsers.put(add, sc);
-            sc.sendString(1,"LOGGED");
+            Login l = new Login(p);
+            dbm.save(l);
+            loggedUsers.put(username, sc);
+            sc.sendString(msgID.toServer.request,"LOGGED");
+            return  true;
         }
         else {
-            sc.sendString(1,"ERROR:La contraseña introducirda es incorrecta.");
+            sc.sendString(msgID.toServer.request,"ERROR:La contraseña introducirda es incorrecta.");
+            return false;
         }
     }
 
@@ -81,8 +94,8 @@ public class serverManager {
         // Mensaje: eresHost?:direcciónRival
         String msg1 = "SEARCH GAME:true:"+p2.getHostAddress();
         String msg2 = "SEARCH GAME:false:"+p1.getHostAddress();
-        boolean okP1 =  connectedUsers.get(p1).reliableSendString(2,msg1,500);
-        boolean okP2 =  connectedUsers.get(p2).reliableSendString(2,msg2,500);
+        boolean okP1 =  connectedUsers.get(p1).reliableSendString(msgID.toServer.tramits,msg1,500);
+        boolean okP2 =  connectedUsers.get(p2).reliableSendString(msgID.toServer.tramits,msg2,500);
         return  okP1 && okP2;
     }
 
@@ -230,5 +243,27 @@ public class serverManager {
 
     public synchronized void stopSearchingGame(InetAddress player){
         searchingGameUsers.remove(player);
+    }
+
+    public String sendMessage(String transmitter, String receiver, String msg){
+        Player p1 = (Player) dbm.findByKey(Player.class, transmitter);
+        if (p1 == null){
+            return "ERROR:El jugador emisor no existe.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, receiver);
+        if (p2 == null){
+            return "ERROR:El jugador receptor no existe.";
+        }
+        Message m = new Message(p1, p2, msg);
+        dbm.save(m);
+        if(loggedUsers.containsKey(receiver)){
+            loggedUsers.get(receiver).sendString(msgID.toServer.notification,"MESSAGE:"+transmitter+":"+msg);
+        }
+        return "MESSAGE SENT";
+    }
+
+    public sendableObjectsList messageBetweenUsersHistorial(String user1, String user2){
+        ArrayList<sendableObject> list = converter.convertMessageList(dbm.getUserMessages(user1,user2));
+        return new sendableObjectsList(list);
     }
 }

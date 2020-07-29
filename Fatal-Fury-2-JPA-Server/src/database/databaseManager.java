@@ -1,5 +1,6 @@
 package database;
 
+import database.models.Message;
 import database.models.Player;
 
 import javax.persistence.*;
@@ -7,9 +8,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 public class databaseManager {
     EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("FatalFuryPersistence");
@@ -40,6 +41,15 @@ public class databaseManager {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<Message> getUserMessages(String user1, String user2){
+        String sql = "SELECT * FROM message m WHERE ((m.receiver LIKE '" + user1 + "' OR m.transmitter LIKE '" + user1 + "')" +
+                " AND (m.receiver LIKE '" + user2 + "' OR m.transmitter LIKE '" + user2 + "')) ORDER BY m.id ASC;";
+        Query q = em.createNativeQuery(sql, Message.class);
+        List<Message> list = q.getResultList();
+        if(list == null){return new ArrayList<>();}
+        return list;
     }
 
     public Player findPlayerByEmail(String email){

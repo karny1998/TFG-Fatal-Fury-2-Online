@@ -2,6 +2,7 @@ import database.databaseManager;
 import database.models.Game;
 import database.models.Player;
 import database.models.RankedGame;
+import server.msgID;
 import server.requestManager;
 import server.serverConnection;
 import server.serverManager;
@@ -19,6 +20,8 @@ public class Main {
     private static ServerSocket serverSocket;
     private static commander com;
     private static Map<InetAddress, clientHandler> threads = new HashMap<>();
+    private static Map<String, clientHandler> threadsByUser = new HashMap<>();
+    private static Map<String, clientHandler> threadsBySession = new HashMap<>();
     private static boolean  shutdown = false;
 
     public static void main(String[] args) {
@@ -36,7 +39,6 @@ public class Main {
                     threads.get(newUser).setCon(con);
                 }
                 else {
-                    //manager.connectUser(newUser,con);
                     clientHandler c = new clientHandler(con, newUser);
                     threads.put(newUser, c);
                     c.start();
@@ -55,15 +57,15 @@ public class Main {
         private InetAddress client;
         private boolean stop = false;
         private final Thread thread;
-        private int requestId = 1, tramitsId = -1;
         private requestManager rqM;
+        private boolean logged = false;
 
         public clientHandler(serverConnection con, InetAddress client) {
             System.out.println("Conectado con el usuario: " + client.getHostAddress());
             this.thread = new Thread(this);
             this.con = con;
             this.client = client;
-            rqM = new requestManager(requestId,manager,con,client);
+            rqM = new requestManager(manager,con,client);
         }
 
         @Override
@@ -72,6 +74,17 @@ public class Main {
         }
 
         public synchronized void doStop() {
+            threads.remove(client);
+            threadsByUser.remove(rqM.getUserLogged());
+            con.close();
+            this.stop = true;
+        }
+
+        public synchronized void doStop(String msg) {
+            threads.remove(client);
+            threadsByUser.remove(rqM.getUserLogged());
+            con.sendString(msgID.toServer.tramits,msg);
+            con.close();
             this.stop = true;
         }
 
@@ -83,8 +96,8 @@ public class Main {
         public void run(){
             while(keepRunning()) {
                 if(con.isConnected()) {
-                    String tramits = con.receiveString(tramitsId);
-                    String request = con.receiveString(requestId);
+                    String tramits = con.receiveString(msgID.toServer.tramits);
+                    String request = con.receiveString(msgID.toServer.request);
                     if (tramits.equals("DISCONNECT")) {
                         threads.remove(client);
                         manager.desconnectUser(client);
@@ -92,6 +105,19 @@ public class Main {
                         doStop();
                     } else {
                         rqM.manageRequest(request);
+                        if(!logged && rqM.isLogged()){
+                            logged = true;
+                            if(threadsByUser.containsKey(rqM.getUserLogged())){
+                                rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
+                                rqM.setCon(con);
+                                threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
+                            }
+                            threadsByUser.put(rqM.getUserLogged(),this);
+                        }
+                        else if(logged && !rqM.isLogged()){
+                            logged = false;
+                            threadsByUser.put(rqM.getUserLogged(),this);
+                        }
                     }
                 }
                 else{
@@ -105,7 +131,45 @@ public class Main {
         }
 
         public void setCon(serverConnection con) {
+            this.con.close();
+            this.rqM.setCon(con);
             this.con = con;
+        }
+
+        public InetAddress getClient() {
+            return client;
+        }
+
+        public void setClient(InetAddress client) {
+            this.client = client;
+        }
+
+        public boolean isStop() {
+            return stop;
+        }
+
+        public void setStop(boolean stop) {
+            this.stop = stop;
+        }
+
+        public Thread getThread() {
+            return thread;
+        }
+
+        public requestManager getRqM() {
+            return rqM;
+        }
+
+        public void setRqM(requestManager rqM) {
+            this.rqM = rqM;
+        }
+
+        public boolean isLogged() {
+            return logged;
+        }
+
+        public void setLogged(boolean logged) {
+            this.logged = logged;
         }
     }
 

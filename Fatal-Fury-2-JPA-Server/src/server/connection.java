@@ -1,7 +1,7 @@
 package server;
 
-import server.sendableObjects.sendableObject;
 import lib.utils.packet;
+import lib.utils.sendableObjects.sendableObject;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -195,7 +195,7 @@ public class connection {
                     p = new packet(id, false, (String)msg);
                 }
                 else {
-                    //p = new packet(id, false, (sendableObject)msg);
+                    p = new packet(id, false, (sendableObject)msg);
                 }
                 out.writeObject(p);
             }catch (Exception e){e.printStackTrace();}
@@ -342,8 +342,8 @@ public class connection {
                 try {
                     sm.acquire();
                     if(received.isObject()){
-                        //pendingObjects.put(received.getId(), received.getObject());
-                        //System.out.println("Se recibe: " + received.getObject().toString());
+                        pendingObjects.put(received.getId(), received.getObject());
+                        System.out.println("Se recibe: " + received.getObject().toString());
                     }
                     else {
                         pendingMsgs.put(received.getId(), received.getMessage());
@@ -391,7 +391,7 @@ public class connection {
                             p = new packet(0, true, (String)msg);
                         }
                         else{
-                            //p = new packet(0, true, (sendableObject)msg);
+                            p = new packet(0, true, (sendableObject)msg);
                         }
                         out.writeObject(p);
                     }catch (Exception e){e.printStackTrace();}

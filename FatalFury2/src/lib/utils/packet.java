@@ -1,6 +1,6 @@
 package lib.utils;
 
-import lib.objects.networking.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.sendableObject;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ public class packet implements Serializable {
     private boolean reliable;
     private boolean isObject;
     private String message = null;
-    //private sendableObject object = null;
+    private sendableObject object = null;
 
     public packet(int id, boolean reliable, String message) {
         this.id = id;
@@ -18,12 +18,12 @@ public class packet implements Serializable {
         this.isObject = false;
     }
 
-    /*public packet(int id, boolean reliable, sendableObject object) {
+    public packet(int id, boolean reliable, sendableObject object) {
         this.id = id;
         this.reliable = reliable;
         this.object = object;
         this.isObject = true;
-    }*/
+    }
 
     public int getId() {
         return id;
@@ -57,7 +57,7 @@ public class packet implements Serializable {
         this.message = message;
     }
 
-    /*public sendableObject getObject() {
+    public sendableObject getObject() {
         return object;
     }
 
@@ -74,5 +74,5 @@ public class packet implements Serializable {
                 ", message='" + message + '\'' +
                 ", object=" + object +
                 '}';
-    }*/
+    }
 }

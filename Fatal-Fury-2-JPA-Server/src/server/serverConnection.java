@@ -1,6 +1,6 @@
 package server;
 
-import server.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.sendableObject;
 import lib.utils.packet;
 
 import java.io.*;
@@ -46,7 +46,7 @@ public class serverConnection{
                 p = new packet(id, false, (String)msg);
             }
             else{
-                //p = new packet(id, false, (sendableObject)msg);
+                p = new packet(id, false, (sendableObject)msg);
             }
             out.writeObject(p);
         }catch (Exception e){e.printStackTrace();}
@@ -69,7 +69,7 @@ public class serverConnection{
                     p = new packet(id, true, (String)msg);
                 }
                 else {
-                    //p = new packet(id, true, (sendableObject)msg);
+                    p = new packet(id, true, (sendableObject)msg);
                 }
                 out.writeObject(p);
             }catch (Exception e){e.printStackTrace();}
@@ -147,12 +147,16 @@ public class serverConnection{
                 sendAck(received.getId());
             }
             if(received.isObject()){
-                //serverPendingObjects.put(received.getId(), received.getObject());
+                serverPendingObjects.put(received.getId(), received.getObject());
             }
             else {
                 serverPendingMessages.put(received.getId(), received.getMessage());
             }
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            this.close();
+            rec.doStop();
+            /*e.printStackTrace();*/
+        }
     }
 
     public boolean isConnected(){return socket.isConnected();}
@@ -215,10 +219,10 @@ public class serverConnection{
         public void run(){
             while(keepRunning()) {
                 con.receive();
-                /*if(con.isConnected()){
+                if(!con.isConnected()){
                     doStop();
                     con.close();
-                }*/
+                }
             }
         }
     }

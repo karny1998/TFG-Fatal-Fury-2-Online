@@ -6,17 +6,14 @@ import lib.maps.scenary;
 import lib.objects.*;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
-import lib.sound.menu_audio;
-import lib.training.state;
-import lib.training.stateCalculator;
+import lib.utils.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.sendableObjectsList;
+import lib.utils.sendableObjects.simpleObjects.message;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
 import java.util.Map;
 
 /**
@@ -82,23 +79,7 @@ public class online_mode {
     private int serverPort = 5555, /**
      * The Con to client port.
      */
-    conToClientPort = 5556,
-    /**
-     * The Request id.
-     */
-    requestID = 1, /**
-     * The Tramits id.
-     */
-    tramitsID = -1, /**
-     * The Tramits clients id.
-     */
-    tramitsClientsID = -2, /**
-     * The Character msgs id.
-     */
-    characterMsgsID = 2, /**
-     * The Fight msgs id.
-     */
-    fightMsgsID = 3;
+    conToClientPort = 5556;
 
     /**
      * Instantiates a new Online mode.
@@ -143,12 +124,12 @@ public class online_mode {
         if (itsMe) {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, true);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, false);
-            enemy.setMenssageIdentifier(characterMsgsID);
+            enemy.setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, false);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, true);
-            enemy.setMenssageIdentifier(characterMsgsID);
+            enemy.setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -156,7 +137,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, fightMsgsID, -2);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, msgID.toClient.fight, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -204,12 +185,12 @@ public class online_mode {
         if (isHost) {
             player = new online_user_controller(pC, 1, conToClient, true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
-            enemy.setMenssageIdentifier(characterMsgsID);
+            enemy.setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(pC, 1, conToClient, false);
             enemy = new online_user_controller(pE, 2, conToClient, true);
-            enemy.setMenssageIdentifier(characterMsgsID);
+            enemy.setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -217,7 +198,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(sce);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, isHost, fightMsgsID, -2);
+        fight = new online_fight_controller(player, enemy, scene, conToClient, isHost, msgID.toClient.fight, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -254,7 +235,7 @@ public class online_mode {
         String command = "";
         boolean fight = false;
         while(!fight) {
-            System.out.print("Command (LOGIN, REGISTER, FIGHT, ADD FRIEND, ACCEPT FRIEND, REJECT FRIEND): ");
+            System.out.print("Command (LOGIN, REGISTER, FIGHT, ADD FRIEND, ACCEPT FRIEND, REJECT FRIEND, SEND MESSAGE, MESSAGES WITH): ");
             String cm = "";
             try {
                 cm = in.readLine();
@@ -262,7 +243,7 @@ public class online_mode {
                 e.printStackTrace();
             }
             if(cm.equals("exit")){
-                conToServer.sendString(tramitsID,"DISCONNECT");
+                conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
                 conToServer.close();
                 System.exit(0);
             }
@@ -274,9 +255,9 @@ public class online_mode {
                     username = in.readLine();
                     System.out.print("Password: ");
                     password = in.readLine();
-                    conToServer.sendString(requestID,"LOGIN:"+username+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"LOGIN:"+username+":"+password);
                     Thread.sleep(2000);
-                    String res = conToServer.receiveString(requestID);
+                    String res = conToServer.receiveString(msgID.toServer.request);
                     if(res.equals("LOGGED")){
                         System.out.println("Te has logeado");
                     }
@@ -296,9 +277,9 @@ public class online_mode {
                     password = in.readLine();
                     System.out.print("Email: ");
                     email = in.readLine();
-                    conToServer.sendString(requestID,"REGISTER:"+username+":"+email+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"REGISTER:"+username+":"+email+":"+password);
                     Thread.sleep(2000);
-                    String res = conToServer.receiveString(requestID);
+                    String res = conToServer.receiveString(msgID.toServer.request);
                     if(res.equals("REGISTERED")){
                         System.out.println("Te has registrado");
                     }
@@ -314,52 +295,75 @@ public class online_mode {
             else if(cm.equals("ADD FRIEND")){
                 String username = "";
                 String password = "";
-                String email = "";
                 try {
                     System.out.print("Username: ");
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.sendString(requestID,"SEND FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"SEND FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
             else if(cm.equals("ACCEPT FRIEND")){
                 String username = "";
                 String password = "";
-                String email = "";
                 try {
                     System.out.print("Username: ");
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.sendString(requestID,"ACCEPT FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"ACCEPT FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
             else if(cm.equals("REJECT FRIEND")){
                 String username = "";
                 String password = "";
-                String email = "";
                 try {
                     System.out.print("Username: ");
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.sendString(requestID,"REJECT FRIEND REQUEST:"+username+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"REJECT FRIEND REQUEST:"+username+":"+password);
                 }catch (Exception e){e.printStackTrace();};
 
             }
             else if(cm.equals("REMOVE FRIEND")){
                 String username = "";
                 String password = "";
-                String email = "";
                 try {
                     System.out.print("Username: ");
                     username = in.readLine();
                     System.out.print("Friend: ");
                     password = in.readLine();
-                    conToServer.sendString(requestID,"REMOVE FRIEND:"+username+":"+password);
+                    conToServer.sendString(msgID.toServer.request,"REMOVE FRIEND:"+username+":"+password);
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("SEND MESSAGE")){
+                String username = "";
+                String password = "";
+                try {
+                    System.out.print("Receptor: ");
+                    username = in.readLine();
+                    System.out.print("Message: ");
+                    password = in.readLine();
+                    conToServer.sendString(msgID.toServer.request,"SEND MESSAGE:"+username+":"+password);
+                }catch (Exception e){e.printStackTrace();};
+
+            }
+            else if(cm.equals("MESSAGES WITH")){
+                String username = "";
+                try {
+                    System.out.print("Receptor: ");
+                    username = in.readLine();
+                    conToServer.sendString(msgID.toServer.request,"MESSAGE HISTORIAL:"+username);
+                    Thread.sleep(2000);
+                    sendableObjectsList m = (sendableObjectsList) conToServer.receiveObject(msgID.toServer.request);
+                    for(sendableObject msg : m.getMsgs()){
+                        message ms = (message)msg;
+                        System.out.println(ms.getDate() + ": " + ms.getContent());
+                    }
                 }catch (Exception e){e.printStackTrace();};
 
             }
@@ -379,11 +383,10 @@ public class online_mode {
      */
     public void online_game(Map<Item_Type, screenObject> screenObjects){
         if(onlineState != GameState.ONLINE_FIGHT && onlineState != GameState.ONLINE_SEARCHING_FIGHT) {commander();}
-
         if(controlListener.menuInput(1, controlListener.ESC_INDEX)
             || controlListener.menuInput(2, controlListener.ESC_INDEX)){
             if(conToClient != null){conToClient.close();}
-            conToServer.sendString(-1, "DISCONNECT");
+            conToServer.sendString(msgID.toServer.tramits, "DISCONNECT");
             System.exit(0);
         }
         if(debug){
@@ -440,6 +443,75 @@ public class online_mode {
                         onlineState = GameState.ONLINE_SEARCHING_FIGHT;
                     }
                     break;
+            }
+        }
+    }
+
+    /**
+     * The type Receiver.
+     */
+    protected class tramitter extends Thread{
+        /**
+         * The Con.
+         */
+        private connection con;
+        /**
+         * The Stop.
+         */
+        private boolean stop = false;
+        /**
+         * The Thread.
+         */
+        private final Thread thread;
+
+        /**
+         * Instantiates a new Receiver.
+         *
+         * @param con the con
+         */
+        public tramitter(connection con) {
+            this.thread = new Thread(this);
+            this.con = con;
+        }
+
+        /**
+         * Start.
+         */
+        @Override
+        public void start(){
+            this.thread.start();
+        }
+
+        /**
+         * Do stop.
+         */
+        public synchronized void doStop() {
+            this.stop = true;
+        }
+
+        /**
+         * Keep running boolean.
+         *
+         * @return the boolean
+         */
+        private synchronized boolean keepRunning() {
+            return this.stop == false;
+        }
+
+        /**
+         * Run.
+         */
+        @Override
+        public void run(){
+            while(keepRunning()) {
+                String msg = con.receiveString(msgID.toServer.notification);
+                if(msg.contains("SESSION CLOSED")){
+                    System.out.println("Se cierra la sesión por la siguiente razón: " + msg.split(":")[1]);
+                    System.exit(0);
+                }
+                else if(msg.contains("MESSAGE")){
+                    System.out.println("Nuevo mensaje de " + msg.split(":")[1]);
+                }
             }
         }
     }
