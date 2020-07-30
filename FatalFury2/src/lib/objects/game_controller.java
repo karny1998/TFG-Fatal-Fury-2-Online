@@ -31,6 +31,7 @@ import static lib.Enums.Item_Type.SCORE_FRAME;
  */
 // Clase que representa un controlador principal del juego que se encarga de gestionarlo
 public class game_controller {
+    Screen screen;
     /**
      * The Ran.
      */
@@ -124,7 +125,7 @@ public class game_controller {
      * The State.
      */
 // Estado del juego, inicalmente en opening
-    private GameState state = GameState.ONLINE_MODE;
+    private GameState state = GameState.NAVIGATION;
     /**
      * The Ranking.
      */
@@ -216,49 +217,22 @@ public class game_controller {
     /**
      * The Online.
      */
-    private online_mode online = new online_mode(false);
+    private online_mode online;// = new online_mode(false);
 
     /**
      * Instantiates a new Game controller.
      */
 // Constructor del game controller por defecto, se inicializan variables
-    public game_controller() {
+    public game_controller(Screen screen) {
+        this.screen = screen;
         this.sure = menu_generator.generate_sure();
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
-        this.gameMenu = basicMenu.getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
+        this.gameMenu = basicMenu.getSelectionables().get(Selectionable.LOCAL).getMen().getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
         this.actualMenu = principal;
         this.difficulty = menu_generator.generate_story_difficulty();
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
-    }
-
-    /**
-     * Instantiates a new Game controller.
-     *
-     * @param principal the principal
-     */
-// Constructor con menu principal
-    public game_controller(menu principal) {
-        this.sure = menu_generator.generate_sure();
-        this.principal = principal;
-        this.actualMenu = principal;
-        this.escapeMenu = menu_generator.generate_scape();
-        this.difficulty = menu_generator.generate_story_difficulty();
-    }
-
-    /**
-     * Instantiates a new Game controller.
-     *
-     * @param fight     the fight
-     * @param principal the principal
-     */
-// Constructor con controlador de pelea y menu principal
-    public game_controller(fight_controller fight, menu principal) {
-        this.fight = fight;
-        this.principal = principal;
-        this.actualMenu = principal;
-        this.escapeMenu = menu_generator.generate_scape();
     }
 
     /**
@@ -519,6 +493,10 @@ public class game_controller {
                         // Cambio a la pantalla de como jugar
                         case GAME_HOW:
                             state = GameState.HOW_TO_PLAY;
+                            break;
+                        case ONLINE:
+                            state = GameState.ONLINE_MODE;
+                            online = new online_mode(screen,false);
                             break;
                     }
                 }

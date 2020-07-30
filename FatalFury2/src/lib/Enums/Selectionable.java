@@ -108,5 +108,7 @@ public enum Selectionable {
     /**
      * No selectionable.
      */
-    NO
+    NO,
+    ONLINE,
+    LOCAL
 }

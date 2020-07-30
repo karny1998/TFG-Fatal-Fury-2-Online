@@ -35,11 +35,47 @@ public class menu_generator {
         a.setSoundType(fight_audio.voice_indexes.Win);
         selectionable sel = new selectionable(Selectionable.START,a);
 
-        sel.setMen(principal());
+        sel.setMen(mode());
 
         Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
         aux.put(Selectionable.START,sel);
         men.setSelectionables(aux);
+        return men;
+    }
+
+    private static menu mode(){
+        menu men = new menu();
+        men.setOrden(new Selectionable[]{Selectionable.ONLINE, Selectionable.LOCAL});
+        Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
+        String path = "/assets/sprites/menu/";
+
+        animation a = new animation();
+        a.setHasEnd(false);
+        screenObject s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "mode_online.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "mode_online.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        selectionable sel = new selectionable(Selectionable.ONLINE,a);
+        aux.put(Selectionable.ONLINE,sel);
+
+        a = new animation();
+        a.setHasEnd(false);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "mode_local.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.0,0,0);
+        s = new screenObject(0, 0,  1280, 720, new ImageIcon(menu_generator.class.getResource(path  + "mode_local.png")).getImage(), Item_Type.MENU);
+        a.addFrame(s,500.00,0,0);
+        a.setHasSound(false);
+        a.setSoundType(fight_audio.voice_indexes.Win);
+
+        sel = new selectionable(Selectionable.LOCAL,a);
+        sel.setMen(principal());
+        aux.put(Selectionable.LOCAL,sel);
+
+        men.setSelectionables(aux);
+
         return men;
     }
 

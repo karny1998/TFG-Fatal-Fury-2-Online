@@ -40,6 +40,10 @@ public class Game implements Serializable {
     private Integer winnerPoints;
     @Column(name = "loserPoints")
     private Integer loserPoints;
+    @Column(name = "character1")
+    private String character1;
+    @Column(name = "character2")
+    private String character2;
 
     /**
      * Instantiates a new Game.
@@ -53,12 +57,14 @@ public class Game implements Serializable {
      * @param player2 the player 2
      * @param result  the result
      */
-    public Game(Player player1, Player player2, int result){
+    public Game(Player player1, Player player2, String character1, String character2, int result){
         this.player1 = player1;
         this.player2 = player2;
         this.date = LocalDateTime.now();
         this.result = result;
         this.ranked = false;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -69,13 +75,15 @@ public class Game implements Serializable {
      * @param result     the result
      * @param tournament the tournament
      */
-    public Game(Player player1, Player player2, int result, Tournament tournament){
+    public Game(Player player1, Player player2, String character1, String character2, int result, Tournament tournament){
         this.player1 = player1;
         this.player2 = player2;
         this.date = LocalDateTime.now();
         this.result = result;
         this.ranked = false;
         this.tournament = tournament;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -87,7 +95,7 @@ public class Game implements Serializable {
      * @param winnerPoints the winner points
      * @param loserPoints  the loser points
      */
-    public Game(Player player1, Player player2, int result, int winnerPoints, int loserPoints){
+    public Game(Player player1, Player player2, String character1, String character2, int result, int winnerPoints, int loserPoints){
         this.player1 = player1;
         this.player2 = player2;
         this.date = LocalDateTime.now();
@@ -95,6 +103,8 @@ public class Game implements Serializable {
         this.ranked = true;
         this.winnerPoints = winnerPoints;
         this.loserPoints = loserPoints;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -105,12 +115,14 @@ public class Game implements Serializable {
      * @param date    the date
      * @param result  the result
      */
-    public Game(Player player1, Player player2, LocalDateTime date, int result){
+    public Game(Player player1, Player player2, String character1, String character2, LocalDateTime date, int result){
         this.player1 = player1;
         this.player2 = player2;
         this.date = date;
         this.result = result;
         this.ranked = false;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -122,13 +134,15 @@ public class Game implements Serializable {
      * @param result     the result
      * @param tournament the tournament
      */
-    public Game(Player player1, Player player2, LocalDateTime date, int result, Tournament tournament){
+    public Game(Player player1, Player player2, String character1, String character2, LocalDateTime date, int result, Tournament tournament){
         this.player1 = player1;
         this.player2 = player2;
         this.date = date;
         this.result = result;
         this.ranked = false;
         this.tournament = tournament;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -141,7 +155,7 @@ public class Game implements Serializable {
      * @param winnerPoints the winner points
      * @param loserPoints  the loser points
      */
-    public Game(Player player1, Player player2, LocalDateTime date, int result, int winnerPoints, int loserPoints){
+    public Game(Player player1, Player player2, String character1, String character2, LocalDateTime date, int result, int winnerPoints, int loserPoints){
         this.player1 = player1;
         this.player2 = player2;
         this.date = date;
@@ -149,6 +163,8 @@ public class Game implements Serializable {
         this.ranked = true;
         this.winnerPoints = winnerPoints;
         this.loserPoints = loserPoints;
+        this.character1 = character1;
+        this.character2 = character2;
     }
 
     /**
@@ -295,12 +311,38 @@ public class Game implements Serializable {
         this.id = id;
     }
 
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    public String getCharacter1() {
+        return character1;
+    }
+
+    public void setCharacter1(String character1) {
+        this.character1 = character1;
+    }
+
+    public String getCharacter2() {
+        return character2;
+    }
+
+    public void setCharacter2(String character2) {
+        this.character2 = character2;
+    }
+
     @Override
     public String toString() {
         return "Game{" +
                 "id=" + id +
                 ", player1=" + player1.getUsername() +
                 ", player2=" + player2.getUsername() +
+                ", character1=" + character1 +
+                ", character1=" + character2 +
                 ", date=" + date +
                 ", result=" + result +
                 ", tournament=" + tournament.getId() +

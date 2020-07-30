@@ -49,7 +49,20 @@ public class requestManager {
             }
         }
         else if (request.equals("SEARCH GAME")) {
-            manager.searchGame(client);
+            if(userLogged != null) {
+                manager.searchGame(userLogged, false);
+            }
+            else{
+                con.sendString(msgID.toServer.request,"E:No estás logeado en ninguna cuenta");
+            }
+        }
+        else if (request.equals("SEARCH RANKED GAME")) {
+            if(userLogged != null) {
+                manager.searchGame(userLogged, true);
+            }
+            else{
+                con.sendString(msgID.toServer.request,"E:No estás logeado en ninguna cuenta");
+            }
         }
         else if(request.contains("SEND FRIEND REQUEST")){
             String aux[] = request.split(":");

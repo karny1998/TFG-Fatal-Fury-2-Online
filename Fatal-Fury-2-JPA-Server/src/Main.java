@@ -83,7 +83,7 @@ public class Main {
         public synchronized void doStop(String msg) {
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
-            con.sendString(msgID.toServer.tramits,msg);
+            con.sendString(msgID.toServer.notification,msg);
             con.close();
             this.stop = true;
         }
@@ -100,7 +100,7 @@ public class Main {
                     String request = con.receiveString(msgID.toServer.request);
                     if (tramits.equals("DISCONNECT")) {
                         threads.remove(client);
-                        manager.desconnectUser(client);
+                        manager.desconnectUser(rqM.getUserLogged());
                         con.close();
                         doStop();
                     } else {

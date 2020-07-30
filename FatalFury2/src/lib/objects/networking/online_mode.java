@@ -23,7 +23,7 @@ public class online_mode {
     /**
      * The Online state.
      */
-    private GameState onlineState = GameState.ONLINE_MODE;
+    private GameState onlineState = GameState.LOGIN;//GameState.ONLINE_MODE;
     /**
      * The Fight.
      */
@@ -81,12 +81,15 @@ public class online_mode {
      */
     conToClientPort = 5556;
 
+    private online_mode_gui gui;
+
     /**
      * Instantiates a new Online mode.
      *
      * @param debug the debug
      */
-    public online_mode(boolean debug) {
+    public online_mode(Screen screen, boolean debug) {
+        this.gui = new online_mode_gui(screen, onlineState);
         this.debug = debug;
         if(debug) {
             /*String ip;
@@ -382,7 +385,10 @@ public class online_mode {
      * @param screenObjects the screen objects
      */
     public void online_game(Map<Item_Type, screenObject> screenObjects){
-        if(onlineState != GameState.ONLINE_FIGHT && onlineState != GameState.ONLINE_SEARCHING_FIGHT) {commander();}
+        if(onlineState != GameState.ONLINE_FIGHT && onlineState != GameState.ONLINE_SEARCHING_FIGHT) {
+            //commander();
+            gui.drawGUI();
+        }
         if(controlListener.menuInput(1, controlListener.ESC_INDEX)
             || controlListener.menuInput(2, controlListener.ESC_INDEX)){
             if(conToClient != null){conToClient.close();}
@@ -410,6 +416,9 @@ public class online_mode {
         }
         else {
             switch (onlineState) {
+                case LOGIN_REGISTER:
+                    gui.drawGUI();
+                    break;
                 case ONLINE_FIGHT:
                     fight.getAnimation(screenObjects);
                     if (fight.getEnd()) {
@@ -436,12 +445,7 @@ public class online_mode {
                     }
                     break;
                 default:
-                    boolean ok = conToServer.reliableSendString(1, "SEARCH GAME", 500);
-                    System.out.println("El servidor ha recibido la request: " + ok);
-                    if (ok) {
-                        System.out.println("Se pasa a buscando partida");
-                        onlineState = GameState.ONLINE_SEARCHING_FIGHT;
-                    }
+                    gui.drawGUI();
                     break;
             }
         }

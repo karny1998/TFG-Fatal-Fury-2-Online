@@ -86,6 +86,7 @@ public enum GameState {
      * Sure game state.
      */
     SURE,
+    // ESTADOS ESPECIALES PARA EL MODO ONLINE
     /**
      * Online fight game state.
      */
@@ -97,5 +98,8 @@ public enum GameState {
     /**
      * Online searching fight game state.
      */
-    ONLINE_SEARCHING_FIGHT
+    ONLINE_SEARCHING_FIGHT,
+    LOGIN_REGISTER,
+    REGISTER,
+    LOGIN
 }

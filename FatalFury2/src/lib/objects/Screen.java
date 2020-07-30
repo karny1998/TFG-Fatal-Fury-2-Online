@@ -3,11 +3,15 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.debug.Debug;
+import lib.utils.Pair;
+import videojuegos.Principal;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +23,7 @@ import static lib.Enums.Item_Type.*;
  */
 // Clase que se encarga de mostrar todo por pantalla
 public class Screen extends JPanel{
+    Principal principal;
     /**
      * The constant resX.
      */
@@ -61,7 +66,9 @@ public class Screen extends JPanel{
      * The List int.
      */
 // Lista de los timpos de Item_types que pertecen a la interfaz
-    java.util.List<Item_Type> listInt;
+    List<Item_Type> listInt;
+
+    private boolean showingGUI = false;
     /**
      * The Order.
      */
@@ -77,7 +84,8 @@ public class Screen extends JPanel{
             Item_Type.HPBAR1, Item_Type.HPBAR2, Item_Type.NAME1, Item_Type.NAME2,
             Item_Type.INDICATOR1, Item_Type.INDICATOR2,
             Item_Type.BUBBLE1, Item_Type.BUBBLE2, Item_Type.BUBBLE3, Item_Type.BUBBLE4,
-            Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME};
+            Item_Type.P1_SELECT, Item_Type.P2_SELECT, Item_Type.P1_MUG, Item_Type.P2_MUG, Item_Type.P1_NAME, Item_Type.P2_NAME,
+            Item_Type.BACKGROUND};
 
     /**
      * Start game.
@@ -108,16 +116,19 @@ public class Screen extends JPanel{
      * Instantiates a new Screen.
      */
 // Inicia todo
-    public Screen() {
+    public Screen(Principal principal) {
+        this.principal = principal;
         setSurfaceSize();
         // Controlador del juego
-        game = new game_controller();
+        game = new game_controller(this);
 
         // Timer encargado del refresco de la pantalla
         Timer screen_refresh = new Timer(refreshDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                repaint();
+                if(!showingGUI) {
+                    repaint();
+                }
             }
         });
         screen_refresh.start();
@@ -127,6 +138,7 @@ public class Screen extends JPanel{
         Item_Type interfacee[] = {HPBAR1, HPBAR2, NAME1, NAME2, INDICATOR1, INDICATOR2, BUBBLE1,
                 BUBBLE2, BUBBLE3, BUBBLE4, TIMER1, TIMER2, TIMERFRAME,};
         listInt = Arrays.asList(interfacee);
+        this.setLayout(null);
     }
 
     /**
@@ -191,7 +203,6 @@ public class Screen extends JPanel{
         else {
             game.writeDirecly(g2d, 0);
         }
-
     }
 
     /**
@@ -201,8 +212,33 @@ public class Screen extends JPanel{
      */
     @Override
     public void paintComponent(Graphics g) {
+        if(showingGUI)System.out.println("Ssssssssssss");
         super.paintComponent(g);
         d.drawFPS(g);
         doDrawing(g);
+    }
+
+    public Map<Item_Type, screenObject> getScreenObjects() {
+        return screenObjects;
+    }
+
+    public void setScreenObjects(Map<Item_Type, screenObject> screenObjects) {
+        this.screenObjects = screenObjects;
+    }
+
+    public boolean isShowingGUI() {
+        return showingGUI;
+    }
+
+    public void setShowingGUI(boolean showingGUI) {
+        this.showingGUI = showingGUI;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
     }
 }

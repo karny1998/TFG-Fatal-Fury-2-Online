@@ -2,6 +2,7 @@ package videojuegos;
 
 import lib.input.controlListener;
 import lib.objects.Screen;
+import lib.objects.networking.pruebaGUI;
 import lib.sound.audio_manager;
 import lib.utils.ScreenOptions;
 import lib.utils.crashReport;
@@ -17,11 +18,15 @@ import java.io.IOException;
  * The type Principal.
  */
 public class Principal extends JFrame {
+    CardLayout cardLayout;
+    JPanel mainPanel,game, gui;
 
     /**
      * Instantiates a new Principal.
      */
     public Principal() {
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
         this.setIconImage(Toolkit.getDefaultToolkit().getImage("/assets/sprites/menu/story/are_you_sure1.png"));
         // TODO -> MOSTRAR OPENING
 
@@ -123,7 +128,11 @@ public class Principal extends JFrame {
      * Init ui.
      */
     private void initUI() {
-        add(new Screen());
+        gui = new pruebaGUI(this);
+        game = new Screen(this);
+        mainPanel.add(game, "game");
+        mainPanel.add(gui, "gui");
+        add(mainPanel);
         pack();
         setTitle("Fatal Fury 2");
         ScreenOptions.init(this);
@@ -146,5 +155,13 @@ public class Principal extends JFrame {
                 ex.setVisible(true);
             }
         });
+    }
+
+    public void gameOn(){
+        cardLayout.show(mainPanel, "game");
+    }
+
+    public void guiOn(){
+        cardLayout.show(mainPanel, "gui");
     }
 }
