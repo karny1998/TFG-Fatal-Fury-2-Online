@@ -14,9 +14,13 @@ import java.util.Arrays;
 
 import static lib.Enums.Item_Type.*;
 
-public class pruebaGUI extends JPanel {
-    Principal principal;
-    static int resX = 1280, resY = 720;
+public class gameGUI extends JPanel {
+    private Image background1 = new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/base_2.png")).getImage(),
+        background2 = new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/base.png")).getImage();
+    private Principal principal;
+    private static int resX = 1280, resY = 720, back = 1;
+    private boolean fullscreen = false;
+    private double multiplier = 1.0;
     private Font f;
     {
         try {
@@ -28,11 +32,11 @@ public class pruebaGUI extends JPanel {
         }
     }
 
-    public pruebaGUI(Principal principal) {
+    public gameGUI(Principal principal) {
         this.principal = principal;
         setSurfaceSize();
         this.setLayout(null);
-        JButton login = new JButton("Login");
+        /*JButton login = new JButton("Login");
         login.setFont(f);
         login.setForeground(Color.YELLOW);
         login.setBackground(new Color(33,32,57));
@@ -44,7 +48,7 @@ public class pruebaGUI extends JPanel {
         username.setBackground(new Color(33,32,57));
         username.setBounds(660,560, 250,60);
         this.add(login);
-        this.add(username);
+        this.add(username);*/
     }
 
     private void setSurfaceSize() {
@@ -57,7 +61,42 @@ public class pruebaGUI extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("Ssssssssssss");
-        g.drawImage(new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/base_2.png")).getImage(),0,0, null);
+        if(back == 1) {
+            g.drawImage(background1,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
+        }
+        else{
+            g.drawImage(background2,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
+        }
+    }
+
+    public static int getBack() {
+        return back;
+    }
+
+    public static void setBack(int back) {
+        gameGUI.back = back;
+    }
+
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
+        if(true){
+            Dimension d = principal.getGame().getSize();
+            multiplier = (double)d.getHeight()/(double)resY;
+        }
+        else{
+            multiplier = 1.0;
+        }
+    }
+
+    public double getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(double multiplier) {
+        this.multiplier = multiplier;
     }
 }

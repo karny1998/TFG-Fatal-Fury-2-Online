@@ -3,6 +3,7 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.debug.Debug;
+import lib.objects.networking.gameGUI;
 import lib.utils.Pair;
 import videojuegos.Principal;
 
@@ -67,8 +68,6 @@ public class Screen extends JPanel{
      */
 // Lista de los timpos de Item_types que pertecen a la interfaz
     List<Item_Type> listInt;
-
-    private boolean showingGUI = false;
     /**
      * The Order.
      */
@@ -126,9 +125,7 @@ public class Screen extends JPanel{
         Timer screen_refresh = new Timer(refreshDelay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!showingGUI) {
-                    repaint();
-                }
+                repaint();
             }
         });
         screen_refresh.start();
@@ -180,6 +177,7 @@ public class Screen extends JPanel{
                 g2d.translate(0, -offset);
             }
         }
+        ((gameGUI)principal.getGui()).setMultiplier((double)d.width/(double)resX);
         // Se escala la pantalla
         g2d.scale((double)d.width/(double)resX,(double)d.height/(double)resY);
         // Se pintan por pantalla todos los screenObjects en el orden indicado
@@ -212,7 +210,6 @@ public class Screen extends JPanel{
      */
     @Override
     public void paintComponent(Graphics g) {
-        if(showingGUI)System.out.println("Ssssssssssss");
         super.paintComponent(g);
         d.drawFPS(g);
         doDrawing(g);
@@ -224,14 +221,6 @@ public class Screen extends JPanel{
 
     public void setScreenObjects(Map<Item_Type, screenObject> screenObjects) {
         this.screenObjects = screenObjects;
-    }
-
-    public boolean isShowingGUI() {
-        return showingGUI;
-    }
-
-    public void setShowingGUI(boolean showingGUI) {
-        this.showingGUI = showingGUI;
     }
 
     public Principal getPrincipal() {

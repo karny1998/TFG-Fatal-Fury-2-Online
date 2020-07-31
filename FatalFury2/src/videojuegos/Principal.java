@@ -2,7 +2,7 @@ package videojuegos;
 
 import lib.input.controlListener;
 import lib.objects.Screen;
-import lib.objects.networking.pruebaGUI;
+import lib.objects.networking.gameGUI;
 import lib.sound.audio_manager;
 import lib.utils.ScreenOptions;
 import lib.utils.crashReport;
@@ -128,7 +128,7 @@ public class Principal extends JFrame {
      * Init ui.
      */
     private void initUI() {
-        gui = new pruebaGUI(this);
+        gui = new gameGUI(this);
         game = new Screen(this);
         mainPanel.add(game, "game");
         mainPanel.add(gui, "gui");
@@ -137,8 +137,6 @@ public class Principal extends JFrame {
         setTitle("Fatal Fury 2");
         ScreenOptions.init(this);
         ScreenOptions.update();
-
-
     }
 
     /**
@@ -163,5 +161,21 @@ public class Principal extends JFrame {
 
     public void guiOn(){
         cardLayout.show(mainPanel, "gui");
+    }
+
+    public JPanel getGame() {
+        return game;
+    }
+
+    public void setGame(JPanel game) {
+        this.game = game;
+    }
+
+    public JPanel getGui() {
+        return gui;
+    }
+
+    public void setGui(JPanel gui) {
+        this.gui = gui;
     }
 }

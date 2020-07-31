@@ -35,7 +35,7 @@ public class menu_generator {
         a.setSoundType(fight_audio.voice_indexes.Win);
         selectionable sel = new selectionable(Selectionable.START,a);
 
-        sel.setMen(mode());
+        sel.setMen(principal());
 
         Map<Selectionable, selectionable> aux =  new HashMap<Selectionable, selectionable>();
         aux.put(Selectionable.START,sel);
@@ -71,7 +71,7 @@ public class menu_generator {
         a.setSoundType(fight_audio.voice_indexes.Win);
 
         sel = new selectionable(Selectionable.LOCAL,a);
-        sel.setMen(principal());
+        sel.setMen(game());
         aux.put(Selectionable.LOCAL,sel);
 
         men.setSelectionables(aux);
@@ -100,7 +100,7 @@ public class menu_generator {
         a.setSoundType(fight_audio.voice_indexes.Win);
 
         selectionable sel = new selectionable(Selectionable.PRINCIPAL_GAME,a);
-        sel.setMen(game());
+        sel.setMen(mode());
         aux.put(Selectionable.PRINCIPAL_GAME,sel);
 
         a = new animation();

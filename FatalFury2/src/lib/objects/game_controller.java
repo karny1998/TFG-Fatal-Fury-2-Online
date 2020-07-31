@@ -228,7 +228,7 @@ public class game_controller {
         this.sure = menu_generator.generate_sure();
         this.principal = menu_generator.generate();
         this.basicMenu = principal.getSelectionables().get(Selectionable.START).getMen();
-        this.gameMenu = basicMenu.getSelectionables().get(Selectionable.LOCAL).getMen().getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
+        this.gameMenu = basicMenu.getSelectionables().get(Selectionable.PRINCIPAL_GAME).getMen();
         this.actualMenu = principal;
         this.difficulty = menu_generator.generate_story_difficulty();
         this.escapeMenu = menu_generator.generate_scape();

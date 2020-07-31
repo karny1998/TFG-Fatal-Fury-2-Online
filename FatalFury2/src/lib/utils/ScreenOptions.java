@@ -1,5 +1,8 @@
 package lib.utils;
 
+import lib.objects.networking.gameGUI;
+import videojuegos.Principal;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,6 +17,7 @@ public class ScreenOptions {
      * The constant screen.
      */
     private static JFrame screen;
+    private static boolean fullscreen = false;
 
     /**
      * Init.
@@ -34,12 +38,16 @@ public class ScreenOptions {
             screen.dispose();
             screen.setUndecorated(true);
             screen.setExtendedState(screen.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            fullscreen = true;
+            ((gameGUI)(((Principal)screen).getGui())).setFullscreen(true);
         }else {
             screen.dispose();
             screen.setUndecorated(false);
             Dimension d = new Dimension(1280,720);
             screen.setSize(d);
             screen.setExtendedState(screen.getExtendedState() & ~JFrame.MAXIMIZED_BOTH);
+            fullscreen = false;
+            ((gameGUI)(((Principal)screen).getGui())).setFullscreen(false);
         }
 
 
@@ -50,5 +58,13 @@ public class ScreenOptions {
         screen.setFocusable(true);
         screen.setLocationRelativeTo(null);
 
+    }
+
+    public static boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public static void setFullscreen(boolean fullscreen) {
+        ScreenOptions.fullscreen = fullscreen;
     }
 }
