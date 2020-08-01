@@ -23,7 +23,7 @@ public class online_mode {
     /**
      * The Online state.
      */
-    private GameState onlineState = GameState.LOGIN_REGISTER;//GameState.ONLINE_MODE;
+    private GameState onlineState = GameState.PRINCIPAL_GUI;//GameState.ONLINE_MODE;
     /**
      * The Fight.
      */

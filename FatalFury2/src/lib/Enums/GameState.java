@@ -101,5 +101,6 @@ public enum GameState {
     ONLINE_SEARCHING_FIGHT,
     LOGIN_REGISTER,
     REGISTER,
-    LOGIN
+    LOGIN,
+    PRINCIPAL_GUI
 }
