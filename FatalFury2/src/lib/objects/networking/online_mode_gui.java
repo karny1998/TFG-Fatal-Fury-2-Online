@@ -285,7 +285,7 @@ public class online_mode_gui {
             JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
 
             JLabel table = new JLabel(new ImageIcon(getClass().getResource("/assets/sprites/menu/tablon_register.png")));
-            table.setBounds(res(346),0,res(788),res(720));
+            table.setBounds(res(246),0,res(788),res(720));
 
             guiItems items[] = {guiItems.REGISTER_BUTTON, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
                     guiItems.PASSWORD_TEXT, guiItems.PASSWORD_2, guiItems.PASSWORD_2_TEXT, guiItems.EMAIL, guiItems.EMAIL_TEXT,
@@ -407,7 +407,7 @@ public class online_mode_gui {
             return rows[row][column];
         }
         public boolean isCellEditable(int row, int column) {
-            return true;
+            return false;
         }
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
