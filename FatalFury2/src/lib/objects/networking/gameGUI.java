@@ -15,8 +15,8 @@ import java.util.Arrays;
 import static lib.Enums.Item_Type.*;
 
 public class gameGUI extends JPanel {
-    private Image background1 = new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/base_2.png")).getImage(),
-        background2 = new ImageIcon(menu_generator.class.getResource("/assets/sprites/menu/base.png")).getImage();
+    private Image background1 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_2.png")).getImage(),
+        background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage();
     private Principal principal;
     private static int resX = 1280, resY = 720, back = 1;
     private boolean fullscreen = false;
@@ -36,19 +36,6 @@ public class gameGUI extends JPanel {
         this.principal = principal;
         setSurfaceSize();
         this.setLayout(null);
-        /*JButton login = new JButton("Login");
-        login.setFont(f);
-        login.setForeground(Color.YELLOW);
-        login.setBackground(new Color(33,32,57));
-        login.setBounds(370,560, 250,60);
-        JTextField username = new JTextField("Username");
-        username.setEditable(true);
-        username.setFont(f);
-        username.setForeground(Color.YELLOW);
-        username.setBackground(new Color(33,32,57));
-        username.setBounds(660,560, 250,60);
-        this.add(login);
-        this.add(username);*/
     }
 
     private void setSurfaceSize() {
