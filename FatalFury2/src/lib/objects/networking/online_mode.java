@@ -71,7 +71,7 @@ public class online_mode {
     /**
      * The Server ip.
      */
-    private String serverIp = "fatalfury2.sytes.net";
+    private String serverIp = "127.0.0.1";//"fatalfury2.sytes.net";
 
     /**
      * The Server port.

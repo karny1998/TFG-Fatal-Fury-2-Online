@@ -3,10 +3,12 @@ package lib.objects.networking;
 import lib.Enums.GameState;
 import lib.Enums.guiItems;
 import lib.objects.Screen;
+import lib.utils.sendableObjects.simpleObjects.message;
 import videojuegos.Principal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -19,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ import java.util.concurrent.Semaphore;
 public class online_mode_gui {
     private Map<guiItems,Component> componentsOnScreen = new HashMap<>();
     private List<guiItems> itemsOnScreen = new ArrayList<>();
+    private List<message> friendMessages;
     private GameState onlineState = GameState.LOGIN_REGISTER;
     private gameGUI gui;
     private Principal principal;
@@ -88,18 +92,35 @@ public class online_mode_gui {
             default:
                 break;
         }
-        //screen.revalidate();
     }
 
     private int res(int x){
         return (int)(((double)(x*m))+0.5);
     }
 
-    private void addComponents(guiItems items[], Component components[]){
+    public void addComponents(guiItems items[], Component components[]){
         for(int i = 0; i < items.length; ++i){
             gui.add(components[i]);
             componentsOnScreen.put(items[i], components[i]);
             itemsOnScreen.add(items[i]);
+        }
+    }
+
+    public void enableComponents(guiItems items[], boolean enable){
+        for(int i = 0; i < items.length; ++i){
+            if(componentsOnScreen.containsKey(items[i])){
+                componentsOnScreen.get(items[i]).setEnabled(enable);
+            }
+        }
+    }
+
+    public void deleteComponents(guiItems items[]){
+        for(int i = 0; i < items.length; ++i){
+            if(componentsOnScreen.containsKey(items[i])){
+                gui.remove(componentsOnScreen.get(items[i]));
+                componentsOnScreen.remove(items[i]);
+                itemsOnScreen.remove(items[i]);
+            }
         }
     }
 
@@ -111,7 +132,7 @@ public class online_mode_gui {
         itemsOnScreen.clear();
     }
 
-    private void reloadGUI(){
+    public void reloadGUI(){
         for(int i = 0; i < itemsOnScreen.size();++i){
             gui.remove(componentsOnScreen.get(itemsOnScreen.get(i)));
         }
@@ -190,22 +211,43 @@ public class online_mode_gui {
         reloadGUI();
     }
 
-    public void popUpWithConfirmation(String msg){
-        JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 370, 220, 540, 280, false, false);
-        popup.setBorder(javax.swing.BorderFactory.createLineBorder(brown,5));
+    public void popUpWithConfirmation(String msg, guiItems yes, guiItems no){
+        JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
 
-        JButton yes = generateSimpleButton("Yes", guiItems.YES_BUTTON, f, Color.YELLOW, grey2, 486, 420, 120, 60);
-        JButton no = generateSimpleButton("No", guiItems.NOT_BUTTON, f, Color.YELLOW, grey2, 666, 420, 120, 60);
+        JButton popupB1 = generateSimpleButton("Yes", yes, f, Color.YELLOW, grey2, 420, 420, 200, 60);
+        JButton popupB2 = generateSimpleButton("No", no, f, Color.YELLOW, grey2, 660, 420, 200, 60);
 
-        gui.add(yes);
-        componentsOnScreen.put(guiItems.YES_BUTTON, yes);
-        itemsOnScreen.add(0,guiItems.YES_BUTTON);
-        gui.add(no);
-        componentsOnScreen.put(guiItems.NOT_BUTTON, no);
-        itemsOnScreen.add(1,guiItems.NOT_BUTTON);
-        gui.add(popup);
-        componentsOnScreen.put(guiItems.POP_UP, popup);
-        itemsOnScreen.add(2,guiItems.POP_UP);
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/pop_up.png"));
+        }catch (Exception e){e.printStackTrace();}
+        Image scaled = img.getScaledInstance(res(540), res(280), Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(scaled);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(370),res(220),res(540),res(280));
+
+        guiItems items[] = {guiItems.POP_UP, yes, no, guiItems.POP_UP_TABLE};
+        Component components[] = {popup, popupB1, popupB2, table};
+
+        guiItems items2[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items2[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items2, false);
+
+        addComponents(items, components);
+
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+
+        itemsOnScreen.add(0,guiItems.POP_UP_TABLE);
+        itemsOnScreen.add(0,guiItems.POP_UP);
+        itemsOnScreen.add(0,yes);
+        itemsOnScreen.add(0,no);
+
         reloadGUI();
     }
 
@@ -214,7 +256,7 @@ public class online_mode_gui {
             clearGui();
             JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 370, 560, 250, 60);
 
-            JButton register = generateSimpleButton("Sign in", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 660, 560, 250, 60);
+            JButton register = generateSimpleButton("Sign up", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 660, 560, 250, 60);
 
             guiItems items[] = {guiItems.LOGIN_BUTTON, guiItems.REGISTER_BUTTON, guiItems.BACK};
             Component components[] = {login, register, backButton()};
@@ -327,7 +369,13 @@ public class online_mode_gui {
 
             JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
 
-            JLabel table = new JLabel(new ImageIcon(getClass().getResource("/assets/sprites/menu/tablon_register.png")));
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/tablon_register.png"));
+            }catch (Exception e){e.printStackTrace();}
+            Image scaled = img.getScaledInstance(res(788), res(720), Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaled);
+            JLabel table = new JLabel(icon);
             table.setBounds(res(246),0,res(788),res(720));
 
             guiItems items[] = {guiItems.REGISTER_BUTTON, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
@@ -358,10 +406,11 @@ public class online_mode_gui {
             JButton tournaments = generateSimpleButton("Tournament mode", guiItems.TOURNAMENT_BUTTON, f, Color.YELLOW, grey1, 308, 520, 400, 65);
             JButton profile = generateSimpleButton("Profile", guiItems.PROFILE_BUTTON, f, Color.YELLOW, grey1, 308, 595, 200, 65);
             JButton exit = generateSimpleButton("Quit", guiItems.QUIT_BUTTON, f, Color.YELLOW, grey1, 508, 595, 200, 65);
+            JButton back = backButton();
 
             guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.PROFILE_BUTTON,
-                    guiItems.QUIT_BUTTON};
-            Component components[] = {normal, ranked, tournaments, profile, exit};
+                    guiItems.QUIT_BUTTON, guiItems.BACK};
+            Component components[] = {normal, ranked, tournaments, profile, exit, back};
 
             addComponents(items, components);
 
@@ -423,6 +472,7 @@ public class online_mode_gui {
                         UIManager.getColor("ScrollBar.thumbDarkShadow"), UIManager.getColor("ScrollBar.thumbHighlight"));
             }*/
         });
+        scrollPane.setBorder(new LineBorder(Color.BLACK, 0));
 
         JButton addFriend = generateSimpleButton("Add friend", guiItems.ADD_FRIEND, f, Color.YELLOW, grey1, 1030, 630, 250, 60);
 
@@ -577,20 +627,67 @@ public class online_mode_gui {
     }
 
     public void addFriend(){
-        JTextField popup = generateSimpleTextField("Introduce the username:", f, Color.YELLOW, grey2, 370, 220, 540, 280, false, false);
-        popup.setBorder(javax.swing.BorderFactory.createLineBorder(brown,5));
-        popup.setHorizontalAlignment(JTextField.CENTER);
+        JTextField popup = generateSimpleTextField("Introduce the username:", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
 
-        JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 370, 220, 300, 60, false, false);
+        JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
 
-        JButton popupB = generateSimpleButton("Okey", guiItems.POP_UP_BUTTON, f, Color.YELLOW, grey2, 580, 420, 120, 60);
+        JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60);
+        JButton popupB2 = generateSimpleButton("Cancel", guiItems.CALCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60);
 
-        gui.add(popupB);
-        componentsOnScreen.put(guiItems.POP_UP_BUTTON, popupB);
-        itemsOnScreen.add(0,guiItems.POP_UP_BUTTON);
-        gui.add(popup);
-        componentsOnScreen.put(guiItems.POP_UP, popup);
-        itemsOnScreen.add(1,guiItems.POP_UP);
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/pop_up.png"));
+        }catch (Exception e){e.printStackTrace();}
+        Image scaled = img.getScaledInstance(res(540), res(280), Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(scaled);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(370),res(220),res(540),res(280));
+
+        guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+        Component components[] = {popup, name, popupB1, popupB2, table};
+
+        addComponents(items, components);
+
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+
+        itemsOnScreen.add(0,guiItems.POP_UP_TABLE);
+        itemsOnScreen.add(0,guiItems.POP_UP);
+        itemsOnScreen.add(0,guiItems.INTRODUCE_NAME);
+        itemsOnScreen.add(0,guiItems.CONFIRM_ADD_BUTTON);
+        itemsOnScreen.add(0,guiItems.CALCEL_ADD_BUTTON);
+
+        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON};
+        enableComponents(items, false);
+
+        reloadGUI();
+    }
+
+    void chat(String friend){
+        new chat_gui(this,friendMessages, friend);
+    }
+
+    public void closeFriendInteractionPopUp(){
+        deleteComponents(new guiItems[]{guiItems.INVITE_FRIEND, guiItems.MESSAGE_FRIEND, guiItems.PROFILE_FRIEND, guiItems.DELETE_FRIEND});
+        reloadGUI();
+    }
+
+    public void closeChat(){
+        deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER});
+        enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON}, true);
+        reloadGUI();
+    }
+
+    public void closePopUpWithConfirmation(guiItems yes, guiItems no){
+        deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, yes, no});
+        guiItems items[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items, true);
         reloadGUI();
     }
 
@@ -736,5 +833,21 @@ public class online_mode_gui {
 
     public void setyTableClick(int yTableClick) {
         this.yTableClick = yTableClick;
+    }
+
+    public List<message> getFriendMessages() {
+        return friendMessages;
+    }
+
+    public void setFriendMessages(List<message> friendMessages) {
+        this.friendMessages = friendMessages;
+    }
+
+    public Color getGrey4() {
+        return grey4;
+    }
+
+    public void setGrey4(Color grey4) {
+        this.grey4 = grey4;
     }
 }

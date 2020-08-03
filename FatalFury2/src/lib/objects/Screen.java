@@ -230,4 +230,12 @@ public class Screen extends JPanel{
     public void setPrincipal(Principal principal) {
         this.principal = principal;
     }
+
+    public game_controller getGame() {
+        return game;
+    }
+
+    public void setGame(game_controller game) {
+        this.game = game;
+    }
 }

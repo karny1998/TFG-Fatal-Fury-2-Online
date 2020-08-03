@@ -1,0 +1,189 @@
+package lib.objects.networking;
+
+import lib.Enums.guiItems;
+import lib.utils.sendableObjects.simpleObjects.message;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class chat_gui {
+    private online_mode_gui gui;
+    private List<message> msgs;
+    private String friend;
+    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
+            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
+    private Font f,f2,f3;
+
+    public chat_gui(online_mode_gui gui, List<message> msgs, String friend){
+        this.gui = gui;
+        this.msgs = msgs;
+        this.friend = friend;
+        this.f = gui.getF();
+        this.f2 = gui.getF2();
+        this.f3 = gui.getF3();
+
+        for(int i = 0; i < msgs.size();++i){
+            message aux = msgs.get(i);
+            if(aux.getContent().length() > 30){
+                msgs.add(i+1,new message(aux.getId(),aux.getTransmitter(),aux.getReceiver(),aux.getContent().substring(30,aux.getContent().length())));
+                aux.setContent(aux.getContent().substring(0,30));
+            }
+        }
+
+        chat();
+    }
+
+    private int res(int x){
+        return (int)(((double)(x*gui.getM()))+0.5);
+    }
+
+    private void chat(){
+
+        JTable table;
+        JScrollPane scrollPane;
+        TableCellRenderer tableRenderer;
+        table = new JTable(new ChatTextsTableModel());
+        table.setBounds(res(530),230,res(600),res(400));
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setRowHeight(res(40));
+        table.setOpaque(true);
+        table.setFillsViewportHeight(true);
+        table.setBackground(grey1);
+        table.setRowSelectionAllowed(false);
+        table.setShowGrid(false);
+
+        table.addComponentListener(new ComponentAdapter() {
+                                       public void componentResized(ComponentEvent e) {
+                                           table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+                                       }});
+
+        JTableHeader header = table.getTableHeader();
+        header.setOpaque(true);
+        header.setBackground(grey2);
+        header.setDefaultRenderer(new HeaderChatRenderer());
+        header.setPreferredSize(new Dimension(res(500), res(60)));
+        header.setReorderingAllowed(false);
+
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(res(500));
+
+        tableRenderer = table.getDefaultRenderer(JTextField.class);
+        table.setDefaultRenderer(JTextField.class, new ChatTableRenderer(tableRenderer));
+
+        scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBounds(res(530),230,res(500),res(400));
+        scrollPane.setBackground(grey1);
+        scrollPane.getVerticalScrollBar().setBackground(grey3);
+        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = Color.YELLOW;
+            }
+        });
+        scrollPane.setBorder(new LineBorder(Color.black, 0));
+
+        JButton send = gui.generateSimpleButton("Send", guiItems.SEND_MESSAGE, f2, Color.YELLOW, grey1, 930, 630, 100, 60);
+
+        JTextField writer = gui.generateSimpleTextField("", f2, Color.YELLOW, grey1, 530, 630, 400, 60, true, false);
+
+        guiItems items[] = {guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER};
+        Component components[] = {scrollPane, send,writer};
+
+        gui.addComponents(items, components);
+
+        gui.getItemsOnScreen().remove(guiItems.CHAT);
+        gui.getItemsOnScreen().add(0,guiItems.CHAT);
+
+        gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON,
+                guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
+                guiItems.BACK}, false);
+        gui.reloadGUI();
+    }
+
+    //https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
+    public class HeaderChatRenderer extends JLabel implements TableCellRenderer {
+        public HeaderChatRenderer() {
+            setFont(f3);
+            setForeground(Color.YELLOW);
+            setBorder(new LineBorder(grey3, 5));
+            setHorizontalAlignment(JTextField.CENTER);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+            setText(value.toString());
+            return this;
+        }
+
+    }
+
+    class ChatTableRenderer implements TableCellRenderer {
+        private TableCellRenderer defaultRenderer;
+
+        public ChatTableRenderer(TableCellRenderer renderer) {
+            defaultRenderer = renderer;
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if(value instanceof Component) {
+                return (Component) value;
+            }
+            return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    }
+
+    class ChatTextsTableModel extends AbstractTableModel {
+        private Object[][] rows;
+        private String[] columns = {friend};
+
+        public ChatTextsTableModel(){
+            rows = new Object[msgs.size()][1];
+            for(int i = 0; i < msgs.size();++i){
+                JTextField aux;
+                if(msgs.get(i).getTransmitter().equals(friend)) {
+                    aux = gui.generateSimpleTextField(" " + msgs.get(i).getContent(),f2,Color.YELLOW,grey2,0,0,482,40,false,true);
+                }
+                else{
+                    aux = gui.generateSimpleTextField(msgs.get(i).getContent() + "  ",f2,Color.YELLOW,grey4,0,0,482,40,false,true);
+                    aux.setHorizontalAlignment(JTextField.RIGHT);
+                }
+                rows[i][0] = aux;
+            }
+        }
+
+        public String getColumnName(int column) {
+            return columns[column];
+        }
+        public int getRowCount() {
+            return rows.length;
+        }
+        public int getColumnCount() {
+            return columns.length;
+        }
+        public Object getValueAt(int row, int column) {
+            return rows[row][column];
+        }
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+        public Class getColumnClass(int column) {
+            return getValueAt(0, column).getClass();
+        }
+    }
+}
