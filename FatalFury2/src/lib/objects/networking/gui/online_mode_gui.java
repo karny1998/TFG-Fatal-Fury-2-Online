@@ -1,34 +1,23 @@
-package lib.objects.networking;
+package lib.objects.networking.gui;
 
 import lib.Enums.GameState;
-import lib.Enums.guiItems;
 import lib.objects.Screen;
 import lib.utils.sendableObjects.simpleObjects.message;
+import lib.utils.sendableObjects.simpleObjects.profile;
 import videojuegos.Principal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.plaf.metal.MetalScrollBarUI;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 public class online_mode_gui {
     private Map<guiItems,Component> componentsOnScreen = new HashMap<>();
@@ -40,9 +29,11 @@ public class online_mode_gui {
     private double m = 1.0;
     private List<String> friends;
     private int friendSelected = -1;
-    private int xYableClick = 0, yTableClick = 0;
+    private int xTableClick = 0, yTableClick = 0;
+    private profile profileToShow;
     private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
             grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
+    private profile_gui profile;
     private Font f,f2,f3;
     {
         try {
@@ -89,12 +80,15 @@ public class online_mode_gui {
             case PRINCIPAL_GUI:
                 principalGUI();
                 break;
+            case PROFILE_GUI:
+                profileGUI();
+                break;
             default:
                 break;
         }
     }
 
-    private int res(int x){
+    public int res(int x){
         return (int)(((double)(x*m))+0.5);
     }
 
@@ -110,6 +104,11 @@ public class online_mode_gui {
         for(int i = 0; i < items.length; ++i){
             if(componentsOnScreen.containsKey(items[i])){
                 componentsOnScreen.get(items[i]).setEnabled(enable);
+                if(items[i] == guiItems.FRIEND_LIST || items[i] == guiItems.HISTORIAL){
+                    JScrollPane scroll = (JScrollPane) componentsOnScreen.get(items[i]);
+                    scroll.getVerticalScrollBar().setEnabled(enable);
+                    scroll.getViewport().getView().setEnabled(enable);
+                }
             }
         }
     }
@@ -125,9 +124,7 @@ public class online_mode_gui {
     }
 
     public void clearGui(){
-        for(int i = 0; i < itemsOnScreen.size();++i){
-            gui.remove(componentsOnScreen.get(itemsOnScreen.get(i)));
-        }
+        gui.removeAll();
         componentsOnScreen.clear();
         itemsOnScreen.clear();
     }
@@ -157,13 +154,17 @@ public class online_mode_gui {
         return back;
     }
 
-    public JButton generateSimpleButton(String text, guiItems id, Font font, Color color, Color back, int x, int y, int w, int h){
+    public JButton generateSimpleButton(String text, guiItems id, Font font, Color color, Color back, int x, int y, int w,
+                                        int h, boolean noMargin){
         JButton aux = new JButton(text);
         aux.addActionListener(new guiListener(this,id));
         aux.setFont(font);
         aux.setForeground(color);
         aux.setBackground(back);
         aux.setBounds(res(x),res(y), res(w),res(h));
+        if(noMargin){
+            aux.setMargin(new Insets(0,0,0,0));
+        }
         return aux;
     }
 
@@ -176,7 +177,12 @@ public class online_mode_gui {
         aux.setEditable(editable);
         aux.setFont(font);
         aux.setForeground(color);
-        aux.setBackground(back);;
+        aux.setBackground(back);
+        if(editable){
+            aux.setBorder(BorderFactory.createCompoundBorder(
+                    aux.getBorder(),
+                    BorderFactory.createEmptyBorder(0, 10, 0, 0)));
+        }
         aux.setBounds(res(x),res(y), res(w),res(h));
         return aux;
     }
@@ -200,7 +206,7 @@ public class online_mode_gui {
         popup.setBorder(javax.swing.BorderFactory.createLineBorder(brown,5));
         popup.setHorizontalAlignment(JTextField.CENTER);
 
-        JButton popupB = generateSimpleButton("Okey", guiItems.POP_UP_BUTTON, f, Color.YELLOW, grey2, 580, 420, 120, 60);
+        JButton popupB = generateSimpleButton("Okey", guiItems.POP_UP_BUTTON, f, Color.YELLOW, grey2, 580, 420, 120, 60, false);
 
         gui.add(popupB);
         componentsOnScreen.put(guiItems.POP_UP_BUTTON, popupB);
@@ -214,8 +220,8 @@ public class online_mode_gui {
     public void popUpWithConfirmation(String msg, guiItems yes, guiItems no){
         JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
 
-        JButton popupB1 = generateSimpleButton("Yes", yes, f, Color.YELLOW, grey2, 420, 420, 200, 60);
-        JButton popupB2 = generateSimpleButton("No", no, f, Color.YELLOW, grey2, 660, 420, 200, 60);
+        JButton popupB1 = generateSimpleButton("Yes", yes, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
+        JButton popupB2 = generateSimpleButton("No", no, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
 
         BufferedImage img = null;
         try {
@@ -254,9 +260,9 @@ public class online_mode_gui {
     public void login_register(){
         if(!componentsOnScreen.containsKey(guiItems.LOGIN_BUTTON)) {
             clearGui();
-            JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 370, 560, 250, 60);
+            JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 370, 560, 250, 60, false);
 
-            JButton register = generateSimpleButton("Sign up", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 660, 560, 250, 60);
+            JButton register = generateSimpleButton("Sign up", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 660, 560, 250, 60, false);
 
             guiItems items[] = {guiItems.LOGIN_BUTTON, guiItems.REGISTER_BUTTON, guiItems.BACK};
             Component components[] = {login, register, backButton()};
@@ -273,7 +279,7 @@ public class online_mode_gui {
         if(!componentsOnScreen.containsKey(guiItems.LOGIN_BUTTON)) {
             clearGui();
 
-            JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 515, 610, 250, 60);
+            JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 515, 610, 250, 60, false);
 
             JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 365, 520, 250, 60, true, false);
 
@@ -299,12 +305,12 @@ public class online_mode_gui {
             addComponents(items, components);
 
             if(show){
-                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 930, 530, 80, 40);
+                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 930, 530, 80, 40, false);
                 showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
                 addComponents(new guiItems[]{guiItems.HIDE}, new Component[]{showPass});
             }
             else{
-                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 930, 530, 80, 40);
+                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 930, 530, 80, 40, false);
                 showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
                 addComponents(new guiItems[]{guiItems.SHOW}, new Component[]{showPass});
             }
@@ -319,17 +325,17 @@ public class online_mode_gui {
         if(!componentsOnScreen.containsKey(guiItems.REGISTER_BUTTON)) {
             clearGui();
             if(show){
-                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40);
+                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
                 showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
                 addComponents(new guiItems[]{guiItems.HIDE}, new Component[]{showPass});
             }
             else{
-                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40);
+                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
                 showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
                 addComponents(new guiItems[]{guiItems.SHOW}, new Component[]{showPass});
             }
 
-            JButton login = generateSimpleButton("Register", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 515, 600, 250, 60);
+            JButton login = generateSimpleButton("Register", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 515, 600, 250, 60, false);
 
             JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 290, 100, 680, 60, true, false);
 
@@ -397,15 +403,15 @@ public class online_mode_gui {
             clearGui();
 
             friends = new ArrayList<>();
-            friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");
+            friends.add("0123456789");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");
 
-            friendList(friends);
+            new friend_list_gui(this,friends);
 
-            JButton normal = generateSimpleButton("Normal mode", guiItems.NORMAL_BUTTON, f, Color.YELLOW, grey1, 308, 375, 400, 65);
-            JButton ranked = generateSimpleButton("Ranked mode", guiItems.RANKED_BUTTON, f, Color.YELLOW, grey1, 308, 450, 400, 65);
-            JButton tournaments = generateSimpleButton("Tournament mode", guiItems.TOURNAMENT_BUTTON, f, Color.YELLOW, grey1, 308, 520, 400, 65);
-            JButton profile = generateSimpleButton("Profile", guiItems.PROFILE_BUTTON, f, Color.YELLOW, grey1, 308, 595, 200, 65);
-            JButton exit = generateSimpleButton("Quit", guiItems.QUIT_BUTTON, f, Color.YELLOW, grey1, 508, 595, 200, 65);
+            JButton normal = generateSimpleButton("Normal mode", guiItems.NORMAL_BUTTON, f, Color.YELLOW, grey1, 308, 375, 400, 65, false);
+            JButton ranked = generateSimpleButton("Ranked mode", guiItems.RANKED_BUTTON, f, Color.YELLOW, grey1, 308, 450, 400, 65, false);
+            JButton tournaments = generateSimpleButton("Tournament mode", guiItems.TOURNAMENT_BUTTON, f, Color.YELLOW, grey1, 308, 520, 400, 65, false);
+            JButton profile = generateSimpleButton("Profile", guiItems.PROFILE_BUTTON, f, Color.YELLOW, grey1, 308, 595, 200, 65, false);
+            JButton exit = generateSimpleButton("Quit", guiItems.QUIT_BUTTON, f, Color.YELLOW, grey1, 508, 595, 200, 65, false);
             JButton back = backButton();
 
             guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.PROFILE_BUTTON,
@@ -420,176 +426,6 @@ public class online_mode_gui {
         }
     }
 
-    private void friendList(List<String>  friends){
-
-        JTable table;
-        JScrollPane scrollPane;
-        TableCellRenderer tableRenderer;
-        table = new JTable(new FriendsButtonsTableModel(friends));
-        table.setBounds(res(1030),0,res(250),res(635));
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowHeight(res(60));
-        table.setOpaque(true);
-        table.setFillsViewportHeight(true);
-        table.setBackground(grey1);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        ListSelectionModel listSelectionModel = table.getSelectionModel();
-        FriendTableSelectionListener friendSelector = new FriendTableSelectionListener();
-        listSelectionModel.addListSelectionListener(friendSelector);
-        table.setSelectionModel(listSelectionModel);
-        table.addMouseListener(friendSelector);
-
-        JTableHeader header = table.getTableHeader();
-        header.setOpaque(true);
-        header.setBackground(grey1);
-        header.setDefaultRenderer(new HeaderFriendListRenderer());
-        header.setPreferredSize(new Dimension(res(250), res(70)));
-        header.setReorderingAllowed(false);
-
-        TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(res(250));
-
-        tableRenderer = table.getDefaultRenderer(JButton.class);
-        table.setDefaultRenderer(JButton.class, new FriendsButtonsTableRenderer(tableRenderer));
-
-        scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(res(1030),0,res(250),res(635));
-        scrollPane.setBackground(grey1);
-        scrollPane.getVerticalScrollBar().setBackground(grey3);
-        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-            @Override
-            protected void configureScrollBarColors() {
-                this.thumbColor = Color.YELLOW;
-            }
-            /*@Override
-            protected JButton createDecreaseButton(int orientation) {
-                return new BasicArrowButton(orientation, grey2, UIManager.getColor("ScrollBar.thumbShadow"),
-                        UIManager.getColor("ScrollBar.thumbDarkShadow"), UIManager.getColor("ScrollBar.thumbHighlight"));
-            }
-            @Override
-            return new BasicArrowButton(orientation, grey2, UIManager.getColor("ScrollBar.thumbShadow"),
-                        UIManager.getColor("ScrollBar.thumbDarkShadow"), UIManager.getColor("ScrollBar.thumbHighlight"));
-            }*/
-        });
-        scrollPane.setBorder(new LineBorder(Color.BLACK, 0));
-
-        JButton addFriend = generateSimpleButton("Add friend", guiItems.ADD_FRIEND, f, Color.YELLOW, grey1, 1030, 630, 250, 60);
-
-        guiItems items[] = {guiItems.ADD_FRIEND, guiItems.FRIEND_LIST};
-        Component components[] = {addFriend, scrollPane};
-
-        addComponents(items, components);
-    }
-
-    class FriendTableSelectionListener extends MouseAdapter implements ListSelectionListener {
-        private boolean clicking = false;
-
-        public void valueChanged(ListSelectionEvent e) {
-            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-            if (lsm.isSelectionEmpty()) {
-                System.out.println("No tienes amigos");
-            } else {
-                int minIndex = lsm.getMinSelectionIndex();
-                int maxIndex = lsm.getMaxSelectionIndex();
-                boolean ended = false;
-                for (int i = minIndex; !ended && i <= maxIndex; i++) {
-                    if (!clicking && lsm.isSelectedIndex(i)) {
-                        clicking = true;
-                        ended = true;
-                    }
-                    else{
-                        friendSelected = i;
-                        clicking = false;
-                        ended = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent me) {
-            xYableClick = (int) (0.5 + me.getX());
-            yTableClick = (int) (0.5 + (me.getYOnScreen()-online_mode_gui.this.componentsOnScreen.get(guiItems.FRIEND_LIST).getLocationOnScreen().getY())/m);
-            new guiListener(online_mode_gui.this,guiItems.FRIEND_SEL_BUTTON).actionPerformed(null);
-        }
-    }
-
-    //https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
-    public class HeaderFriendListRenderer extends JLabel implements TableCellRenderer {
-        public HeaderFriendListRenderer() {
-            setFont(f3);
-            setForeground(Color.YELLOW);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
-            setText(value.toString());
-            return this;
-        }
-
-    }
-
-    //https://www.tutorialspoint.com/how-can-we-add-insert-a-jbutton-to-jtable-cell-in-java
-    class FriendsButtonsTableRenderer implements TableCellRenderer {
-        private TableCellRenderer defaultRenderer;
-
-        public FriendsButtonsTableRenderer(TableCellRenderer renderer) {
-            defaultRenderer = renderer;
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if(value instanceof Component) {
-                Component aux = (Component) value;
-                if(isSelected){
-                    aux.setBackground(grey3);
-                }
-                else{
-                    aux.setBackground(grey2);
-                }
-                return aux;
-            }
-            return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        }
-    }
-
-    class FriendsButtonsTableModel extends AbstractTableModel {
-        private Object[][] rows;
-        private String[] columns = {" Friends"};
-
-        public FriendsButtonsTableModel(List<String> friends){
-            rows = new Object[friends.size()][1];
-            for(int i = 0; i < friends.size();++i){
-                JButton aux = new JButton(friends.get(i));
-                aux.setFont(f);
-                aux.setForeground(Color.YELLOW);
-                aux.setBackground(grey2);
-                aux.addActionListener(new guiListener(online_mode_gui.this,guiItems.FRIEND_SEL_BUTTON));
-                rows[i][0] = aux;
-            }
-        }
-
-        public String getColumnName(int column) {
-            return columns[column];
-        }
-        public int getRowCount() {
-            return rows.length;
-        }
-        public int getColumnCount() {
-            return columns.length;
-        }
-        public Object getValueAt(int row, int column) {
-            return rows[row][column];
-        }
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-        public Class getColumnClass(int column) {
-            return getValueAt(0, column).getClass();
-        }
-    }
-
     public void friendInteractionPopUp(){
         JButton invite, msg, profile, delete;
         int x = 830, y = yTableClick;
@@ -598,10 +434,10 @@ public class online_mode_gui {
             y -= 160;
         }
 
-        invite = generateSimpleButton("Challenge",guiItems.INVITE_FRIEND,f2,Color.YELLOW, grey3, x, y, 200,40);
-        msg = generateSimpleButton("Chat",guiItems.MESSAGE_FRIEND,f2,Color.YELLOW, grey3, x, y+40, 200,40);
-        profile = generateSimpleButton("Profile",guiItems.PROFILE_FRIEND,f2,Color.YELLOW, grey3, x, y+80, 200,40);
-        delete = generateSimpleButton("Delete",guiItems.DELETE_FRIEND,f2,Color.YELLOW, grey3, x, y+120, 200,40);
+        invite = generateSimpleButton("Challenge",guiItems.INVITE_FRIEND,f2,Color.YELLOW, grey3, x, y, 200,40, false);
+        msg = generateSimpleButton("Chat",guiItems.MESSAGE_FRIEND,f2,Color.YELLOW, grey3, x, y+40, 200,40, false);
+        profile = generateSimpleButton("Profile",guiItems.PROFILE_FRIEND,f2,Color.YELLOW, grey3, x, y+80, 200,40, false);
+        delete = generateSimpleButton("Delete",guiItems.DELETE_FRIEND,f2,Color.YELLOW, grey3, x, y+120, 200,40, false);
 
         guiItems items[] = {guiItems.INVITE_FRIEND, guiItems.MESSAGE_FRIEND, guiItems.PROFILE_FRIEND, guiItems.DELETE_FRIEND};
         Component components[] = {invite, msg, profile, delete};
@@ -621,9 +457,18 @@ public class online_mode_gui {
         }
 
         addComponents(items, components);
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
 
-        gui.repaint();
-        gui.revalidate();
+        itemsOnScreen.add(0,guiItems.INVITE_FRIEND);
+        itemsOnScreen.add(0,guiItems.MESSAGE_FRIEND);
+        itemsOnScreen.add(0,guiItems.PROFILE_FRIEND);
+        itemsOnScreen.add(0,guiItems.DELETE_FRIEND);
+
+        enableComponents(new guiItems[]{guiItems.HISTORIAL}, false);
+
+        reloadGUI();
     }
 
     public void addFriend(){
@@ -631,8 +476,8 @@ public class online_mode_gui {
 
         JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
 
-        JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60);
-        JButton popupB2 = generateSimpleButton("Cancel", guiItems.CALCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60);
+        JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
+        JButton popupB2 = generateSimpleButton("Cancel", guiItems.CALCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
 
         BufferedImage img = null;
         try {
@@ -642,6 +487,13 @@ public class online_mode_gui {
         ImageIcon icon = new ImageIcon(scaled);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370),res(220),res(540),res(280));
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent arg0) {
+                guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+                deleteComponents(items);
+                addFriend();
+            }
+        });
 
         guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
         Component components[] = {popup, name, popupB1, popupB2, table};
@@ -658,25 +510,49 @@ public class online_mode_gui {
         itemsOnScreen.add(0,guiItems.CONFIRM_ADD_BUTTON);
         itemsOnScreen.add(0,guiItems.CALCEL_ADD_BUTTON);
 
-        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON};
+        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
+                guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
         enableComponents(items, false);
 
         reloadGUI();
     }
 
-    void chat(String friend){
+    public void chat(String friend){
         new chat_gui(this,friendMessages, friend);
     }
 
+    public void profileGUI(){
+        if(!componentsOnScreen.containsKey(guiItems.PROFILE_NAME)){
+            clearGui();
+            profile = new profile_gui(this, profileToShow);
+            gui.setBack(3);
+            gui.repaint();
+            gui.revalidate();
+        }
+    }
+
+    public void closeAddFriend(){
+        if(componentsOnScreen.containsKey(guiItems.CALCEL_ADD_BUTTON)){
+            guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+            deleteComponents(items);
+        }
+    }
+
     public void closeFriendInteractionPopUp(){
-        deleteComponents(new guiItems[]{guiItems.INVITE_FRIEND, guiItems.MESSAGE_FRIEND, guiItems.PROFILE_FRIEND, guiItems.DELETE_FRIEND});
-        reloadGUI();
+        if(componentsOnScreen.containsKey(guiItems.INVITE_FRIEND)) {
+            deleteComponents(new guiItems[]{guiItems.INVITE_FRIEND, guiItems.MESSAGE_FRIEND, guiItems.PROFILE_FRIEND, guiItems.DELETE_FRIEND});
+            enableComponents(new guiItems[]{guiItems.HISTORIAL}, true);
+            reloadGUI();
+        }
     }
 
     public void closeChat(){
-        deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER});
-        enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON}, true);
-        reloadGUI();
+        if(componentsOnScreen.containsKey(guiItems.CHAT)) {
+            deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER, guiItems.CLOSE_CHAT});
+            enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON,
+                    guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON, guiItems.BACK}, true);
+            reloadGUI();
+        }
     }
 
     public void closePopUpWithConfirmation(guiItems yes, guiItems no){
@@ -819,12 +695,12 @@ public class online_mode_gui {
         this.f3 = f3;
     }
 
-    public int getxYableClick() {
-        return xYableClick;
+    public int getxTableClick() {
+        return xTableClick;
     }
 
-    public void setxYableClick(int xYableClick) {
-        this.xYableClick = xYableClick;
+    public void setxTableClick(int xYableClick) {
+        this.xTableClick = xYableClick;
     }
 
     public int getyTableClick() {
@@ -849,5 +725,21 @@ public class online_mode_gui {
 
     public void setGrey4(Color grey4) {
         this.grey4 = grey4;
+    }
+
+    public profile getProfileToShow() {
+        return profileToShow;
+    }
+
+    public void setProfileToShow(profile profileToShow) {
+        this.profileToShow = profileToShow;
+    }
+
+    public void setProfile(profile_gui profile) {
+        this.profile = profile;
+    }
+
+    public profile_gui getProfile() {
+        return profile;
     }
 }

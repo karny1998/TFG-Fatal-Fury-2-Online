@@ -1,22 +1,15 @@
-package lib.objects.networking;
+package lib.objects.networking.gui;
 
-import lib.Enums.Item_Type;
-import lib.menus.menu_generator;
-import lib.objects.game_controller;
 import videojuegos.Principal;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
-
-import static lib.Enums.Item_Type.*;
 
 public class gameGUI extends JPanel {
     private Image background1 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_2.png")).getImage(),
-        background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage();
+        background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage(),
+            background3 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_simple.png")).getImage();
     private Principal principal;
     private static int resX = 1280, resY = 720, back = 1;
     private boolean fullscreen = false;
@@ -51,8 +44,11 @@ public class gameGUI extends JPanel {
         if(back == 1) {
             g.drawImage(background1,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
         }
-        else{
+        else if(back == 2){
             g.drawImage(background2,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
+        }
+        else{
+            g.drawImage(background3,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
         }
     }
 

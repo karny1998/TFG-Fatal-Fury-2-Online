@@ -3,8 +3,7 @@ package lib.objects;
 import lib.Enums.Item_Type;
 import lib.Enums.Movement;
 import lib.debug.Debug;
-import lib.objects.networking.gameGUI;
-import lib.utils.Pair;
+import lib.objects.networking.gui.gameGUI;
 import videojuegos.Principal;
 
 import javax.swing.*;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

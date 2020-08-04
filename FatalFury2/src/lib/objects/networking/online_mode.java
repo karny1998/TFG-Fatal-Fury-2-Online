@@ -4,6 +4,7 @@ import lib.Enums.*;
 import lib.input.controlListener;
 import lib.maps.scenary;
 import lib.objects.*;
+import lib.objects.networking.gui.online_mode_gui;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.utils.sendableObjects.sendableObject;

@@ -1,12 +1,9 @@
-package lib.objects.networking;
+package lib.objects.networking.gui;
 
-import lib.Enums.guiItems;
 import lib.utils.sendableObjects.simpleObjects.message;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
@@ -15,10 +12,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class chat_gui {
@@ -49,7 +42,7 @@ public class chat_gui {
     }
 
     private int res(int x){
-        return (int)(((double)(x*gui.getM()))+0.5);
+        return gui.res(x);
     }
 
     private void chat(){
@@ -86,7 +79,7 @@ public class chat_gui {
         table.setDefaultRenderer(JTextField.class, new ChatTableRenderer(tableRenderer));
 
         scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(res(530),230,res(500),res(400));
+        scrollPane.setBounds(res(530),res(230),res(500),res(400));
         scrollPane.setBackground(grey1);
         scrollPane.getVerticalScrollBar().setBackground(grey3);
         scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -97,17 +90,25 @@ public class chat_gui {
         });
         scrollPane.setBorder(new LineBorder(Color.black, 0));
 
-        JButton send = gui.generateSimpleButton("Send", guiItems.SEND_MESSAGE, f2, Color.YELLOW, grey1, 930, 630, 100, 60);
+        JButton send = gui.generateSimpleButton("Send", guiItems.SEND_MESSAGE, f2, Color.YELLOW, grey1, 930, 630, 100, 60, false);
 
         JTextField writer = gui.generateSimpleTextField("", f2, Color.YELLOW, grey1, 530, 630, 400, 60, true, false);
 
-        guiItems items[] = {guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER};
-        Component components[] = {scrollPane, send,writer};
+        JButton close = gui.generateSimpleButton("X", guiItems.CLOSE_CHAT, f, Color.YELLOW, grey1, 960, 242, 40, 40, true);
+
+        guiItems items[] = {guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER, guiItems.CLOSE_CHAT};
+        Component components[] = {scrollPane, send,writer, close};
 
         gui.addComponents(items, components);
 
+        gui.getItemsOnScreen().remove(guiItems.MESSAGE_WRITER);
+        gui.getItemsOnScreen().add(0,guiItems.MESSAGE_WRITER);
+        gui.getItemsOnScreen().remove(guiItems.SEND_MESSAGE);
+        gui.getItemsOnScreen().add(0,guiItems.SEND_MESSAGE);
         gui.getItemsOnScreen().remove(guiItems.CHAT);
         gui.getItemsOnScreen().add(0,guiItems.CHAT);
+        gui.getItemsOnScreen().remove(guiItems.CLOSE_CHAT);
+        gui.getItemsOnScreen().add(0,guiItems.CLOSE_CHAT);
 
         gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON,
                 guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
@@ -121,7 +122,7 @@ public class chat_gui {
             setFont(f3);
             setForeground(Color.YELLOW);
             setBorder(new LineBorder(grey3, 5));
-            setHorizontalAlignment(JTextField.CENTER);
+            setHorizontalAlignment(JTextField.LEFT);
         }
 
         @Override

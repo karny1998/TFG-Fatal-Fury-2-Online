@@ -102,5 +102,6 @@ public enum GameState {
     LOGIN_REGISTER,
     REGISTER,
     LOGIN,
-    PRINCIPAL_GUI
+    PRINCIPAL_GUI,
+    PROFILE_GUI
 }

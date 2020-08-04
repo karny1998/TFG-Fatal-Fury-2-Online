@@ -1,6 +1,6 @@
 package lib.utils;
 
-import lib.objects.networking.gameGUI;
+import lib.objects.networking.gui.gameGUI;
 import videojuegos.Principal;
 
 import javax.swing.*;

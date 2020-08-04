@@ -2,10 +2,9 @@ package videojuegos;
 
 import lib.input.controlListener;
 import lib.objects.Screen;
-import lib.objects.networking.gameGUI;
+import lib.objects.networking.gui.gameGUI;
 import lib.sound.audio_manager;
 import lib.utils.ScreenOptions;
-import lib.utils.crashReport;
 import lib.utils.fileUtils;
 
 import javax.swing.*;
