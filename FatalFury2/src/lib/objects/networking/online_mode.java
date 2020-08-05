@@ -24,7 +24,7 @@ public class online_mode {
     /**
      * The Online state.
      */
-    private GameState onlineState = GameState.PRINCIPAL_GUI;//GameState.ONLINE_MODE;
+    private GameState onlineState = GameState.LOGIN_REGISTER;//GameState.ONLINE_MODE;
     /**
      * The Fight.
      */
@@ -72,7 +72,7 @@ public class online_mode {
     /**
      * The Server ip.
      */
-    private String serverIp = "127.0.0.1";//"fatalfury2.sytes.net";
+    private String serverIp = "fatalfury2.sytes.net";//"127.0.0.1";//
 
     /**
      * The Server port.
@@ -84,13 +84,15 @@ public class online_mode {
 
     private online_mode_gui gui;
 
+    private String userLogged = null;
+
     /**
      * Instantiates a new Online mode.
      *
      * @param debug the debug
      */
     public online_mode(Screen screen, boolean debug) {
-        this.gui = new online_mode_gui(screen, onlineState);
+        this.gui = new online_mode_gui(this, screen, onlineState);
         this.debug = debug;
         if(debug) {
             /*String ip;
@@ -645,5 +647,85 @@ public class online_mode {
      */
     public void setConToClient(connection con) {
         this.conToClient = con;
+    }
+
+    public GameState getOnlineState() {
+        return onlineState;
+    }
+
+    public void setOnlineState(GameState onlineState) {
+        this.onlineState = onlineState;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isSearching() {
+        return searching;
+    }
+
+    public void setSearching(boolean searching) {
+        this.searching = searching;
+    }
+
+    public connection getConToServer() {
+        return conToServer;
+    }
+
+    public void setConToServer(connection conToServer) {
+        this.conToServer = conToServer;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    public int getConToClientPort() {
+        return conToClientPort;
+    }
+
+    public void setConToClientPort(int conToClientPort) {
+        this.conToClientPort = conToClientPort;
+    }
+
+    public online_mode_gui getGui() {
+        return gui;
+    }
+
+    public void setGui(online_mode_gui gui) {
+        this.gui = gui;
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public void setIn(BufferedReader in) {
+        this.in = in;
+    }
+
+    public String getUserLogged() {
+        return userLogged;
+    }
+
+    public void setUserLogged(String userLogged) {
+        this.userLogged = userLogged;
     }
 }

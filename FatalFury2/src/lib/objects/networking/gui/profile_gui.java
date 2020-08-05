@@ -38,18 +38,11 @@ public class profile_gui {
         this.f = gui.getF();
         this.f2 = gui.getF2();
         this.f3 = gui.getF3();
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(this.getClass().getResource("/assets/sprites/characters/terry/icon.png"));
-            Image scaled = img.getScaledInstance(res(70), res(70), Image.SCALE_SMOOTH);
-            terry = new ImageIcon(scaled);
-            img = ImageIO.read(this.getClass().getResource("/assets/sprites/characters/andy/icon.png"));
-            scaled = img.getScaledInstance(res(70), res(70), Image.SCALE_SMOOTH);
-            andy = new ImageIcon(scaled);
-            img = ImageIO.read(this.getClass().getResource("/assets/sprites/characters/mai/icon.png"));
-            scaled = img.getScaledInstance(res(70), res(70), Image.SCALE_SMOOTH);
-            mai = new ImageIcon(scaled);
-        }catch (Exception e){e.printStackTrace();}
+
+        terry = gui.loadIcon("/assets/sprites/characters/terry/icon.png",70,70);
+        andy = gui.loadIcon("/assets/sprites/characters/andy/icon.png",70,70);
+        mai = gui.loadIcon("/assets/sprites/characters/mai/icon.png",70,70);
+
         profile();
     }
 
@@ -69,15 +62,6 @@ public class profile_gui {
         normals.setHorizontalAlignment(JTextField.CENTER);
         rankeds.setHorizontalAlignment(JTextField.CENTER);
         JButton back = gui.backButton();
-/*
-        name.setEnabled(false);
-        points.setEnabled(false);
-        normals.setEnabled(false);
-        rankeds.setEnabled(false);
-        name.setDisabledTextColor(Color.YELLOW);
-        points.setDisabledTextColor(Color.YELLOW);
-        normals.setDisabledTextColor(Color.YELLOW);
-        rankeds.setDisabledTextColor(Color.YELLOW);*/
 
         JTable table;
         JScrollPane scrollPane;

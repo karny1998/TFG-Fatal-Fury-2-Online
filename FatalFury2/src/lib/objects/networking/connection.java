@@ -72,7 +72,7 @@ public class connection {
     /**
      * The Sm.
      */
-    protected Semaphore sm = new Semaphore(1);
+    protected Semaphore sm = new Semaphore(1), notificationSM = new Semaphore(1);
 
     /**
      * The Out.
@@ -117,6 +117,7 @@ public class connection {
                 out = new ObjectOutputStream (socketTCP.getOutputStream());
                 in = new ObjectInputStream(socketTCP.getInputStream());
             }
+            notificationSM.acquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -343,6 +344,9 @@ public class connection {
                     else {
                         pendingMsgs.put(received.getId(), received.getMessage());
                         System.out.println("Se recibe: " + received.getMessage());
+                        if(received.getId() == msgID.toServer.notification){
+                            notificationSM.release();
+                        }
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -354,12 +358,48 @@ public class connection {
         }catch (Exception e){e.printStackTrace();}
     }
 
+    public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
+        return (String) sendWaitingAnswer(id, msg, timeout, true, true);
+    }
+    public String sendObjectWaitingAnswerString(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return (String) sendWaitingAnswer(id, msg, timeout, false, true);
+    }
+    public Object sendStringWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return sendWaitingAnswer(id, msg, timeout, true, false);
+    }
+    public Object sendObjectWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return sendWaitingAnswer(id, msg, timeout, false, false);
+    }
+
+    private Object sendWaitingAnswer(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        try {
+            for(int i = 0; i < 10; ++i){
+                send(id,msg,sendString);
+                Thread.sleep(timeout);
+                if(receiveString){
+                    String res = receiveString(id);
+                    if(res!= null && !res.equals("") && !res.equals("NONE")) {
+                        return res;
+                    }
+                }
+                else{
+                    Object res = receiveObject(id);
+                    if(res != null){
+                        return res;
+                    }
+                }
+            }
+            return false;
+        }catch (Exception e){e.printStackTrace();}
+        return null;
+    }
+
     public boolean reliableSendString(int id, String msg, int timeout){
         return reliableSend(id, msg, timeout, true);
     }
 
     public boolean reliableSendObject(int id, Object msg, int timeout){
-        return reliableSend(id, msg, timeout, true);
+        return reliableSend(id, msg, timeout, false);
     }
 
     /**
@@ -405,6 +445,20 @@ public class connection {
             return false;
         }catch (Exception e){e.printStackTrace();}
         return false;
+    }
+
+    public String receiveNotifications(){
+        if (pendingMsgs.containsKey(msgID.toServer.notification)) {
+            String aux = pendingMsgs.get(msgID.toServer.notification);
+            pendingMsgs.remove(msgID.toServer.notification);
+            return aux;
+        }
+        else{
+            try {
+                notificationSM.acquire();
+            }catch (Exception e){e.printStackTrace();}
+            return receiveNotifications();
+        }
     }
 
     /**

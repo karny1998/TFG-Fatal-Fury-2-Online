@@ -2,6 +2,8 @@ package lib.objects.networking.gui;
 
 import lib.Enums.GameState;
 import lib.objects.Screen;
+import lib.objects.networking.connection;
+import lib.objects.networking.online_mode;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
 import videojuegos.Principal;
@@ -9,6 +11,7 @@ import videojuegos.Principal;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class online_mode_gui {
+    private online_mode online_controller;
     private Map<guiItems,Component> componentsOnScreen = new HashMap<>();
     private List<guiItems> itemsOnScreen = new ArrayList<>();
     private List<message> friendMessages;
@@ -34,6 +38,8 @@ public class online_mode_gui {
     private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
             grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
     private profile_gui profile;
+    private character_selection_gui char_sel;
+    private String userLogged = null;
     private Font f,f2,f3;
     {
         try {
@@ -47,7 +53,8 @@ public class online_mode_gui {
         }
     }
 
-    public online_mode_gui(Screen screen, GameState onlineState){
+    public online_mode_gui(online_mode online_controller, Screen screen, GameState onlineState){
+        this.online_controller = online_controller;
         this.onlineState = onlineState;
         this.gui = (gameGUI) screen.getPrincipal().getGui();
         this.principal = screen.getPrincipal();
@@ -83,6 +90,9 @@ public class online_mode_gui {
             case PROFILE_GUI:
                 profileGUI();
                 break;
+            case CHARACTER_SELECTION:
+                character_selection();
+                break;
             default:
                 break;
         }
@@ -90,6 +100,20 @@ public class online_mode_gui {
 
     public int res(int x){
         return (int)(((double)(x*m))+0.5);
+    }
+
+    public ImageIcon loadIcon(String path, int x, int y){
+        ImageIcon aux;
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(this.getClass().getResource(path));
+            Image scaled = img.getScaledInstance(res(x), res(y), Image.SCALE_SMOOTH);
+            aux = new ImageIcon(scaled);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return aux;
     }
 
     public void addComponents(guiItems items[], Component components[]){
@@ -157,7 +181,9 @@ public class online_mode_gui {
     public JButton generateSimpleButton(String text, guiItems id, Font font, Color color, Color back, int x, int y, int w,
                                         int h, boolean noMargin){
         JButton aux = new JButton(text);
-        aux.addActionListener(new guiListener(this,id));
+        if(id != null) {
+            aux.addActionListener(new guiListener(this, id));
+        }
         aux.setFont(font);
         aux.setForeground(color);
         aux.setBackground(back);
@@ -202,18 +228,47 @@ public class online_mode_gui {
     }
 
     public void popUp(String msg){
-        JTextField popup = generateSimpleTextField(msg, f, Color.YELLOW, grey1, 370, 220, 540, 280, false, false);
-        popup.setBorder(javax.swing.BorderFactory.createLineBorder(brown,5));
-        popup.setHorizontalAlignment(JTextField.CENTER);
+        popUp(msg, guiItems.POP_UP_BUTTON);
+    }
 
-        JButton popupB = generateSimpleButton("Okey", guiItems.POP_UP_BUTTON, f, Color.YELLOW, grey2, 580, 420, 120, 60, false);
+    public void popUp(String msg, guiItems okey){
+        int n = msg.length()/23 +1;
+        StringBuffer str= new StringBuffer(msg);
+        for(int i = 0; i < n; ++i){
+            str.insert(i*23+i,"\n");
+        }
 
-        gui.add(popupB);
-        componentsOnScreen.put(guiItems.POP_UP_BUTTON, popupB);
-        itemsOnScreen.add(0,guiItems.POP_UP_BUTTON);
-        gui.add(popup);
-        componentsOnScreen.put(guiItems.POP_UP, popup);
-        itemsOnScreen.add(1,guiItems.POP_UP);
+        msg = str.toString();
+
+        JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
+
+        JButton popupB = generateSimpleButton("Okey", okey, f, Color.YELLOW, grey2, 580, 420, 120, 60, false);
+
+        ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540,280);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(370),res(220),res(540),res(280));
+
+        guiItems items[] = {guiItems.POP_UP, okey, guiItems.POP_UP_TABLE};
+        Component components[] = {popup, popupB, table};
+
+        guiItems items2[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items2[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items2, false);
+
+        addComponents(items, components);
+
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+
+        itemsOnScreen.add(0,guiItems.POP_UP_TABLE);
+        itemsOnScreen.add(0,guiItems.POP_UP);
+        itemsOnScreen.add(0,okey);
+
         reloadGUI();
     }
 
@@ -223,12 +278,7 @@ public class online_mode_gui {
         JButton popupB1 = generateSimpleButton("Yes", yes, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
         JButton popupB2 = generateSimpleButton("No", no, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
 
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/pop_up.png"));
-        }catch (Exception e){e.printStackTrace();}
-        Image scaled = img.getScaledInstance(res(540), res(280), Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(scaled);
+        ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540,280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370),res(220),res(540),res(280));
 
@@ -375,12 +425,7 @@ public class online_mode_gui {
 
             JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
 
-            BufferedImage img = null;
-            try {
-                img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/tablon_register.png"));
-            }catch (Exception e){e.printStackTrace();}
-            Image scaled = img.getScaledInstance(res(788), res(720), Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(scaled);
+            ImageIcon icon = loadIcon("/assets/sprites/menu/tablon_register.png",788,720);
             JLabel table = new JLabel(icon);
             table.setBounds(res(246),0,res(788),res(720));
 
@@ -479,12 +524,7 @@ public class online_mode_gui {
         JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
         JButton popupB2 = generateSimpleButton("Cancel", guiItems.CALCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
 
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(this.getClass().getResource("/assets/sprites/menu/pop_up.png"));
-        }catch (Exception e){e.printStackTrace();}
-        Image scaled = img.getScaledInstance(res(540), res(280), Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(scaled);
+        ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png",540,280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370),res(220),res(540),res(280));
         table.addMouseListener(new MouseAdapter() {
@@ -531,6 +571,18 @@ public class online_mode_gui {
         }
     }
 
+    public void character_selection(){
+        if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)){
+            char_sel = new character_selection_gui(this,true);
+            if(char_sel.isHost()){
+                gui.setBack(5);
+            }
+            else {
+                gui.setBack(4);
+            }
+        }
+    }
+
     public void closeAddFriend(){
         if(componentsOnScreen.containsKey(guiItems.CALCEL_ADD_BUTTON)){
             guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
@@ -567,6 +619,96 @@ public class online_mode_gui {
         reloadGUI();
     }
 
+    public void closePopUp(){
+        closePopUp(guiItems.POP_UP_BUTTON);
+    }
+
+    public void closePopUp(guiItems okey){
+        deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, okey});
+        guiItems items[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items, true);
+        reloadGUI();
+    }
+
+    /**
+     * The type Receiver.
+     */
+    protected class notificationsReceiver extends Thread{
+        /**
+         * The Con.
+         */
+        private connection con;
+        /**
+         * The Stop.
+         */
+        private boolean stop = false;
+        /**
+         * The Thread.
+         */
+        private final Thread thread;
+
+        /**
+         * Instantiates a new Receiver.
+         */
+        public notificationsReceiver() {
+            this.thread = new Thread(this);
+            this.con = online_controller.getConToServer();
+        }
+
+        /**
+         * Start.
+         */
+        @Override
+        public void start(){
+            this.thread.start();
+        }
+
+        /**
+         * Do stop.
+         */
+        public synchronized void doStop() {
+            this.stop = true;
+        }
+
+        /**
+         * Keep running boolean.
+         *
+         * @return the boolean
+         */
+        private synchronized boolean keepRunning() {
+            return this.stop == false;
+        }
+
+        /**
+         * Run.
+         */
+        @Override
+        public void run(){
+            while(keepRunning()) {
+                String notification = con.receiveNotifications();
+                String res[] = notification.split(":");
+                if(res[0].equals("FRIEND REQUEST") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
+                    popUpWithConfirmation("   You have received   friend request from:  "+res[1],guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
+                    JButton aux = ((JButton)componentsOnScreen.get(guiItems.ACCEPT_FRIEND));
+                    for(ActionListener al : aux.getActionListeners() ) {
+                        aux.removeActionListener( al );
+                    }
+                    aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.ACCEPT_FRIEND,res[1]));
+                    aux = ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND));
+                    for(ActionListener al : aux.getActionListeners() ) {
+                        aux.removeActionListener( al );
+                    }
+                    aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.REJECT_FRIEND,res[1]));
+                }
+            }
+        }
+    }
+
     public Map<guiItems, Component> getComponentsOnScreen() {
         return componentsOnScreen;
     }
@@ -589,6 +731,7 @@ public class online_mode_gui {
 
     public void setOnlineState(GameState onlineState) {
         this.onlineState = onlineState;
+        online_controller.setOnlineState(onlineState);
     }
 
     public gameGUI getGui() {
@@ -741,5 +884,30 @@ public class online_mode_gui {
 
     public profile_gui getProfile() {
         return profile;
+    }
+
+    public online_mode getOnline_controller() {
+        return online_controller;
+    }
+
+    public void setOnline_controller(online_mode online_controller) {
+        this.online_controller = online_controller;
+    }
+
+    public character_selection_gui getChar_sel() {
+        return char_sel;
+    }
+
+    public void setChar_sel(character_selection_gui char_sel) {
+        this.char_sel = char_sel;
+    }
+
+    public String getUserLogged() {
+        return userLogged;
+    }
+
+    public void setUserLogged(String userLogged) {
+        this.online_controller.setUserLogged(userLogged);
+        this.userLogged = userLogged;
     }
 }

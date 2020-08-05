@@ -11,22 +11,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import lib.objects.Screen;
+import lib.objects.networking.connection;
+import lib.objects.networking.msgID;
+import lib.objects.networking.online_mode;
 import lib.utils.sendableObjects.simpleObjects.game;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
 public class guiListener implements ActionListener {
     private online_mode_gui gui;
+    private online_mode online_controller;
     private guiItems type;
+    private connection conToServer;
+    private String additionalInformation;
 
     public guiListener(online_mode_gui gui, guiItems type){
         this.gui = gui;
         this.type = type;
+        this.online_controller = gui.getOnline_controller();
+        this.conToServer = online_controller.getConToServer();
+    }
+    public guiListener(online_mode_gui gui, guiItems type, String additionalInformation){
+        this.gui = gui;
+        this.type = type;
+        this.online_controller = gui.getOnline_controller();
+        this.conToServer = online_controller.getConToServer();
+        this.additionalInformation = additionalInformation;
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        String user, pass, pass2, email, msg, friend;
+        String user, pass, pass2, email, msg, friend, res;
         GameState onlineState = gui.getOnlineState();
         switch (onlineState){
             case LOGIN_REGISTER:
@@ -48,8 +63,8 @@ public class guiListener implements ActionListener {
                 }
                 break;
             case LOGIN:
-                pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText();
-                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText();
+                pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase();
+                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase();
                 switch (type){
                     case SHOW:
                         gui.clearGui();
@@ -64,39 +79,79 @@ public class guiListener implements ActionListener {
                         gui.setOnlineState(GameState.LOGIN_REGISTER);
                         break;
                     case LOGIN_BUTTON:
-                        //popUp("TU PUTA MADRE, GRACIAS");
-                        gui.clearGui();
-                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        if(pass.length() == 0 || user.length() == 0){
+                            gui.popUp("The pass or user is empty.");
+                        }
+                        else {
+                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "LOGIN:" + user + ":" + pass, 200);
+                            if (res.equals("LOGGED")) {
+                                gui.clearGui();
+                                gui.setUserLogged(user);
+                                gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                                System.out.println("Te has logeado");
+                            } else {
+                                if (res == null || res.equals("NONE") || res.equals("")) {
+                                    gui.popUp("No se conseguido contactar con el servidor");
+                                } else {
+                                    gui.popUp(res.split(":")[1]);
+                                }
+                            }
+                        }
                         break;
                     case POP_UP_BUTTON:
-                        gui.clearGui();
-                        gui.login(false,user,pass);
+                        /*gui.clearGui();
+                        gui.login(false,user,pass);*/
+                        gui.closePopUp();
+                        break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
                         break;
                 }
                 break;
             case REGISTER:
+                pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase();
+                pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD_2)).getText().toUpperCase();
+                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase();
+                email = ((JTextField)gui.getComponentsOnScreen().get(guiItems.EMAIL)).getText().toUpperCase();
                 switch (type){
                     case SHOW:
-                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText();
-                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD_2)).getText();
-                        user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText();
-                        email = ((JTextField)gui.getComponentsOnScreen().get(guiItems.EMAIL)).getText();
                         gui.clearGui();
                         gui.register(true,user,pass,pass2,email);
                         break;
                     case HIDE:
-                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText();
-                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD_2)).getText();
-                        user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText();
-                        email = ((JTextField)gui.getComponentsOnScreen().get(guiItems.EMAIL)).getText();
                         gui.clearGui();
                         gui.register(false,user,pass,pass2,email);
                         break;
                     case BACK:
                         gui.clearGui();
                         gui.setOnlineState(GameState.LOGIN_REGISTER);
+                        break;
+                    case REGISTER_BUTTON:
+                        if(pass.length() == 0 || user.length() == 0 || pass2.length() == 0 || email.length() == 0){
+                            gui.popUp("No field can be empty.");
+                        }
+                        else if(!pass2.equals(pass)){
+                            gui.popUp("Both passwords must be the same.");
+                        }
+                        else{
+                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER:"+user+":"+email+":"+pass, 200);
+                            if (res.equals("REGISTERED")) {
+                                gui.clearGui();
+                                gui.setOnlineState(GameState.LOGIN_REGISTER);
+                                System.out.println("Te has registrado");
+                            } else {
+                                if (res == null || res.equals("NONE") || res.equals("")) {
+                                    gui.popUp("No se conseguido contactar con el servidor");
+                                } else {
+                                    gui.popUp(res.split(":")[1]);
+                                }
+                            }
+                        }
+                        break;
+                    case POP_UP_BUTTON:
+                        /*gui.clearGui();
+                        gui.register(false,user,pass,pass2,email);*/
+                        gui.closePopUp();
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -123,6 +178,9 @@ public class guiListener implements ActionListener {
                         gui.closeChat();
                         gui.closeFriendInteractionPopUp();
                         gui.addFriend();
+                        break;
+                    case CONFIRM_ADD_BUTTON:
+                        addFriendGestion();
                         break;
                     case CALCEL_ADD_BUTTON:
                         gui.clearGui();
@@ -151,6 +209,8 @@ public class guiListener implements ActionListener {
                         }
                         break;
                     case QUIT_YES:
+                        conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
+                        conToServer.close();
                         System.exit(0);
                         break;
                     case QUIT_NO:
@@ -158,6 +218,7 @@ public class guiListener implements ActionListener {
                         gui.principalGUI();
                         break;
                     case LOG_OUT_YES:
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"LOG OFF",200);
                         gui.setOnlineState(GameState.LOGIN);
                         gui.clearGui();
                         break;
@@ -176,6 +237,16 @@ public class guiListener implements ActionListener {
                         gui.clearGui();
                         gui.setOnlineState(GameState.PROFILE_GUI);
                         gui.setProfileToShow(randomProfile());
+                        break;
+                    case NORMAL_BUTTON:
+                        gui.setOnlineState(GameState.CHARACTER_SELECTION);
+                        gui.clearGui();
+                        break;
+                    case ACCEPT_FRIEND:
+                        answerFriendRequest(true);
+                        break;
+                    case REJECT_FRIEND:
+                        answerFriendRequest(false);
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -204,6 +275,9 @@ public class guiListener implements ActionListener {
                         }
                         gui.closeFriendInteractionPopUp();
                         gui.addFriend();
+                        break;
+                    case CONFIRM_ADD_BUTTON:
+                        addFriendGestion();
                         break;
                     case CALCEL_ADD_BUTTON:
                         gui.clearGui();
@@ -240,14 +314,70 @@ public class guiListener implements ActionListener {
                         gui.setOnlineState(GameState.PROFILE_GUI);
                         gui.setProfileToShow(randomProfile());
                         break;
+                    case ACCEPT_FRIEND:
+                        answerFriendRequest(true);
+                        break;
+                    case REJECT_FRIEND:
+                        answerFriendRequest(false);
+                        break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
                         break;
                 }
                 break;
+            case CHARACTER_SELECTION:
+                switch (type){
+                    case BACK:
+                        gui.clearGui();
+                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        break;
+                    default:
+                        System.out.println("SE HA PRETADO UN BOTON");
+                        break;
+                }
             default:
                 System.out.println("SE HA PRETADO UN BOTON");
                 break;
+        }
+    }
+
+    private void addFriendGestion(){
+        String friend = ((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_NAME)).getText().toUpperCase();
+        if(friend.length() == 0){
+            gui.popUp("Username cant be empty.");
+        }
+        else {
+            String res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"SEND FRIEND REQUEST:"+gui.getUserLogged()+":"+friend, 200);
+            if (res.equals("FRIEND REQUEST SENT")) {
+                gui.clearGui();
+                System.out.println("Has enviado una solicitud de amistad");
+            } else {
+                if (res == null || res.equals("NONE") || res.equals("")) {
+                    gui.popUp("No se conseguido contactar con el servidor");
+                } else {
+                    gui.popUp(res.split(":")[1]);
+                }
+            }
+        }
+    }
+
+    private void answerFriendRequest(boolean accepted){
+        String res = "";
+        if(accepted){
+            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"ACCEPT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 200);
+        }
+        else{
+            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REJECT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 200);
+        }
+        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
+        if (res.equals("FRIEND REQUEST ACCEPTED") || res.equals("FRIEND REQUEST REJECTED")) {
+            System.out.println("Has respondido a una solicitud de amistad");
+        } else {
+            if (res == null || res.equals("NONE") || res.equals("")) {
+                gui.popUp("No se conseguido contactar con el servidor");
+            } else {
+                gui.popUp(res.split(":")[1]);
+            }
         }
     }
 
