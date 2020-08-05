@@ -92,7 +92,6 @@ public class online_mode {
      * @param debug the debug
      */
     public online_mode(Screen screen, boolean debug) {
-        this.gui = new online_mode_gui(this, screen, onlineState);
         this.debug = debug;
         if(debug) {
             /*String ip;
@@ -120,6 +119,7 @@ public class online_mode {
             conToServer = new connection(serverIp, serverPort, 0, false);
             conToServer.setPortSend(serverPort);
         }
+        this.gui = new online_mode_gui(this, screen, onlineState);
     }
 
     /**

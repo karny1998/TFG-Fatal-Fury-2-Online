@@ -111,12 +111,18 @@ public class Main {
                                 rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
                                 rqM.setCon(con);
                                 threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
+
+                                //////////////////////////////////////////////////////////////////
+                                //////////////////////////////////////////////////////////////////////
+                                // problema al deslogearse y volver a logearse sin cerrar el juego
+                                //////////////////////////////////////////////////////////////////////////////
+                                //////////////////////////
                             }
                             threadsByUser.put(rqM.getUserLogged(),this);
                         }
                         else if(logged && !rqM.isLogged()){
                             logged = false;
-                            threadsByUser.put(rqM.getUserLogged(),this);
+                            //threadsByUser.put(rqM.getUserLogged(),this);
                         }
                     }
                 }

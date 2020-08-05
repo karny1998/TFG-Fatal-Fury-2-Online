@@ -44,7 +44,7 @@ public class serverManager {
             return  true;
         }
         else {
-            sc.sendString(msgID.toServer.request,"ERROR:La contraseña introducirda es incorrecta.");
+            sc.sendString(msgID.toServer.request,"ERROR:Incorrect password.");
             return false;
         }
     }
@@ -168,6 +168,11 @@ public class serverManager {
         p2.getReceivedFriendRequest().add(p1);
         dbm.save(p1);
         dbm.save(p2);
+
+        if(loggedUsers.containsKey(user2)){
+            loggedUsers.get(user2).sendString(msgID.toServer.notification, "FRIEND REQUEST:"+user1);
+        }
+
         return "FRIEND REQUEST SENT";
     }
 

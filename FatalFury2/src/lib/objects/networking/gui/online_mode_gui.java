@@ -40,6 +40,7 @@ public class online_mode_gui {
     private profile_gui profile;
     private character_selection_gui char_sel;
     private String userLogged = null;
+    private notificationsReceiver notifier;// = new notificationsReceiver();
     private Font f,f2,f3;
     {
         try {
@@ -58,6 +59,8 @@ public class online_mode_gui {
         this.onlineState = onlineState;
         this.gui = (gameGUI) screen.getPrincipal().getGui();
         this.principal = screen.getPrincipal();
+        this.notifier = new notificationsReceiver();
+        this.notifier.start();
     }
 
     public void drawGUI(){

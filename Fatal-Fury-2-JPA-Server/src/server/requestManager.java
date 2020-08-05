@@ -38,11 +38,10 @@ public class requestManager {
                 con.sendString(1,"E:Estás logeado en otra cuenta");
             }
         }
-        else if(request.contains("SIGN OFF")){
+        else if(request.contains("LOG OFF")){
             if(userLogged != null) {
-                String aux[] = request.split(":");
                 userLogged = null;
-                con.sendString(msgID.toServer.request, "SINGNED OFF");
+                con.sendString(msgID.toServer.request, "LOGGED OFF");
             }
             else{
                 con.sendString(msgID.toServer.request,"E:No estás logeado en ninguna cuenta");

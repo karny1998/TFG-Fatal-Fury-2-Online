@@ -3,13 +3,8 @@ package server;
 import lib.utils.packet;
 import lib.utils.sendableObjects.sendableObject;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -237,7 +232,7 @@ public class connection {
                 while (!ok) {
                     socketUDP.send(packet);
                     Thread.sleep(50);
-                    String ack = receiveString(-1);
+                    String ack = receiveString(msgID.toClient.hi);
                     if (ack.equals("ACK")) {
                         ok = true;
                     }
@@ -309,7 +304,7 @@ public class connection {
                 int port = packet.getPort();
                 received = new String(packet.getData(), 0, packet.getLength());
                 if(received.equals("HI")){
-                    sendAck(-1);
+                    sendAck(msgID.toClient.hi);
                     return;
                 }
                 String aux[] = received.split(";");
@@ -359,12 +354,48 @@ public class connection {
         }catch (Exception e){e.printStackTrace();}
     }
 
+    public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
+        return (String) sendWaitingAnswer(id, msg, timeout, true, true);
+    }
+    public String sendObjectWaitingAnswerString(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return (String) sendWaitingAnswer(id, msg, timeout, false, true);
+    }
+    public Object sendStringWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return sendWaitingAnswer(id, msg, timeout, true, false);
+    }
+    public Object sendObjectWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        return sendWaitingAnswer(id, msg, timeout, false, false);
+    }
+
+    private Object sendWaitingAnswer(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        try {
+            for(int i = 0; i < 10; ++i){
+                send(id,msg,sendString);
+                Thread.sleep(timeout);
+                if(receiveString){
+                    String res = receiveString(id);
+                    if(res!= null && !res.equals("") && !res.equals("NONE")) {
+                        return res;
+                    }
+                }
+                else{
+                    Object res = receiveObject(id);
+                    if(res != null){
+                        return res;
+                    }
+                }
+            }
+            return false;
+        }catch (Exception e){e.printStackTrace();}
+        return null;
+    }
+
     public boolean reliableSendString(int id, String msg, int timeout){
         return reliableSend(id, msg, timeout, true);
     }
 
     public boolean reliableSendObject(int id, Object msg, int timeout){
-        return reliableSend(id, msg, timeout, true);
+        return reliableSend(id, msg, timeout, false);
     }
 
     /**
