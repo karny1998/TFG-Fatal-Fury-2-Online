@@ -1,11 +1,14 @@
 package lib.objects.networking;
 
+import lib.utils.Pair;
 import lib.utils.packet;
 import lib.utils.sendableObjects.sendableObject;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
@@ -72,7 +75,8 @@ public class connection {
     /**
      * The Sm.
      */
-    protected Semaphore sm = new Semaphore(1), notificationSM = new Semaphore(1);
+    protected Semaphore sm = new Semaphore(1),
+            notificationSM = new Semaphore(1);
 
     /**
      * The Out.
@@ -87,7 +91,9 @@ public class connection {
     /**
      * The Is udp.
      */
-    boolean isUDP = true;
+    private boolean isUDP = true;
+
+    private List<Pair<Boolean, Boolean>> waiterList = new ArrayList<>();
 
     /**
      * Instantiates a new Connection.
@@ -153,6 +159,7 @@ public class connection {
                 out = new ObjectOutputStream (socketTCP.getOutputStream());
                 in = new ObjectInputStream(socketTCP.getInputStream());
             }
+            notificationSM.acquire();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -281,7 +288,12 @@ public class connection {
                 return  obj;
             }
             sm.release();
-            return "NONE";
+            if(string) {
+                return "NONE";
+            }
+            else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             sm.release();
@@ -355,43 +367,91 @@ public class connection {
                 sm.release();
             }
 
+            for(int i = 0; i < waiterList.size(); ++i) {
+                synchronized (waiterList.get(i).first) {
+                    waiterList.get(i).second = true;
+                    waiterList.get(i).first.notify();
+                }
+            }
+
         }catch (Exception e){e.printStackTrace();}
     }
 
     public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
         return (String) sendWaitingAnswer(id, msg, timeout, true, true);
     }
-    public String sendObjectWaitingAnswerString(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+    public String sendObjectWaitingAnswerString(int id, Object msg, int timeout){
         return (String) sendWaitingAnswer(id, msg, timeout, false, true);
     }
-    public Object sendStringWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+    public Object sendStringWaitingAnswerObject(int id, Object msg, int timeout){
         return sendWaitingAnswer(id, msg, timeout, true, false);
     }
-    public Object sendObjectWaitingAnswerObject(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+    public Object sendObjectWaitingAnswerObject(int id, Object msg, int timeout){
         return sendWaitingAnswer(id, msg, timeout, false, false);
     }
 
     private Object sendWaitingAnswer(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
-        try {
-            for(int i = 0; i < 10; ++i){
-                send(id,msg,sendString);
-                Thread.sleep(timeout);
-                if(receiveString){
+        if(isUDP) {
+            try {
+                for (int i = 0; i < 10; ++i) {
+                    send(id, msg, sendString);
+                    Thread.sleep(timeout);
+                    if (receiveString) {
+                        String res = receiveString(id);
+                        if (res != null && !res.equals("") && !res.equals("NONE")) {
+                            return res;
+                        }
+                    } else {
+                        Object res = receiveObject(id);
+                        if (res != null) {
+                            return res;
+                        }
+                    }
+                }
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        else{
+            send(id, msg, sendString);
+            boolean error = false;
+            long ref = System.currentTimeMillis();
+            Pair<Boolean,Boolean> localWaiter =  new Pair<>(new Boolean(true),new Boolean(false));
+            synchronized(waiterList) {
+                waiterList.add(localWaiter);
+            }
+            while(!error && !(timeout > 0 && System.currentTimeMillis() - ref > timeout)){
+                if (receiveString) {
                     String res = receiveString(id);
-                    if(res!= null && !res.equals("") && !res.equals("NONE")) {
+                    if (res != null && !res.equals("") && !res.equals("NONE")) {
+                        return res;
+                    }
+                } else {
+                    Object res = receiveObject(id);
+                    if (res != null) {
                         return res;
                     }
                 }
-                else{
-                    Object res = receiveObject(id);
-                    if(res != null){
-                        return res;
+                try {
+                    synchronized(localWaiter.first) {
+                        while (!localWaiter.second) {
+                            localWaiter.first.wait();
+                        }
+                        waiterList.remove(localWaiter);
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    error = true;
                 }
             }
-            return false;
-        }catch (Exception e){e.printStackTrace();}
-        return null;
+        }
+        if (receiveString) {
+            return "";
+        } else {
+            return null;
+        }
     }
 
     public boolean reliableSendString(int id, String msg, int timeout){

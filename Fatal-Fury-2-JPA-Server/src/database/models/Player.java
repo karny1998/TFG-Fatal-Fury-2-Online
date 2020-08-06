@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class Player implements Serializable {
     @Id
     @Column(name = "username", nullable = false)
-    @Size(min = 3, max = 30, message="ERROR:El nombre tiene que tener entre 3 y 30 caracteres.")
+    @Size(min = 3, max = 10, message="ERROR:El nombre tiene que tener entre 3 y 10 caracteres.")
     @Pattern(regexp = "[A-z,0-9,_,-]+", message="ERROR:El nombre solo puede tener letras mayúsculas o minúsculas sin acentuar, números, y los caracteres \"_\" y \"-\".")
     private String username;
     @Column(name = "email", unique = true, nullable = false)

@@ -126,6 +126,7 @@ public class friend_list_gui {
 
         @Override
         public void mouseReleased(MouseEvent me) {
+            if(gui.getFriendSelected() < 0){return;}
             int xTableClick = (int) (0.5 + me.getX());
             int yTableClick = (int) (0.5 + (me.getYOnScreen() - gui.getComponentsOnScreen().get(guiItems.FRIEND_LIST).getLocationOnScreen().getY()) / gui.getM());
             gui.setxTableClick(xTableClick);

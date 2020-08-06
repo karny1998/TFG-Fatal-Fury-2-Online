@@ -7,6 +7,7 @@ import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.simpleObjects.game;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
+import lib.utils.sendableObjects.simpleObjects.string;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class converter {
         return list;
     }
 
-    public static ArrayList<game> castCameList(List<Game> l){
+    public static ArrayList<game> castGameList(List<Game> l){
         ArrayList<game>list = new ArrayList<>();
         for(Game m : l){
             list.add(convertGame(m));
@@ -47,8 +48,16 @@ public class converter {
         return list;
     }
 
-    private static profile convertPlayerToProfile(Player p){
-        return new profile(p.getUsername(),p.getRankScore(),0,0,0,0,
-                castCameList(p.getGamesAsP1()));
+    public static profile convertPlayerToProfile(Player p, List<Game> lastGames){
+        return new profile(p.getUsername(),p.getRankScore(),25,12,11,1,
+                castGameList(lastGames));
+    }
+
+    public static ArrayList<sendableObject> convertStringList(List<String> l){
+        ArrayList<sendableObject>list = new ArrayList<>();
+        for(String m : l){
+            list.add(new string(m));
+        }
+        return list;
     }
 }

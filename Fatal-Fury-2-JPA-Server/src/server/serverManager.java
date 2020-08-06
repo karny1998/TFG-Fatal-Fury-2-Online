@@ -7,12 +7,10 @@ import lib.utils.converter;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.sendableObjectsList;
 import lib.utils.sendableObjects.simpleObjects.message;
+import lib.utils.sendableObjects.simpleObjects.profile;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class serverManager {
     private static databaseManager dbm;
@@ -220,6 +218,9 @@ public class serverManager {
             p1.getFriendsAsReceiver().add(p2);
             dbm.save(p1);
             dbm.save(p2);
+            if(loggedUsers.containsKey(user2)){
+                loggedUsers.get(user2).sendString(msgID.toServer.notification,"NEW FRIEND:"+user1);
+            }
             return "FRIEND REQUEST ACCEPTED";
         }
         dbm.save(p1);
@@ -252,6 +253,9 @@ public class serverManager {
             p2.getFriendsAsReceiver().remove(x);
             dbm.save(p1);
             dbm.save(p2);
+            if(loggedUsers.containsKey(user2)){
+                loggedUsers.get(user2).sendString(msgID.toServer.notification,"DELETED FRIEND:"+user1);
+            }
             return "FRIEND REMOVED";
         }
         for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
@@ -271,6 +275,9 @@ public class serverManager {
             p2.getFriendsAsSoliciter().remove(x);
             dbm.save(p1);
             dbm.save(p2);
+            if(loggedUsers.containsKey(user2)){
+                loggedUsers.get(user2).sendString(msgID.toServer.notification,"DELETED FRIEND:"+user1);
+            }
             return "FRIEND REMOVED";
         }
     }
@@ -291,7 +298,7 @@ public class serverManager {
         Message m = new Message(p1, p2, msg);
         dbm.save(m);
         if(loggedUsers.containsKey(receiver)){
-            loggedUsers.get(receiver).sendString(msgID.toServer.notification,"MESSAGE:"+transmitter+":"+msg);
+            loggedUsers.get(receiver).sendString(msgID.toServer.notification,"MESSAGE RECEIVED:"+transmitter+":"+msg);
         }
         return "MESSAGE SENT";
     }
@@ -350,5 +357,33 @@ public class serverManager {
             }
             return "GAME REGISTERED";
         }catch (Exception e){return "E:Error al registrar la partida.";}
+    }
+
+    public sendableObjectsList getUserFriends(String user){
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        sendableObjectsList friends = new sendableObjectsList(new ArrayList<>());
+        if(p != null){
+            List<String> aux = new ArrayList<>();
+            for(Player pAux : p.getFriendsAsReceiver()){
+                aux.add(pAux.getUsername());
+            }
+            for(Player pAux : p.getFriendsAsSoliciter()){
+                aux.add(pAux.getUsername());
+            }
+            if(aux.size() > 0) {
+                friends = new sendableObjectsList(converter.convertStringList(aux));
+            }
+        }
+        return friends;
+    }
+
+    public profile getUserProfile(String user){
+        List<Game> games;
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        if (p == null){
+            return null;
+        }
+        games = dbm.getUserLastGames(user);
+        return converter.convertPlayerToProfile(p,games);
     }
 }

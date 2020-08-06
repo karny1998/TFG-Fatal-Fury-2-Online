@@ -18,13 +18,14 @@ public class serverConnection{
     protected Map<Integer,String> serverPendingMessages = new HashMap<>();
     protected receiver rec;
     protected  boolean blockReception = false;
-    protected Semaphore sm = new Semaphore(1);
+    protected Semaphore sm = new Semaphore(1), requestSM = new Semaphore(1);
 
     public serverConnection(Socket socket) {
         this.socket = socket;
         try {
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
+            requestSM.acquire();
         }catch (Exception e){e.printStackTrace();}
         this.portReceive = socket.getLocalPort();
         this.rec = new receiver(this);
@@ -134,6 +135,19 @@ public class serverConnection{
         return "";
     }
 
+    public void waitForRequestOrTramit(){
+        if (serverPendingMessages.containsKey(msgID.toServer.request)
+            || serverPendingMessages.containsKey(msgID.toServer.tramits)) {
+            return;
+        }
+        else{
+            try {
+                requestSM.acquire();
+            }catch (Exception e){e.printStackTrace();}
+            waitForRequestOrTramit();
+        }
+    }
+
     public void receive(){
         if(blockReception){return;}
         try {
@@ -151,6 +165,9 @@ public class serverConnection{
             }
             else {
                 serverPendingMessages.put(received.getId(), received.getMessage());
+            }
+            if(received.getId() == msgID.toServer.request || received.getId() == msgID.toServer.tramits){
+                requestSM.release();
             }
         }catch (Exception e){
             this.close();

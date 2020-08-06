@@ -1,5 +1,6 @@
 package database;
 
+import database.models.Game;
 import database.models.Message;
 import database.models.Player;
 
@@ -50,6 +51,18 @@ public class databaseManager {
         List<Message> list = q.getResultList();
         if(list == null){return new ArrayList<>();}
         return list;
+    }
+
+    public List<Game> getUserLastGames(String user){
+        String sql = "SELECT * FROM game m WHERE (m.player1 LIKE '" + user + "' OR m.player2 LIKE '" + user + "') ORDER BY m.id DESC LIMIT 10;";
+        Query q = em.createNativeQuery(sql, Game.class);
+        try {
+            List<Game> list = q.getResultList();
+            if(list == null){return new ArrayList<>();}
+            return list;
+        }catch (Exception e){e.printStackTrace();}
+
+        return null;
     }
 
     public Player findPlayerByEmail(String email){

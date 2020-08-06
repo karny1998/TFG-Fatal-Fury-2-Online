@@ -96,6 +96,7 @@ public class Main {
         public void run(){
             while(keepRunning()) {
                 if(con.isConnected()) {
+                    con.waitForRequestOrTramit();
                     String tramits = con.receiveString(msgID.toServer.tramits);
                     String request = con.receiveString(msgID.toServer.request);
                     if (tramits.equals("DISCONNECT")) {

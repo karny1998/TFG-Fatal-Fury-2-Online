@@ -53,7 +53,7 @@ public class profile_gui {
     public void profile(){
         new friend_list_gui(gui,gui.getFriends());
 
-        JTextField name = gui.generateSimpleTextField("TU PUTA MADRE", f3, Color.YELLOW, grey2, 256, 25, 500, 100, false, false);
+        JTextField name = gui.generateSimpleTextField(prof.getUser(), f3, Color.YELLOW, grey2, 256, 25, 500, 100, false, false);
         JTextField points = gui.generateSimpleTextField("Ranked points: " + prof.getPoints(), f, Color.YELLOW, grey4, 256, 150, 500, 60, false, false);
         JTextField normals = gui.generateSimpleTextField("Normal: " + prof.getNormalWins() + "W " + prof.getNormalLoses() + "L", f, Color.YELLOW, grey4, 50, 235, 450, 60, false, false);
         JTextField rankeds = gui.generateSimpleTextField("Rankeds: " + prof.getRankedWins() + "W " + prof.getRankedLoses() + "L", f, Color.YELLOW, grey4, 530, 235, 450, 60, false, false);

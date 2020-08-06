@@ -1,6 +1,7 @@
 package server;
 
 import lib.utils.sendableObjects.sendableObjectsList;
+import lib.utils.sendableObjects.simpleObjects.profile;
 
 import java.net.InetAddress;
 
@@ -80,7 +81,7 @@ public class requestManager {
         }
         else if(request.contains("REMOVE FRIEND")){
             String aux[] = request.split(":");
-            String res = manager.removeFriend(aux[1],aux[2]);
+            String res = manager.removeFriend(userLogged,aux[1]);
             con.sendString(msgID.toServer.request, res);
         }
         else if(request.contains("SEND MESSAGE")){
@@ -91,6 +92,14 @@ public class requestManager {
         else if(request.contains("MESSAGE HISTORIAL")){
             sendableObjectsList ml = manager.messageBetweenUsersHistorial(userLogged, request.split(":")[1]);
             con.sendObject(msgID.toServer.request,ml);
+        }
+        else if(request.contains("FRIEND LIST")){
+            sendableObjectsList friends = manager.getUserFriends(userLogged);
+            con.sendObject(msgID.toServer.request,friends);
+        }
+        else if(request.contains("PROFILE")){
+            profile prof = manager.getUserProfile(request.split(":")[1]);
+            con.sendObject(msgID.toServer.request,prof);
         }
     }
 

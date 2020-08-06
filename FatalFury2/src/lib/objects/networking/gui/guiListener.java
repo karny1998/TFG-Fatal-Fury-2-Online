@@ -42,6 +42,7 @@ public class guiListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         String user, pass, pass2, email, msg, friend, res;
+        profile prof;
         GameState onlineState = gui.getOnlineState();
         switch (onlineState){
             case LOGIN_REGISTER:
@@ -83,11 +84,12 @@ public class guiListener implements ActionListener {
                             gui.popUp("The pass or user is empty.");
                         }
                         else {
-                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "LOGIN:" + user + ":" + pass, 200);
+                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "LOGIN:" + user + ":" + pass, 0);
                             if (res.equals("LOGGED")) {
                                 gui.clearGui();
                                 gui.setUserLogged(user);
                                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                                gui.loadFriends();
                                 System.out.println("Te has logeado");
                             } else {
                                 if (res == null || res.equals("NONE") || res.equals("")) {
@@ -134,7 +136,7 @@ public class guiListener implements ActionListener {
                             gui.popUp("Both passwords must be the same.");
                         }
                         else{
-                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER:"+user+":"+email+":"+pass, 200);
+                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER:"+user+":"+email+":"+pass, 0);
                             if (res.equals("REGISTERED")) {
                                 gui.clearGui();
                                 gui.setOnlineState(GameState.LOGIN_REGISTER);
@@ -182,31 +184,26 @@ public class guiListener implements ActionListener {
                     case CONFIRM_ADD_BUTTON:
                         addFriendGestion();
                         break;
-                    case CALCEL_ADD_BUTTON:
-                        gui.clearGui();
-                        gui.principalGUI();
+                    case CANCEL_ADD_BUTTON:
+                        gui.closeAddFriend();
+                        //gui.principalGUI();
                         break;
                     case MESSAGE_FRIEND:
                         if(!gui.getComponentsOnScreen().containsKey(guiItems.POP_UP_TABLE)) {
                             gui.closeFriendInteractionPopUp();
-                            gui.setFriendMessages(generateRandomMsgs());
                             gui.chat(gui.getFriends().get(gui.getFriendSelected()));
                         }
                         break;
                     case DELETE_FRIEND:
                         gui.closeFriendInteractionPopUp();
+                        gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
+                                +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                         break;
                     case INVITE_FRIEND:
                         gui.closeFriendInteractionPopUp();
                         break;
                     case SEND_MESSAGE:
-                        msg = ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).getText();
-                        if(msg != null && !msg.trim().equals("")){
-                            message aux = gui.getFriendMessages().get(gui.getFriendMessages().size()-1);
-                            gui.getFriendMessages().add(new message(aux.getId()+1,"yo", gui.getFriends().get(gui.getFriendSelected()),msg));
-                            gui.closeChat();
-                            gui.chat(gui.getFriends().get(gui.getFriendSelected()));
-                        }
+                        sendMessage();
                         break;
                     case QUIT_YES:
                         conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
@@ -218,7 +215,7 @@ public class guiListener implements ActionListener {
                         gui.principalGUI();
                         break;
                     case LOG_OUT_YES:
-                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"LOG OFF",200);
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"LOG OFF",0);
                         gui.setOnlineState(GameState.LOGIN);
                         gui.clearGui();
                         break;
@@ -227,16 +224,19 @@ public class guiListener implements ActionListener {
                         break;
                     case CLOSE_CHAT:
                         gui.closeChat();
+                        gui.setFriendMessages(new ArrayList<>());
                         break;
                     case PROFILE_BUTTON:
                         gui.clearGui();
                         gui.setOnlineState(GameState.PROFILE_GUI);
-                        gui.setProfileToShow(randomProfile());
+                        prof = (profile) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"PROFILE:"+gui.getUserLogged(),0);
+                        gui.setProfileToShow(prof);
                         break;
                     case PROFILE_FRIEND:
                         gui.clearGui();
                         gui.setOnlineState(GameState.PROFILE_GUI);
-                        gui.setProfileToShow(randomProfile());
+                        prof = (profile) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"PROFILE:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        gui.setProfileToShow(prof);
                         break;
                     case NORMAL_BUTTON:
                         gui.setOnlineState(GameState.CHARACTER_SELECTION);
@@ -247,6 +247,15 @@ public class guiListener implements ActionListener {
                         break;
                     case REJECT_FRIEND:
                         answerFriendRequest(false);
+                        break;
+                    case POP_UP_BUTTON:
+                        gui.closePopUp();
+                        break;
+                    case CANCEL_DELETE:
+                        gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                        break;
+                    case CONFIRM_DELETE:
+                        deleteFriend();
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -279,46 +288,52 @@ public class guiListener implements ActionListener {
                     case CONFIRM_ADD_BUTTON:
                         addFriendGestion();
                         break;
-                    case CALCEL_ADD_BUTTON:
-                        gui.clearGui();
+                    case CANCEL_ADD_BUTTON:
+                        gui.closeAddFriend();
                         break;
                     case MESSAGE_FRIEND:
                         if(!gui.getComponentsOnScreen().containsKey(guiItems.POP_UP_TABLE)) {
                             gui.closeFriendInteractionPopUp();
-                            gui.setFriendMessages(generateRandomMsgs());
                             gui.getProfile().swapHistorial();
                             gui.chat(gui.getFriends().get(gui.getFriendSelected()));
                             break;
                         }
                     case DELETE_FRIEND:
                         gui.closeFriendInteractionPopUp();
+                        gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
+                                +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                         break;
                     case INVITE_FRIEND:
                         gui.closeFriendInteractionPopUp();
                         break;
                     case SEND_MESSAGE:
-                        msg = ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).getText();
-                        if(msg != null && !msg.trim().equals("")){
-                            message aux = gui.getFriendMessages().get(gui.getFriendMessages().size()-1);
-                            gui.getFriendMessages().add(new message(aux.getId()+1,"yo", gui.getFriends().get(gui.getFriendSelected()),msg));
-                            gui.closeChat();
-                            gui.chat(gui.getFriends().get(gui.getFriendSelected()));
-                        }
+                        sendMessage();
                         break;
                     case CLOSE_CHAT:
                         gui.clearGui();
+                        gui.setFriendMessages(new ArrayList<>());
                         gui.getProfile().swapHistorial();
                         break;
                     case PROFILE_FRIEND:
                         gui.clearGui();
                         gui.setOnlineState(GameState.PROFILE_GUI);
-                        gui.setProfileToShow(randomProfile());
+                        prof = (profile) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"PROFILE:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        gui.setProfileToShow(prof);
                         break;
                     case ACCEPT_FRIEND:
                         answerFriendRequest(true);
                         break;
                     case REJECT_FRIEND:
                         answerFriendRequest(false);
+                        break;
+                    case POP_UP_BUTTON:
+                        gui.closePopUp();
+                        break;
+                    case CANCEL_DELETE:
+                        gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                        break;
+                    case CONFIRM_DELETE:
+                        deleteFriend();
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -341,13 +356,31 @@ public class guiListener implements ActionListener {
         }
     }
 
+    private void deleteFriend(){
+        String friend = gui.getFriends().get(gui.getFriendSelected());
+        boolean end = false;
+        for(int i = 0; !end && i <gui.getFriends().size(); ++i){
+            if(gui.getFriends().get(i).equals(friend)){
+                gui.getFriends().remove(i);
+                end = true;
+            }
+        }
+        gui.closeFriendList();
+        new friend_list_gui(gui,gui.getFriends());
+        //gui.reloadGUI();
+        String res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REMOVE FRIEND:"+friend,0);
+        gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+    }
+
     private void addFriendGestion(){
         String friend = ((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_NAME)).getText().toUpperCase();
+        gui.closeAddFriend();
         if(friend.length() == 0){
             gui.popUp("Username cant be empty.");
         }
         else {
-            String res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"SEND FRIEND REQUEST:"+gui.getUserLogged()+":"+friend, 200);
+            String res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"SEND FRIEND REQUEST:"+gui.getUserLogged()+":"+friend, 0);
+            gui.closePopUpWithConfirmation(guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON);
             if (res.equals("FRIEND REQUEST SENT")) {
                 gui.clearGui();
                 System.out.println("Has enviado una solicitud de amistad");
@@ -364,10 +397,13 @@ public class guiListener implements ActionListener {
     private void answerFriendRequest(boolean accepted){
         String res = "";
         if(accepted){
-            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"ACCEPT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 200);
+            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"ACCEPT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 0);
+            gui.getFriends().add(additionalInformation);
+            gui.closeFriendList();
+            new friend_list_gui(gui,gui.getFriends());
         }
         else{
-            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REJECT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 200);
+            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REJECT FRIEND REQUEST:"+gui.getUserLogged()+":"+additionalInformation, 0);
         }
         gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
         if (res.equals("FRIEND REQUEST ACCEPTED") || res.equals("FRIEND REQUEST REJECTED")) {
@@ -381,26 +417,18 @@ public class guiListener implements ActionListener {
         }
     }
 
-    public List<message> generateRandomMsgs(){
-        List<message> aux = new ArrayList<>();
-
-        for(int i = 0; i < 50; ++i){
-            aux.add(new message(i,gui.getFriends().get(gui.getFriendSelected()), "JOSH", "HOLAHOLAHOLAHOLAHOLAHOLAHOLAHOLAHOLA"));
-            aux.add(new message(i, "JOSH",gui.getFriends().get(gui.getFriendSelected()),"HOLA"));
+    private void sendMessage(){
+        String msg = ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).getText();
+        String friend = gui.getFriends().get(gui.getFriendSelected());
+        if(msg != null && !msg.trim().equals("")){
+            int id = 0;
+            if(gui.getFriendMessages() != null && !gui.getFriendMessages().isEmpty()){
+                message aux = gui.getFriendMessages().get(gui.getFriendMessages().size()-1);
+                id = aux.getId()+1;
+            }
+            gui.getChatgui().addMessage(new message(id,gui.getUserLogged(), friend,msg));
+            ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).setText("");
+            conToServer.sendString(msgID.toServer.request,"SEND MESSAGE:"+friend+":"+msg);
         }
-
-        return aux;
-    }
-
-    public profile randomProfile(){
-        return new profile("caca",1000,10,1,10,1,randomHistorial());
-    }
-
-    public ArrayList<game> randomHistorial(){
-        ArrayList<game>  games = new ArrayList<>();
-        for(int i = 0; i < 10; ++i){
-            games.add(new game(i,"0123456789", "caca2", LocalDateTime.now(), (int) (Math.random()*3), true,0,0,"",""));
-        }
-        return games;
     }
 }

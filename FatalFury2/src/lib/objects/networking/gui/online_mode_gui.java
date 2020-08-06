@@ -3,9 +3,13 @@ package lib.objects.networking.gui;
 import lib.Enums.GameState;
 import lib.objects.Screen;
 import lib.objects.networking.connection;
+import lib.objects.networking.msgID;
 import lib.objects.networking.online_mode;
+import lib.utils.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.sendableObjectsList;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
+import lib.utils.sendableObjects.simpleObjects.string;
 import videojuegos.Principal;
 
 import javax.imageio.ImageIO;
@@ -17,10 +21,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class online_mode_gui {
     private online_mode online_controller;
@@ -41,6 +43,7 @@ public class online_mode_gui {
     private character_selection_gui char_sel;
     private String userLogged = null;
     private notificationsReceiver notifier;// = new notificationsReceiver();
+    private chat_gui chatgui;
     private Font f,f2,f3;
     {
         try {
@@ -450,9 +453,6 @@ public class online_mode_gui {
         if(!componentsOnScreen.containsKey(guiItems.FRIEND_LIST)) {
             clearGui();
 
-            friends = new ArrayList<>();
-            friends.add("0123456789");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");friends.add("JOSH1");friends.add("JOSH2");friends.add("JOSH3");friends.add("JOSH4");friends.add("JOSH5");
-
             new friend_list_gui(this,friends);
 
             JButton normal = generateSimpleButton("Normal mode", guiItems.NORMAL_BUTTON, f, Color.YELLOW, grey1, 308, 375, 400, 65, false);
@@ -525,20 +525,20 @@ public class online_mode_gui {
         JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
 
         JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
-        JButton popupB2 = generateSimpleButton("Cancel", guiItems.CALCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
+        JButton popupB2 = generateSimpleButton("Cancel", guiItems.CANCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
 
         ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png",540,280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370),res(220),res(540),res(280));
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent arg0) {
-                guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+                guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
                 deleteComponents(items);
                 addFriend();
             }
         });
 
-        guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+        guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
         Component components[] = {popup, name, popupB1, popupB2, table};
 
         addComponents(items, components);
@@ -551,7 +551,7 @@ public class online_mode_gui {
         itemsOnScreen.add(0,guiItems.POP_UP);
         itemsOnScreen.add(0,guiItems.INTRODUCE_NAME);
         itemsOnScreen.add(0,guiItems.CONFIRM_ADD_BUTTON);
-        itemsOnScreen.add(0,guiItems.CALCEL_ADD_BUTTON);
+        itemsOnScreen.add(0,guiItems.CANCEL_ADD_BUTTON);
 
         items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
                 guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
@@ -561,7 +561,12 @@ public class online_mode_gui {
     }
 
     public void chat(String friend){
-        new chat_gui(this,friendMessages, friend);
+        sendableObjectsList msgs = (sendableObjectsList)online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request,"MESSAGE HISTORIAL:"+friend,0);
+        friendMessages = new ArrayList<>();
+        for(sendableObject m : msgs.getMsgs()){
+            friendMessages.add((message) m);
+        }
+        chatgui = new chat_gui(this,friendMessages, friend);
     }
 
     public void profileGUI(){
@@ -587,9 +592,14 @@ public class online_mode_gui {
     }
 
     public void closeAddFriend(){
-        if(componentsOnScreen.containsKey(guiItems.CALCEL_ADD_BUTTON)){
-            guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CALCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
+        if(componentsOnScreen.containsKey(guiItems.CANCEL_ADD_BUTTON)){
+            guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
             deleteComponents(items);
+
+            items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
+                    guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
+            enableComponents(items, true);
+            reloadGUI();
         }
     }
 
@@ -636,6 +646,20 @@ public class online_mode_gui {
 
         enableComponents(items, true);
         reloadGUI();
+    }
+
+    public void closeFriendList(){
+        deleteComponents(new guiItems[]{guiItems.ADD_FRIEND, guiItems.FRIEND_LIST});
+    }
+
+    public void loadFriends(){
+        online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "FRIEND LIST",0);
+        sendableObjectsList res = (sendableObjectsList) online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "FRIEND LIST",0);
+        friends = new ArrayList<>();
+        for(sendableObject s : res.getMsgs()){
+            friends.add(((string)s).getContent());
+        }
+        Collections.sort(friends);
     }
 
     /**
@@ -707,6 +731,23 @@ public class online_mode_gui {
                         aux.removeActionListener( al );
                     }
                     aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.REJECT_FRIEND,res[1]));
+                }
+                else if(res[0].equals("NEW FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
+                    friends.add(res[1]);
+                    Collections.sort(friends);
+                    closeFriendList();
+                    new friend_list_gui(online_mode_gui.this, friends);
+                }
+                else if(res[0].equals("MESSAGE RECEIVED") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
+                    if(componentsOnScreen.containsKey(guiItems.CHAT) && friends.get(friendSelected).equals(res[1])){
+                        message aux = friendMessages.get(friendMessages.size()-1);
+                        chatgui.addMessage(new message(aux.getId()+1, res[1], userLogged,res[2]));
+                    }
+                }
+                else if(res[0].equals("DELETED FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
+                    friends.remove(res[1]);
+                    closeFriendList();
+                    new friend_list_gui(online_mode_gui.this, friends);
                 }
             }
         }
@@ -912,5 +953,21 @@ public class online_mode_gui {
     public void setUserLogged(String userLogged) {
         this.online_controller.setUserLogged(userLogged);
         this.userLogged = userLogged;
+    }
+
+    public notificationsReceiver getNotifier() {
+        return notifier;
+    }
+
+    public void setNotifier(notificationsReceiver notifier) {
+        this.notifier = notifier;
+    }
+
+    public chat_gui getChatgui() {
+        return chatgui;
+    }
+
+    public void setChatgui(chat_gui chatgui) {
+        this.chatgui = chatgui;
     }
 }

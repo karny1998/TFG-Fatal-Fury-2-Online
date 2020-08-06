@@ -21,6 +21,7 @@ public class chat_gui {
     private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
             grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
     private Font f,f2,f3;
+    private ChatTextsTableModel model;
 
     public chat_gui(online_mode_gui gui, List<message> msgs, String friend){
         this.gui = gui;
@@ -50,7 +51,8 @@ public class chat_gui {
         JTable table;
         JScrollPane scrollPane;
         TableCellRenderer tableRenderer;
-        table = new JTable(new ChatTextsTableModel());
+        model = new ChatTextsTableModel();
+        table = new JTable(model);
         table.setBounds(res(530),230,res(600),res(400));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(res(40));
@@ -168,6 +170,16 @@ public class chat_gui {
             }
         }
 
+        @Override
+        public void setValueAt(Object value, int row, int column)
+        {
+            JTextField aux = (JTextField)value;
+            Object[][] rowsAux = new Object[row+1][1];
+            System.arraycopy(rows, 0, rowsAux, 0, rows.length);
+            rows = rowsAux;
+            rows[row][column] = aux;
+        }
+
         public String getColumnName(int column) {
             return columns[column];
         }
@@ -186,5 +198,19 @@ public class chat_gui {
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
         }
+    }
+
+    void addMessage(message m){
+        JTextField aux;
+        if(m.getTransmitter().equals(friend)) {
+            aux = gui.generateSimpleTextField(" " + m.getContent(),f2,Color.YELLOW,grey2,0,0,482,40,false,true);
+        }
+        else{
+            aux = gui.generateSimpleTextField(m.getContent() + "  ",f2,Color.YELLOW,grey4,0,0,482,40,false,true);
+            aux.setHorizontalAlignment(JTextField.RIGHT);
+        }
+        model.setValueAt(aux,model.getRowCount(),0);
+        model.fireTableDataChanged();
+        gui.reloadGUI();
     }
 }

@@ -16,7 +16,7 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue(value = "Game")
 @DiscriminatorFormula("case when ranked is false then 'Game' else 'RankedGame' end")
-public class Game implements Serializable {
+public class Game implements Serializable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
