@@ -257,6 +257,9 @@ public class guiListener implements ActionListener {
                     case CONFIRM_DELETE:
                         deleteFriend();
                         break;
+                    case RANKED_BUTTON:
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER GAME:"+gui.getUserLogged() +":TOMI1234:TERRY:ANDY:2:true",0);
+                        break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
                         break;

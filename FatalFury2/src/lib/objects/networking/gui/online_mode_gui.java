@@ -653,7 +653,6 @@ public class online_mode_gui {
     }
 
     public void loadFriends(){
-        online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "FRIEND LIST",0);
         sendableObjectsList res = (sendableObjectsList) online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "FRIEND LIST",0);
         friends = new ArrayList<>();
         for(sendableObject s : res.getMsgs()){

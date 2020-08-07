@@ -27,23 +27,20 @@ public class serverManager {
     }
 
 
-    public synchronized boolean connectUser(InetAddress add, serverConnection sc, String username, String pass){
+    public synchronized String connectUser(InetAddress add, serverConnection sc, String username, String pass){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(p == null){
-            sc.sendString(msgID.toServer.request,"ERROR:El nombre de usuario no existe.");
-            return false;
+            return "ERROR:El nombre de usuario no existe.";
         }
         else if(p.getPassword().equals(pass)) {
             Login l = new Login(p);
             dbm.save(l);
             loggedUsers.put(username, sc);
             usersIP.put(username,add);
-            sc.sendString(msgID.toServer.request,"LOGGED");
-            return  true;
+            return  "LOGGED";
         }
         else {
-            sc.sendString(msgID.toServer.request,"ERROR:Incorrect password.");
-            return false;
+            return "ERROR:Incorrect password.";
         }
     }
 
@@ -127,7 +124,9 @@ public class serverManager {
     }
 
     public String registerUser(String username, String email, String password){
-        return dbm.registerPlayer(username, email, password);
+        String res = dbm.registerPlayer(username, email, password);
+        if(res.equals("OK")){return "REGISTERED";}
+        return res;
     }
 
     public String friendsRequest(String user1, String user2){
@@ -340,7 +339,7 @@ public class serverManager {
                     return "E:Error al registrar la partida.";
                 }
             } else {
-                boolean erased = false;
+                boolean erased =false;
                 for(int i = 0; !erased && i < ongoingGames.size(); ++i){
                     if(ongoingGames.get(i).first.equals(user1) || ongoingGames.get(i).second.equals(user1)){
                         ongoingGames.remove(i);
@@ -348,7 +347,7 @@ public class serverManager {
                     }
                 }
                 if(erased) {
-                    Game game = new RankedGame(p1, p2, character1, character2, result);
+                    Game game = new Game(p1, p2, character1, character2, result);
                     dbm.save(game);
                 }
                 else{
@@ -356,7 +355,10 @@ public class serverManager {
                 }
             }
             return "GAME REGISTERED";
-        }catch (Exception e){return "E:Error al registrar la partida.";}
+        }catch (Exception e){
+            e.printStackTrace();
+            return "E:Error al registrar la partida.";
+        }
     }
 
     public sendableObjectsList getUserFriends(String user){

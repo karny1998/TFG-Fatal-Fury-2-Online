@@ -18,22 +18,19 @@ public class requestManager {
     }
 
     public void manageRequest(String request){
-        if(request.contains("REGISTER")){
+        if(request.contains("REGISTER:")){
             String aux[] = request.split(":");
             String res = manager.registerUser(aux[1],aux[2],aux[3]);
-            if(res.equals("OK")) {
-                con.sendString(msgID.toServer.request, "REGISTERED");
-            }
-            else{
-                con.sendString(msgID.toServer.request, res);
-            }
+            con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("LOGIN")){
+        else if(request.contains("LOGIN:")){
             if(userLogged == null) {
                 String aux[] = request.split(":");
-                if (manager.connectUser(client, con, aux[1], aux[2])) {
+                String res = manager.connectUser(client, con, aux[1], aux[2]);
+                if (res.equals("LOGGED")) {
                     userLogged = aux[1];
                 }
+                con.sendString(msgID.toServer.request,res);
             }
             else{
                 con.sendString(1,"E:Estás logeado en otra cuenta");
@@ -64,32 +61,32 @@ public class requestManager {
                 con.sendString(msgID.toServer.request,"E:No estás logeado en ninguna cuenta");
             }
         }
-        else if(request.contains("SEND FRIEND REQUEST")){
+        else if(request.contains("SEND FRIEND REQUEST:")){
             String aux[] = request.split(":");
             String res = manager.friendsRequest(aux[1],aux[2]);
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("ACCEPT FRIEND REQUEST")){
+        else if(request.contains("ACCEPT FRIEND REQUEST:")){
             String aux[] = request.split(":");
             String res = manager.answerFriendsRequest(aux[1],aux[2], true);
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("REJECT FRIEND REQUEST")){
+        else if(request.contains("REJECT FRIEND REQUEST:")){
             String aux[] = request.split(":");
             String res = manager.answerFriendsRequest(aux[1],aux[2], false);
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("REMOVE FRIEND")){
+        else if(request.contains("REMOVE FRIEND:")){
             String aux[] = request.split(":");
             String res = manager.removeFriend(userLogged,aux[1]);
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("SEND MESSAGE")){
+        else if(request.contains("SEND MESSAGE:")){
             String aux[] = request.split(":");
             String res = manager.sendMessage(userLogged, aux[1],aux[2]);
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.contains("MESSAGE HISTORIAL")){
+        else if(request.contains("MESSAGE HISTORIAL:")){
             sendableObjectsList ml = manager.messageBetweenUsersHistorial(userLogged, request.split(":")[1]);
             con.sendObject(msgID.toServer.request,ml);
         }
@@ -97,9 +94,14 @@ public class requestManager {
             sendableObjectsList friends = manager.getUserFriends(userLogged);
             con.sendObject(msgID.toServer.request,friends);
         }
-        else if(request.contains("PROFILE")){
+        else if(request.contains("PROFILE:")){
             profile prof = manager.getUserProfile(request.split(":")[1]);
             con.sendObject(msgID.toServer.request,prof);
+        }
+        else if(request.contains("REGISTER GAME:")){
+            String aux[] = request.split(":");
+            String res = manager.registerGame(aux[1], aux[2], aux[3], aux[4], Integer.parseInt(aux[5]), Boolean.parseBoolean(aux[6]));
+            con.sendString(msgID.toServer.request, res);
         }
     }
 
