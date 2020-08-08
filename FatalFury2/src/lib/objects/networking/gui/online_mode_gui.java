@@ -1,8 +1,11 @@
 package lib.objects.networking.gui;
 
 import lib.Enums.GameState;
+import lib.Enums.Playable_Character;
+import lib.Enums.Scenario_type;
 import lib.objects.Screen;
 import lib.objects.networking.connection;
+import lib.objects.networking.gui.gui_components.*;
 import lib.objects.networking.msgID;
 import lib.objects.networking.online_mode;
 import lib.utils.sendableObjects.sendableObject;
@@ -15,10 +18,7 @@ import videojuegos.Principal;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
@@ -34,6 +34,7 @@ public class online_mode_gui {
     private Principal principal;
     private double m = 1.0;
     private List<String> friends;
+    private List<String> pendingMessages;
     private int friendSelected = -1;
     private int xTableClick = 0, yTableClick = 0;
     private profile profileToShow;
@@ -44,6 +45,7 @@ public class online_mode_gui {
     private String userLogged = null;
     private notificationsReceiver notifier;// = new notificationsReceiver();
     private chat_gui chatgui;
+    private notifications_gui notifications;
     private Font f,f2,f3;
     {
         try {
@@ -170,6 +172,28 @@ public class online_mode_gui {
         gui.repaint();
     }
 
+    public JLabel auxiliarBackgroud(){
+        JLabel back = new JLabel(loadIcon("/assets/sprites/menu/auxiliar.png", 1013,683));
+        back.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {}
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener( online_mode_gui.this, guiItems.AUXILIAR_BACKGROUND).actionPerformed(null);
+            }
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {}
+        });
+        back.setOpaque(false);
+        back.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        back.setBounds(0,0,res(1013),res(683));
+        return back;
+    }
+
     public JButton backButton(){
         JButton back = new JButton("Back");
         back.addActionListener(new guiListener(this,guiItems.BACK));
@@ -233,18 +257,50 @@ public class online_mode_gui {
         return aux;
     }
 
+    public String centerLine(String msg, int max){
+        String res = msg;
+        int x = (max - msg.length())/2;
+        for(int i = 0; i < x; ++i){
+            res = " " + res;
+        }
+        return res;
+    }
+
+    public String fillText(String msg, int max, int nLines){
+        String aux[] = msg.split(" ");
+        List<String> lines = new ArrayList<>();
+        String res = "", line = "";
+        for(int i = 0; i < aux.length;++i){
+            if(line.length() + aux[i].length() <= max){
+                line += aux[i] + " ";
+            }
+            else{
+                line = line.substring(0, line.length() - 1);
+                lines.add(centerLine(line, max));
+                line = "";
+                --i;
+            }
+        }
+        if(!line.equals("")){
+            lines.add(centerLine(line, max));
+        }
+        for(int i = 0; i < lines.size();++i){
+            res += (lines.get(i) + "\n");
+        }
+        int x = (nLines - lines.size())/2;
+        for(int i = 0; i < x;++i){
+            res = "\n" + res;
+        }
+        return res;
+    }
+
     public void popUp(String msg){
         popUp(msg, guiItems.POP_UP_BUTTON);
     }
 
     public void popUp(String msg, guiItems okey){
-        int n = msg.length()/23 +1;
-        StringBuffer str= new StringBuffer(msg);
-        for(int i = 0; i < n; ++i){
-            str.insert(i*23+i,"\n");
-        }
 
-        msg = str.toString();
+        msg = fillText(msg, 24,4);
 
         JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
 
@@ -278,8 +334,54 @@ public class online_mode_gui {
         reloadGUI();
     }
 
+    public void searchingGame(boolean rank){
+        String msg = "Searching game";
+        if(rank){
+            msg = "Searching ranked game";
+        }
+
+        guiItems type = guiItems.CANCEL_SEARCH_GAME;
+        /*if(rank){
+            type = guiItems.CANCEL_SEARCH_RANK_GAME;
+        }*/
+
+        JTextField popup = generateSimpleTextField(msg, f3, Color.YELLOW, grey1, 400, 250, 490, 150, false, true);
+        popup.setHorizontalAlignment(JTextField.CENTER);
+
+        JButton popupB = generateSimpleButton("Cancel", type, f, Color.YELLOW, grey2, 545, 420, 190, 60, false);
+
+        ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540,280);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(370),res(220),res(540),res(280));
+
+        guiItems items[] = {guiItems.POP_UP, type, guiItems.POP_UP_TABLE};
+        Component components[] = {popup, popupB, table};
+
+        guiItems items2[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items2[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items2, false);
+
+        addComponents(items, components);
+
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+
+        itemsOnScreen.add(0,guiItems.POP_UP_TABLE);
+        itemsOnScreen.add(0,guiItems.POP_UP);
+        itemsOnScreen.add(0,type);
+
+        reloadGUI();
+    }
+
     public void popUpWithConfirmation(String msg, guiItems yes, guiItems no){
-        JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
+        msg = fillText(msg, 24,4);
+
+        JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 400, 250, 490, 150, false, true);
 
         JButton popupB1 = generateSimpleButton("Yes", yes, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
         JButton popupB2 = generateSimpleButton("No", no, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
@@ -453,7 +555,10 @@ public class online_mode_gui {
         if(!componentsOnScreen.containsKey(guiItems.FRIEND_LIST)) {
             clearGui();
 
-            new friend_list_gui(this,friends);
+            new friend_list_gui(this,friends, pendingMessages);
+
+            this.notifications = new notifications_gui(this);
+            notifications.showNotifications();
 
             JButton normal = generateSimpleButton("Normal mode", guiItems.NORMAL_BUTTON, f, Color.YELLOW, grey1, 308, 375, 400, 65, false);
             JButton ranked = generateSimpleButton("Ranked mode", guiItems.RANKED_BUTTON, f, Color.YELLOW, grey1, 308, 450, 400, 65, false);
@@ -463,8 +568,8 @@ public class online_mode_gui {
             JButton back = backButton();
 
             guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.PROFILE_BUTTON,
-                    guiItems.QUIT_BUTTON, guiItems.BACK};
-            Component components[] = {normal, ranked, tournaments, profile, exit, back};
+                    guiItems.QUIT_BUTTON, guiItems.BACK, guiItems.AUXILIAR_BACKGROUND};
+            Component components[] = {normal, ranked, tournaments, profile, exit, back, auxiliarBackgroud()};
 
             addComponents(items, components);
 
@@ -567,11 +672,16 @@ public class online_mode_gui {
             friendMessages.add((message) m);
         }
         chatgui = new chat_gui(this,friendMessages, friend);
+        pendingMessages.remove(friend);
+        closeFriendList();
+        new friend_list_gui(this,friends,pendingMessages);
+        reloadGUI();
     }
 
     public void profileGUI(){
         if(!componentsOnScreen.containsKey(guiItems.PROFILE_NAME)){
             clearGui();
+            notifications.showNotifications();
             profile = new profile_gui(this, profileToShow);
             gui.setBack(3);
             gui.repaint();
@@ -632,6 +742,18 @@ public class online_mode_gui {
         reloadGUI();
     }
 
+    public void closeSearchingGame(){
+        deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, guiItems.CANCEL_SEARCH_GAME});
+        guiItems items[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items, true);
+        reloadGUI();
+    }
+
     public void closePopUp(){
         closePopUp(guiItems.POP_UP_BUTTON);
     }
@@ -659,6 +781,26 @@ public class online_mode_gui {
             friends.add(((string)s).getContent());
         }
         Collections.sort(friends);
+        res = (sendableObjectsList) online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "FRIENDS PENDING MESSAGES",0);
+        pendingMessages = new ArrayList<>();
+        for(sendableObject s : res.getMsgs()){
+            pendingMessages.add(((string)s).getContent());
+        }
+        Collections.sort(pendingMessages);
+    }
+
+    public void friendRequest(String friend){
+        popUpWithConfirmation("You have received   friend request from:  "+friend,guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
+        JButton aux = ((JButton)componentsOnScreen.get(guiItems.ACCEPT_FRIEND));
+        for(ActionListener al : aux.getActionListeners() ) {
+            aux.removeActionListener( al );
+        }
+        aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.ACCEPT_FRIEND,friend));
+        aux = ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND));
+        for(ActionListener al : aux.getActionListeners() ) {
+            aux.removeActionListener( al );
+        }
+        aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.REJECT_FRIEND,friend));
     }
 
     /**
@@ -719,34 +861,44 @@ public class online_mode_gui {
                 String notification = con.receiveNotifications();
                 String res[] = notification.split(":");
                 if(res[0].equals("FRIEND REQUEST") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
-                    popUpWithConfirmation("   You have received   friend request from:  "+res[1],guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
-                    JButton aux = ((JButton)componentsOnScreen.get(guiItems.ACCEPT_FRIEND));
-                    for(ActionListener al : aux.getActionListeners() ) {
-                        aux.removeActionListener( al );
-                    }
-                    aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.ACCEPT_FRIEND,res[1]));
-                    aux = ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND));
-                    for(ActionListener al : aux.getActionListeners() ) {
-                        aux.removeActionListener( al );
-                    }
-                    aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.REJECT_FRIEND,res[1]));
+                    notifications.addFriendRequest(res[1]);
                 }
                 else if(res[0].equals("NEW FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
                     friends.add(res[1]);
                     Collections.sort(friends);
                     closeFriendList();
-                    new friend_list_gui(online_mode_gui.this, friends);
+                    new friend_list_gui(online_mode_gui.this, friends,pendingMessages);
                 }
                 else if(res[0].equals("MESSAGE RECEIVED") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
                     if(componentsOnScreen.containsKey(guiItems.CHAT) && friends.get(friendSelected).equals(res[1])){
                         message aux = friendMessages.get(friendMessages.size()-1);
                         chatgui.addMessage(new message(aux.getId()+1, res[1], userLogged,res[2]));
                     }
+                    else{
+                        boolean yet = false;
+                        for(int i = 0; !yet && i < pendingMessages.size(); ++i){
+                            yet = pendingMessages.equals(res[1]);
+                        }
+                        if(!yet){
+                            pendingMessages.add(res[1]);
+                            closeFriendList();
+                            new friend_list_gui(online_mode_gui.this, friends,pendingMessages);
+                        }
+                    }
                 }
                 else if(res[0].equals("DELETED FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
                     friends.remove(res[1]);
+                    pendingMessages.remove(res[1]);
                     closeFriendList();
-                    new friend_list_gui(online_mode_gui.this, friends);
+                    new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
+                }
+                else if(res[0].equals("SEARCH GAME")){
+                    String ip = res[2];
+                    boolean isHost = Boolean.parseBoolean(res[1]);
+                    online_controller.generateFight(ip, isHost, Playable_Character.TERRY, Playable_Character.TERRY, Scenario_type.USA);
+                }
+                else if(res[0].equals("SERVER CLOSED")){
+                    popUp("Server has been closed.", guiItems.CLOSE_GAME);
                 }
             }
         }
@@ -968,5 +1120,21 @@ public class online_mode_gui {
 
     public void setChatgui(chat_gui chatgui) {
         this.chatgui = chatgui;
+    }
+
+    public notifications_gui getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(notifications_gui notifications) {
+        this.notifications = notifications;
+    }
+
+    public List<String> getPendingMessages() {
+        return pendingMessages;
+    }
+
+    public void setPendingMessages(List<String> pendingMessages) {
+        this.pendingMessages = pendingMessages;
     }
 }

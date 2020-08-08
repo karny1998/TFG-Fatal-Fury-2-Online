@@ -1,4 +1,8 @@
-package lib.objects.networking.gui;
+package lib.objects.networking.gui.gui_components;
+
+import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.guiListener;
+import lib.objects.networking.gui.online_mode_gui;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -17,13 +21,15 @@ import java.util.List;
 public class friend_list_gui {
     private online_mode_gui gui;
     private List<String> friends;
+    private List<String> pendingMessages;
     private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
             grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
     private Font f,f2,f3;
 
-    public friend_list_gui(online_mode_gui gui, List<String> friends){
+    public friend_list_gui(online_mode_gui gui, List<String> friends, List<String> pendingMessages){
         this.gui = gui;
         this.friends = friends;
+        this.pendingMessages = pendingMessages;
         this.f = gui.getF();
         this.f2 = gui.getF2();
         this.f3 = gui.getF3();
@@ -127,8 +133,15 @@ public class friend_list_gui {
         @Override
         public void mouseReleased(MouseEvent me) {
             if(gui.getFriendSelected() < 0){return;}
+
+            if(me.getYOnScreen() >  (gui.getComponentsOnScreen().get(guiItems.FRIEND_LIST).getLocationOnScreen().getY() + res(70 + 60*friends.size()))){
+                gui.closeFriendInteractionPopUp();
+                return;
+            }
+
             int xTableClick = (int) (0.5 + me.getX());
             int yTableClick = (int) (0.5 + (me.getYOnScreen() - gui.getComponentsOnScreen().get(guiItems.FRIEND_LIST).getLocationOnScreen().getY()) / gui.getM());
+
             gui.setxTableClick(xTableClick);
             gui.setyTableClick(yTableClick);
 
@@ -212,6 +225,9 @@ public class friend_list_gui {
                 JButton aux = new JButton(friends.get(i));
                 aux.setFont(f);
                 aux.setForeground(Color.YELLOW);
+                if(pendingMessages.contains(friends.get(i))){
+                    aux.setForeground(new Color(230,115,0));
+                }
                 aux.setBackground(grey2);
                 aux.addActionListener(new guiListener(gui,guiItems.FRIEND_SEL_BUTTON));
                 rows[i][0] = aux;

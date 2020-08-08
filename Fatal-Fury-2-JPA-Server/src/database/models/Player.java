@@ -30,29 +30,40 @@ public class Player implements Serializable {
     @Column(name = "active", nullable = false)
     private boolean active;
     @Column(name = "rankScore", nullable = false)
-    private int rankScore;
+    private int rankScore = 0;
+    @Column(name = "normalWins", nullable = false)
+    private int normalWins = 0;
+    @Column(name = "normalLoses", nullable = false)
+    private int normalLoses = 0;
+    @Column(name = "rankWins", nullable = false)
+    private int rankWins = 0;
+    @Column(name = "rankLoses", nullable = false)
+    private int rankLoses = 0;
     @OneToMany(mappedBy = "player1", fetch = FetchType.LAZY)
     private List<Game> gamesAsP1 = new ArrayList<>();
     @OneToMany(mappedBy = "player2", fetch = FetchType.LAZY)
-    private List<Game> gamesAsP2 = new ArrayList<>();;
+    private List<Game> gamesAsP2 = new ArrayList<>();
     @OneToMany(mappedBy = "transmitter", fetch = FetchType.LAZY)
-    private List<Message> messagesAsTransmitter = new ArrayList<>();;
+    private List<Message> messagesAsTransmitter = new ArrayList<>();
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
-    private List<Message> messagesAsReceiver = new ArrayList<>();;
+    private List<Message> messagesAsReceiver = new ArrayList<>();
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    private List<Login> logins = new ArrayList<>();;
+    private List<Login> logins = new ArrayList<>();
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
-    private List<Tournament> participatedTournaments = new ArrayList<>();;
+    private List<Tournament> participatedTournaments = new ArrayList<>();
     @ManyToMany
     @JoinTable(name = "friends")
-    private List<Player> friendsAsSoliciter = new ArrayList<>();;
+    private List<Player> friendsAsSoliciter = new ArrayList<>();
     @ManyToMany(mappedBy = "friendsAsSoliciter", fetch = FetchType.LAZY)
-    private List<Player> friendsAsReceiver = new ArrayList<>();;
+    private List<Player> friendsAsReceiver = new ArrayList<>();
     @ManyToMany
     @JoinTable(name = "friend_request")
-    private List<Player> sentFriendRequest = new ArrayList<>();;
+    private List<Player> sentFriendRequest = new ArrayList<>();
     @ManyToMany(mappedBy = "sentFriendRequest", fetch = FetchType.LAZY)
-    private List<Player> receivedFriendRequest = new ArrayList<>();;
+    private List<Player> receivedFriendRequest = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "pending_messages")
+    private List<Player> pending_messages = new ArrayList<>();
 
     /**
      * Instantiates a new Player.
@@ -306,6 +317,56 @@ public class Player implements Serializable {
         this.receivedFriendRequest = receivedFriendRequest;
     }
 
+    public void addNormalGameResult(boolean won){
+        if(won){++normalWins;}
+        else{++normalLoses;}
+    }
+
+    public void addRankedGameResult(boolean won){
+        if(won){++rankWins;}
+        else{++rankLoses;}
+    }
+
+    public int getNormalWins() {
+        return normalWins;
+    }
+
+    public void setNormalWins(int normalWins) {
+        this.normalWins = normalWins;
+    }
+
+    public int getNormalLoses() {
+        return normalLoses;
+    }
+
+    public void setNormalLoses(int normalLoses) {
+        this.normalLoses = normalLoses;
+    }
+
+    public int getRankWins() {
+        return rankWins;
+    }
+
+    public void setRankWins(int rankWins) {
+        this.rankWins = rankWins;
+    }
+
+    public int getRankLoses() {
+        return rankLoses;
+    }
+
+    public void setRankLoses(int rankLoses) {
+        this.rankLoses = rankLoses;
+    }
+
+    public List<Player> getPending_messages() {
+        return pending_messages;
+    }
+
+    public void setPending_messages(List<Player> pending_messages) {
+        this.pending_messages = pending_messages;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
@@ -314,6 +375,10 @@ public class Player implements Serializable {
                 ", password='" + password + '\'' +
                 ", active=" + active +
                 ", rankScore=" + rankScore +
+                ", normalWins=" + normalWins +
+                ", normalLoses=" + normalLoses +
+                ", rankWins=" + rankWins +
+                ", rankLoses=" + rankLoses +
                 '}';
     }
 }

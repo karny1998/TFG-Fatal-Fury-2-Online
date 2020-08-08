@@ -38,6 +38,7 @@ public class requestManager {
         }
         else if(request.contains("LOG OFF")){
             if(userLogged != null) {
+                manager.desconnectUser(userLogged);
                 userLogged = null;
                 con.sendString(msgID.toServer.request, "LOGGED OFF");
             }
@@ -102,6 +103,18 @@ public class requestManager {
             String aux[] = request.split(":");
             String res = manager.registerGame(aux[1], aux[2], aux[3], aux[4], Integer.parseInt(aux[5]), Boolean.parseBoolean(aux[6]));
             con.sendString(msgID.toServer.request, res);
+        }
+        else if(request.contains("FRIENDS REQUESTS")){
+            sendableObjectsList res = manager.pendingFriendsRequestList(userLogged);
+            con.sendObject(msgID.toServer.request, res);
+        }
+        else if(request.contains("FRIENDS PENDING MESSAGES")){
+            sendableObjectsList res = manager.pendingFriendsMessageList(userLogged);
+            con.sendObject(msgID.toServer.request, res);
+        }
+        else if(request.contains("NOTIFY READ MESSAGES")){
+            String aux[] = request.split(":");
+            manager.notifyMessagesRead(userLogged, aux[1]);
         }
     }
 

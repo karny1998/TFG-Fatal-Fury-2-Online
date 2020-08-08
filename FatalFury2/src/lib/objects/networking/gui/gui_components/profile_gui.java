@@ -1,26 +1,21 @@
-package lib.objects.networking.gui;
+package lib.objects.networking.gui.gui_components;
 
+import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.guiListener;
+import lib.objects.networking.gui.online_mode_gui;
 import lib.utils.sendableObjects.simpleObjects.game;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class profile_gui {
     private online_mode_gui gui;
@@ -51,7 +46,7 @@ public class profile_gui {
     }
 
     public void profile(){
-        new friend_list_gui(gui,gui.getFriends());
+        new friend_list_gui(gui,gui.getFriends(), gui.getPendingMessages());
 
         JTextField name = gui.generateSimpleTextField(prof.getUser(), f3, Color.YELLOW, grey2, 256, 25, 500, 100, false, false);
         JTextField points = gui.generateSimpleTextField("Ranked points: " + prof.getPoints(), f, Color.YELLOW, grey4, 256, 150, 500, 60, false, false);
@@ -75,6 +70,21 @@ public class profile_gui {
         table.setBackground(grey1);
         table.setRowSelectionAllowed(false);
         table.setShowGrid(false);
+
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {}
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener( gui, guiItems.AUXILIAR_BACKGROUND).actionPerformed(null);
+            }
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {}
+        });
 
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(res(950), res(0)));
@@ -100,6 +110,7 @@ public class profile_gui {
             }
         });
         scrollPane.setBorder(new LineBorder(Color.black, 0));
+
         scroll1 = scrollPane;
 
         table = new JTable(new HistorialTableModel(true));
@@ -138,8 +149,9 @@ public class profile_gui {
         scroll2 = scrollPane;
         scroll2.setVisible(false);
 
-        guiItems items[] = {guiItems.PROFILE_NAME, guiItems.PROFILE_POINTS, guiItems.PROFILE_NORMALS, guiItems.PROFILE_RANKEDS, guiItems.BACK, guiItems.HISTORIAL , guiItems.HISTORIAL2};
-        Component components[] = {name, points, normals, rankeds, back, scroll1, scroll2};
+        guiItems items[] = {guiItems.BACK, guiItems.HISTORIAL , guiItems.AUXILIAR_BACKGROUND, guiItems.PROFILE_NAME, guiItems.PROFILE_POINTS, guiItems.PROFILE_NORMALS,
+                guiItems.PROFILE_RANKEDS, guiItems.HISTORIAL2};
+        Component components[] = {back, scroll1, gui.auxiliarBackgroud(),name, points, normals, rankeds, scroll2};
 
         gui.addComponents(items, components);
     }
@@ -246,11 +258,10 @@ public class profile_gui {
         }
     }
 
-    public void swapHistorial(){
-        if(inScroll1){
+    public void swapHistorial(boolean trap){
+        if(trap){
             scroll2.setVisible(true);
             scroll1.setVisible(false);
-            inScroll1 = false;
         }
         else{
             scroll1.setVisible(true);

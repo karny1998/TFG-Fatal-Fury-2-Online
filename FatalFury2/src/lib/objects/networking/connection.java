@@ -102,37 +102,6 @@ public class connection {
 
     /**
      * Instantiates a new Connection.
-     * Por defecto 50 segundos de timeout, y puerto de envío y recepción el mismo
-     *
-     * @param ip    the ip
-     * @param port  the port
-     * @param isUDP the is udp
-     */
-    public connection(String ip, int port, boolean isUDP) {
-        this.isUDP = isUDP;
-        try {
-            if(isUDP) {
-                socketUDP = new DatagramSocket(port);
-                this.portReceive = port;
-                socketUDP.setSoTimeout(50);
-                address = InetAddress.getByName(ip);
-            }
-            else{
-                socketTCP = new Socket(ip, port);
-                socketTCP.setSoTimeout(50);
-                out = new ObjectOutputStream (socketTCP.getOutputStream());
-                in = new ObjectInputStream(socketTCP.getInputStream());
-            }
-            notificationSM.acquire();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.rec = new receiver(this);
-        this.rec.start();
-    }
-
-    /**
-     * Instantiates a new Connection.
      *
      * @param ip      the ip
      * @param port    the port
@@ -238,8 +207,9 @@ public class connection {
             try {
                 boolean ok = false;
                 while (!ok) {
+                    System.out.println("se envia hi");
                     socketUDP.send(packet);
-                    Thread.sleep(50);
+                    Thread.sleep(100);
                     String ack = receiveString(msgID.toClient.hi);
                     if (ack.equals("ACK")) {
                         ok = true;
@@ -317,6 +287,7 @@ public class connection {
                 int port = packet.getPort();
                 received = new String(packet.getData(), 0, packet.getLength());
                 if(received.equals("HI")){
+                    System.out.println("ssssssssssssssssssssssssss");
                     sendAck(msgID.toClient.hi);
                     return;
                 }
@@ -335,7 +306,7 @@ public class connection {
                     else {
                         pendingMsgs.put(idM, aux[2]);
                     }
-                    System.out.println("Se recibe: " + aux[2]);
+                    //System.out.println("Se recibe: " + aux[2]);
                 }catch (Exception e){
                     e.printStackTrace();
                     sm.release();

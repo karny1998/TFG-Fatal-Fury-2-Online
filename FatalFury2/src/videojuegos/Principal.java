@@ -1,8 +1,11 @@
 package videojuegos;
 
+import lib.Enums.GameState;
 import lib.input.controlListener;
 import lib.objects.Screen;
 import lib.objects.networking.gui.gameGUI;
+import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.guiListener;
 import lib.sound.audio_manager;
 import lib.utils.ScreenOptions;
 import lib.utils.fileUtils;
@@ -118,8 +121,6 @@ public class Principal extends JFrame {
 
         addKeyListener(control);
 
-
-
         initUI();
     }
 
@@ -136,6 +137,19 @@ public class Principal extends JFrame {
         setTitle("Fatal Fury 2");
         ScreenOptions.init(this);
         ScreenOptions.update();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if(((Screen)game).getGame().getState() == GameState.ONLINE_MODE){
+                    guiOn();
+                    new guiListener(((Screen)game).getGame().getOnline().getGui(),guiItems.QUIT_BUTTON).actionPerformed(null);
+                }
+                else{
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     /**

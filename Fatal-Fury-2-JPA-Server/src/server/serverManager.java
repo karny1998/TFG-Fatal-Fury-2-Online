@@ -110,17 +110,19 @@ public class serverManager {
         // Mensaje: eresHost?:direcciónRival
         String msg1 = "SEARCH GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2;
         String msg2 = "SEARCH GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1;
-        boolean okP1 =  loggedUsers.get(p1).reliableSendString(msgID.toServer.tramits,msg1,500);
-        boolean okP2 =  loggedUsers.get(p2).reliableSendString(msgID.toServer.tramits,msg2,500);
-        if(okP1 && okP2){
-            if(ranked){
-                ongoingRankedGames.add(new Pair<>(p1,p2));
-            }
-            else{
-                ongoingGames.add(new Pair<>(p1,p2));
-            }
+        if(ranked){
+            msg1 = "SEARCH RANKED GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2;
+            msg2 = "SEARCH RANKED GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1;
         }
-        return  okP1 && okP2;
+        loggedUsers.get(p1).sendString(msgID.toServer.notification,msg1);
+        loggedUsers.get(p2).sendString(msgID.toServer.notification,msg2);
+        if(ranked){
+            ongoingRankedGames.add(new Pair<>(p1,p2));
+        }
+        else{
+            ongoingGames.add(new Pair<>(p1,p2));
+        }
+        return  true;
     }
 
     public String registerUser(String username, String email, String password){
@@ -294,7 +296,28 @@ public class serverManager {
         if (p2 == null){
             return "ERROR:El jugador receptor no existe.";
         }
+        boolean ok = false;
+        for(int i = 0; !ok && i < p1.getPending_messages().size(); ++i){
+            if(p1.getPending_messages().get(i).getUsername().equals(receiver)){
+                p1.getPending_messages().remove(i);
+                dbm.save(p1);
+                ok = true;
+            }
+        }
+
         Message m = new Message(p1, p2, msg);
+
+        ok = false;
+        for(int i = 0; !ok && i < p2.getPending_messages().size(); ++i){
+            if(p2.getPending_messages().get(i).getUsername().equals(transmitter)){
+                ok = true;
+            }
+        }
+        if(!ok) {
+            p2.getPending_messages().add(p1);
+            dbm.save(p2);
+        }
+
         dbm.save(m);
         if(loggedUsers.containsKey(receiver)){
             loggedUsers.get(receiver).sendString(msgID.toServer.notification,"MESSAGE RECEIVED:"+transmitter+":"+msg);
@@ -307,7 +330,7 @@ public class serverManager {
         return new sendableObjectsList(list);
     }
 
-    public String registerGame(String user1, String user2, String character1, String character2, int result, boolean ranked){
+    public synchronized String registerGame(String user1, String user2, String character1, String character2, int result, boolean ranked){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
             return "ERROR:El jugador emisor no existe.";
@@ -326,9 +349,22 @@ public class serverManager {
                     }
                 }
                 if(erased) {
-                    int winnerPoints = 0, loserPoints = 0;
-                    // EVALUAR PUNTOS
+                    Pair<Integer,Integer> pts = evaluatePoints(p1,p2,result);
+                    int winnerPoints = pts.first, loserPoints = pts.second;
+
                     RankedGame game = new RankedGame(p1, p2, character1, character2, result, winnerPoints, loserPoints);
+                    if(result == 0){
+                        p1.addRankedGameResult(true);
+                        p2.addRankedGameResult(true);
+                    }
+                    else if(result == 1){
+                        p1.addRankedGameResult(true);
+                        p2.addRankedGameResult(false);
+                    }
+                    else{
+                        p1.addRankedGameResult(false);
+                        p2.addRankedGameResult(true);
+                    }
                     p1.setRankScore(p1.getRankScore() + winnerPoints);
                     p2.setRankScore(p2.getRankScore() + winnerPoints);
                     dbm.save(p1);
@@ -339,7 +375,7 @@ public class serverManager {
                     return "E:Error al registrar la partida.";
                 }
             } else {
-                boolean erased =false;
+                boolean erased = true;//false;
                 for(int i = 0; !erased && i < ongoingGames.size(); ++i){
                     if(ongoingGames.get(i).first.equals(user1) || ongoingGames.get(i).second.equals(user1)){
                         ongoingGames.remove(i);
@@ -348,6 +384,20 @@ public class serverManager {
                 }
                 if(erased) {
                     Game game = new Game(p1, p2, character1, character2, result);
+                    if(result == 0){
+                        p1.addNormalGameResult(true);
+                        p2.addNormalGameResult(true);
+                    }
+                    else if(result == 1){
+                        p1.addNormalGameResult(true);
+                        p2.addNormalGameResult(false);
+                    }
+                    else{
+                        p1.addNormalGameResult(false);
+                        p2.addNormalGameResult(true);
+                    }
+                    dbm.save(p1);
+                    dbm.save(p2);
                     dbm.save(game);
                 }
                 else{
@@ -387,5 +437,67 @@ public class serverManager {
         }
         games = dbm.getUserLastGames(user);
         return converter.convertPlayerToProfile(p,games);
+    }
+
+    private Pair<Integer,Integer> evaluatePoints(Player p1, Player p2, int r){
+        int p1P = 0, p2P = 0;
+        switch (r){
+            case 1:
+                p1P = 20;
+                p2P = -20;
+                break;
+            case 2:
+                p1P = -20;
+                p2P = 20;
+                break;
+            default:
+                break;
+        }
+
+        if(p1.getRankScore() > p2.getRankScore()){
+            p1P += (p2.getRankScore() - p1.getRankScore())/10;
+            p2P += (p1.getRankScore() - p2.getRankScore())/10;
+        }
+        else if(p1.getRankScore() < p2.getRankScore()){
+            p2P += (p2.getRankScore() - p1.getRankScore())/10;
+            p1P += (p1.getRankScore() - p2.getRankScore())/10;
+        }
+
+        return new Pair<>(p1P, p2P);
+    }
+
+    public sendableObjectsList pendingFriendsRequestList(String user){
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        if (p == null){
+            return new sendableObjectsList(new ArrayList<>());
+        }
+        return new sendableObjectsList(converter.convertPlayerListToUsernameList(p.getReceivedFriendRequest()));
+    }
+
+    public sendableObjectsList pendingFriendsMessageList(String user){
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        if (p == null){
+            return new sendableObjectsList(new ArrayList<>());
+        }
+        return new sendableObjectsList(converter.convertPlayerListToUsernameList(p.getPending_messages()));
+    }
+
+    public String notifyMessagesRead(String receiver, String transmiter){
+        Player p1 = (Player) dbm.findByKey(Player.class, receiver);
+        if (p1 == null){
+            return "ERROR:El jugador receptor no existe.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, transmiter);
+        if (p2 == null){
+            return "ERROR:El jugador emisor no existe.";
+        }
+        for(int i = 0; i < p1.getPending_messages().size(); ++i){
+            if(p1.getPending_messages().get(i).getUsername().equals(transmiter)){
+                p1.getPending_messages().remove(i);
+                dbm.save(p1);
+                return "OK";
+            }
+        }
+        return "OK";
     }
 }

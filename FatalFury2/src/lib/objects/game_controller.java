@@ -1624,4 +1624,12 @@ public class game_controller {
     public void setFont(Font font) {
         this.font = font;
     }
+
+    public online_mode getOnline() {
+        return online;
+    }
+
+    public void setOnline(online_mode online) {
+        this.online = online;
+    }
 }

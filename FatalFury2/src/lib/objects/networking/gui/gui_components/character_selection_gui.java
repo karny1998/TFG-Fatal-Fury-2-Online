@@ -1,7 +1,9 @@
-package lib.objects.networking.gui;
+package lib.objects.networking.gui.gui_components;
 
 import lib.Enums.Playable_Character;
 import lib.Enums.Scenario_type;
+import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.online_mode_gui;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
 import javax.imageio.ImageIO;

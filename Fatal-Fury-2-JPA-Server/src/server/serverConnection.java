@@ -252,4 +252,84 @@ public class serverConnection{
             rec.doStop();
         }catch (Exception e){e.printStackTrace();}
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+    public void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
+
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    public void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    public int getPortReceive() {
+        return portReceive;
+    }
+
+    public void setPortReceive(int portReceive) {
+        this.portReceive = portReceive;
+    }
+
+    public Map<Integer, sendableObject> getServerPendingObjects() {
+        return serverPendingObjects;
+    }
+
+    public void setServerPendingObjects(Map<Integer, sendableObject> serverPendingObjects) {
+        this.serverPendingObjects = serverPendingObjects;
+    }
+
+    public Map<Integer, String> getServerPendingMessages() {
+        return serverPendingMessages;
+    }
+
+    public void setServerPendingMessages(Map<Integer, String> serverPendingMessages) {
+        this.serverPendingMessages = serverPendingMessages;
+    }
+
+    public receiver getRec() {
+        return rec;
+    }
+
+    public void setRec(receiver rec) {
+        this.rec = rec;
+    }
+
+    public boolean isBlockReception() {
+        return blockReception;
+    }
+
+    public void setBlockReception(boolean blockReception) {
+        this.blockReception = blockReception;
+    }
+
+    public Semaphore getSm() {
+        return sm;
+    }
+
+    public void setSm(Semaphore sm) {
+        this.sm = sm;
+    }
+
+    public Semaphore getRequestSM() {
+        return requestSM;
+    }
+
+    public void setRequestSM(Semaphore requestSM) {
+        this.requestSM = requestSM;
+    }
 }

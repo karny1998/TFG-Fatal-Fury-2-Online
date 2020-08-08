@@ -49,14 +49,22 @@ public class converter {
     }
 
     public static profile convertPlayerToProfile(Player p, List<Game> lastGames){
-        return new profile(p.getUsername(),p.getRankScore(),25,12,11,1,
-                castGameList(lastGames));
+        return new profile(p.getUsername(),p.getRankScore(),p.getNormalWins(),p.getNormalLoses(),p.getRankWins(),
+                p.getRankLoses(), castGameList(lastGames));
     }
 
     public static ArrayList<sendableObject> convertStringList(List<String> l){
         ArrayList<sendableObject>list = new ArrayList<>();
         for(String m : l){
             list.add(new string(m));
+        }
+        return list;
+    }
+
+    public static ArrayList<sendableObject> convertPlayerListToUsernameList(List<Player> l){
+        ArrayList<sendableObject>list = new ArrayList<>();
+        for(Player p : l){
+            list.add(new string(p.getUsername()));
         }
         return list;
     }

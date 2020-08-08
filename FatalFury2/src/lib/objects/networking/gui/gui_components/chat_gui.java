@@ -1,5 +1,7 @@
-package lib.objects.networking.gui;
+package lib.objects.networking.gui.gui_components;
 
+import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.online_mode_gui;
 import lib.utils.sendableObjects.simpleObjects.message;
 
 import javax.swing.*;
@@ -200,17 +202,22 @@ public class chat_gui {
         }
     }
 
-    void addMessage(message m){
-        JTextField aux;
-        if(m.getTransmitter().equals(friend)) {
-            aux = gui.generateSimpleTextField(" " + m.getContent(),f2,Color.YELLOW,grey2,0,0,482,40,false,true);
+    public void addMessage(message m){
+        if(m.getContent().length() <= 30) {
+            JTextField aux;
+            if (m.getTransmitter().equals(friend)) {
+                aux = gui.generateSimpleTextField(" " + m.getContent(), f2, Color.YELLOW, grey2, 0, 0, 482, 40, false, true);
+            } else {
+                aux = gui.generateSimpleTextField(m.getContent() + "  ", f2, Color.YELLOW, grey4, 0, 0, 482, 40, false, true);
+                aux.setHorizontalAlignment(JTextField.RIGHT);
+            }
+            model.setValueAt(aux, model.getRowCount(), 0);
+            model.fireTableDataChanged();
+            gui.reloadGUI();
         }
         else{
-            aux = gui.generateSimpleTextField(m.getContent() + "  ",f2,Color.YELLOW,grey4,0,0,482,40,false,true);
-            aux.setHorizontalAlignment(JTextField.RIGHT);
+            addMessage(new message(m.getId(),m.getTransmitter(),m.getReceiver(),m.getContent().substring(0,30)));
+            addMessage(new message(m.getId(),m.getTransmitter(),m.getReceiver(),m.getContent().substring(30,m.getContent().length())));
         }
-        model.setValueAt(aux,model.getRowCount(),0);
-        model.fireTableDataChanged();
-        gui.reloadGUI();
     }
 }

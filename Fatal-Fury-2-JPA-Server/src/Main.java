@@ -74,6 +74,7 @@ public class Main {
         }
 
         public synchronized void doStop() {
+            con.sendString(msgID.toServer.notification, "SERVER CLOSED");
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
             con.close();
@@ -81,6 +82,7 @@ public class Main {
         }
 
         public synchronized void doStop(String msg) {
+            con.sendString(msgID.toServer.notification, "SERVER CLOSED");
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
             con.sendString(msgID.toServer.notification,msg);
@@ -108,22 +110,19 @@ public class Main {
                         rqM.manageRequest(request);
                         if(!logged && rqM.isLogged()){
                             logged = true;
+                            String aux = "";
                             if(threadsByUser.containsKey(rqM.getUserLogged())){
+                                aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
+                            }
+                            if(threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)){
                                 rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
                                 rqM.setCon(con);
                                 threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
-
-                                //////////////////////////////////////////////////////////////////
-                                //////////////////////////////////////////////////////////////////////
-                                // problema al deslogearse y volver a logearse sin cerrar el juego
-                                //////////////////////////////////////////////////////////////////////////////
-                                //////////////////////////
                             }
                             threadsByUser.put(rqM.getUserLogged(),this);
                         }
                         else if(logged && !rqM.isLogged()){
                             logged = false;
-                            //threadsByUser.put(rqM.getUserLogged(),this);
                         }
                     }
                 }
