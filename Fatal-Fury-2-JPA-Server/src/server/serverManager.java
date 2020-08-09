@@ -6,8 +6,15 @@ import lib.utils.Pair;
 import lib.utils.converter;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.sendableObjectsList;
-import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import java.net.InetAddress;
 import java.util.*;
@@ -30,7 +37,10 @@ public class serverManager {
     public synchronized String connectUser(InetAddress add, serverConnection sc, String username, String pass){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(p == null){
-            return "ERROR:El nombre de usuario no existe.";
+            return "ERROR:The username doesn't exist.";
+        }
+        else if(!p.isActive()){
+            return "ERROR:The account hasn't been verified.";
         }
         else if(p.getPassword().equals(pass)) {
             Login l = new Login(p);
@@ -127,8 +137,27 @@ public class serverManager {
 
     public String registerUser(String username, String email, String password){
         String res = dbm.registerPlayer(username, email, password);
-        if(res.equals("OK")){return "REGISTERED";}
+        Player p = (Player) dbm.findByKey(Player.class, username);
+        if(res.equals("OK")){
+            sendVerificationCode(username,email,p.getCode());
+            return "REGISTERED";
+        }
         return res;
+    }
+
+    public String verifyAccount(String username, int cod){
+        Player p = (Player) dbm.findByKey(Player.class, username);
+        if (p == null){
+            return "ERROR:El jugador solicitante no existe.";
+        }
+        if(p.getCode() == cod){
+            p.setActive(true);
+            dbm.save(p);
+            return "VERIFIED";
+        }
+        else{
+            return "ERROR:Incorrect code.";
+        }
     }
 
     public String friendsRequest(String user1, String user2){
@@ -499,5 +528,82 @@ public class serverManager {
             }
         }
         return "OK";
+    }
+
+    public String recoverAccount(String user){
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        if (p == null){
+            return "ERROR:El jugador receptor no existe.";
+        }
+        String pass = String.valueOf((int)(Math.random()*999999999));
+        try {
+            p.setPassword(encrypt(pass));
+            dbm.save(p);
+            sendRecoverAccount(user, p.getEmail(),pass);
+        } catch (Exception e) {
+            return "ERROR:Has been a problem.";
+        }
+        return "RECOVERED";
+    }
+
+    private void sendRecoverAccount(String user, String cor, String pass){
+        String msg = "Hi, " + user + ".<br/> Your password has been changed to : "+ pass
+                +"<br/>You can chage your password in your profile." +"<br/>Regards.";
+        try {
+            sendmail(cor, msg, "Recover Account");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendVerificationCode(String user, String cor, int cod){
+        String msg = "Hi, " + user + ".<br/> Your verification code is: "+ cod+"<br/>Thanks for entering our community.";
+        try {
+            sendmail(cor, msg, "Verification Code");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void sendmail(String cor, String mensaje, String sub) throws MessagingException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        javax.mail.Session session = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("fatalfury2online@gmail.com", "199819981998s");
+            }
+        });
+        javax.mail.Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress("fatalfury2online@gmail.com", false));
+
+        msg.setRecipients(javax.mail.Message.RecipientType.TO, InternetAddress.parse(cor));
+        msg.setSubject("Fatal Fury 2 Online " + sub);
+        msg.setContent(mensaje, "text/html; charset=utf-8");
+        msg.setSentDate(new Date());
+        Transport.send(msg);
+    }
+
+    public static String encrypt(String strClearText) throws Exception{
+        String strData="";
+        String strKey = strClearText;
+        try {
+            SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes(),"Blowfish");
+            Cipher cipher=Cipher.getInstance("Blowfish");
+            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
+            byte[] encrypted=cipher.doFinal(strClearText.getBytes());
+            strData=new String(encrypted);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e);
+        }
+        System.out.println(strData);
+        strData.replace(":",".");
+        return strData;
     }
 }

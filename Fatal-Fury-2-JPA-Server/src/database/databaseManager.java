@@ -121,7 +121,7 @@ public class databaseManager {
     }
 
     public String registerPlayer(String username, String email, String password){
-        Player p = new Player(username, email, password, true);
+        Player p = new Player(username, email, password, false);
         return insertPlayer(p);
     }
 

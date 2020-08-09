@@ -33,6 +33,7 @@ public class friend_list_gui {
         this.f = gui.getF();
         this.f2 = gui.getF2();
         this.f3 = gui.getF3();
+        this.gui.closeFriendList();
         friendList();
     }
 

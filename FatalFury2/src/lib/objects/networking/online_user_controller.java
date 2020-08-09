@@ -1,6 +1,7 @@
 package lib.objects.networking;
 
 import lib.Enums.Playable_Character;
+import lib.input.controlListener;
 import lib.objects.hitBox;
 import lib.objects.screenObject;
 import lib.objects.user_controller;
@@ -37,6 +38,15 @@ public class online_user_controller extends user_controller {
         this.isLocal = isLocal;
         if(!isLocal){
             this.input_control.stop();
+        }
+    }
+
+    @Override
+    protected void inputsGestion(){
+        mov = "";
+        if(!standBy) {
+            mov = controlListener.getMove(1);
+            inputsGestionAux();
         }
     }
 

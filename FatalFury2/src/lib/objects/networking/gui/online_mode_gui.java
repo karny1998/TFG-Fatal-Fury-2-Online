@@ -300,7 +300,7 @@ public class online_mode_gui {
 
     public void popUp(String msg, guiItems okey){
 
-        msg = fillText(msg, 24,4);
+        msg = fillText(msg, 23,4);
 
         JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
 
@@ -379,7 +379,7 @@ public class online_mode_gui {
     }
 
     public void popUpWithConfirmation(String msg, guiItems yes, guiItems no){
-        msg = fillText(msg, 24,4);
+        msg = fillText(msg, 23,4);
 
         JTextArea popup = generateSimpleTextArea(msg, f, Color.YELLOW, grey1, 400, 250, 490, 150, false, true);
 
@@ -439,6 +439,8 @@ public class online_mode_gui {
 
             JButton login = generateSimpleButton("Login", guiItems.LOGIN_BUTTON, f, Color.YELLOW, grey1, 515, 610, 250, 60, false);
 
+            JButton recover = generateSimpleButton("Recover account", guiItems.RECOVER_BUTTON, f2, Color.YELLOW, grey2, 780, 620, 225, 40, false);
+
             JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 365, 520, 250, 60, true, false);
 
             JTextField username2 = generateSimpleTextField("Username", f, Color.YELLOW, blue, 365, 460, 250, 60, false, true);
@@ -458,8 +460,9 @@ public class online_mode_gui {
 
             JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, blue, 665, 460, 250, 60, false, true);
 
-            guiItems items[] = {guiItems.LOGIN_BUTTON, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT, guiItems.PASSWORD_TEXT, guiItems.BACK};
-            Component components[] = {login, username, password, username2, password2, backButton()};
+            guiItems items[] = {guiItems.LOGIN_BUTTON, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
+                    guiItems.PASSWORD_TEXT, guiItems.BACK, guiItems.RECOVER_BUTTON};
+            Component components[] = {login, username, password, username2, password2, backButton(), recover};
             addComponents(items, components);
 
             if(show){
@@ -551,8 +554,77 @@ public class online_mode_gui {
         }
     }
 
+    public void changePass(Boolean show, String user, String pass1, String pass2, String eml){
+        if(show){
+            JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
+            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
+            addComponents(new guiItems[]{guiItems.HIDE}, new Component[]{showPass});
+        }
+        else{
+            JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
+            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
+            addComponents(new guiItems[]{guiItems.SHOW}, new Component[]{showPass});
+        }
+
+        JButton confirm = generateSimpleButton("Confirm", guiItems.CONFIRM_CHANGE_PASS, f, Color.YELLOW, grey1, 515, 600, 250, 60, false);
+
+        JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 290, 100, 680, 60, true, false);
+
+        JTextField oldpass2 = generateSimpleTextField("Old password", f, Color.YELLOW, grey1, 290, 30, 680, 60, false, true);
+
+        JPasswordField password = new JPasswordField(pass1);
+        if(!show) {
+            password.setEchoChar('*');
+        }
+        else{
+            password.setEchoChar((char) 0);
+        }
+        password.setEditable(true);
+        password.setFont(f);
+        password.setForeground(Color.YELLOW);
+        password.setBackground(grey2);
+        password.setBounds((int)(290*m),(int)(240*m), (int)(680*m),(int)(60*m));
+
+        JTextField password2 = generateSimpleTextField("New password", f, Color.YELLOW, grey1, 290, 170, 680, 60, false, true);
+
+        JPasswordField password_2 = new JPasswordField(pass2);
+        if(!show) {
+            password_2.setEchoChar('*');
+        }
+        else{
+            password_2.setEchoChar((char) 0);
+        }
+        password_2.setEditable(true);
+        password_2.setFont(f);
+        password_2.setForeground(Color.YELLOW);
+        password_2.setBackground(grey2);
+        password_2.setBounds((int)(290*m),(int)(380*m), (int)(680*m),(int)(60*m));
+
+        JTextField password2_2 = generateSimpleTextField("Repeat new password", f, Color.YELLOW, grey1, 290, 310, 680, 60, false, true);
+
+        JTextField email = generateSimpleTextField(eml, f, Color.YELLOW, grey2, 290, 510, 680, 60, true, false);
+
+        JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
+
+        ImageIcon icon = loadIcon("/assets/sprites/menu/tablon_register.png",788,720);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(246),0,res(788),res(720));
+
+        guiItems items[] = {guiItems.CONFIRM_CHANGE_PASS, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
+                guiItems.PASSWORD_TEXT, guiItems.PASSWORD_2, guiItems.PASSWORD_2_TEXT, guiItems.EMAIL, guiItems.EMAIL_TEXT,
+                guiItems.BACK, guiItems.REGISTER_TABLE};
+        Component components[] = {confirm, username, password, oldpass2, password2, password_2, password2_2,
+                email, email2, backButton(), table};
+
+        addComponents(items, components);
+
+        gui.setBack(2);
+        gui.repaint();
+        gui.revalidate();
+    }
+
     public void principalGUI(){
-        if(!componentsOnScreen.containsKey(guiItems.FRIEND_LIST)) {
+        if(!componentsOnScreen.containsKey(guiItems.NORMAL_BUTTON)) {
             clearGui();
 
             new friend_list_gui(this,friends, pendingMessages);
@@ -665,6 +737,56 @@ public class online_mode_gui {
         reloadGUI();
     }
 
+    public void verifyAccount(){
+        JTextField popup = generateSimpleTextField("   Verification code", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
+
+        JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
+
+        JButton popupB1 = generateSimpleButton("Okey", guiItems.VERIFY_BUTTON, f, Color.YELLOW, grey2, 533, 420, 200, 60, false);
+
+        ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png",540,280);
+        JLabel table = new JLabel(icon);
+        table.setBounds(res(370),res(220),res(540),res(280));
+
+        guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_CODE, guiItems.VERIFY_BUTTON, guiItems.POP_UP_TABLE};
+        Component components[] = {popup, name, popupB1, table};
+
+        guiItems items2[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items2[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items2, false);
+
+        addComponents(items, components);
+
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+
+        itemsOnScreen.add(0,guiItems.POP_UP_TABLE);
+        itemsOnScreen.add(0,guiItems.POP_UP);
+        itemsOnScreen.add(0,guiItems.INTRODUCE_CODE);
+        itemsOnScreen.add(0,guiItems.VERIFY_BUTTON);
+
+        reloadGUI();
+    }
+
+    public void closeVerification(){
+        guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_CODE, guiItems.VERIFY_BUTTON, guiItems.POP_UP_TABLE};
+        deleteComponents(items);
+        guiItems items2[] = new guiItems[itemsOnScreen.size()];
+
+        for(int i = 0; i < itemsOnScreen.size();++i){
+            items2[i] = itemsOnScreen.get(i);
+        }
+
+        enableComponents(items2, true);
+
+        reloadGUI();
+    }
+
     public void chat(String friend){
         sendableObjectsList msgs = (sendableObjectsList)online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request,"MESSAGE HISTORIAL:"+friend,0);
         friendMessages = new ArrayList<>();
@@ -673,9 +795,9 @@ public class online_mode_gui {
         }
         chatgui = new chat_gui(this,friendMessages, friend);
         pendingMessages.remove(friend);
-        closeFriendList();
         new friend_list_gui(this,friends,pendingMessages);
         reloadGUI();
+        online_controller.getConToServer().sendString(msgID.toServer.request,"NOTIFY READ MESSAGES:"+friend);
     }
 
     public void profileGUI(){
@@ -726,7 +848,10 @@ public class online_mode_gui {
             deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER, guiItems.CLOSE_CHAT});
             enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON,
                     guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON, guiItems.BACK}, true);
+            pendingMessages.remove(friends.get(friendSelected));
+            new friend_list_gui(this,friends,pendingMessages);
             reloadGUI();
+            online_controller.getConToServer().sendString(msgID.toServer.request,"NOTIFY READ MESSAGES:"+friends.get(friendSelected));
         }
     }
 
@@ -866,7 +991,6 @@ public class online_mode_gui {
                 else if(res[0].equals("NEW FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
                     friends.add(res[1]);
                     Collections.sort(friends);
-                    closeFriendList();
                     new friend_list_gui(online_mode_gui.this, friends,pendingMessages);
                 }
                 else if(res[0].equals("MESSAGE RECEIVED") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
@@ -877,11 +1001,10 @@ public class online_mode_gui {
                     else{
                         boolean yet = false;
                         for(int i = 0; !yet && i < pendingMessages.size(); ++i){
-                            yet = pendingMessages.equals(res[1]);
+                            yet = pendingMessages.get(i).equals(res[1]);
                         }
                         if(!yet){
                             pendingMessages.add(res[1]);
-                            closeFriendList();
                             new friend_list_gui(online_mode_gui.this, friends,pendingMessages);
                         }
                     }
@@ -889,7 +1012,6 @@ public class online_mode_gui {
                 else if(res[0].equals("DELETED FRIEND") && (onlineState == GameState.PRINCIPAL_GUI ||  onlineState == GameState.PROFILE_GUI) ){
                     friends.remove(res[1]);
                     pendingMessages.remove(res[1]);
-                    closeFriendList();
                     new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
                 }
                 else if(res[0].equals("SEARCH GAME")){

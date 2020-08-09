@@ -25,10 +25,9 @@ public class Player implements Serializable {
     private String email;
     @Column(name = "password", nullable = false)
     @Size(min = 8, max = 100, message="ERROR:La contraseña tiene que tener entre 8 y 100 caracteres.")
-    @Pattern(regexp = "[A-z,0-9,_,-]+", message="ERROR:La contraseña solo puede tener letras mayúsculas o minúsculas sin acentuar, números, y los caracteres \"_\" y \"-\".")
     private String password;
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private boolean active = false;
     @Column(name = "rankScore", nullable = false)
     private int rankScore = 0;
     @Column(name = "normalWins", nullable = false)
@@ -64,6 +63,8 @@ public class Player implements Serializable {
     @ManyToMany
     @JoinTable(name = "pending_messages")
     private List<Player> pending_messages = new ArrayList<>();
+    @Column(name="code")
+    private int code;
 
     /**
      * Instantiates a new Player.
@@ -85,6 +86,7 @@ public class Player implements Serializable {
         this.password = password;
         this.active = active;
         this.rankScore = 0;
+        this.code = (int) (Math.random()*100000);
     }
 
     /**
@@ -365,6 +367,14 @@ public class Player implements Serializable {
 
     public void setPending_messages(List<Player> pending_messages) {
         this.pending_messages = pending_messages;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     @Override

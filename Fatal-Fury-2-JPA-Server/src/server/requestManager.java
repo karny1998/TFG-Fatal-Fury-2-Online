@@ -116,6 +116,16 @@ public class requestManager {
             String aux[] = request.split(":");
             manager.notifyMessagesRead(userLogged, aux[1]);
         }
+        else if(request.contains("VERIFY ACCOUNT")){
+            String aux[] = request.split(":");
+            String res = manager.verifyAccount(aux[1], Integer.parseInt(aux[2]));
+            con.sendString(msgID.toServer.request, res);
+        }
+        else if(request.contains("RECOVER ACCOUNT")){
+            String aux[] = request.split(":");
+            String res = manager.recoverAccount(aux[1]);
+            con.sendString(msgID.toServer.request, res);
+        }
     }
 
     public boolean isLogged(){

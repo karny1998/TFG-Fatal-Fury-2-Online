@@ -48,7 +48,13 @@ public class profile_gui {
     public void profile(){
         new friend_list_gui(gui,gui.getFriends(), gui.getPendingMessages());
 
-        JTextField name = gui.generateSimpleTextField(prof.getUser(), f3, Color.YELLOW, grey2, 256, 25, 500, 100, false, false);
+        JTextField name = null;
+        if(prof.getUser().equals(gui.getUserLogged())){
+            name = gui.generateSimpleTextField(prof.getUser(), f3, Color.YELLOW, grey2, 256, 25, 500, 60, false, false);
+        }
+        else{
+            name = gui.generateSimpleTextField(prof.getUser(), f3, Color.YELLOW, grey2, 256, 25, 500, 100, false, false);
+        }
         JTextField points = gui.generateSimpleTextField("Ranked points: " + prof.getPoints(), f, Color.YELLOW, grey4, 256, 150, 500, 60, false, false);
         JTextField normals = gui.generateSimpleTextField("Normal: " + prof.getNormalWins() + "W " + prof.getNormalLoses() + "L", f, Color.YELLOW, grey4, 50, 235, 450, 60, false, false);
         JTextField rankeds = gui.generateSimpleTextField("Rankeds: " + prof.getRankedWins() + "W " + prof.getRankedLoses() + "L", f, Color.YELLOW, grey4, 530, 235, 450, 60, false, false);
@@ -154,6 +160,13 @@ public class profile_gui {
         Component components[] = {back, scroll1, gui.auxiliarBackgroud(),name, points, normals, rankeds, scroll2};
 
         gui.addComponents(items, components);
+
+        if(prof.getUser().equals(gui.getUserLogged())){
+            JButton change = gui.generateSimpleButton("Change password", guiItems.CHANGE_PASS_BUTTON, f, Color.YELLOW, grey1, 321, 100, 370, 40, false);
+            gui.getComponentsOnScreen().put(guiItems.CHANGE_PASS_BUTTON, change);
+            gui.getItemsOnScreen().add(0,guiItems.CHANGE_PASS_BUTTON);
+            gui.reloadGUI();
+        }
     }
 
     class HistorialTableRenderer implements TableCellRenderer {

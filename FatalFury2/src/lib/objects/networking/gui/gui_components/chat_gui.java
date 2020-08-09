@@ -41,6 +41,8 @@ public class chat_gui {
             }
         }
 
+        gui.closeChat();
+
         chat();
     }
 

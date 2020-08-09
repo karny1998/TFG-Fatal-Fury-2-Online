@@ -85,10 +85,10 @@ public class online_round extends round {
                 e.applyDamage(e.getLife()-eL);
                 e.setX(eX);e.setY(eY);
                 e.setOrientation(eO);
-                if(character.isKnockback(pS)){
+                if(character.isKnockback(pS) && !p.inKnockback()){
                     p.setState(pS,pHurt,eHurt);
                 }
-                if(character.isKnockback(eS)){
+                if(character.isKnockback(eS) && !e.inKnockback()){
                     e.setState(eS,eHurt,pHurt);
                 }
             }

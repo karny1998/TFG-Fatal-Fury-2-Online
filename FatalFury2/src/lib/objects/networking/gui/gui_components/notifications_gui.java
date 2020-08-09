@@ -59,13 +59,19 @@ public class notifications_gui {
                 guiItems items[] = {guiItems.FRIEND_REQUEST_NOTIFICATION};
                 Component comps[] = {button};
                 gui.addComponents(items,comps);
+                gui.getItemsOnScreen().remove(guiItems.FRIEND_REQUEST_NOTIFICATION);
+                gui.getItemsOnScreen().add(0,guiItems.FRIEND_REQUEST_NOTIFICATION);
             }
             else{
-                //clearFriendRequestNotification()
+                if(gui.getComponentsOnScreen().containsKey(guiItems.FRIEND_REQUEST_NOTIFICATION)) {
+                    clearFriendRequestNotification();
+                }
             }
         }
         else{
-            //clearFriendRequestNotification()
+            if(gui.getComponentsOnScreen().containsKey(guiItems.FRIEND_REQUEST_NOTIFICATION)) {
+                clearFriendRequestNotification();
+            }
         }
         gui.reloadGUI();
     }
