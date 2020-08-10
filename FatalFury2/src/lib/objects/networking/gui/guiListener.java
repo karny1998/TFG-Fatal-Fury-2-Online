@@ -43,7 +43,7 @@ public class guiListener implements ActionListener {
         if (type == guiItems.CLOSE_GAME) {
             System.exit(0);
         }
-        String user, pass = null, pass2, email, msg, friend, res = null;
+        String user, oldpass = null, pass = null, pass2, email, msg, friend, res = null;
         int code;
         profile prof;
         GameState onlineState = gui.getOnlineState();
@@ -93,11 +93,6 @@ public class guiListener implements ActionListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                /*try {
-                    pass = encrypt(pass);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
                 user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase();
                 switch (type){
                     case SHOW:
@@ -143,8 +138,6 @@ public class guiListener implements ActionListener {
                         }
                         break;
                     case POP_UP_BUTTON:
-                        /*gui.clearGui();
-                        gui.login(false,user,pass);*/
                         gui.closePopUp();
                         break;
                     case QUIT_BUTTON:
@@ -163,6 +156,7 @@ public class guiListener implements ActionListener {
                         res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"VERIFY ACCOUNT:"+user+":"+code, 0);
                         if(res.equals("VERIFIED")){
                             gui.closeVerification();
+                            gui.popUp("Account verified.");
                         }
                         else{
                             gui.closeVerification();
@@ -253,13 +247,17 @@ public class guiListener implements ActionListener {
                         code  = Integer.parseInt(((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_CODE)).getText());
                         res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"VERIFY ACCOUNT:"+user+":"+code, 0);
                         if(res.equals("VERIFIED")){
-                            gui.clearGui();
-                            gui.setOnlineState(GameState.LOGIN);
+                            gui.closeVerification();
+                            gui.popUp("Account verified.",guiItems.VERIFY_POP_BUTTON);
                         }
                         else{
                             gui.closeVerification();
                             gui.popUp("Wrong code", guiItems.BAD_CODE);
                         }
+                        break;
+                    case VERIFY_POP_BUTTON:
+                        gui.clearGui();
+                        gui.setOnlineState(GameState.LOGIN);
                         break;
                     case BAD_CODE:
                         gui.closePopUp(guiItems.BAD_CODE);
@@ -449,6 +447,7 @@ public class guiListener implements ActionListener {
                         deleteFriend();
                         break;
                     case QUIT_BUTTON:
+                        gui.closeChangePass();
                         quitGame();
                         break;
                     case QUIT_YES:
@@ -464,7 +463,56 @@ public class guiListener implements ActionListener {
                         gui.getNotifications().getFriendRequest().remove(0);
                         break;
                     case CHANGE_PASS_BUTTON:
-
+                        System.out.println("Antes del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
+                        gui.changePass(false,"","","");
+                        System.out.println("Despues del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
+                        break;
+                    case CANCEL_CHANGE_PASS:
+                        System.out.println("Antes del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
+                        gui.closeChangePass();
+                        System.out.println("Despues del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
+                        break;
+                    case CONFIRM_CHANGE_PASS:
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        if(pass.length() == 0 || oldpass.length() == 0 || pass2.length() == 0){
+                            gui.popUp("No field can be empty.");
+                        }
+                        else if(!pass2.equals(pass)){
+                            gui.popUp("Both passwords must be the same.");
+                        }
+                        else{
+                            try {
+                                res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"CHANGE PASSWORD:"+encrypt(oldpass)+":"+encrypt(pass2), 0);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (res.equals("CHANGED")) {
+                                gui.closeChangePass();
+                                gui.popUp("Password has been updated.");
+                                System.out.println("Has cambiado la contraseña");
+                            } else {
+                                if (res == null || res.equals("NONE") || res.equals("")) {
+                                    gui.popUp("No se conseguido contactar con el servidor");
+                                } else {
+                                    gui.popUp(res.split(":")[1].split("\n")[0]);
+                                }
+                            }
+                        }
+                    case SHOW:
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        gui.closeChangePass();
+                        gui.changePass(true,oldpass,pass,pass2);
+                        break;
+                    case HIDE:
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        gui.closeChangePass();
+                        gui.changePass(false,oldpass,pass,pass2);
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -509,9 +557,9 @@ public class guiListener implements ActionListener {
         }
         gui.closeFriendList();
         new friend_list_gui(gui,gui.getFriends(), gui.getPendingMessages());
-        //gui.reloadGUI();
         String res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REMOVE FRIEND:"+friend,0);
         gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+        gui.popUp(friend + " has been removed from your friends.");
     }
 
     private void addFriendGestion(){
@@ -532,6 +580,7 @@ public class guiListener implements ActionListener {
                 items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
                         guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
                 gui.enableComponents(items, true);
+                gui.popUp("Friend request to " + friend + " sent.");
                 System.out.println("Has enviado una solicitud de amistad");
             } else {
                 if (res == null || res.equals("NONE") || res.equals("")) {
@@ -556,6 +605,12 @@ public class guiListener implements ActionListener {
         }
         gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
         if (res.equals("FRIEND REQUEST ACCEPTED") || res.equals("FRIEND REQUEST REJECTED")) {
+            if(res.equals("FRIEND REQUEST ACCEPTED")){
+                gui.popUp(additionalInformation + " is now your friend.");
+            }
+            else{
+                gui.popUp(" Friend request rejected.");
+            }
             System.out.println("Has respondido a una solicitud de amistad");
         } else {
             if (res == null || res.equals("NONE") || res.equals("")) {

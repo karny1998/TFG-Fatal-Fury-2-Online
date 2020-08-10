@@ -1,9 +1,12 @@
 package lib.objects.networking.gui.gui_components;
 
+import lib.Enums.GameState;
 import lib.Enums.Playable_Character;
 import lib.Enums.Scenario_type;
+import lib.objects.networking.connection;
 import lib.objects.networking.gui.guiItems;
 import lib.objects.networking.gui.online_mode_gui;
+import lib.objects.networking.msgID;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
 import javax.imageio.ImageIO;
@@ -30,9 +33,17 @@ public class character_selection_gui {
     private Timer timer;
     private int time = 20;
     private JTextField timeOnScreen;
+    private String ip, rivalName;
+    private connection conToClient;
 
-    public character_selection_gui (online_mode_gui gui, boolean isHost){
+    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName){
+        this.ip = ip;
+        this.rivalName = rivalName;
         this.gui = gui;
+
+        gui.getOnline_controller().generateConToClient(ip);
+        this.conToClient = gui.getOnline_controller().getConToClient();
+
         try {
             f4 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float)res(60));
         } catch (FontFormatException e) {
@@ -77,12 +88,82 @@ public class character_selection_gui {
                 gui.getGui().repaint();
                 if(time == 0){
                     timer.stop();
+                    generateGame();
                 }
             }
         });
         timer.start();
     }
 
+    private void generateGame(){
+        if(isHost) {
+            boolean ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":"+chosen_map.toString(), 200);
+            if(!ok){
+                gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                gui.clearGui();
+                gui.popUp("Connection lost with the rival.");
+            }
+            Playable_Character rivalC = null;
+            ok = false;
+            int i = 0;
+            while(!ok && i < 200){
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String msg = conToClient.receiveString(msgID.toClient.tramits);
+                if(msg.contains(":")){
+                    ok = true;
+                    String res[] = msg.split(":");
+                    rivalC = Playable_Character.valueOf(res[0]);
+                }
+                else{
+                    ++i;
+                }
+            }
+            if(!ok){
+                gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                gui.clearGui();
+                gui.popUp("Connection lost with the rival.");
+            }
+            gui.getOnline_controller().generateFight(isHost, chosen_character, rivalC, chosen_map);
+        }
+        else{
+            Playable_Character rivalC = null;
+            boolean ok = false;
+            int i = 0;
+            while(!ok && i < 200){
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String msg = conToClient.receiveString(msgID.toClient.tramits);
+                if(msg.contains(":")){
+                    ok = true;
+                    String res[] = msg.split(":");
+                    rivalC = Playable_Character.valueOf(res[0]);
+                    chosen_map = Scenario_type.valueOf(res[1]);
+                }
+                else{
+                    ++i;
+                }
+            }
+            if(!ok){
+                gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                gui.clearGui();
+                gui.popUp("Connection lost with the rival.");
+            }
+            ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":", 200);
+            if(!ok){
+                gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                gui.clearGui();
+                gui.popUp("Connection lost with the rival.");
+            }
+            gui.getOnline_controller().generateFight(isHost, rivalC, chosen_character, chosen_map);
+        }
+    }
 
     private int res(int x){
         return gui.res(x);
@@ -123,6 +204,8 @@ public class character_selection_gui {
                 andyM = new JLabel(andyMug), andyC = new JLabel(andyCombos),
                 maiM = new JLabel(maiMug), maiC = new JLabel(maiCombos),
                 unknowM = new JLabel(unknownMug), usaMap = null, chinaMap = null, ausMap = null;
+
+        JTextField rival = gui.generateSimpleTextField(rivalName, f, Color.YELLOW, new Color(0,0,0,0), 416, 451, 100, 100, false, true);
 
         if(isHost){
             terryM.setBounds(50, 100,312, 285);
@@ -271,5 +354,21 @@ public class character_selection_gui {
 
     public void setChosen_character(Playable_Character chosen_character) {
         this.chosen_character = chosen_character;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getRivalName() {
+        return rivalName;
+    }
+
+    public void setRivalName(String rivalName) {
+        this.rivalName = rivalName;
     }
 }

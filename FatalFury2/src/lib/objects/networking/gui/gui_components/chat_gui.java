@@ -1,6 +1,7 @@
 package lib.objects.networking.gui.gui_components;
 
 import lib.objects.networking.gui.guiItems;
+import lib.objects.networking.gui.guiListener;
 import lib.objects.networking.gui.online_mode_gui;
 import lib.utils.sendableObjects.simpleObjects.message;
 
@@ -12,6 +13,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
@@ -94,11 +96,17 @@ public class chat_gui {
                 this.thumbColor = Color.YELLOW;
             }
         });
-        scrollPane.setBorder(new LineBorder(Color.black, 0));
+        //scrollPane.setBorder(new LineBorder(Color.black, 0));
 
         JButton send = gui.generateSimpleButton("Send", guiItems.SEND_MESSAGE, f2, Color.YELLOW, grey1, 930, 630, 100, 60, false);
 
         JTextField writer = gui.generateSimpleTextField("", f2, Color.YELLOW, grey1, 530, 630, 400, 60, true, false);
+        writer.addActionListener(new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                new guiListener(gui, guiItems.SEND_MESSAGE).actionPerformed(null);
+            }
+        });
 
         JButton close = gui.generateSimpleButton("X", guiItems.CLOSE_CHAT, f, Color.YELLOW, grey1, 960, 242, 40, 40, true);
 

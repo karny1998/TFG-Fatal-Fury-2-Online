@@ -20,7 +20,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
 
@@ -99,7 +101,9 @@ public class online_mode_gui {
                 profileGUI();
                 break;
             case CHARACTER_SELECTION:
-                character_selection();
+                /*if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
+                    character_selection(false, "127.0.0.1", "ss");
+                }*/
                 break;
             default:
                 break;
@@ -554,23 +558,26 @@ public class online_mode_gui {
         }
     }
 
-    public void changePass(Boolean show, String user, String pass1, String pass2, String eml){
-        if(show){
-            JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
-            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
-            addComponents(new guiItems[]{guiItems.HIDE}, new Component[]{showPass});
+    public void changePass(Boolean show, String oldpas, String pass1, String pass2){
+
+        JButton confirm = generateSimpleButton("Confirm", guiItems.CONFIRM_CHANGE_PASS, f, Color.YELLOW, grey1, 415, 528, 200, 60, false);
+
+        JButton cancel = generateSimpleButton("Cancel", guiItems.CANCEL_CHANGE_PASS, f, Color.YELLOW, grey1, 657, 528, 200, 60, false);
+
+        JTextField oldpass2 = generateSimpleTextField("Old password", f, Color.YELLOW, grey1, 290, 95, 680, 60, false, true);
+
+        JPasswordField oldpass = new JPasswordField(oldpas);
+        if(!show) {
+            oldpass.setEchoChar('*');
         }
         else{
-            JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
-            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
-            addComponents(new guiItems[]{guiItems.SHOW}, new Component[]{showPass});
+            oldpass.setEchoChar((char) 0);
         }
-
-        JButton confirm = generateSimpleButton("Confirm", guiItems.CONFIRM_CHANGE_PASS, f, Color.YELLOW, grey1, 515, 600, 250, 60, false);
-
-        JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 290, 100, 680, 60, true, false);
-
-        JTextField oldpass2 = generateSimpleTextField("Old password", f, Color.YELLOW, grey1, 290, 30, 680, 60, false, true);
+        oldpass.setEditable(true);
+        oldpass.setFont(f);
+        oldpass.setForeground(Color.YELLOW);
+        oldpass.setBackground(grey2);
+        oldpass.setBounds((int)(290*m),(int)(165*m), (int)(680*m),(int)(60*m));
 
         JPasswordField password = new JPasswordField(pass1);
         if(!show) {
@@ -583,9 +590,9 @@ public class online_mode_gui {
         password.setFont(f);
         password.setForeground(Color.YELLOW);
         password.setBackground(grey2);
-        password.setBounds((int)(290*m),(int)(240*m), (int)(680*m),(int)(60*m));
+        password.setBounds((int)(290*m),(int)(305*m), (int)(680*m),(int)(60*m));
 
-        JTextField password2 = generateSimpleTextField("New password", f, Color.YELLOW, grey1, 290, 170, 680, 60, false, true);
+        JTextField password2 = generateSimpleTextField("New password", f, Color.YELLOW, grey1, 290, 235, 300, 60, false, true);
 
         JPasswordField password_2 = new JPasswordField(pass2);
         if(!show) {
@@ -598,29 +605,43 @@ public class online_mode_gui {
         password_2.setFont(f);
         password_2.setForeground(Color.YELLOW);
         password_2.setBackground(grey2);
-        password_2.setBounds((int)(290*m),(int)(380*m), (int)(680*m),(int)(60*m));
+        password_2.setBounds((int)(290*m),(int)(445*m), (int)(680*m),(int)(60*m));
 
-        JTextField password2_2 = generateSimpleTextField("Repeat new password", f, Color.YELLOW, grey1, 290, 310, 680, 60, false, true);
+        JTextField password2_2 = generateSimpleTextField("Repeat new password", f, Color.YELLOW, grey1, 290, 375, 680, 60, false, true);
 
-        JTextField email = generateSimpleTextField(eml, f, Color.YELLOW, grey2, 290, 510, 680, 60, true, false);
-
-        JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
-
-        ImageIcon icon = loadIcon("/assets/sprites/menu/tablon_register.png",788,720);
+        ImageIcon icon = loadIcon("/assets/sprites/menu/tablon_register.png",788,590);
         JLabel table = new JLabel(icon);
-        table.setBounds(res(246),0,res(788),res(720));
+        table.setBounds(res(246),65,res(788),res(590));
 
-        guiItems items[] = {guiItems.CONFIRM_CHANGE_PASS, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
-                guiItems.PASSWORD_TEXT, guiItems.PASSWORD_2, guiItems.PASSWORD_2_TEXT, guiItems.EMAIL, guiItems.EMAIL_TEXT,
-                guiItems.BACK, guiItems.REGISTER_TABLE};
-        Component components[] = {confirm, username, password, oldpass2, password2, password_2, password2_2,
-                email, email2, backButton(), table};
+        guiItems items[] = {guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS, guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT,
+                guiItems.NEW_PASS_REPEAT, guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE};
+        Component components[] = {confirm, cancel, oldpass, oldpass2, password,  password2, password_2, password2_2, table};
 
         addComponents(items, components);
 
+        for(int i = 0; i < items.length; ++i){
+            itemsOnScreen.remove(items[i]);
+        }
+        for(int i = items.length-1; i >= 0; --i){
+            itemsOnScreen.add(0,items[i]);
+        }
+
         gui.setBack(2);
-        gui.repaint();
-        gui.revalidate();
+
+        if(show){
+            JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 590, 246, 80, 40, false);
+            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
+            itemsOnScreen.add(0,  guiItems.HIDE);
+            componentsOnScreen.put(guiItems.HIDE, showPass);
+        }
+        else{
+            JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 590, 246, 80, 40, false);
+            showPass.setMargin(new Insets((int)(5*m),(int)(5*m),(int)(5*m),(int)(5*m)));
+            itemsOnScreen.add(0,  guiItems.SHOW);
+            componentsOnScreen.put(guiItems.SHOW, showPass);
+        }
+
+        reloadGUI();
     }
 
     public void principalGUI(){
@@ -811,15 +832,17 @@ public class online_mode_gui {
         }
     }
 
-    public void character_selection(){
+    public void character_selection(boolean isHost, String ip, String rival){
         if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)){
-            char_sel = new character_selection_gui(this,true);
-            if(char_sel.isHost()){
+            clearGui();
+            if(isHost){
                 gui.setBack(5);
             }
             else {
                 gui.setBack(4);
             }
+            char_sel = new character_selection_gui(this,isHost,ip, rival);
+            System.out.println("Se ha creado la gui de selección ");
         }
     }
 
@@ -897,6 +920,13 @@ public class online_mode_gui {
 
     public void closeFriendList(){
         deleteComponents(new guiItems[]{guiItems.ADD_FRIEND, guiItems.FRIEND_LIST});
+        reloadGUI();
+    }
+
+    public void closeChangePass(){
+        deleteComponents(new guiItems[]{guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS, guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT,
+                guiItems.NEW_PASS_REPEAT, guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE, guiItems.HIDE, guiItems.SHOW});
+        reloadGUI();
     }
 
     public void loadFriends(){
@@ -1015,11 +1045,16 @@ public class online_mode_gui {
                     new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
                 }
                 else if(res[0].equals("SEARCH GAME")){
-                    String ip = res[2];
+                    String ip = res[2], name = res[3];
                     boolean isHost = Boolean.parseBoolean(res[1]);
-                    online_controller.generateFight(ip, isHost, Playable_Character.TERRY, Playable_Character.TERRY, Scenario_type.USA);
+                    setOnlineState(GameState.CHARACTER_SELECTION);
+                    clearGui();
+                    character_selection(isHost,ip,name);
+                    System.out.println("Se cambia el estado a CHARACTER_SELECTION");
                 }
                 else if(res[0].equals("SERVER CLOSED")){
+                    clearGui();
+                    principalGUI();
                     popUp("Server has been closed.", guiItems.CLOSE_GAME);
                 }
             }

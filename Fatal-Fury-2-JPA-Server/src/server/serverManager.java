@@ -546,6 +546,24 @@ public class serverManager {
         return "RECOVERED";
     }
 
+    public String changePassword(String user, String oldp, String newp) {
+        Player p = (Player) dbm.findByKey(Player.class, user);
+        if (p == null){
+            return "ERROR:El jugador receptor no existe.";
+        }
+        if (!p.getPassword().equals(oldp)){
+            return "ERROR:Incorrect password.";
+        }
+        String pass = newp;
+        try {
+            p.setPassword(pass);
+            dbm.save(p);
+        } catch (Exception e) {
+            return "ERROR:Has been a problem.";
+        }
+        return "CHANGED";
+    }
+
     private void sendRecoverAccount(String user, String cor, String pass){
         String msg = "Hi, " + user + ".<br/> Your password has been changed to : "+ pass
                 +"<br/>You can chage your password in your profile." +"<br/>Regards.";

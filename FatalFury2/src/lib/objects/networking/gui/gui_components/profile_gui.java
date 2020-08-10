@@ -162,7 +162,7 @@ public class profile_gui {
         gui.addComponents(items, components);
 
         if(prof.getUser().equals(gui.getUserLogged())){
-            JButton change = gui.generateSimpleButton("Change password", guiItems.CHANGE_PASS_BUTTON, f, Color.YELLOW, grey1, 321, 100, 370, 40, false);
+            JButton change = gui.generateSimpleButton("Change password", guiItems.CHANGE_PASS_BUTTON, f, Color.YELLOW, grey1, 321, 97, 370, 40, false);
             gui.getComponentsOnScreen().put(guiItems.CHANGE_PASS_BUTTON, change);
             gui.getItemsOnScreen().add(0,guiItems.CHANGE_PASS_BUTTON);
             gui.reloadGUI();

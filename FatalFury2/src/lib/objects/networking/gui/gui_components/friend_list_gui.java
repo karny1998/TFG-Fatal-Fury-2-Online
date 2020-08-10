@@ -99,6 +99,9 @@ public class friend_list_gui {
         guiItems items[] = {guiItems.ADD_FRIEND, guiItems.FRIEND_LIST};
         Component components[] = {addFriend, scrollPane};
 
+        gui.getItemsOnScreen().remove(guiItems.ADD_FRIEND);
+        gui.getItemsOnScreen().add(0,guiItems.ADD_FRIEND);
+
         gui.addComponents(items, components);
     }
 

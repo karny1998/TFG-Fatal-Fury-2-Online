@@ -8,9 +8,6 @@ import lib.objects.networking.gui.online_mode_gui;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
-import lib.utils.sendableObjects.sendableObject;
-import lib.utils.sendableObjects.sendableObjectsList;
-import lib.utils.sendableObjects.simpleObjects.message;
 
 import javax.security.sasl.SaslServer;
 import java.io.BufferedReader;
@@ -26,7 +23,7 @@ public class online_mode {
     /**
      * The Online state.
      */
-    private GameState onlineState = GameState.LOGIN_REGISTER;//GameState.ONLINE_MODE;
+    private GameState onlineState = GameState.CHARACTER_SELECTION;//GameState.ONLINE_MODE;
     /**
      * The Fight.
      */
@@ -94,30 +91,8 @@ public class online_mode {
      * @param debug the debug
      */
     public online_mode(Screen screen, boolean debug) {
-        this.debug = debug;
-        if(debug) {
-            /*String ip;
-            try (final DatagramSocket socket = new DatagramSocket()) {
-                socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-                ip = socket.getLocalAddress().getHostAddress();
-                itsMe = ip.equals("192.168.1.3");
-            } catch (UnknownHostException | SocketException e) {
-                e.printStackTrace();
-            }*/
-            itsMe = false;
-            if (itsMe) {
-                System.out.println("ME RECONOCIO");
-                conToClient = new connection(serverIp, 3333, 0,true);
-                conToClient.setPortSend(3334);
-            } else {
-                conToClient = new connection(serverIp, 3334, 0,true);
-                conToClient.setPortSend(3333);
-            }
-            System.out.println("Se está usando el puerto: " + conToClient.getPortReceive());
-            conToClient.setBlockReception(true);
-            System.out.println("Se han creado los sockets");
-        }
-        else {
+        this.debug = true;
+        if(!debug) {
             conToServer = new connection(serverIp, serverPort, 0, false);
             conToServer.setPortSend(serverPort);
         }
@@ -152,9 +127,8 @@ public class online_mode {
         audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
         try {
             Thread.sleep(5000);
-        } catch (Exception e) {
-        }
-        conToClient.setBlockReception(false);
+        } catch (Exception e) {}
+        //conToClient.setBlockReception(false);
 
         if (itsMe) {
             boolean ok = false;
@@ -179,17 +153,12 @@ public class online_mode {
     /**
      * Generate fight.
      *
-     * @param ip     the ip
      * @param isHost the is host
      * @param pC     the p c
      * @param pE     the p e
      * @param sce    the sce
      */
-    public void generateFight(String ip, boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce){
-        System.out.println("Se va a establecer la conexion");
-        conToClient = new connection(ip, conToClientPort, 0,true);
-        conToClient.setPortSend(conToClientPort);
-        conToClient.setBlockReception(true);
+    public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce){
         if (isHost) {
             player = new online_user_controller(pC, 1, conToClient, true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
@@ -206,15 +175,24 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(sce);
+        audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
+        audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+
+        //conToClient.setBlockReception(false);
+
+        //Sincronizar
+        boolean syncOk = synchronize(isHost);
+        if(!syncOk){
+            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+            gui.clearGui();
+            gui.popUp("Connection lost with the rival.");
+            return;
+        }
+
         fight = new online_fight_controller(player, enemy, scene, conToClient, isHost, msgID.toClient.fight, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
-        audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
-        audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-        try {
-            Thread.sleep(5000);
-        } catch (Exception e) {}
-        conToClient.setBlockReception(false);
+
         if (isHost) {
             boolean ok = false;
             do {
@@ -231,6 +209,41 @@ public class online_mode {
         }
         gui.getPrincipal().gameOn();
         gui.setOnlineState(GameState.ONLINE_FIGHT);
+    }
+
+    private boolean synchronize(boolean isHost){
+        if(isHost){
+            for(int i = 0; i < 1000 ;++i){
+                conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String res = conToClient.receiveString(msgID.toClient.synchronization);
+                if( res.equals("READY") || res.equals("ACK")){
+                    return true;
+                }
+            }
+            return false;
+        }
+        else{
+            for(int i = 0; i < 1000 ;++i){
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String res = conToClient.receiveString(msgID.toClient.synchronization);
+                if(res.equals("READY")){
+                    for(int j = 0; j < 10; ++j){
+                        conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
@@ -258,6 +271,13 @@ public class online_mode {
                 audio_manager.menu.play(menu_audio.indexes.menu_theme);
             }
         }
+    }
+
+    public void generateConToClient(String ip){
+        //conToClient = new connection(ip, 5560, 0, true);
+        //conToClient.setPortSend(5561);
+        conToClient = new connection(ip, conToClientPort, 0, true);
+        conToClient.setPortSend(conToClientPort);
     }
 
     /**

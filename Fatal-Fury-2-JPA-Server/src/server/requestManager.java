@@ -126,6 +126,11 @@ public class requestManager {
             String res = manager.recoverAccount(aux[1]);
             con.sendString(msgID.toServer.request, res);
         }
+        else if(request.contains("CHANGE PASSWORD")){
+            String aux[] = request.split(":");
+            String res = manager.changePassword(userLogged,aux[1], aux[2]);
+            con.sendString(msgID.toServer.request, res);
+        }
     }
 
     public boolean isLogged(){
