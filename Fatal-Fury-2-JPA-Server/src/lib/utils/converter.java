@@ -68,4 +68,12 @@ public class converter {
         }
         return list;
     }
+
+    public static ArrayList<sendableObject> convertPlayerListToRanking(List<Player> l){
+        ArrayList<sendableObject>list = new ArrayList<>();
+        for(Player p : l){
+            list.add(new profile(p.getUsername(),p.getRankScore(),0,0,p.getRankWins(), p.getRankLoses(), null));
+        }
+        return list;
+    }
 }

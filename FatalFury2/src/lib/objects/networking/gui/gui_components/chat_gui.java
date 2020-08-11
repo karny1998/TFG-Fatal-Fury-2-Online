@@ -59,7 +59,7 @@ public class chat_gui {
         TableCellRenderer tableRenderer;
         model = new ChatTextsTableModel();
         table = new JTable(model);
-        table.setBounds(res(530),230,res(600),res(400));
+        table.setBounds(res(530),res(230),res(600),res(400));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(res(40));
         table.setOpaque(true);
@@ -125,7 +125,7 @@ public class chat_gui {
         gui.getItemsOnScreen().add(0,guiItems.CLOSE_CHAT);
 
         gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON,
-                guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
+                guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
                 guiItems.BACK}, false);
         gui.reloadGUI();
     }

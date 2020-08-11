@@ -134,6 +134,8 @@ public class connection {
             notificationSM.acquire();
         }catch (Exception e){
             e.printStackTrace();
+            socketTCP = null;
+            socketUDP = null;
         }
         this.rec = new receiver(this);
         this.rec.start();
@@ -181,7 +183,7 @@ public class connection {
                     p = new packet(id, false, (sendableObject)msg);
                 }
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
         }
     }
 
@@ -211,13 +213,14 @@ public class connection {
     /**
      * Send hi.
      */
-    public void sendHi(){
+    public boolean sendHi(){
+        long timeReference = System.currentTimeMillis();
         if(isUDP) {
             bufSend = ("HI").getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
                 boolean ok = false;
-                while (!ok) {
+                while (!ok && System.currentTimeMillis()-timeReference < 5000) {
                     System.out.println("se envia hi");
                     socketUDP.send(packet);
                     Thread.sleep(100);
@@ -225,15 +228,21 @@ public class connection {
                         ok = true;
                     }
                 }
+                return ok;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
         }
         else{
             try{
                 packet p = new packet(0, false, "HI");
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+                return true;
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -372,7 +381,11 @@ public class connection {
                 }
             }
 
-        }catch (Exception e){/*e.printStackTrace();*/}
+        }catch (Exception e){
+            /*e.printStackTrace();*/
+            socketTCP = null;
+            socketUDP = null;
+        }
     }
 
     public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
@@ -541,10 +554,10 @@ public class connection {
      */
     public  boolean isConnected(){
         if(isUDP){
-            return socketUDP.isConnected();
+            return socketUDP != null;
         }
         else{
-            return socketTCP.isConnected();
+            return socketTCP != null;
         }
     }
 
@@ -668,12 +681,13 @@ public class connection {
      *
      * @param portSend the port send
      */
-    public void setPortSend(int portSend) {
+    public boolean setPortSend(int portSend) {
         this.portSend = portSend;
         if(isUDP) {
             socketUDP.connect(address, portSend);
-            sendHi();
+            return sendHi();
         }
+        return true;
     }
 
     /**

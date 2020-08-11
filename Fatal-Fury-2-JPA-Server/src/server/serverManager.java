@@ -27,6 +27,7 @@ public class serverManager {
     private List<String> searchingRankedGameUsers = new ArrayList<>();
     private List<Pair<String,String>> ongoingGames = new ArrayList<>();
     private List<Pair<String,String>> ongoingRankedGames = new ArrayList<>();
+    private Map<String, String> pendingFriendsInvitatiosns = new HashMap<>();
     private boolean shuttingDown = false;
 
     public serverManager(databaseManager dbm){
@@ -58,6 +59,7 @@ public class serverManager {
         loggedUsers.remove(us);
         usersIP.remove(us);
         searchingGameUsers.remove(us);
+        pendingFriendsInvitatiosns.remove(us);
         boolean erased = false;
         for(int i = 0; !erased && i < ongoingGames.size(); ++i){
             if(ongoingGames.get(i).first.equals(us) || ongoingGames.get(i).second.equals(us)){
@@ -312,18 +314,20 @@ public class serverManager {
         }
     }
 
-    public synchronized void stopSearchingGame(InetAddress player){
+    public synchronized void stopSearchingGame(String player){
+        searchingRankedGameUsers.remove(player);
         searchingGameUsers.remove(player);
+        pendingFriendsInvitatiosns.remove(player);
     }
 
     public String sendMessage(String transmitter, String receiver, String msg){
         Player p1 = (Player) dbm.findByKey(Player.class, transmitter);
         if (p1 == null){
-            return "ERROR:El jugador emisor no existe.";
+            return "ERROR:The player does not exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, receiver);
         if (p2 == null){
-            return "ERROR:El jugador receptor no existe.";
+            return "ERROR:The player does not exist.";
         }
         boolean ok = false;
         for(int i = 0; !ok && i < p1.getPending_messages().size(); ++i){
@@ -362,11 +366,11 @@ public class serverManager {
     public synchronized String registerGame(String user1, String user2, String character1, String character2, int result, boolean ranked){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
-            return "ERROR:El jugador emisor no existe.";
+            return "ERROR:The player does not exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, user2);
         if (p2 == null){
-            return "ERROR:El jugador receptor no existe.";
+            return "ERROR:The player does not exist.";
         }
         try {
             if (ranked) {
@@ -514,11 +518,11 @@ public class serverManager {
     public String notifyMessagesRead(String receiver, String transmiter){
         Player p1 = (Player) dbm.findByKey(Player.class, receiver);
         if (p1 == null){
-            return "ERROR:El jugador receptor no existe.";
+            return "ERROR:The player does not exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, transmiter);
         if (p2 == null){
-            return "ERROR:El jugador emisor no existe.";
+            return "ERROR:The player does not exist.";
         }
         for(int i = 0; i < p1.getPending_messages().size(); ++i){
             if(p1.getPending_messages().get(i).getUsername().equals(transmiter)){
@@ -530,10 +534,66 @@ public class serverManager {
         return "OK";
     }
 
+    public String challengeFriend(String inviter, String receptor){
+        if(!loggedUsers.containsKey(receptor)){
+            return "ERROR: The user isnt connected.";
+        }
+        Player p1 = (Player) dbm.findByKey(Player.class, inviter);
+        if (p1 == null){
+            return "ERROR:The player does not exist.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, receptor);
+        if (p2 == null){
+            return "ERROR:The player does not exist.";
+        }
+        loggedUsers.get(receptor).sendString(msgID.toServer.notification, "FRIEND CHALLENGE:"+inviter);
+        pendingFriendsInvitatiosns.put(inviter, receptor);
+        return "CHALLENGE SENT";
+    }
+
+    public String cancelInvitation(String inviter){
+        Player p1 = (Player) dbm.findByKey(Player.class, inviter);
+        if (p1 == null){
+            return "ERROR:The player does not exist.";
+        }
+        if(loggedUsers.containsKey(pendingFriendsInvitatiosns.get(inviter))){
+            loggedUsers.get(pendingFriendsInvitatiosns.get(inviter)).sendString(msgID.toServer.notification,
+                    "FRIEND CHALLENGE CANCELED");
+        }
+        pendingFriendsInvitatiosns.remove(inviter);
+        return "CHALLENGE CANCELLED";
+    }
+
+    public String answerFriendChallenge(String receptor, String inviter, boolean accepted){
+        if(!pendingFriendsInvitatiosns.containsKey(inviter) || !loggedUsers.containsKey(inviter)){
+            return "ERROR:The invitation has expired.";
+        }
+        Player p1 = (Player) dbm.findByKey(Player.class, receptor);
+        if (p1 == null){
+            return "ERROR:The player does not exist.";
+        }
+        Player p2 = (Player) dbm.findByKey(Player.class, inviter);
+        if (p2 == null){
+            return "ERROR:The player does not exist.";
+        }
+        if(!accepted){
+            loggedUsers.get(inviter).sendString(msgID.toServer.notification, "PLAYER BUSY");
+        }
+        else{
+            createGameBetweenPalyers(inviter, receptor, false);
+        }
+        return "CHALLENGE ANSWERED";
+    }
+
+    public sendableObjectsList loadRanking(){
+        List<Player> list = dbm.getRanking();
+        return new sendableObjectsList(converter.convertPlayerListToRanking(list));
+    }
+
     public String recoverAccount(String user){
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
-            return "ERROR:El jugador receptor no existe.";
+            return "ERROR:The player does not exist.";
         }
         String pass = String.valueOf((int)(Math.random()*999999999));
         try {
@@ -549,7 +609,7 @@ public class serverManager {
     public String changePassword(String user, String oldp, String newp) {
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
-            return "ERROR:El jugador receptor no existe.";
+            return "ERROR:The player does not exist.";
         }
         if (!p.getPassword().equals(oldp)){
             return "ERROR:Incorrect password.";

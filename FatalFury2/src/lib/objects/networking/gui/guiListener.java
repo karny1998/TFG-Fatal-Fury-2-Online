@@ -58,6 +58,22 @@ public class guiListener implements ActionListener {
             }
         }
         switch (onlineState){
+            case SERVER_PROBLEM:
+                switch (type){
+                    case RETRY_CONNECTION:
+                        gui.clearGui();
+                        boolean ok = gui.getOnline_controller().retryInitialConnection();
+                        if(ok){
+                            gui.getPinger().setCon(gui.getOnline_controller().getConToServer());
+                        }
+                        break;
+                    case QUIT_YES:
+                        System.exit(0);
+                        break;
+                    default:
+                        break;
+                }
+                break;
             case LOGIN_REGISTER:
                 switch (type){
                     case LOGIN_BUTTON:
@@ -305,6 +321,13 @@ public class guiListener implements ActionListener {
                                 +" will be removed from your friend list. Are you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                         break;
                     case INVITE_FRIEND:
+                        res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CHALLENGE FRIEND:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        if(res.equals("CHALLENGE SENT")){
+                            gui.searchingGame(true,false);
+                        }
+                        else if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1], guiItems.OKEY_INVITATION_CANCELLED);
+                        }
                         break;
                     case SEND_MESSAGE:
                         sendMessage();
@@ -342,10 +365,8 @@ public class guiListener implements ActionListener {
                         gui.setProfileToShow(prof);
                         break;
                     case NORMAL_BUTTON:
-                        gui.searchingGame(false);
+                        gui.searchingGame(false,false);
                         conToServer.sendString(msgID.toServer.request,"SEARCH GAME");
-                        //gui.setOnlineState(GameState.CHARACTER_SELECTION);
-                        //gui.clearGui();
                         break;
                     case ACCEPT_FRIEND:
                         answerFriendRequest(true);
@@ -363,15 +384,37 @@ public class guiListener implements ActionListener {
                         deleteFriend();
                         break;
                     case RANKED_BUTTON:
-                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER GAME:"+gui.getUserLogged() +":TOMI1234:TERRY:ANDY:2:false",0);
+                        gui.searchingGame(false,true);
+                        conToServer.sendString(msgID.toServer.request,"SEARCH RANKED GAME");
                         break;
                     case CANCEL_SEARCH_GAME:
                         gui.closeSearchingGame();
+                        conToServer.sendString(msgID.toServer.request,"CANCEL SEARCH GAME");
                         break;
                     case FRIEND_REQUEST_NOTIFICATION:
                         gui.friendRequest(gui.getNotifications().getFriendRequest().get(0));
                         gui.getNotifications().getFriendRequest().remove(0);
                         break;
+                    case CANCEL_FRIEND_CHALLENGE:
+                        gui.closeSearchingGame();
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CANCEL CHALLENGE", 0);
+                        break;
+                    case REJECT_FRIEND_CHALLENGE:
+                        online_controller.getConToServer().sendString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":false");
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        break;
+                    case ACCEPT_FRIEND_CHALLENGE:
+                        res = online_controller.getConToServer().sendStringWaitingAnswerString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":true", 0);
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1]);
+                        }
+                        break;
+                    case OKEY_INVITATION_CANCELLED:
+                        gui.closePopUp(guiItems.OKEY_INVITATION_CANCELLED);
+                        break;
+                    case RANKING_BUTTON:
+                        gui.setOnlineState(GameState.ONLINE_RANKING);
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
                         break;
@@ -416,6 +459,13 @@ public class guiListener implements ActionListener {
                                 +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                         break;
                     case INVITE_FRIEND:
+                        res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CHALLENGE FRIEND:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        if(res.equals("CHALLENGE SENT")){
+                            gui.searchingGame(true,false);
+                        }
+                        else if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1], guiItems.OKEY_INVITATION_CANCELLED);
+                        }
                         break;
                     case SEND_MESSAGE:
                         sendMessage();
@@ -500,6 +550,7 @@ public class guiListener implements ActionListener {
                                 }
                             }
                         }
+                        break;
                     case SHOW:
                         oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
                         pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
@@ -513,6 +564,24 @@ public class guiListener implements ActionListener {
                         pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
                         gui.closeChangePass();
                         gui.changePass(false,oldpass,pass,pass2);
+                        break;
+                    case CANCEL_FRIEND_CHALLENGE:
+                        gui.closeSearchingGame();
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CANCEL CHALLENGE", 0);
+                        break;
+                    case REJECT_FRIEND_CHALLENGE:
+                        online_controller.getConToServer().sendString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":false");
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        break;
+                    case ACCEPT_FRIEND_CHALLENGE:
+                        res = online_controller.getConToServer().sendStringWaitingAnswerString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":true", 0);
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1]);
+                        }
+                        break;
+                    case OKEY_INVITATION_CANCELLED:
+                        gui.closePopUp(guiItems.OKEY_INVITATION_CANCELLED);
                         break;
                     default:
                         System.out.println("SE HA PRETADO UN BOTON");
@@ -540,6 +609,123 @@ public class guiListener implements ActionListener {
                         System.out.println("SE HA PRETADO UN BOTON");
                         break;
                 }
+            case ONLINE_RANKING:
+                switch (type){
+                    case BACK:
+                        gui.clearGui();
+                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        break;
+                    case FRIEND_SEL_BUTTON:
+                        if(!gui.getComponentsOnScreen().containsKey(guiItems.POP_UP_TABLE)) {
+                            if(gui.getComponentsOnScreen().containsKey(guiItems.CHAT)) {
+                                gui.closeChat();
+                            }
+                            gui.friendInteractionPopUp();
+                        }
+                        break;
+                    case ADD_FRIEND:
+                        if(gui.getComponentsOnScreen().containsKey(guiItems.CHAT)) {
+                            gui.closeChat();
+                        }
+                        gui.addFriend();
+                        break;
+                    case CONFIRM_ADD_BUTTON:
+                        addFriendGestion();
+                        break;
+                    case CANCEL_ADD_BUTTON:
+                        gui.closeAddFriend();
+                        break;
+                    case MESSAGE_FRIEND:
+                        if(!gui.getComponentsOnScreen().containsKey(guiItems.POP_UP_TABLE)) {
+                            /*gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            boolean ok = false;
+                            for(int i = 0;  !ok && i < gui.getItemsOnScreen().size(); ++i){
+                                if(gui.getItemsOnScreen().get(i) == guiItems.FRIEND_LIST || gui.getItemsOnScreen().get(i) == guiItems.ADD_FRIEND){
+                                    ok = true;
+                                    gui.getItemsOnScreen().add(i,guiItems.AUXILIAR_BACKGROUND);
+                                }
+                            }*/
+                            gui.chat(gui.getFriends().get(gui.getFriendSelected()));
+                        }
+                        break;
+                    case DELETE_FRIEND:
+                        gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
+                                +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                        break;
+                    case INVITE_FRIEND:
+                        res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CHALLENGE FRIEND:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        if(res.equals("CHALLENGE SENT")){
+                            gui.searchingGame(true,false);
+                        }
+                        else if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1], guiItems.OKEY_INVITATION_CANCELLED);
+                        }
+                        break;
+                    case SEND_MESSAGE:
+                        sendMessage();
+                        break;
+                    case CLOSE_CHAT:
+                        gui.closeChat();
+                        gui.setFriendMessages(new ArrayList<>());
+                        break;
+                    case PROFILE_FRIEND:
+                        gui.clearGui();
+                        gui.setOnlineState(GameState.PROFILE_GUI);
+                        prof = (profile) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"PROFILE:"+gui.getFriends().get(gui.getFriendSelected()),0);
+                        gui.setProfileToShow(prof);
+                        break;
+                    case ACCEPT_FRIEND:
+                        answerFriendRequest(true);
+                        break;
+                    case REJECT_FRIEND:
+                        answerFriendRequest(false);
+                        break;
+                    case POP_UP_BUTTON:
+                        gui.closePopUp();
+                        break;
+                    case CANCEL_DELETE:
+                        gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                        break;
+                    case CONFIRM_DELETE:
+                        deleteFriend();
+                        break;
+                    case QUIT_BUTTON:
+                        quitGame();
+                        break;
+                    case QUIT_YES:
+                        conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
+                        conToServer.close();
+                        System.exit(0);
+                        break;
+                    case QUIT_NO:
+                        gui.closePopUpWithConfirmation(guiItems.QUIT_YES, guiItems.QUIT_NO);
+                        break;
+                    case FRIEND_REQUEST_NOTIFICATION:
+                        gui.friendRequest(gui.getNotifications().getFriendRequest().get(0));
+                        gui.getNotifications().getFriendRequest().remove(0);
+                        break;
+                    case CANCEL_FRIEND_CHALLENGE:
+                        gui.closeSearchingGame();
+                        conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CANCEL CHALLENGE", 0);
+                        break;
+                    case REJECT_FRIEND_CHALLENGE:
+                        online_controller.getConToServer().sendString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":false");
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        break;
+                    case ACCEPT_FRIEND_CHALLENGE:
+                        res = online_controller.getConToServer().sendStringWaitingAnswerString(msgID.toServer.request, "ANSWER CHALLENGE:" + additionalInformation + ":true", 0);
+                        gui.closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        if(res.contains("ERROR")){
+                            gui.popUp(res.split(":")[1]);
+                        }
+                        break;
+                    case OKEY_INVITATION_CANCELLED:
+                        gui.closePopUp(guiItems.OKEY_INVITATION_CANCELLED);
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 System.out.println("SE HA PRETADO UN BOTON");
                 break;
@@ -577,7 +763,7 @@ public class guiListener implements ActionListener {
             if (res.equals("FRIEND REQUEST SENT")) {
                 guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_CODE, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
                 gui.deleteComponents(items);
-                items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
+                items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
                         guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
                 gui.enableComponents(items, true);
                 gui.popUp("Friend request to " + friend + " sent.");

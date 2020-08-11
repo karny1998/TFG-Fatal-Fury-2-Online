@@ -59,6 +59,8 @@ public class Main {
         private final Thread thread;
         private requestManager rqM;
         private boolean logged = false;
+        private boolean forzedClose = false;
+        private clientPinger cp;
 
         public clientHandler(serverConnection con, InetAddress client) {
             System.out.println("Conectado con el usuario: " + client.getHostAddress());
@@ -66,6 +68,8 @@ public class Main {
             this.con = con;
             this.client = client;
             rqM = new requestManager(manager,con,client);
+            this.cp = new clientPinger(con);
+            this.cp.start();
         }
 
         @Override
@@ -78,6 +82,7 @@ public class Main {
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
             con.close();
+            manager.desconnectUser(rqM.getUserLogged());
             this.stop = true;
         }
 
@@ -97,14 +102,21 @@ public class Main {
         @Override
         public void run(){
             while(keepRunning()) {
-                if(con.isConnected()) {
+                if(forzedClose){
+                    threads.remove(client);
+                    manager.desconnectUser(rqM.getUserLogged());
+                    con.close();
+                    doStop();
+                }
+                else if(con.isConnected()) {
                     con.waitForRequestOrTramit();
                     String tramits = con.receiveString(msgID.toServer.tramits);
                     String request = con.receiveString(msgID.toServer.request);
-                    if (tramits.equals("DISCONNECT")) {
+                    if (tramits.equals("DISCONNECT") || forzedClose) {
                         threads.remove(client);
                         manager.desconnectUser(rqM.getUserLogged());
                         con.close();
+                        cp.doStop();
                         doStop();
                     } else {
                         rqM.manageRequest(request);
@@ -128,6 +140,53 @@ public class Main {
                 }
                 else{
                     doStop();
+                }
+            }
+        }
+
+        protected class clientPinger extends Thread{
+            private serverConnection con;
+            private boolean stop = false;
+            private final Thread thread;
+            private long timeReference = System.currentTimeMillis();
+
+            public clientPinger(serverConnection con) {
+                this.con = con;
+                this.thread = new Thread(this);
+            }
+
+            @Override
+            public void start(){
+                this.thread.start();
+            }
+
+            public synchronized void doStop() {
+                this.stop = true;
+            }
+
+            private synchronized boolean keepRunning() {
+                return this.stop == false;
+            }
+
+            @Override
+            public void run(){
+                while(keepRunning()) {
+                    try{
+                        con.sendString(msgID.toServer.ping, "PING");
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String p = con.receiveString(msgID.toServer.ping);
+                    if(p.equals("PING")){
+                        timeReference = System.currentTimeMillis();
+                    }
+                    else{
+                        if(System.currentTimeMillis() - timeReference > 5000){
+                            clientHandler.this.setForzedClose(true);
+                            doStop();
+                        }
+                    }
                 }
             }
         }
@@ -176,6 +235,14 @@ public class Main {
 
         public void setLogged(boolean logged) {
             this.logged = logged;
+        }
+
+        public boolean isForzedClose() {
+            return forzedClose;
+        }
+
+        public void setForzedClose(boolean forzedClose) {
+            this.forzedClose = forzedClose;
         }
     }
 

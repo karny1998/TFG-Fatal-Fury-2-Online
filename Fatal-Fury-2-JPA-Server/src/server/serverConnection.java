@@ -50,7 +50,16 @@ public class serverConnection{
                 p = new packet(id, false, (sendableObject)msg);
             }
             out.writeObject(p);
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            /*e.printStackTrace();*/
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            socket = null;
+            requestSM.release();
+        }
     }
 
     public boolean reliableSendString(int id, Object msg, int timeout){
@@ -109,7 +118,7 @@ public class serverConnection{
     }
 
     public Object receive(int id, boolean string){
-        if(blockReception || !socket.isConnected()){return "";}
+        if(blockReception || socket == null){return "";}
         try {
             sm.acquire();
             Object msg;
@@ -128,8 +137,14 @@ public class serverConnection{
             sm.release();
             return "NONE";
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            socket = null;
             sm.release();
+            requestSM.release();
         }
         sm.release();
         return "";
@@ -144,7 +159,9 @@ public class serverConnection{
             try {
                 requestSM.acquire();
             }catch (Exception e){e.printStackTrace();}
-            waitForRequestOrTramit();
+            if(socket != null) {
+                waitForRequestOrTramit();
+            }
         }
     }
 
@@ -176,7 +193,7 @@ public class serverConnection{
         }
     }
 
-    public boolean isConnected(){return socket.isConnected();}
+    public boolean isConnected(){return socket != null;}
 
     /**
      * The type Receiver.

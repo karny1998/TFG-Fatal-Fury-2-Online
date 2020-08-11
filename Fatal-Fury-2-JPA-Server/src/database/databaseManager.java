@@ -65,6 +65,17 @@ public class databaseManager {
         return null;
     }
 
+    public List<Player> getRanking(){
+        String sql = "SELECT * FROM player m ORDER BY m.rankscore DESC LIMIT 100;";
+        Query q = em.createNativeQuery(sql, Player.class);
+        try {
+            List<Player> list = q.getResultList();
+            if(list == null){return new ArrayList<>();}
+            return list;
+        }catch (Exception e){e.printStackTrace();}
+        return null;
+    }
+
     public Player findPlayerByEmail(String email){
         try{
             TypedQuery<Player> query = em.createQuery("SELECT p FROM PLAYER p WHERE p.email = :email", Player.class);

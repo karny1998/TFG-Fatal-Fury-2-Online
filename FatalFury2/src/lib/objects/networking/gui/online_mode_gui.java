@@ -46,6 +46,7 @@ public class online_mode_gui {
     private character_selection_gui char_sel;
     private String userLogged = null;
     private notificationsReceiver notifier;// = new notificationsReceiver();
+    private serverPinger pinger;
     private chat_gui chatgui;
     private notifications_gui notifications;
     private Font f,f2,f3;
@@ -66,6 +67,8 @@ public class online_mode_gui {
         this.onlineState = onlineState;
         this.gui = (gameGUI) screen.getPrincipal().getGui();
         this.principal = screen.getPrincipal();
+        this.pinger = new serverPinger(online_controller.getConToServer());
+        this.pinger.start();
         this.notifier = new notificationsReceiver();
         this.notifier.start();
     }
@@ -85,6 +88,9 @@ public class online_mode_gui {
         }
         principal.guiOn();
         switch (onlineState){
+            case SERVER_PROBLEM:
+                server_problem();
+                break;
             case LOGIN_REGISTER:
                 login_register();
                 break;
@@ -99,6 +105,9 @@ public class online_mode_gui {
                 break;
             case PROFILE_GUI:
                 profileGUI();
+                break;
+            case ONLINE_RANKING:
+                ranking();
                 break;
             case CHARACTER_SELECTION:
                 /*if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
@@ -338,19 +347,25 @@ public class online_mode_gui {
         reloadGUI();
     }
 
-    public void searchingGame(boolean rank){
+    public void searchingGame(boolean friendChallenge, boolean rank){
         String msg = "Searching game";
         if(rank){
             msg = "Searching ranked game";
         }
+        else if(friendChallenge){
+            msg = "Waiting friend answer.";
+        }
+        msg = fillText(msg,16,2);
 
         guiItems type = guiItems.CANCEL_SEARCH_GAME;
-        /*if(rank){
+        if(rank){
             type = guiItems.CANCEL_SEARCH_RANK_GAME;
-        }*/
+        }
+        else if(friendChallenge){
+            type = guiItems.CANCEL_FRIEND_CHALLENGE;
+        }
 
-        JTextField popup = generateSimpleTextField(msg, f3, Color.YELLOW, grey1, 400, 250, 490, 150, false, true);
-        popup.setHorizontalAlignment(JTextField.CENTER);
+        JTextArea popup = generateSimpleTextArea(msg, f3, Color.YELLOW, grey1, 405, 250, 490, 150, false, true);
 
         JButton popupB = generateSimpleButton("Cancel", type, f, Color.YELLOW, grey2, 545, 420, 190, 60, false);
 
@@ -417,6 +432,13 @@ public class online_mode_gui {
         itemsOnScreen.add(0,no);
 
         reloadGUI();
+    }
+
+    public void server_problem(){
+        if(!componentsOnScreen.containsKey(guiItems.RETRY_CONNECTION)){
+            clearGui();
+            popUpWithConfirmation("Connection to server couldnt be established. Retry?", guiItems.RETRY_CONNECTION, guiItems.QUIT_YES);
+        }
     }
 
     public void login_register(){
@@ -558,6 +580,15 @@ public class online_mode_gui {
         }
     }
 
+    public void ranking(){
+        if(!componentsOnScreen.containsKey(guiItems.RANKING)){
+            guiItems items[] = {guiItems.AUXILIAR_BACKGROUND};
+            Component components[] = {auxiliarBackgroud()};
+            new rank_gui(this);
+            new friend_list_gui(this,friends,pendingMessages);
+        }
+    }
+
     public void changePass(Boolean show, String oldpas, String pass1, String pass2){
 
         JButton confirm = generateSimpleButton("Confirm", guiItems.CONFIRM_CHANGE_PASS, f, Color.YELLOW, grey1, 415, 528, 200, 60, false);
@@ -655,12 +686,12 @@ public class online_mode_gui {
 
             JButton normal = generateSimpleButton("Normal mode", guiItems.NORMAL_BUTTON, f, Color.YELLOW, grey1, 308, 375, 400, 65, false);
             JButton ranked = generateSimpleButton("Ranked mode", guiItems.RANKED_BUTTON, f, Color.YELLOW, grey1, 308, 450, 400, 65, false);
-            JButton tournaments = generateSimpleButton("Tournament mode", guiItems.TOURNAMENT_BUTTON, f, Color.YELLOW, grey1, 308, 520, 400, 65, false);
+            JButton tournaments = generateSimpleButton("Ranking table", guiItems.RANKING_BUTTON, f, Color.YELLOW, grey1, 308, 520, 400, 65, false);
             JButton profile = generateSimpleButton("Profile", guiItems.PROFILE_BUTTON, f, Color.YELLOW, grey1, 308, 595, 200, 65, false);
             JButton exit = generateSimpleButton("Quit", guiItems.QUIT_BUTTON, f, Color.YELLOW, grey1, 508, 595, 200, 65, false);
             JButton back = backButton();
 
-            guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.PROFILE_BUTTON,
+            guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.PROFILE_BUTTON,
                     guiItems.QUIT_BUTTON, guiItems.BACK, guiItems.AUXILIAR_BACKGROUND};
             Component components[] = {normal, ranked, tournaments, profile, exit, back, auxiliarBackgroud()};
 
@@ -751,7 +782,7 @@ public class online_mode_gui {
         itemsOnScreen.add(0,guiItems.CONFIRM_ADD_BUTTON);
         itemsOnScreen.add(0,guiItems.CANCEL_ADD_BUTTON);
 
-        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
+        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
                 guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
         enableComponents(items, false);
 
@@ -851,7 +882,7 @@ public class online_mode_gui {
             guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
             deleteComponents(items);
 
-            items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON, guiItems.QUIT_BUTTON,
+            items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
                     guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
             enableComponents(items, true);
             reloadGUI();
@@ -869,9 +900,15 @@ public class online_mode_gui {
     public void closeChat(){
         if(componentsOnScreen.containsKey(guiItems.CHAT)) {
             deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER, guiItems.CLOSE_CHAT});
-            enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.TOURNAMENT_BUTTON,
+            enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON,
                     guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON, guiItems.BACK}, true);
             pendingMessages.remove(friends.get(friendSelected));
+
+            /*if(onlineState == GameState.RANKING && itemsOnScreen.contains(guiItems.AUXILIAR_BACKGROUND)){
+                itemsOnScreen.remove(guiItems.AUXILIAR_BACKGROUND);
+                itemsOnScreen.add(guiItems.AUXILIAR_BACKGROUND);
+            }*/
+
             new friend_list_gui(this,friends,pendingMessages);
             reloadGUI();
             online_controller.getConToServer().sendString(msgID.toServer.request,"NOTIFY READ MESSAGES:"+friends.get(friendSelected));
@@ -891,7 +928,8 @@ public class online_mode_gui {
     }
 
     public void closeSearchingGame(){
-        deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, guiItems.CANCEL_SEARCH_GAME});
+        deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, guiItems.CANCEL_SEARCH_GAME,
+                guiItems.CANCEL_FRIEND_CHALLENGE});
         guiItems items[] = new guiItems[itemsOnScreen.size()];
 
         for(int i = 0; i < itemsOnScreen.size();++i){
@@ -946,16 +984,8 @@ public class online_mode_gui {
 
     public void friendRequest(String friend){
         popUpWithConfirmation("You have received   friend request from:  "+friend,guiItems.ACCEPT_FRIEND, guiItems.REJECT_FRIEND);
-        JButton aux = ((JButton)componentsOnScreen.get(guiItems.ACCEPT_FRIEND));
-        for(ActionListener al : aux.getActionListeners() ) {
-            aux.removeActionListener( al );
-        }
-        aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.ACCEPT_FRIEND,friend));
-        aux = ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND));
-        for(ActionListener al : aux.getActionListeners() ) {
-            aux.removeActionListener( al );
-        }
-        aux.addActionListener(new guiListener(online_mode_gui.this, guiItems.REJECT_FRIEND,friend));
+        updateButtonWithInformation(guiItems.ACCEPT_FRIEND, friend);
+        updateButtonWithInformation(guiItems.REJECT_FRIEND, friend);
     }
 
     /**
@@ -1045,19 +1075,126 @@ public class online_mode_gui {
                     new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
                 }
                 else if(res[0].equals("SEARCH GAME")){
-                    String ip = res[2], name = res[3];
-                    boolean isHost = Boolean.parseBoolean(res[1]);
-                    setOnlineState(GameState.CHARACTER_SELECTION);
-                    clearGui();
-                    character_selection(isHost,ip,name);
-                    System.out.println("Se cambia el estado a CHARACTER_SELECTION");
+                    if(onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI) {
+                        String ip = res[2], name = res[3];
+                        boolean isHost = Boolean.parseBoolean(res[1]);
+                        setOnlineState(GameState.CHARACTER_SELECTION);
+                        clearGui();
+                        character_selection(isHost, ip, name);
+                        System.out.println("Se cambia el estado a CHARACTER_SELECTION");
+                    }
                 }
                 else if(res[0].equals("SERVER CLOSED")){
                     clearGui();
                     principalGUI();
                     popUp("Server has been closed.", guiItems.CLOSE_GAME);
                 }
+                else if(res[0].equals("FRIEND CHALLENGE")){
+                    if((onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI)
+                        && !componentsOnScreen.containsKey(guiItems.ACCEPT_FRIEND_CHALLENGE)
+                            && !componentsOnScreen.containsKey(guiItems.OKEY_INVITATION_CANCELLED)){
+                        popUpWithConfirmation(res[1] + " has challenged you. Accept the invitation?", guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        updateButtonWithInformation(guiItems.ACCEPT_FRIEND_CHALLENGE, res[1]);
+                        updateButtonWithInformation(guiItems.REJECT_FRIEND_CHALLENGE, res[1]);
+                    }
+                    else{
+                        online_controller.getConToServer().sendString(msgID.toServer.request, "ANSWER CHALLENGE:" + res[1] + ":false");
+                    }
+                }
+                else if(res[0].equals("FRIEND CHALLENGE CANCELED")){
+                    if(componentsOnScreen.containsKey(guiItems.ACCEPT_FRIEND_CHALLENGE)){
+                        closePopUpWithConfirmation(guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE);
+                        popUp("The invitation has been cancelled.",guiItems.OKEY_INVITATION_CANCELLED);
+                    }
+                }
+                else if(res[0].equals("PLAYER BUSY")){
+                    closeSearchingGame();
+                    popUp("The player is busy right now.");
+                }
             }
+        }
+    }
+
+    public void updateButtonWithInformation(guiItems item, String info){
+        JButton aux = ((JButton)componentsOnScreen.get(item));
+        for(ActionListener al : aux.getActionListeners() ) {
+            aux.removeActionListener( al );
+        }
+        aux.addActionListener(new guiListener(online_mode_gui.this, item,info));
+    }
+
+    protected class serverPinger extends Thread{
+        private connection con;
+        private boolean stop = false;
+        private final Thread thread;
+        private long timeReference = System.currentTimeMillis();
+
+        public serverPinger(connection con) {
+            this.con = con;
+            this.thread = new Thread(this);
+        }
+
+        @Override
+        public void start(){
+            this.thread.start();
+        }
+
+        public synchronized void doStop() {
+            this.stop = true;
+        }
+
+        private synchronized boolean keepRunning() {
+            return this.stop == false;
+        }
+
+        @Override
+        public void run(){
+            while(keepRunning()) {
+                try {
+                    con.sendString(msgID.toServer.ping, "PING");
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String p = con.receiveString(msgID.toServer.ping);
+                if(p.equals("PING")){
+                    timeReference = System.currentTimeMillis();
+                }
+                else{
+                    if(System.currentTimeMillis() - timeReference > 5000){
+                        onlineState = GameState.SERVER_PROBLEM;
+                        setUserLogged("");
+                    }
+                }
+            }
+        }
+
+        public connection getCon() {
+            return con;
+        }
+
+        public void setCon(connection con) {
+            this.con = con;
+        }
+
+        public boolean isStop() {
+            return stop;
+        }
+
+        public void setStop(boolean stop) {
+            this.stop = stop;
+        }
+
+        public Thread getThread() {
+            return thread;
+        }
+
+        public long getTimeReference() {
+            return timeReference;
+        }
+
+        public void setTimeReference(long timeReference) {
+            this.timeReference = timeReference;
         }
     }
 
@@ -1293,5 +1430,13 @@ public class online_mode_gui {
 
     public void setPendingMessages(List<String> pendingMessages) {
         this.pendingMessages = pendingMessages;
+    }
+
+    public serverPinger getPinger() {
+        return pinger;
+    }
+
+    public void setPinger(serverPinger pinger) {
+        this.pinger = pinger;
     }
 }

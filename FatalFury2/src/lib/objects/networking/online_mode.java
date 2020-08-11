@@ -23,7 +23,7 @@ public class online_mode {
     /**
      * The Online state.
      */
-    private GameState onlineState = GameState.CHARACTER_SELECTION;//GameState.ONLINE_MODE;
+    private GameState onlineState = GameState.LOGIN_REGISTER;//GameState.CHARACTER_SELECTION;//
     /**
      * The Fight.
      */
@@ -94,9 +94,38 @@ public class online_mode {
         this.debug = true;
         if(!debug) {
             conToServer = new connection(serverIp, serverPort, 0, false);
-            conToServer.setPortSend(serverPort);
+            if(!conToServer.isConnected()){
+                onlineState = GameState.SERVER_PROBLEM;
+            }
+            else {
+                conToServer.setPortSend(serverPort);
+            }
         }
         this.gui = new online_mode_gui(this, screen, onlineState);
+    }
+
+    public boolean retryInitialConnection(){
+        boolean ok = reconnectToServer();
+        gui.clearGui();
+        if(ok){
+            gui.setOnlineState(GameState.LOGIN_REGISTER);
+            return true;
+        }
+        else{
+            gui.setOnlineState(GameState.SERVER_PROBLEM);
+            return false;
+        }
+    }
+
+    public boolean reconnectToServer(){
+        conToServer = new connection(serverIp, serverPort, 0, false);
+        if(!conToServer.isConnected()){
+            return false;
+        }
+        else {
+            conToServer.setPortSend(serverPort);
+            return true;
+        }
     }
 
     /**
@@ -259,6 +288,8 @@ public class online_mode {
             screenObjects.remove(Item_Type.MENU);
             fight.getAnimation(screenObjects);
             if (fight.getEnd()) {
+                Fight_Results results = fight.getFight_result();
+                conToClient.reliableSendString(msgID.toClient.tramits,"GAME ENDED:"+results.toString(), 200);
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                 fight.getPlayer().stop();
                 fight.getEnemy().stop();
@@ -266,18 +297,25 @@ public class online_mode {
                 fight = null;
                 conToClient = null;
                 onlineState = GameState.PRINCIPAL_GUI;
-                gui.getPrincipal().getGui();
+                gui.getPrincipal().guiOn();
                 audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.menu_theme);
             }
         }
     }
 
-    public void generateConToClient(String ip){
+    public boolean generateConToClient(String ip){
         //conToClient = new connection(ip, 5560, 0, true);
         //conToClient.setPortSend(5561);
         conToClient = new connection(ip, conToClientPort, 0, true);
-        conToClient.setPortSend(conToClientPort);
+        boolean ok = conToClient.setPortSend(conToClientPort);
+        if(!ok){
+            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+            gui.clearGui();
+            gui.principalGUI();
+            gui.popUp("Has been a problem establishing the connection.");
+        }
+        return ok;
     }
 
     /**

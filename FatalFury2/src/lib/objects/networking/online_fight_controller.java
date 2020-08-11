@@ -84,6 +84,13 @@ public class online_fight_controller extends fight_controller {
      */
     @Override
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
+        if(!isServer){
+            String res = con.receiveString(msgID.toClient.tramits);
+            if(res.contains("GAME ENDED")){
+                this.hasEnded = true;
+                this.fight_result = Fight_Results.valueOf(res.split(":")[1]);
+            }
+        }
         if(con.isConnected()) {
             if(reconnecting){
                 reconnecting = false;

@@ -131,6 +131,26 @@ public class requestManager {
             String res = manager.changePassword(userLogged,aux[1], aux[2]);
             con.sendString(msgID.toServer.request, res);
         }
+        else if(request.contains("CHALLENGE FRIEND")){
+            String aux[] = request.split(":");
+            String res = manager.challengeFriend(userLogged,aux[1]);
+            con.sendString(msgID.toServer.request, res);
+        }
+        else if(request.contains("CANCEL CHALLENGE")){
+            String res = manager.cancelInvitation(userLogged);
+            con.sendString(msgID.toServer.request, res);
+        }
+        else if(request.contains("ANSWER CHALLENGE")){
+            String aux[] = request.split(":");
+            String res = manager.answerFriendChallenge(userLogged, aux[1],Boolean.parseBoolean(aux[2]));
+            con.sendString(msgID.toServer.request, res);
+        }
+        else if(request.equals("CALCEL SEARCH GAME")){
+            manager.stopSearchingGame(userLogged);
+        }
+        else if(request.equals("RANKING")){
+            con.sendObject(msgID.toServer.request, manager.loadRanking());
+        }
     }
 
     public boolean isLogged(){

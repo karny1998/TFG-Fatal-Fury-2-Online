@@ -41,7 +41,10 @@ public class character_selection_gui {
         this.rivalName = rivalName;
         this.gui = gui;
 
-        gui.getOnline_controller().generateConToClient(ip);
+        boolean ok = gui.getOnline_controller().generateConToClient(ip);
+        if(!ok){
+            return;
+        }
         this.conToClient = gui.getOnline_controller().getConToClient();
 
         try {
