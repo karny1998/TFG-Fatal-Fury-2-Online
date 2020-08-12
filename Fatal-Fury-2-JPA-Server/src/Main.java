@@ -78,7 +78,9 @@ public class Main {
         }
 
         public synchronized void doStop() {
-            con.sendString(msgID.toServer.notification, "SERVER CLOSED");
+            if(con.isConnected()) {
+                con.sendString(msgID.toServer.notification, "SERVER CLOSED");
+            }
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
             con.close();

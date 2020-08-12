@@ -1,5 +1,6 @@
 package lib.objects.networking.gui;
 
+import lib.Enums.Fight_Results;
 import lib.Enums.GameState;
 import lib.Enums.Playable_Character;
 import lib.Enums.Scenario_type;
@@ -109,9 +110,17 @@ public class online_mode_gui {
             case ONLINE_RANKING:
                 ranking();
                 break;
+            case GAME_END:
+                if(!componentsOnScreen.containsKey(guiItems.GAME_RESULT)){
+                    gui.setBack(6);
+                    new end_game_gui(this,online_controller.isHost(),online_controller.getRival(),
+                            online_controller.getChar1(), online_controller.getChar2(),
+                            online_controller.getFight().getFight_result(), online_controller.getRankPoints(), online_controller.isRanked());
+                }
+                break;
             case CHARACTER_SELECTION:
                 /*if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
-                    character_selection(false, "127.0.0.1", "ss");
+                    character_selection(false, "127.0.0.1", "ss",false);
                 }*/
                 break;
             default:
@@ -863,7 +872,7 @@ public class online_mode_gui {
         }
     }
 
-    public void character_selection(boolean isHost, String ip, String rival){
+    public void character_selection(boolean isHost, String ip, String rival, boolean isRanked){
         if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)){
             clearGui();
             if(isHost){
@@ -872,8 +881,16 @@ public class online_mode_gui {
             else {
                 gui.setBack(4);
             }
-            char_sel = new character_selection_gui(this,isHost,ip, rival);
-            System.out.println("Se ha creado la gui de selección ");
+            char_sel = new character_selection_gui(this,isHost,ip, rival, isRanked);
+            if(char_sel.isAllOk()) {
+                System.out.println("Se ha creado la gui de selección ");
+            }
+            else{
+                setOnlineState(GameState.PRINCIPAL_GUI);
+                clearGui();
+                principalGUI();
+                popUp("Has been a problem establishing the connection.");
+            }
         }
     }
 
@@ -1074,13 +1091,14 @@ public class online_mode_gui {
                     pendingMessages.remove(res[1]);
                     new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
                 }
-                else if(res[0].equals("SEARCH GAME")){
+                else if(res[0].equals("SEARCH GAME") || res[0].equals("SEARCH RANKED GAME")){
                     if(onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI) {
                         String ip = res[2], name = res[3];
                         boolean isHost = Boolean.parseBoolean(res[1]);
                         setOnlineState(GameState.CHARACTER_SELECTION);
                         clearGui();
-                        character_selection(isHost, ip, name);
+                        boolean isRanked = res[0].equals("SEARCH RANKED GAME");
+                        character_selection(isHost, ip, name, isRanked);
                         System.out.println("Se cambia el estado a CHARACTER_SELECTION");
                     }
                 }

@@ -52,6 +52,8 @@ public class online_fight_controller extends fight_controller {
      */
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
 
+    private online_user_controller onlinePlayer;
+
     /**
      * Instantiates a new Online fight controller.
      *
@@ -63,8 +65,16 @@ public class online_fight_controller extends fight_controller {
      * @param mI       the m i
      * @param tID      the t id
      */
-    public online_fight_controller(character_controller p, character_controller e, scenary s, connection con, boolean isServer, int mI, int tID){
+    public online_fight_controller(online_user_controller p, online_user_controller e, scenary s, connection con, boolean isServer, int mI, int tID){
         super(p, e, s);
+
+        if(p.isLocal()){
+            onlinePlayer = e;
+        }
+        else{
+            onlinePlayer = p;
+        }
+
         try {
             this.f = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(60f);
         }catch (Exception ex){ex.printStackTrace();};
@@ -84,26 +94,31 @@ public class online_fight_controller extends fight_controller {
      */
     @Override
     public void getAnimation(Map<Item_Type, screenObject> screenObjects) {
-        if(!isServer){
-            String res = con.receiveString(msgID.toClient.tramits);
-            if(res.contains("GAME ENDED")){
-                this.hasEnded = true;
-                this.fight_result = Fight_Results.valueOf(res.split(":")[1]);
-            }
+        if(connectionLost()){
+            this.hasEnded = true;
+            this.fight_result = Fight_Results.TIE;
         }
-        if(con.isConnected()) {
-            if(reconnecting){
-                reconnecting = false;
-                resumeFight();
+        else {
+            if (!isServer) {
+                String res = con.receiveString(msgID.toClient.tramits);
+                if (res.contains("GAME ENDED")) {
+                    this.hasEnded = true;
+                    this.fight_result = Fight_Results.valueOf(res.split(":")[1]);
+                }
             }
-            fight_management(screenObjects);
-            // RONDA
-            currentRoundOnline.getAnimation(screenObjects);
-        }
-        else{
-            if(!reconnecting){
-                reconnecting = true;
-                pauseFight();
+            if (con.isConnected()) {
+                if (reconnecting) {
+                    reconnecting = false;
+                    resumeFight();
+                }
+                fight_management(screenObjects);
+                // RONDA
+                currentRoundOnline.getAnimation(screenObjects);
+            } else {
+                if (!reconnecting) {
+                    reconnecting = true;
+                    pauseFight();
+                }
             }
         }
     }
@@ -133,5 +148,9 @@ public class online_fight_controller extends fight_controller {
             g.setColor(Color.YELLOW);
             g.drawString("Lost connection, please wait",200,280);
         }
+    }
+
+    public boolean connectionLost(){
+        return onlinePlayer.isConnectionLost();
     }
 }

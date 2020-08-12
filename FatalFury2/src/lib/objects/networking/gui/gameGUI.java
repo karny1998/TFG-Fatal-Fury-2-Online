@@ -11,7 +11,8 @@ public class gameGUI extends JPanel {
         background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage(),
             background3 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_simple.png")).getImage(),
             background4 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection.png")).getImage(),
-            background5 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection2.png")).getImage();
+            background5 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection2.png")).getImage(),
+            background6 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/fight_end.png")).getImage();
     private Principal principal;
     private static int resX = 1280, resY = 720, back = 1;
     private boolean fullscreen = false;
@@ -55,8 +56,11 @@ public class gameGUI extends JPanel {
         else if(back == 4){
             g.drawImage(background4,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
         }
-        else{
+        else if(back == 5){
             g.drawImage(background5,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
+        }
+        else{
+            g.drawImage(background6,0,0,(int)(resX*multiplier), (int)(resY*multiplier), null);
         }
     }
 

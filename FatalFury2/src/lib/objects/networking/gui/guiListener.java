@@ -726,6 +726,25 @@ public class guiListener implements ActionListener {
                         break;
                 }
                 break;
+            case GAME_END:
+                switch (type){
+                    case CONFIRM_END_GAME:
+                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        gui.clearGui();
+                        break;
+                    case QUIT_BUTTON:
+                        quitGame();
+                        break;
+                    case QUIT_YES:
+                        conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
+                        conToServer.close();
+                        System.exit(0);
+                        break;
+                    case QUIT_NO:
+                        gui.closePopUpWithConfirmation(guiItems.QUIT_YES, guiItems.QUIT_NO);
+                        break;
+                }
+                break;
             default:
                 System.out.println("SE HA PRETADO UN BOTON");
                 break;

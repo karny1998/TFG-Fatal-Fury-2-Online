@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
-Class-Path: jarFiles jarFiles/weka.jar jarFiles/mtj.jar
+Class-Path: jarFiles jarFiles/weka.jar jarFiles/mtj.jar jarFiles/WaifUPnP.jar jarFiles/cling-core-2.1.2.jar
+            jarFiles/cling-core-2.1.2-sources.jar jarFiles/cling-support-2.1.2.jar jarFiles/seamless-util-1.1.2.jar
+            jarFiles/seamless-http-1.1.2.jar jarFiles/weupnp-0.1.4.jar
 Main-Class: videojuegos.Principal
 

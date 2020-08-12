@@ -35,8 +35,11 @@ public class character_selection_gui {
     private JTextField timeOnScreen;
     private String ip, rivalName;
     private connection conToClient;
+    private boolean isRanked = false;
+    private boolean allOk = false;
 
-    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName){
+    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked){
+        this.isRanked = isRanked;
         this.ip = ip;
         this.rivalName = rivalName;
         this.gui = gui;
@@ -45,6 +48,7 @@ public class character_selection_gui {
         if(!ok){
             return;
         }
+        this.allOk = true;
         this.conToClient = gui.getOnline_controller().getConToClient();
 
         try {
@@ -130,7 +134,7 @@ public class character_selection_gui {
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
             }
-            gui.getOnline_controller().generateFight(isHost, chosen_character, rivalC, chosen_map);
+            gui.getOnline_controller().generateFight(isHost, chosen_character, rivalC, chosen_map, isRanked,rivalName);
         }
         else{
             Playable_Character rivalC = null;
@@ -164,7 +168,7 @@ public class character_selection_gui {
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
             }
-            gui.getOnline_controller().generateFight(isHost, rivalC, chosen_character, chosen_map);
+            gui.getOnline_controller().generateFight(isHost, rivalC, chosen_character, chosen_map, isRanked,rivalName);
         }
     }
 
@@ -208,35 +212,39 @@ public class character_selection_gui {
                 maiM = new JLabel(maiMug), maiC = new JLabel(maiCombos),
                 unknowM = new JLabel(unknownMug), usaMap = null, chinaMap = null, ausMap = null;
 
-        JTextField rival = gui.generateSimpleTextField(rivalName, f, Color.YELLOW, new Color(0,0,0,0), 416, 451, 100, 100, false, true);
+        JTextField rival = null ;
 
         if(isHost){
-            terryM.setBounds(50, 100,312, 285);
-            andyM.setBounds(50, 100,312, 285);
-            maiM.setBounds(50, 100,312, 285);
-            terryC.setBounds(80, 390,267, 224);
-            andyC.setBounds(80, 390,267, 224);
-            maiC.setBounds(80, 390,267, 224);
-            unknowM.setBounds(918, 200,312, 285);
+            terryM.setBounds(res(50), res(100),res(312), res(285));
+            andyM.setBounds(res(50), res(100),res(312), res(285));
+            maiM.setBounds(res(50), res(100),res(312), res(285));
+            terryC.setBounds(res(80), res(390),res(267), res(224));
+            andyC.setBounds(res(80), res(390),res(267), res(224));
+            maiC.setBounds(res(80), res(390),res(267), res(224));
+            unknowM.setBounds(res(918), res(200),res(312), res(285));
+            rival = gui.generateSimpleTextField(rivalName, f, Color.YELLOW, new Color(0,0,0,0), 918, 500, 250, 60, false, true);
 
             usaMap = new JLabel(usa);
             chinaMap = new JLabel(china);
             chinaMap.setVisible(false);
             ausMap = new JLabel(australia);
             ausMap.setVisible(false);
-            usaMap.setBounds(413, 130, 436,244);
-            chinaMap.setBounds(413, 130, 436,244);
-            ausMap.setBounds(413, 130, 436,244);
+            usaMap.setBounds(res(413), res(130), res(436),res(244));
+            chinaMap.setBounds(res(413), res(130), res(436),res(244));
+            ausMap.setBounds(res(413), res(130), res(436),res(244));
         }
         else{
-            terryM.setBounds(918, 100,312, 285);
-            andyM.setBounds(918, 100,312, 285);
-            maiM.setBounds(918, 100,312, 285);
-            terryC.setBounds(933, 405,267, 224);
-            andyC.setBounds(933, 405,267, 224);
-            maiC.setBounds(933, 405,267, 224);
-            unknowM.setBounds(50, 200,312, 285);
+            terryM.setBounds(res(918), res(100),res(312), res(285));
+            andyM.setBounds(res(918), res(100),res(312), res(285));
+            maiM.setBounds(res(918), res(100),res(312), res(285));
+            terryC.setBounds(res(933), res(405),res(267), res(224));
+            andyC.setBounds(res(933), res(405),res(267), res(224));
+            maiC.setBounds(res(933), res(405),res(267), res(224));
+            unknowM.setBounds(res(50), res(200),res(312), res(285));
+            rival = gui.generateSimpleTextField(rivalName, f, Color.YELLOW, new Color(0,0,0,0), 50, 500, 250, 60, false, true);
         }
+
+        rival.setHorizontalAlignment(JTextField.CENTER);
 
         andyM.setVisible(false); andyC.setVisible(false);
         maiM.setVisible(false); maiC.setVisible(false);
@@ -254,16 +262,16 @@ public class character_selection_gui {
                     guiItems.UNKNOWN_MUG, guiItems.TERRY_MUG, guiItems.TERRY_COMBOS,
                     guiItems.ANDY_MUG, guiItems.ANDY_COMBOS, guiItems.MAI_MUG, guiItems.MAI_COMBOS,
                     guiItems.TIMER, guiItems.SELECT_USA, guiItems.SELECT_CHINA, guiItems.SELECT_AUSTRALIA,
-                    guiItems.USA_MAP, guiItems.AUSTRALIA_MAP, guiItems.CHINA_MAP, guiItems.BACK} ;
+                    guiItems.USA_MAP, guiItems.AUSTRALIA_MAP, guiItems.CHINA_MAP, guiItems.BACK, guiItems.RIVAL_USERNAME} ;
             comps = new Component[]{terry, andy, mai, unknowM, terryM, terryC, andyM, andyC, maiM, maiC, tm,
-                    usaB, chinaB, australiaB, usaMap,ausMap,chinaMap, back};
+                    usaB, chinaB, australiaB, usaMap,ausMap,chinaMap, back, rival};
         }
         else{
             items = new guiItems[]{guiItems.SELECT_TERRY, guiItems.SELECT_ANDY, guiItems.SELECT_MAI,
                     guiItems.UNKNOWN_MUG, guiItems.TERRY_MUG, guiItems.TERRY_COMBOS,
                     guiItems.ANDY_MUG, guiItems.ANDY_COMBOS, guiItems.MAI_MUG, guiItems.MAI_COMBOS,
-                    guiItems.TIMER, guiItems.BACK} ;
-            comps = new Component[]{terry, andy, mai, unknowM, terryM, terryC, andyM, andyC, maiM, maiC, tm, back};
+                    guiItems.TIMER, guiItems.BACK, guiItems.RIVAL_USERNAME} ;
+            comps = new Component[]{terry, andy, mai, unknowM, terryM, terryC, andyM, andyC, maiM, maiC, tm, back, rival};
         }
 
         gui.addComponents(items, comps);
@@ -373,5 +381,13 @@ public class character_selection_gui {
 
     public void setRivalName(String rivalName) {
         this.rivalName = rivalName;
+    }
+
+    public boolean isAllOk() {
+        return allOk;
+    }
+
+    public void setAllOk(boolean allOk) {
+        this.allOk = allOk;
     }
 }

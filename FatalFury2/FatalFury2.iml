@@ -15,6 +15,9 @@
     <orderEntry type="library" exported="" name="com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
     <orderEntry type="library" exported="" name="com.sun.xml.bind:jaxb-impl:2.3.0.1" level="project" />
     <orderEntry type="library" exported="" name="jfree:jfreechart:1.0.13" level="project" />
-    <orderEntry type="library" name="javax.validation:validation-api:2.0.0.Final" level="project" />
+    <orderEntry type="library" exported="" name="javax.validation:validation-api:2.0.0.Final" level="project" />
+    <orderEntry type="library" exported="" name="waifupnp" level="project" />
+    <orderEntry type="library" name="jarFiles1" level="project" />
+    <orderEntry type="library" name="weupnp-0.1.4" level="project" />
   </component>
 </module>

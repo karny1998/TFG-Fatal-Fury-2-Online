@@ -383,9 +383,9 @@ public class serverManager {
                 }
                 if(erased) {
                     Pair<Integer,Integer> pts = evaluatePoints(p1,p2,result);
-                    int winnerPoints = pts.first, loserPoints = pts.second;
+                    int p1pts = pts.first, p2pts = pts.second;
 
-                    RankedGame game = new RankedGame(p1, p2, character1, character2, result, winnerPoints, loserPoints);
+                    RankedGame game = new RankedGame(p1, p2, character1, character2, result, p1pts, p2pts);
                     if(result == 0){
                         p1.addRankedGameResult(true);
                         p2.addRankedGameResult(true);
@@ -398,11 +398,14 @@ public class serverManager {
                         p1.addRankedGameResult(false);
                         p2.addRankedGameResult(true);
                     }
-                    p1.setRankScore(p1.getRankScore() + winnerPoints);
-                    p2.setRankScore(p2.getRankScore() + winnerPoints);
+                    p1.setRankScore(p1.getRankScore() + p1pts);
+                    p2.setRankScore(p2.getRankScore() + p2pts);
                     dbm.save(p1);
                     dbm.save(p2);
                     dbm.save(game);
+
+                    loggedUsers.get(user1).sendString(msgID.toServer.request, "GAME REGISTERED:"+p1pts);
+                    loggedUsers.get(user2).sendString(msgID.toServer.request, "GAME REGISTERED:"+p2pts);
                 }
                 else{
                     return "E:Error al registrar la partida.";

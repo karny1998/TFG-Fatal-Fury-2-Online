@@ -24,6 +24,10 @@ public class online_user_controller extends user_controller {
      */
     private int menssageIdentifier = 1;
 
+    private long timeReference = System.currentTimeMillis();
+
+    private boolean connectionLost = false;
+
     /**
      * Instantiates a new Online user controller.
      *
@@ -63,10 +67,18 @@ public class online_user_controller extends user_controller {
         this.y = this.player.getY();
         if(!isLocal){
             if(!standBy) {
-                String newMov = con.receiveString(menssageIdentifier);
-                if (!newMov.equals("NONE")) {
-                    mov = newMov;
+                if(System.currentTimeMillis() - timeReference > 5000){
+                    connectionLost = true;
                 }
+
+                String newMov = con.receiveString(menssageIdentifier);
+                if (newMov != null && !newMov.equals("NONE")) {
+                    mov = newMov;
+                    timeReference = System.currentTimeMillis();
+                }
+            }
+            else{
+                timeReference = System.currentTimeMillis();
             }
         }
         else{
@@ -132,5 +144,23 @@ public class online_user_controller extends user_controller {
      */
     public void setMenssageIdentifier(int menssageIdentifier) {
         this.menssageIdentifier = menssageIdentifier;
+    }
+
+    @Override
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    @Override
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
+    }
+
+    public boolean isConnectionLost() {
+        return connectionLost;
+    }
+
+    public void setConnectionLost(boolean connectionLost) {
+        this.connectionLost = connectionLost;
     }
 }

@@ -108,5 +108,4 @@ public class online_round extends round {
         screenObjects.put(SHADOW_1,shadow1);
         screenObjects.put(SHADOW_2,shadow2);
     }
-
 }

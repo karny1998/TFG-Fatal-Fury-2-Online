@@ -26,7 +26,7 @@ public class serverConnection{
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             requestSM.acquire();
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){/*e.printStackTrace();*/}
         this.portReceive = socket.getLocalPort();
         this.rec = new receiver(this);
         this.rec.start();
@@ -53,7 +53,9 @@ public class serverConnection{
         }catch (Exception e){
             /*e.printStackTrace();*/
             try {
-                socket.close();
+                if(socket != null) {
+                    socket.close();
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -82,13 +84,12 @@ public class serverConnection{
                     p = new packet(id, true, (sendableObject)msg);
                 }
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
             try {
                 Thread.sleep(timeout);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
             }
-            System.out.println(serverPendingMessages);
             String rec = receiveString(id);
             if(rec.equals("ACK")){
                 ok = true;
@@ -106,7 +107,7 @@ public class serverConnection{
         try{
             packet p = new packet(id, false, "ACK");
             out.writeObject(p);
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){/*e.printStackTrace();*/}
     }
 
     public String receiveString(int id){
@@ -158,7 +159,7 @@ public class serverConnection{
         else{
             try {
                 requestSM.acquire();
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
             if(socket != null) {
                 waitForRequestOrTramit();
             }
@@ -169,7 +170,6 @@ public class serverConnection{
         if(blockReception){return;}
         try {
             packet received = (packet) in.readObject();
-            System.out.println("Se ha recibido: " + received.toString());
             if(!received.isObject() && received.getMessage().equals("HI")){
                 sendAck(-1);
                 return;
@@ -181,6 +181,9 @@ public class serverConnection{
                 serverPendingObjects.put(received.getId(), received.getObject());
             }
             else {
+                if(received.getId() != msgID.toServer.ping) {
+                    System.out.println("Se recibe: " + received.getMessage());
+                }
                 serverPendingMessages.put(received.getId(), received.getMessage());
             }
             if(received.getId() == msgID.toServer.request || received.getId() == msgID.toServer.tramits){
@@ -263,11 +266,13 @@ public class serverConnection{
 
     public void  close(){
         try {
-            socket.close();
             in.close();
             out.close();
             rec.doStop();
-        }catch (Exception e){e.printStackTrace();}
+            if(socket != null) {
+                socket.close();
+            }
+        }catch (Exception e){/*e.printStackTrace();*/}
     }
 
     public Socket getSocket() {

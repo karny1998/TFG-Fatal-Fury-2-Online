@@ -101,8 +101,7 @@ public class requestManager {
         }
         else if(request.contains("REGISTER GAME:")){
             String aux[] = request.split(":");
-            String res = manager.registerGame(aux[1], aux[2], aux[3], aux[4], Integer.parseInt(aux[5]), Boolean.parseBoolean(aux[6]));
-            con.sendString(msgID.toServer.request, res);
+            manager.registerGame(aux[1], aux[2], aux[3], aux[4], Integer.parseInt(aux[5]), Boolean.parseBoolean(aux[6]));
         }
         else if(request.contains("FRIENDS REQUESTS")){
             sendableObjectsList res = manager.pendingFriendsRequestList(userLogged);

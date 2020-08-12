@@ -1,10 +1,19 @@
 package lib.objects.networking;
 
+import com.dosse.upnp.UPnP;
 import lib.utils.Pair;
 import lib.utils.packet;
 import lib.utils.sendableObjects.sendableObject;
+import org.bitlet.weupnp.GatewayDevice;
+import org.bitlet.weupnp.GatewayDiscover;
+import org.bitlet.weupnp.PortMappingEntry;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.support.igd.PortMappingListener;
+import org.fourthline.cling.support.model.PortMapping;
 import org.netlib.lapack.Ssycon;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -12,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Logger;
 
 /**
  * Conexión mediante sockets UDP con un receptor.
@@ -116,8 +126,28 @@ public class connection {
         this.timeout = timeout;
         try {
             if(isUDP) {
-                socketUDP = new DatagramSocket(port);
+                /*System.out.println("Attempting UPnP port forwarding...");
+                if (UPnP.isUPnPAvailable()) { //is UPnP available?
+                    if (UPnP.isMappedTCP(port)) { //is the port already mapped?
+                        System.out.println("UPnP port forwarding not enabled: port is already mapped");
+                    } else if (UPnP.openPortTCP(port)) { //try to map port
+                        System.out.println("UPnP port forwarding enabled");
+                    } else {
+                        System.out.println("UPnP port forwarding failed");
+                    }
+                } else {
+                    System.out.println("UPnP is not available");
+                }*/
+
+                /*InetAddress inet = InetAddress.getLocalHost();
+                PortMapping desiredMapping = new PortMapping(port,
+                        inet.getHostAddress(), PortMapping.Protocol.UDP,
+                        "Fatal Fury 2 Online");
+                UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(desiredMapping));
+                upnpService.getControlPoint().search();*/
                 this.portReceive = port;
+                //weupnp();
+                socketUDP = new DatagramSocket(port);
                 if (timeout > 0) {
                     socketUDP.setSoTimeout(timeout);
                 }
@@ -133,12 +163,59 @@ public class connection {
             }
             notificationSM.acquire();
         }catch (Exception e){
-            e.printStackTrace();
+            /*e.printStackTrace();*/
             socketTCP = null;
             socketUDP = null;
         }
         this.rec = new receiver(this);
         this.rec.start();
+    }
+
+    public void weupnp(){
+        System.out.println("Starting weupnp");
+
+        GatewayDiscover discover = new GatewayDiscover();
+        System.out.println("Looking for Gateway Devices");
+        try {
+            discover.discover();
+            GatewayDevice d = discover.getValidGateway();
+            if (null != d) {
+                System.out.println("Found gateway device.\n{0} ({1})" +
+                        new Object[]{d.getModelName(), d.getModelDescription()});
+            } else {
+                System.out.println("No valid gateway device found.");
+                return;
+            }
+            InetAddress localAddress = d.getLocalAddress();
+            System.out.println("Using local address: {0}"+ localAddress);
+            String externalIPAddress = d.getExternalIPAddress();
+            System.out.println("External address: {0}"+ externalIPAddress);
+            System.out.println("Attempting to map port {0}"+ portReceive);
+            PortMappingEntry portMapping = new PortMappingEntry();
+            System.out.println("Querying device to see if mapping for port {0} already exists"+
+                    portReceive);
+            if (!d.getSpecificPortMappingEntry(portReceive,"UDP",portMapping)) {
+                System.out.println("Port was already mapped. Aborting test.");
+            }
+            else {
+                System.out.println("Sending port mapping request");
+                if (!d.addPortMapping(portReceive, portReceive,
+                        localAddress.getHostAddress(),"UDP","test")) {
+                    System.out.println("Port mapping attempt failed");
+                    System.out.println("Test FAILED");
+                }
+                else {
+                    System.out.println("Mapping successful: waiting {0} seconds before removing."+
+                        200);
+                    /*Thread.sleep(1000*200);
+                    d.deletePortMapping(portReceive,"UDP");*/
+
+                    //System.out.println("Port mapping removed");
+                    System.out.println("Test SUCCESSFUL");
+                }
+            }
+            System.out.println("Stopping weupnp");
+        } catch (Exception e) {}
     }
 
     public void sendStringReliable(int id, String msg){
@@ -170,7 +247,7 @@ public class connection {
             try {
                 socketUDP.send(packet);
             } catch (Exception e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
             }
         }
         else {
@@ -199,14 +276,14 @@ public class connection {
             try {
                 socketUDP.send(packet);
             } catch (Exception e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
             }
         }
         else{
             try{
                 packet p = new packet(id, false, "ACK");
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
         }
     }
 
@@ -230,7 +307,7 @@ public class connection {
                 }
                 return ok;
             } catch (Exception e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
                 return false;
             }
         }
@@ -240,7 +317,7 @@ public class connection {
                 out.writeObject(p);
                 return true;
             }catch (Exception e){
-                e.printStackTrace();
+                /*e.printStackTrace();*/
                 return false;
             }
         }
@@ -269,7 +346,7 @@ public class connection {
      * @return the object
      */
     private Object receive(int id, boolean string){
-        if(blockReception){return "";}
+        if(blockReception){return "NONE";}
         try {
             sm.acquire();
             if((string || isUDP) && pendingMsgs.containsKey(id)){
@@ -292,7 +369,7 @@ public class connection {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            /*e.printStackTrace();*/
             sm.release();
         }
         sm.release();
@@ -323,7 +400,6 @@ public class connection {
                 String aux[] = received.split(";");
                 int idM = Integer.parseInt(aux[0]);
                 boolean reliable = aux[1].equals("R");
-                System.out.println("Se recibe" + received);
                 // Envía la confirmación si corresponde
                 if(reliable){
                     System.out.println("Se envia ack");
@@ -344,7 +420,7 @@ public class connection {
                     }
                     //System.out.println("Se recibe: " + aux[2]);
                 }catch (Exception e){
-                    e.printStackTrace();
+                    /*e.printStackTrace();*/
                     sm.release();
                 }
                 sm.release();
@@ -362,13 +438,15 @@ public class connection {
                     }
                     else {
                         pendingMsgs.put(received.getId(), received.getMessage());
-                        System.out.println("Se recibe: " + received.getMessage());
+                        if(received.getId() != msgID.toServer.ping) {
+                            System.out.println("Se recibe: " + received.getMessage());
+                        }
                         if(received.getId() == msgID.toServer.notification){
                             notificationSM.release();
                         }
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+                    /*e.printStackTrace();*/
                     sm.release();
                 }
                 sm.release();
@@ -421,7 +499,7 @@ public class connection {
                 }
                 return false;
             } catch (Exception e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
             }
             return null;
         }
@@ -453,7 +531,7 @@ public class connection {
                         waiterList.remove(localWaiter);
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+                    /*e.printStackTrace();*/
                     error = true;
                 }
             }
@@ -501,7 +579,7 @@ public class connection {
                             p = new packet(0, true, (sendableObject)msg);
                         }
                         out.writeObject(p);
-                    }catch (Exception e){e.printStackTrace();}
+                    }catch (Exception e){/*e.printStackTrace();*/}
                 }
                 Thread.sleep(timeout);
                 if(receiveACK(id)) {
@@ -509,7 +587,7 @@ public class connection {
                 }
             }
             return false;
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){/*e.printStackTrace();*/}
         return false;
     }
 
@@ -522,7 +600,7 @@ public class connection {
         else{
             try {
                 notificationSM.acquire();
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
             return receiveNotifications();
         }
     }
@@ -541,7 +619,7 @@ public class connection {
                 in.close();
                 out.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                /*e.printStackTrace();*/
             }
         }
         rec.doStop();
@@ -664,7 +742,7 @@ public class connection {
             else{
                 socketTCP.setSoTimeout(timeout);
             }
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){/*e.printStackTrace();*/}
     }
 
     /**

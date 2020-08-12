@@ -66,6 +66,8 @@ public class connection {
      */
     protected Map<Integer, String> pendingMsgs = new HashMap<>();
 
+    protected Map<Integer, String> pendingACKs = new HashMap<>();
+
     protected Map<Integer, sendableObject> pendingObjects = new HashMap<>();
     /**
      * The proccess which receives messages constantly.
@@ -107,37 +109,6 @@ public class connection {
 
     /**
      * Instantiates a new Connection.
-     * Por defecto 50 segundos de timeout, y puerto de envío y recepción el mismo
-     *
-     * @param ip    the ip
-     * @param port  the port
-     * @param isUDP the is udp
-     */
-    public connection(String ip, int port, boolean isUDP) {
-        this.isUDP = isUDP;
-        try {
-            if(isUDP) {
-                socketUDP = new DatagramSocket(port);
-                this.portReceive = port;
-                socketUDP.setSoTimeout(50);
-                address = InetAddress.getByName(ip);
-            }
-            else{
-                socketTCP = new Socket(ip, port);
-                socketTCP.setSoTimeout(50);
-                out = new ObjectOutputStream (socketTCP.getOutputStream());
-                in = new ObjectInputStream(socketTCP.getInputStream());
-            }
-            notificationSM.acquire();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.rec = new receiver(this);
-        this.rec.start();
-    }
-
-    /**
-     * Instantiates a new Connection.
      *
      * @param ip      the ip
      * @param port    the port
@@ -167,17 +138,27 @@ public class connection {
             notificationSM.acquire();
         }catch (Exception e){
             e.printStackTrace();
+            socketTCP = null;
+            socketUDP = null;
         }
         this.rec = new receiver(this);
         this.rec.start();
     }
 
+    public void sendStringReliable(int id, String msg){
+        send(id, msg, true, "R");
+    }
+
+    public void sendObjectReliable(int id, Object msg){
+        send(id, msg, false, "R");
+    }
+
     public void sendString(int id, String msg){
-        send(id, msg, true);
+        send(id, msg, true, "NR");
     }
 
     public void sendObject(int id, Object msg){
-        send(id, msg, false);
+        send(id, msg, false, "NR");
     }
 
     /**
@@ -186,9 +167,9 @@ public class connection {
      * @param id  the id
      * @param msg the msg
      */
-    private void send(int id, Object msg, boolean string){
+    private void send(int id, Object msg, boolean string, String r){
         if(isUDP) {
-            bufSend = (Integer.toString(id) + ";NR;" + (String)msg).getBytes();
+            bufSend = (Integer.toString(id) + ";"+ r + ";" + (String)msg).getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
                 socketUDP.send(packet);
@@ -206,7 +187,7 @@ public class connection {
                     p = new packet(id, false, (sendableObject)msg);
                 }
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){/*e.printStackTrace();*/}
         }
     }
 
@@ -236,30 +217,45 @@ public class connection {
     /**
      * Send hi.
      */
-    public void sendHi(){
+    public boolean sendHi(){
+        long timeReference = System.currentTimeMillis();
         if(isUDP) {
             bufSend = ("HI").getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
                 boolean ok = false;
-                while (!ok) {
+                while (!ok && System.currentTimeMillis()-timeReference < 5000) {
+                    System.out.println("se envia hi");
                     socketUDP.send(packet);
-                    Thread.sleep(50);
-                    String ack = receiveString(msgID.toClient.hi);
-                    if (ack.equals("ACK")) {
+                    Thread.sleep(100);
+                    if (receiveACK(msgID.toClient.hi)) {
                         ok = true;
                     }
                 }
+                return ok;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
         }
         else{
             try{
                 packet p = new packet(0, false, "HI");
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+                return true;
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
         }
+    }
+
+    public boolean receiveACK(int id){
+        boolean ack = pendingACKs.containsKey(id);
+        if(ack){
+            pendingACKs.remove(id);
+        }
+        return ack;
     }
 
     public String receiveString(int id){
@@ -293,7 +289,12 @@ public class connection {
                 return  obj;
             }
             sm.release();
-            return "NONE";
+            if(string) {
+                return "NONE";
+            }
+            else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             sm.release();
@@ -306,7 +307,10 @@ public class connection {
      * Recibe cualquier mensaje pendiente y lo guarda en pendingMessages.
      */
     public void receive(){
-        if(blockReception || socketUDP != null && !socketUDP.isConnected()){return;}
+        if(blockReception || socketTCP != null && !socketTCP.isConnected()){
+            return;
+        }
+        //if(blockReception || socketTCP != null && !socketTCP.isConnected()){return;}
         try {
             if(isUDP) {
                 String received = "";
@@ -323,8 +327,10 @@ public class connection {
                 String aux[] = received.split(";");
                 int idM = Integer.parseInt(aux[0]);
                 boolean reliable = aux[1].equals("R");
+                System.out.println("Se recibe" + received);
                 // Envía la confirmación si corresponde
                 if(reliable){
+                    System.out.println("Se envia ack");
                     sendAck(idM);
                 }
                 try {
@@ -333,9 +339,14 @@ public class connection {
                         pendingMsgs.put(idM, "");
                     }
                     else {
-                        pendingMsgs.put(idM, aux[2]);
+                        if(aux[2].equals("ACK")){
+                            pendingACKs.put(idM, aux[2]);
+                        }
+                        else {
+                            pendingMsgs.put(idM, aux[2]);
+                        }
                     }
-                    System.out.println("Se recibe: " + aux[2]);
+                    //System.out.println("Se recibe: " + aux[2]);
                 }catch (Exception e){
                     e.printStackTrace();
                     sm.release();
@@ -374,7 +385,11 @@ public class connection {
                 }
             }
 
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            /*e.printStackTrace();*/
+            socketTCP = null;
+            socketUDP = null;
+        }
     }
 
     public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
@@ -394,7 +409,7 @@ public class connection {
         if(isUDP) {
             try {
                 for (int i = 0; i < 10; ++i) {
-                    send(id, msg, sendString);
+                    send(id, msg, sendString, "NR");
                     Thread.sleep(timeout);
                     if (receiveString) {
                         String res = receiveString(id);
@@ -415,7 +430,7 @@ public class connection {
             return null;
         }
         else{
-            send(id, msg, sendString);
+            send(id, msg, sendString, "NR");
             boolean error = false;
             long ref = System.currentTimeMillis();
             Pair<Boolean,Boolean> localWaiter =  new Pair<>(new Boolean(true),new Boolean(false));
@@ -473,7 +488,8 @@ public class connection {
      */
     private boolean reliableSend(int id, Object msg, int timeout, boolean string){
         try {
-            for(int i = 0; i < 10; ++i){
+            pendingACKs.remove(id);
+            for(int i = 0; i < 30; ++i){
                 if(isUDP) {
                     bufSend = (Integer.toString(id) + ";R;" + (String)msg).getBytes();
                     DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
@@ -492,14 +508,8 @@ public class connection {
                     }catch (Exception e){e.printStackTrace();}
                 }
                 Thread.sleep(timeout);
-                String ack = receiveString(id);
-                if(!ack.equals("") && !ack.equals("NONE")) {
-                    if (ack.equals("ACK")){
-                        return true;
-                    }
-                    else{
-                        pendingMsgs.put(id, ack);
-                    }
+                if(receiveACK(id)) {
+                    return true;
                 }
             }
             return false;
@@ -548,10 +558,10 @@ public class connection {
      */
     public  boolean isConnected(){
         if(isUDP){
-            return socketUDP.isConnected();
+            return socketUDP != null;
         }
         else{
-            return socketTCP.isConnected();
+            return socketTCP != null;
         }
     }
 
@@ -675,12 +685,13 @@ public class connection {
      *
      * @param portSend the port send
      */
-    public void setPortSend(int portSend) {
+    public boolean setPortSend(int portSend) {
         this.portSend = portSend;
         if(isUDP) {
             socketUDP.connect(address, portSend);
-            sendHi();
+            return sendHi();
         }
+        return true;
     }
 
     /**

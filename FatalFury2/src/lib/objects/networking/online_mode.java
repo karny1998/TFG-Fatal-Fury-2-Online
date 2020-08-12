@@ -79,11 +79,17 @@ public class online_mode {
     private int serverPort = 5555, /**
      * The Con to client port.
      */
-    conToClientPort = 5556;
+    conToClientPort = 55555;
 
     private online_mode_gui gui;
 
     private String userLogged = null;
+
+    //Información de la partida en curso
+    private String rival = "";
+    private Playable_Character char1 = Playable_Character.TERRY, char2 = Playable_Character.TERRY;
+    private boolean isRanked = false, isHost = false;
+    private int rankPoints = 0;
 
     /**
      * Instantiates a new Online mode.
@@ -91,7 +97,6 @@ public class online_mode {
      * @param debug the debug
      */
     public online_mode(Screen screen, boolean debug) {
-        this.debug = true;
         if(!debug) {
             conToServer = new connection(serverIp, serverPort, 0, false);
             if(!conToServer.isConnected()){
@@ -187,7 +192,13 @@ public class online_mode {
      * @param pE     the p e
      * @param sce    the sce
      */
-    public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce){
+    public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce, boolean isRanked, String rival){
+        this.rankPoints = 0;
+        this.char1 = pC;
+        this.char2 = pE;
+        this.rival = rival;
+        this.isRanked = isRanked;
+        this.isHost = isHost;
         if (isHost) {
             player = new online_user_controller(pC, 1, conToClient, true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
@@ -247,7 +258,7 @@ public class online_mode {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    /*e.printStackTrace();*/
                 }
                 String res = conToClient.receiveString(msgID.toClient.synchronization);
                 if( res.equals("READY") || res.equals("ACK")){
@@ -261,7 +272,7 @@ public class online_mode {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    /*e.printStackTrace();*/
                 }
                 String res = conToClient.receiveString(msgID.toClient.synchronization);
                 if(res.equals("READY")){
@@ -288,15 +299,61 @@ public class online_mode {
             screenObjects.remove(Item_Type.MENU);
             fight.getAnimation(screenObjects);
             if (fight.getEnd()) {
+
+                if(((online_fight_controller)fight).connectionLost()){
+                    gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                    gui.clearGui();
+                    gui.principalGUI();
+                    gui.popUp("Connection with rival lost. The game will count as tie.");
+                    conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
+                            gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":0:" + isRanked);
+                }
+
                 Fight_Results results = fight.getFight_result();
                 conToClient.reliableSendString(msgID.toClient.tramits,"GAME ENDED:"+results.toString(), 200);
+                int r = 0;
+                switch (results){
+                    case PLAYER1_WIN:
+                        r = 1;
+                        break;
+                    case PLAYER2_WIN:
+                        r = 2;
+                        break;
+                    default:
+                        r = 0;
+                        break;
+                }
+
+                if(isRanked) {
+                    String res = "";
+                    if (isHost) {
+                        res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "REGISTER GAME:" +
+                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                + r + ":" + isRanked, 0);
+                    }
+                    else{
+                        do {
+                            res = conToServer.receiveString(msgID.toServer.request);
+                        }while (!res.contains("GAME REGISTERED"));
+                    }
+                    rankPoints = Integer.parseInt(res);
+                }
+                else{
+                    if (isHost) {
+                        conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
+                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                + r + ":" + isRanked);
+                    }
+                }
+
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                 fight.getPlayer().stop();
                 fight.getEnemy().stop();
                 conToClient.close();
                 fight = null;
                 conToClient = null;
-                onlineState = GameState.PRINCIPAL_GUI;
+                gui.setOnlineState(GameState.GAME_END);
+                gui.clearGui();
                 gui.getPrincipal().guiOn();
                 audio_manager.endFight();
                 audio_manager.menu.play(menu_audio.indexes.menu_theme);
@@ -307,6 +364,7 @@ public class online_mode {
     public boolean generateConToClient(String ip){
         //conToClient = new connection(ip, 5560, 0, true);
         //conToClient.setPortSend(5561);
+        //return true;
         conToClient = new connection(ip, conToClientPort, 0, true);
         boolean ok = conToClient.setPortSend(conToClientPort);
         if(!ok){
@@ -514,5 +572,53 @@ public class online_mode {
 
     public void setUserLogged(String userLogged) {
         this.userLogged = userLogged;
+    }
+
+    public String getRival() {
+        return rival;
+    }
+
+    public void setRival(String rival) {
+        this.rival = rival;
+    }
+
+    public Playable_Character getChar1() {
+        return char1;
+    }
+
+    public void setChar1(Playable_Character char1) {
+        this.char1 = char1;
+    }
+
+    public Playable_Character getChar2() {
+        return char2;
+    }
+
+    public void setChar2(Playable_Character char2) {
+        this.char2 = char2;
+    }
+
+    public boolean isRanked() {
+        return isRanked;
+    }
+
+    public void setRanked(boolean ranked) {
+        isRanked = ranked;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
+    public void setHost(boolean host) {
+        isHost = host;
+    }
+
+    public int getRankPoints() {
+        return rankPoints;
+    }
+
+    public void setRankPoints(int rankPoints) {
+        this.rankPoints = rankPoints;
     }
 }
