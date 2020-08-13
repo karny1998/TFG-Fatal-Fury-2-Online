@@ -2,15 +2,19 @@ import database.databaseManager;
 import database.models.Game;
 import database.models.Player;
 import database.models.RankedGame;
+import lib.utils.sendableObjects.simpleObjects.certificate;
 import server.msgID;
 import server.requestManager;
 import server.serverConnection;
 import server.serverManager;
 
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +30,8 @@ public class Main {
 
     public static void main(String[] args) {
         try{
-            serverSocket = new ServerSocket(5555);
+            //serverSocket = new ServerSocket(5555);
+            serverSocket = generateTCPSecureServerSocket(5555);
             com = new commander(threads,serverSocket);
             com.start();
             while(!shutdown){
@@ -50,6 +55,16 @@ public class Main {
             return;
         }
         dbm.close();
+    }
+
+    private static ServerSocket generateTCPSecureServerSocket(int port) throws IOException {
+        String path = System.getProperty("user.dir") + "/certs/";
+        System.setProperty("javax.net.ssl.keyStore", path+"serverKey.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword","servpass");
+        System.setProperty("javax.net.ssl.trustStore", path+"serverTrustedCerts.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "servpass");
+        SSLServerSocketFactory serverFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+        return serverFactory.createServerSocket(port);
     }
 
     protected static class clientHandler extends Thread{
@@ -112,31 +127,37 @@ public class Main {
                 }
                 else if(con.isConnected()) {
                     con.waitForRequestOrTramit();
-                    String tramits = con.receiveString(msgID.toServer.tramits);
-                    String request = con.receiveString(msgID.toServer.request);
-                    if (tramits.equals("DISCONNECT") || forzedClose) {
-                        threads.remove(client);
-                        manager.desconnectUser(rqM.getUserLogged());
-                        con.close();
-                        cp.doStop();
-                        doStop();
-                    } else {
-                        rqM.manageRequest(request);
-                        if(!logged && rqM.isLogged()){
-                            logged = true;
-                            String aux = "";
-                            if(threadsByUser.containsKey(rqM.getUserLogged())){
-                                aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
+                    Object cer = con.receiveObject(msgID.toServer.request);
+                    if(cer != null && !cer.equals("NONE") && !cer.equals("")){
+                        String res = rqM.getManager().addCertificateToKeystore((certificate) cer);
+                        con.sendString(msgID.toServer.request,res);
+                    }
+                    else {
+                        String tramits = con.receiveString(msgID.toServer.tramits);
+                        String request = con.receiveString(msgID.toServer.request);
+                        if (tramits.equals("DISCONNECT") || forzedClose) {
+                            threads.remove(client);
+                            manager.desconnectUser(rqM.getUserLogged());
+                            con.close();
+                            cp.doStop();
+                            doStop();
+                        } else {
+                            rqM.manageRequest(request);
+                            if (!logged && rqM.isLogged()) {
+                                logged = true;
+                                String aux = "";
+                                if (threadsByUser.containsKey(rqM.getUserLogged())) {
+                                    aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
+                                }
+                                if (threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)) {
+                                    rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
+                                    rqM.setCon(con);
+                                    threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
+                                }
+                                threadsByUser.put(rqM.getUserLogged(), this);
+                            } else if (logged && !rqM.isLogged()) {
+                                logged = false;
                             }
-                            if(threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)){
-                                rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
-                                rqM.setCon(con);
-                                threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
-                            }
-                            threadsByUser.put(rqM.getUserLogged(),this);
-                        }
-                        else if(logged && !rqM.isLogged()){
-                            logged = false;
                         }
                     }
                 }

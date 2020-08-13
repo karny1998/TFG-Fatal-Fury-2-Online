@@ -3,7 +3,10 @@ package server;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.packet;
 
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,7 +156,9 @@ public class serverConnection{
 
     public void waitForRequestOrTramit(){
         if (serverPendingMessages.containsKey(msgID.toServer.request)
-            || serverPendingMessages.containsKey(msgID.toServer.tramits)) {
+            || serverPendingMessages.containsKey(msgID.toServer.tramits)
+            || serverPendingObjects.containsKey(msgID.toServer.tramits)
+            || serverPendingObjects.containsKey(msgID.toServer.request)) {
             return;
         }
         else{

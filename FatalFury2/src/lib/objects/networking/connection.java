@@ -4,22 +4,31 @@ import com.dosse.upnp.UPnP;
 import lib.utils.Pair;
 import lib.utils.packet;
 import lib.utils.sendableObjects.sendableObject;
+import lib.utils.sendableObjects.simpleObjects.certificate;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
 import org.bitlet.weupnp.PortMappingEntry;
-import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.support.igd.PortMappingListener;
-import org.fourthline.cling.support.model.PortMapping;
-import org.netlib.lapack.Ssycon;
-import org.xml.sax.SAXException;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
+import java.util.Date;
+import javax.net.ssl.SSLSocketFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.math.BigInteger;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
@@ -108,6 +117,8 @@ public class connection {
 
     private List<Pair<Boolean, Boolean>> waiterList = new ArrayList<>();
 
+    private String path = System.getProperty("user.dir") + "/.files/certs/";
+
     /**
      * Instantiates a new Connection.
      */
@@ -145,16 +156,19 @@ public class connection {
                         "Fatal Fury 2 Online");
                 UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(desiredMapping));
                 upnpService.getControlPoint().search();*/
-                this.portReceive = port;
+
                 //weupnp();
+
+                this.portReceive = port;
+                address = InetAddress.getByName(ip);
                 socketUDP = new DatagramSocket(port);
                 if (timeout > 0) {
                     socketUDP.setSoTimeout(timeout);
                 }
-                address = InetAddress.getByName(ip);
             }
             else{
-                socketTCP = new Socket(ip, port);
+                //socketTCP = new Socket(ip, port);
+                generateTCPSecureSocket(ip,port);
                 if (timeout > 0) {
                     socketTCP.setSoTimeout(timeout);
                 }
@@ -163,12 +177,89 @@ public class connection {
             }
             notificationSM.acquire();
         }catch (Exception e){
-            /*e.printStackTrace();*/
+            e.printStackTrace();
             socketTCP = null;
             socketUDP = null;
         }
         this.rec = new receiver(this);
         this.rec.start();
+    }
+
+    private void generateTCPSecureSocket(String ip, int port) throws Exception {
+        File archivo = new File(path+"ownClientKey.jks");
+        System.setProperty("javax.net.ssl.trustStore", path+"clientTrustedCerts.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "clientpass");
+        if (!archivo.exists()) {
+            firstConnectionToServer(ip, port);
+        }
+        //System.setProperty("javax.net.ssl.keyStore", path+"ownClientKey.jks");
+        //System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
+        System.setProperty("javax.net.ssl.keyStore", path+"clientKey.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
+        SSLSocketFactory clientFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+        socketTCP = clientFactory.createSocket(ip, port);
+    }
+
+    private void firstConnectionToServer(String ip, int port) throws Exception {
+        Certificate cer = selfSign("dc=OwnPlayer");
+        writeCertificate(cer);
+        System.setProperty("javax.net.ssl.keyStore", path+"clientKey.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
+
+        SSLSocketFactory clientFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+        socketTCP = clientFactory.createSocket(ip, port);
+        this.portSend = 5555;
+        out = new ObjectOutputStream (socketTCP.getOutputStream());
+        in = new ObjectInputStream(socketTCP.getInputStream());
+        this.rec = new receiver(this);
+        this.rec.start();
+
+        sendObjectWaitingAnswerString(msgID.toServer.request,new certificate(cer), 0);
+        try{
+            this.rec.doStop();
+            close();
+        }catch (Exception e){}
+    }
+
+    public void writeCertificate(Certificate cer) throws Exception{
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(null, null);
+        ks.setCertificateEntry("OwnPlayer", cer);
+
+        File file = new File(path+"ownClientKey.jks");
+        OutputStream out = new FileOutputStream(file);
+        ks.store(out, "clientpass".toCharArray());
+        out.close();
+
+        file = new File(path+"OwnClientPublicKey.cer");
+        byte[] buf = cer.getEncoded();
+        out = new FileOutputStream(file);
+        out.write(buf);
+        out.close();
+    }
+
+    public static Certificate selfSign(String subjectDN) throws Exception{
+        KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
+        gen.initialize(2048, new SecureRandom());
+        KeyPair keyPair = gen.generateKeyPair();
+        System.out.println(keyPair.toString());
+
+        Provider bcProvider = new BouncyCastleProvider();
+        Security.addProvider(bcProvider);
+        long now = System.currentTimeMillis();
+        Date startDate = new Date(now);
+        X500Name dnName = new X500Name(subjectDN);
+        BigInteger certSerialNumber = new BigInteger(Long.toString(now));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.YEAR, 1);
+        Date endDate = calendar.getTime();
+        String signatureAlgorithm = "SHA256WithRSA";
+        ContentSigner contentSigner = new JcaContentSignerBuilder(signatureAlgorithm).build(keyPair.getPrivate());
+        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, keyPair.getPublic());
+        BasicConstraints basicConstraints = new BasicConstraints(true);
+        certBuilder.addExtension(new ASN1ObjectIdentifier("2.5.29.19"), true, basicConstraints);
+        return new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
     }
 
     public void weupnp(){
@@ -260,7 +351,7 @@ public class connection {
                     p = new packet(id, false, (sendableObject)msg);
                 }
                 out.writeObject(p);
-            }catch (Exception e){/*e.printStackTrace();*/}
+            }catch (Exception e){e.printStackTrace();}
         }
     }
 

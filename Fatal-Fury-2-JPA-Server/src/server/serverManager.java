@@ -6,6 +6,7 @@ import lib.utils.Pair;
 import lib.utils.converter;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.sendableObjectsList;
+import lib.utils.sendableObjects.simpleObjects.certificate;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
 import javax.crypto.Cipher;
@@ -16,7 +17,13 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.util.*;
 
 public class serverManager {
@@ -686,5 +693,22 @@ public class serverManager {
         System.out.println(strData);
         strData.replace(":",".");
         return strData;
+    }
+
+    public synchronized String addCertificateToKeystore(certificate cer){
+        String path = System.getProperty("user.dir") + "/certs/serverTrustedCerts.jks";
+        File file = new File(path);
+        try {
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(file), "servpass".toCharArray());
+            ks.setCertificateEntry("OwnPlayer", cer.getCer());
+
+            OutputStream out = new FileOutputStream(file);
+            ks.store(out, "servpass".toCharArray());
+            out.close();
+            return "ADDED";
+        }catch (Exception e){
+            return "ERROR:Problem adding the certificate.";
+        }
     }
 }
