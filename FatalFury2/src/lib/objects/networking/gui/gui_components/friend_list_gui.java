@@ -18,14 +18,60 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+/**
+ * The type Friend list gui.
+ */
 public class friend_list_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
+    /**
+     * The Friends.
+     */
     private List<String> friends;
+    /**
+     * The Pending messages.
+     */
     private List<String> pendingMessages;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3;
 
+    /**
+     * Instantiates a new Friend list gui.
+     *
+     * @param gui             the gui
+     * @param friends         the friends
+     * @param pendingMessages the pending messages
+     */
     public friend_list_gui(online_mode_gui gui, List<String> friends, List<String> pendingMessages){
         this.gui = gui;
         this.friends = friends;
@@ -37,10 +83,19 @@ public class friend_list_gui {
         friendList();
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * Friend list.
+     */
     private void friendList(){
         JTable table;
         JScrollPane scrollPane;
@@ -105,12 +160,35 @@ public class friend_list_gui {
         gui.getItemsOnScreen().add(0,guiItems.ADD_FRIEND);
     }
 
+    /**
+     * The type Friend table selection listener.
+     */
     class FriendTableSelectionListener extends MouseAdapter implements ListSelectionListener {
+        /**
+         * The Clicking.
+         */
         private boolean clicking = false;
+        /**
+         * The Times.
+         */
         private int times = 0;
+        /**
+         * The Reference.
+         */
         private long reference;
-        private int actRow, previousRow;
+        /**
+         * The Act row.
+         */
+        private int actRow, /**
+         * The Previous row.
+         */
+        previousRow;
 
+        /**
+         * Value changed.
+         *
+         * @param e the e
+         */
         public void valueChanged(ListSelectionEvent e) {
             ListSelectionModel lsm = (ListSelectionModel)e.getSource();
             if (lsm.isSelectionEmpty()) {
@@ -134,6 +212,11 @@ public class friend_list_gui {
             }
         }
 
+        /**
+         * Mouse released.
+         *
+         * @param me the me
+         */
         @Override
         public void mouseReleased(MouseEvent me) {
             if(gui.getFriendSelected() < 0){return;}
@@ -180,13 +263,30 @@ public class friend_list_gui {
         }
     }
 
-    //https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
+    /**
+     * The type Header friend list renderer.
+     */
+//https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
     public class HeaderFriendListRenderer extends JLabel implements TableCellRenderer {
+        /**
+         * Instantiates a new Header friend list renderer.
+         */
         public HeaderFriendListRenderer() {
             setFont(f3);
             setForeground(Color.YELLOW);
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
@@ -196,14 +296,36 @@ public class friend_list_gui {
 
     }
 
-    //https://www.tutorialspoint.com/how-can-we-add-insert-a-jbutton-to-jtable-cell-in-java
+    /**
+     * The type Friends buttons table renderer.
+     */
+//https://www.tutorialspoint.com/how-can-we-add-insert-a-jbutton-to-jtable-cell-in-java
     class FriendsButtonsTableRenderer implements TableCellRenderer {
+        /**
+         * The Default renderer.
+         */
         private TableCellRenderer defaultRenderer;
 
+        /**
+         * Instantiates a new Friends buttons table renderer.
+         *
+         * @param renderer the renderer
+         */
         public FriendsButtonsTableRenderer(TableCellRenderer renderer) {
             defaultRenderer = renderer;
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value instanceof Component) {
                 Component aux = (Component) value;
@@ -219,10 +341,24 @@ public class friend_list_gui {
         }
     }
 
+    /**
+     * The type Friends buttons table model.
+     */
     class FriendsButtonsTableModel extends AbstractTableModel {
+        /**
+         * The Rows.
+         */
         private Object[][] rows;
+        /**
+         * The Columns.
+         */
         private String[] columns = {" Friends"};
 
+        /**
+         * Instantiates a new Friends buttons table model.
+         *
+         * @param friends the friends
+         */
         public FriendsButtonsTableModel(List<String> friends){
             rows = new Object[friends.size()][1];
             for(int i = 0; i < friends.size();++i){
@@ -238,21 +374,62 @@ public class friend_list_gui {
             }
         }
 
+        /**
+         * Gets column name.
+         *
+         * @param column the column
+         * @return the column name
+         */
         public String getColumnName(int column) {
             return columns[column];
         }
+
+        /**
+         * Gets row count.
+         *
+         * @return the row count
+         */
         public int getRowCount() {
             return rows.length;
         }
+
+        /**
+         * Gets column count.
+         *
+         * @return the column count
+         */
         public int getColumnCount() {
             return columns.length;
         }
+
+        /**
+         * Gets value at.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the value at
+         */
         public Object getValueAt(int row, int column) {
             return rows[row][column];
         }
+
+        /**
+         * Is cell editable boolean.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the boolean
+         */
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+
+        /**
+         * Gets column class.
+         *
+         * @param column the column
+         * @return the column class
+         */
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
         }

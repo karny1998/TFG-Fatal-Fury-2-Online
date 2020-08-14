@@ -24,8 +24,14 @@ public class online_user_controller extends user_controller {
      */
     private int menssageIdentifier = 1;
 
+    /**
+     * The Time reference.
+     */
     private long timeReference = System.currentTimeMillis();
 
+    /**
+     * The Connection lost.
+     */
     private boolean connectionLost = false;
 
     /**
@@ -45,6 +51,9 @@ public class online_user_controller extends user_controller {
         }
     }
 
+    /**
+     * Inputs gestion.
+     */
     @Override
     protected void inputsGestion(){
         mov = "";
@@ -146,20 +155,40 @@ public class online_user_controller extends user_controller {
         this.menssageIdentifier = menssageIdentifier;
     }
 
+    /**
+     * Gets time reference.
+     *
+     * @return the time reference
+     */
     @Override
     public long getTimeReference() {
         return timeReference;
     }
 
+    /**
+     * Sets time reference.
+     *
+     * @param timeReference the time reference
+     */
     @Override
     public void setTimeReference(long timeReference) {
         this.timeReference = timeReference;
     }
 
+    /**
+     * Is connection lost boolean.
+     *
+     * @return the boolean
+     */
     public boolean isConnectionLost() {
         return connectionLost;
     }
 
+    /**
+     * Sets connection lost.
+     *
+     * @param connectionLost the connection lost
+     */
     public void setConnectionLost(boolean connectionLost) {
         this.connectionLost = connectionLost;
     }

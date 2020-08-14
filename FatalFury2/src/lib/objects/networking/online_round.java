@@ -61,13 +61,16 @@ public class online_round extends round {
         hitBox eHurt = enemy.getPlayer().getHurtbox();
 
         if(isServer) {
-            fightManagement(pHurt, eHurt);
+            fightManagement(pHurt, eHurt, true);
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = p.getState().toString() + ":" + p.getOrientation() + ":" + p.getLife() + ":" + p.getX() + ":" + p.getY() + ":" +
                     e.getState().toString() + ":" + e.getOrientation() + ":" + e.getLife() + ":" + e.getX() + ":" + e.getY() + ":" + timeLeft;
             con.sendString(messageIdentifier, msg);
         }
         else{
+            ///////////////////////////////////////////////////////////
+            fightManagement(pHurt, eHurt, false);
+            ///////////////////////////////////////////////////////////
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receiveString(messageIdentifier);
             if(!msg.equals("") && !msg.equals("NONE")){
@@ -80,11 +83,17 @@ public class online_round extends round {
                 int time = Integer.parseInt(aux[10]);
                 timeLeft = time;
                 p.applyDamage(p.getLife()-pL);
-                p.setX(pX);p.setY(pY);
-                p.setOrientation(pO);
+                if(!p.isJumping()) {
+                    p.setX(pX);
+                    p.setY(pY);
+                    p.setOrientation(pO);
+                }
                 e.applyDamage(e.getLife()-eL);
-                e.setX(eX);e.setY(eY);
-                e.setOrientation(eO);
+                if(!e.isJumping()) {
+                    e.setX(eX);
+                    e.setY(eY);
+                    e.setOrientation(eO);
+                }
                 if(character.isKnockback(pS) && !p.inKnockback()){
                     p.setState(pS,pHurt,eHurt);
                 }

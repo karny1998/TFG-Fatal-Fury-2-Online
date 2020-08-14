@@ -18,26 +18,152 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * The type Character selection gui.
+ */
 public class character_selection_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3,f4;
-    private ImageIcon terryIcon, andyIcon,  maiIcon,
-            terryMug, andyMug,  maiMug, terryCombos,
-            andyCombos,  maiCombos, unknownMug,
-            australia, china, usa, usaIcon, chinaIcon, australiaIcon;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3, /**
+     * The F 4.
+     */
+    f4;
+    /**
+     * The Terry icon.
+     */
+    private ImageIcon terryIcon, /**
+     * The Andy icon.
+     */
+    andyIcon, /**
+     * The Mai icon.
+     */
+    maiIcon,
+    /**
+     * The Terry mug.
+     */
+    terryMug, /**
+     * The Andy mug.
+     */
+    andyMug, /**
+     * The Mai mug.
+     */
+    maiMug, /**
+     * The Terry combos.
+     */
+    terryCombos,
+    /**
+     * The Andy combos.
+     */
+    andyCombos, /**
+     * The Mai combos.
+     */
+    maiCombos, /**
+     * The Unknown mug.
+     */
+    unknownMug,
+    /**
+     * The Australia.
+     */
+    australia, /**
+     * The China.
+     */
+    china, /**
+     * The Usa.
+     */
+    usa, /**
+     * The Usa icon.
+     */
+    usaIcon, /**
+     * The China icon.
+     */
+    chinaIcon, /**
+     * The Australia icon.
+     */
+    australiaIcon;
+    /**
+     * The Is host.
+     */
     private boolean isHost = false;
+    /**
+     * The Chosen character.
+     */
     private Playable_Character chosen_character = Playable_Character.TERRY;
+    /**
+     * The Chosen map.
+     */
     private Scenario_type chosen_map = Scenario_type.USA;
+    /**
+     * The Timer.
+     */
     private Timer timer;
+    /**
+     * The Time.
+     */
     private int time = 20;
+    /**
+     * The Time on screen.
+     */
     private JTextField timeOnScreen;
-    private String ip, rivalName;
+    /**
+     * The Ip.
+     */
+    private String ip, /**
+     * The Rival name.
+     */
+    rivalName;
+    /**
+     * The Con to client.
+     */
     private connection conToClient;
+    /**
+     * The Is ranked.
+     */
     private boolean isRanked = false;
+    /**
+     * The All ok.
+     */
     private boolean allOk = false;
 
+    /**
+     * Instantiates a new Character selection gui.
+     *
+     * @param gui       the gui
+     * @param isHost    the is host
+     * @param ip        the ip
+     * @param rivalName the rival name
+     * @param isRanked  the is ranked
+     */
     public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked){
         this.isRanked = isRanked;
         this.ip = ip;
@@ -86,6 +212,10 @@ public class character_selection_gui {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String trat = conToClient.receiveString(msgID.toClient.tramits);
+                if(trat.equals("LEFT THE GAME")){
+                    close();
+                }
                 --time;
                 String aux = Integer.toString(time);
                 if(time < 10){
@@ -102,6 +232,9 @@ public class character_selection_gui {
         timer.start();
     }
 
+    /**
+     * Generate game.
+     */
     private void generateGame(){
         if(isHost) {
             boolean ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":"+chosen_map.toString(), 200);
@@ -172,10 +305,19 @@ public class character_selection_gui {
         }
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * Character selection.
+     */
     public void characterSelection(){
         JButton terry, andy, mai, usaB = null, chinaB = null, australiaB = null;
 
@@ -278,13 +420,35 @@ public class character_selection_gui {
         gui.reloadGUI();
     }
 
+    public void close(){
+        timer.stop();
+        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+        gui.clearGui();
+    }
+
+    /**
+     * The type Character selection listener.
+     */
     public class characterSelectionListener implements ActionListener {
+        /**
+         * The Type.
+         */
         private guiItems type;
 
+        /**
+         * Instantiates a new Character selection listener.
+         *
+         * @param type the type
+         */
         public characterSelectionListener(guiItems type) {
             this.type = type;
         }
 
+        /**
+         * Action performed.
+         *
+         * @param actionEvent the action event
+         */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             Map<guiItems,Component> aux = gui.getComponentsOnScreen();
@@ -316,13 +480,29 @@ public class character_selection_gui {
         }
     }
 
+    /**
+     * The type Map selection listener.
+     */
     public class mapSelectionListener implements ActionListener {
+        /**
+         * The Type.
+         */
         private guiItems type;
 
+        /**
+         * Instantiates a new Map selection listener.
+         *
+         * @param type the type
+         */
         public mapSelectionListener(guiItems type) {
             this.type = type;
         }
 
+        /**
+         * Action performed.
+         *
+         * @param actionEvent the action event
+         */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             Map<guiItems,Component> aux = gui.getComponentsOnScreen();
@@ -351,42 +531,92 @@ public class character_selection_gui {
         }
     }
 
+    /**
+     * Is host boolean.
+     *
+     * @return the boolean
+     */
     public boolean isHost() {
         return isHost;
     }
 
+    /**
+     * Sets host.
+     *
+     * @param host the host
+     */
     public void setHost(boolean host) {
         isHost = host;
     }
 
+    /**
+     * Gets chosen character.
+     *
+     * @return the chosen character
+     */
     public Playable_Character getChosen_character() {
         return chosen_character;
     }
 
+    /**
+     * Sets chosen character.
+     *
+     * @param chosen_character the chosen character
+     */
     public void setChosen_character(Playable_Character chosen_character) {
         this.chosen_character = chosen_character;
     }
 
+    /**
+     * Gets ip.
+     *
+     * @return the ip
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * Sets ip.
+     *
+     * @param ip the ip
+     */
     public void setIp(String ip) {
         this.ip = ip;
     }
 
+    /**
+     * Gets rival name.
+     *
+     * @return the rival name
+     */
     public String getRivalName() {
         return rivalName;
     }
 
+    /**
+     * Sets rival name.
+     *
+     * @param rivalName the rival name
+     */
     public void setRivalName(String rivalName) {
         this.rivalName = rivalName;
     }
 
+    /**
+     * Is all ok boolean.
+     *
+     * @return the boolean
+     */
     public boolean isAllOk() {
         return allOk;
     }
 
+    /**
+     * Sets all ok.
+     *
+     * @param allOk the all ok
+     */
     public void setAllOk(boolean allOk) {
         this.allOk = allOk;
     }

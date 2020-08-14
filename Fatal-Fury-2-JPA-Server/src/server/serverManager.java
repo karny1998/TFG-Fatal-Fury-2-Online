@@ -659,6 +659,7 @@ public class serverManager {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
         javax.mail.Session session = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
@@ -701,7 +702,7 @@ public class serverManager {
         try {
             KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream(file), "servpass".toCharArray());
-            ks.setCertificateEntry("OwnPlayer", cer.getCer());
+            ks.setCertificateEntry("OwnPlayer"+((int)Math.random()*10000)+System.currentTimeMillis(), cer.getCer());
 
             OutputStream out = new FileOutputStream(file);
             ks.store(out, "servpass".toCharArray());

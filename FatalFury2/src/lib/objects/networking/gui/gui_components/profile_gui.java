@@ -17,16 +17,76 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * The type Profile gui.
+ */
 public class profile_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
+    /**
+     * The Prof.
+     */
     private profile prof;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3;
-    private ImageIcon terry, andy,  mai;
-    private JScrollPane scroll1, scroll2;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3;
+    /**
+     * The Terry.
+     */
+    private ImageIcon terry, /**
+     * The Andy.
+     */
+    andy, /**
+     * The Mai.
+     */
+    mai;
+    /**
+     * The Scroll 1.
+     */
+    private JScrollPane scroll1, /**
+     * The Scroll 2.
+     */
+    scroll2;
+    /**
+     * The In scroll 1.
+     */
     private boolean inScroll1 = true;
 
+    /**
+     * Instantiates a new Profile gui.
+     *
+     * @param gui  the gui
+     * @param prof the prof
+     */
     public profile_gui(online_mode_gui gui, profile prof){
         this.gui = gui;
         this.prof = prof;
@@ -41,10 +101,19 @@ public class profile_gui {
         profile();
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * Profile.
+     */
     public void profile(){
         new friend_list_gui(gui,gui.getFriends(), gui.getPendingMessages());
 
@@ -169,13 +238,35 @@ public class profile_gui {
         }
     }
 
+    /**
+     * The type Historial table renderer.
+     */
     class HistorialTableRenderer implements TableCellRenderer {
+        /**
+         * The Default renderer.
+         */
         private TableCellRenderer defaultRenderer;
 
+        /**
+         * Instantiates a new Historial table renderer.
+         *
+         * @param renderer the renderer
+         */
         public HistorialTableRenderer(TableCellRenderer renderer) {
             defaultRenderer = renderer;
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value instanceof Component) {
                 return (Component) value;
@@ -184,10 +275,24 @@ public class profile_gui {
         }
     }
 
+    /**
+     * The type Historial table model.
+     */
     class HistorialTableModel extends AbstractTableModel {
+        /**
+         * The Rows.
+         */
         private Object[][] rows;
+        /**
+         * The Columns.
+         */
         private String[] columns = {"CHAR1","Host", "TYPE","Client", "CHAR2"};
 
+        /**
+         * Instantiates a new Historial table model.
+         *
+         * @param half the half
+         */
         public HistorialTableModel(boolean half){
             rows = new Object[prof.getGames().size()][5];
             if(half){
@@ -239,7 +344,29 @@ public class profile_gui {
                 aux2.setHorizontalAlignment(JTextField.CENTER);
                 aux3.setHorizontalAlignment(JTextField.CENTER);
 
-                JLabel aux4 = new JLabel(terry), aux5 = new JLabel(andy);
+                JLabel aux4 = new JLabel(terry), aux5 = new JLabel(terry);
+
+                switch (games.get(i).getCharacter1()){
+                    case "MAI":
+                        aux4 = new JLabel(mai);
+                        break;
+                    case "ANDY":
+                        aux4 = new JLabel(andy);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (games.get(i).getCharacter2()){
+                    case "MAI":
+                        aux5 = new JLabel(mai);
+                        break;
+                    case "ANDY":
+                        aux5 = new JLabel(andy);
+                        break;
+                    default:
+                        break;
+                }
 
                 rows[i][0] = aux4;
                 rows[i][1] = aux1;
@@ -251,26 +378,72 @@ public class profile_gui {
             }
         }
 
+        /**
+         * Gets column name.
+         *
+         * @param column the column
+         * @return the column name
+         */
         public String getColumnName(int column) {
             return columns[column];
         }
+
+        /**
+         * Gets row count.
+         *
+         * @return the row count
+         */
         public int getRowCount() {
             return rows.length;
         }
+
+        /**
+         * Gets column count.
+         *
+         * @return the column count
+         */
         public int getColumnCount() {
             return columns.length;
         }
+
+        /**
+         * Gets value at.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the value at
+         */
         public Object getValueAt(int row, int column) {
             return rows[row][column];
         }
+
+        /**
+         * Is cell editable boolean.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the boolean
+         */
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+
+        /**
+         * Gets column class.
+         *
+         * @param column the column
+         * @return the column class
+         */
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
         }
     }
 
+    /**
+     * Swap historial.
+     *
+     * @param trap the trap
+     */
     public void swapHistorial(boolean trap){
         if(trap){
             scroll2.setVisible(true);

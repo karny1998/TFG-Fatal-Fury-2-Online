@@ -6,17 +6,59 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * The type Game gui.
+ */
 public class gameGUI extends JPanel {
+    /**
+     * The Background 1.
+     */
     private Image background1 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_2.png")).getImage(),
-        background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage(),
-            background3 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_simple.png")).getImage(),
-            background4 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection.png")).getImage(),
-            background5 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection2.png")).getImage(),
-            background6 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/fight_end.png")).getImage();
+    /**
+     * The Background 2.
+     */
+    background2 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base.png")).getImage(),
+    /**
+     * The Background 3.
+     */
+    background3 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/base_simple.png")).getImage(),
+    /**
+     * The Background 4.
+     */
+    background4 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection.png")).getImage(),
+    /**
+     * The Background 5.
+     */
+    background5 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/character_selection2.png")).getImage(),
+    /**
+     * The Background 6.
+     */
+    background6 = new ImageIcon(this.getClass().getResource("/assets/sprites/menu/fight_end.png")).getImage();
+    /**
+     * The Principal.
+     */
     private Principal principal;
-    private static int resX = 1280, resY = 720, back = 1;
+    /**
+     * The constant resX.
+     */
+    private static int resX = 1280, /**
+     * The Res y.
+     */
+    resY = 720, /**
+     * The Back.
+     */
+    back = 1;
+    /**
+     * The Fullscreen.
+     */
     private boolean fullscreen = false;
+    /**
+     * The Multiplier.
+     */
     private double multiplier = 1.0;
+    /**
+     * The F.
+     */
     private Font f;
     {
         try {
@@ -28,12 +70,20 @@ public class gameGUI extends JPanel {
         }
     }
 
+    /**
+     * Instantiates a new Game gui.
+     *
+     * @param principal the principal
+     */
     public gameGUI(Principal principal) {
         this.principal = principal;
         setSurfaceSize();
         this.setLayout(null);
     }
 
+    /**
+     * Sets surface size.
+     */
     private void setSurfaceSize() {
         Dimension d = new Dimension();
         d.width = resX;
@@ -41,6 +91,11 @@ public class gameGUI extends JPanel {
         setPreferredSize(d);
     }
 
+    /**
+     * Paint component.
+     *
+     * @param g the g
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -64,18 +119,38 @@ public class gameGUI extends JPanel {
         }
     }
 
+    /**
+     * Gets back.
+     *
+     * @return the back
+     */
     public static int getBack() {
         return back;
     }
 
+    /**
+     * Sets back.
+     *
+     * @param back the back
+     */
     public static void setBack(int back) {
         gameGUI.back = back;
     }
 
+    /**
+     * Is fullscreen boolean.
+     *
+     * @return the boolean
+     */
     public boolean isFullscreen() {
         return fullscreen;
     }
 
+    /**
+     * Sets fullscreen.
+     *
+     * @param fullscreen the fullscreen
+     */
     public void setFullscreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
         if(true){
@@ -87,10 +162,20 @@ public class gameGUI extends JPanel {
         }
     }
 
+    /**
+     * Gets multiplier.
+     *
+     * @return the multiplier
+     */
     public double getMultiplier() {
         return multiplier;
     }
 
+    /**
+     * Sets multiplier.
+     *
+     * @param multiplier the multiplier
+     */
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }

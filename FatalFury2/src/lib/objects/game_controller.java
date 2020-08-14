@@ -31,6 +31,9 @@ import static lib.Enums.Item_Type.SCORE_FRAME;
  */
 // Clase que representa un controlador principal del juego que se encarga de gestionarlo
 public class game_controller {
+    /**
+     * The Screen.
+     */
     Screen screen;
     /**
      * The Ran.
@@ -221,6 +224,8 @@ public class game_controller {
 
     /**
      * Instantiates a new Game controller.
+     *
+     * @param screen the screen
      */
 // Constructor del game controller por defecto, se inicializan variables
     public game_controller(Screen screen) {
@@ -1625,10 +1630,20 @@ public class game_controller {
         this.font = font;
     }
 
+    /**
+     * Gets online.
+     *
+     * @return the online
+     */
     public online_mode getOnline() {
         return online;
     }
 
+    /**
+     * Sets online.
+     *
+     * @param online the online
+     */
     public void setOnline(online_mode online) {
         this.online = online;
     }

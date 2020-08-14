@@ -1,6 +1,7 @@
 package server;
 
 import lib.utils.sendableObjects.sendableObjectsList;
+import lib.utils.sendableObjects.simpleObjects.certificate;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
 import java.net.InetAddress;
@@ -144,11 +145,24 @@ public class requestManager {
             String res = manager.answerFriendChallenge(userLogged, aux[1],Boolean.parseBoolean(aux[2]));
             con.sendString(msgID.toServer.request, res);
         }
-        else if(request.equals("CALCEL SEARCH GAME")){
+        else if(request.equals("CANCEL SEARCH GAME")){
             manager.stopSearchingGame(userLogged);
         }
         else if(request.equals("RANKING")){
             con.sendObject(msgID.toServer.request, manager.loadRanking());
+        }
+        else if(request.contains("FIRST CONNECTION")){
+            Object cer;
+            do{
+                cer = con.receiveObject(msgID.toServer.request);
+            }while(cer == null || cer.equals("NONE") || cer.equals(""));
+            String res = manager.addCertificateToKeystore((certificate) cer);
+            con.sendString(msgID.toServer.request,res);
+        }
+        else if(request.contains("SAVE QTABLE")){
+            String aux[] = request.split(":");
+            String res = manager.answerFriendChallenge(userLogged, aux[1],Boolean.parseBoolean(aux[2]));
+            con.sendString(msgID.toServer.request, res);
         }
     }
 

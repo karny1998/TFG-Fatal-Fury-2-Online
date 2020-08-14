@@ -22,6 +22,9 @@ import static lib.Enums.Item_Type.*;
  */
 // Clase que se encarga de mostrar todo por pantalla
 public class Screen extends JPanel{
+    /**
+     * The Principal.
+     */
     Principal principal;
     /**
      * The constant resX.
@@ -111,6 +114,8 @@ public class Screen extends JPanel{
 
     /**
      * Instantiates a new Screen.
+     *
+     * @param principal the principal
      */
 // Inicia todo
     public Screen(Principal principal) {
@@ -213,26 +218,56 @@ public class Screen extends JPanel{
         doDrawing(g);
     }
 
+    /**
+     * Gets screen objects.
+     *
+     * @return the screen objects
+     */
     public Map<Item_Type, screenObject> getScreenObjects() {
         return screenObjects;
     }
 
+    /**
+     * Sets screen objects.
+     *
+     * @param screenObjects the screen objects
+     */
     public void setScreenObjects(Map<Item_Type, screenObject> screenObjects) {
         this.screenObjects = screenObjects;
     }
 
+    /**
+     * Gets principal.
+     *
+     * @return the principal
+     */
     public Principal getPrincipal() {
         return principal;
     }
 
+    /**
+     * Sets principal.
+     *
+     * @param principal the principal
+     */
     public void setPrincipal(Principal principal) {
         this.principal = principal;
     }
 
+    /**
+     * Gets game.
+     *
+     * @return the game
+     */
     public game_controller getGame() {
         return game;
     }
 
+    /**
+     * Sets game.
+     *
+     * @param game the game
+     */
     public void setGame(game_controller game) {
         this.game = game;
     }

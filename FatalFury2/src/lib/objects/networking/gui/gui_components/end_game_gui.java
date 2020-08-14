@@ -12,18 +12,105 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * The type End game gui.
+ */
 public class end_game_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3,f4;
-    private ImageIcon terryMug, andyMug,  maiMug, draw, win, lost;
-    private boolean isHost = false, isRanked;
-    private Playable_Character character1 = Playable_Character.TERRY, character2 = Playable_Character.TERRY;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3, /**
+     * The F 4.
+     */
+    f4;
+    /**
+     * The Terry mug.
+     */
+    private ImageIcon terryMug, /**
+     * The Andy mug.
+     */
+    andyMug, /**
+     * The Mai mug.
+     */
+    maiMug, /**
+     * The Draw.
+     */
+    draw, /**
+     * The Win.
+     */
+    win, /**
+     * The Lost.
+     */
+    lost;
+    /**
+     * The Is host.
+     */
+    private boolean isHost = false, /**
+     * The Is ranked.
+     */
+    isRanked;
+    /**
+     * The Character 1.
+     */
+    private Playable_Character character1 = Playable_Character.TERRY, /**
+     * The Character 2.
+     */
+    character2 = Playable_Character.TERRY;
+    /**
+     * The Rival name.
+     */
     private String rivalName;
+    /**
+     * The Results.
+     */
     private Fight_Results results;
+    /**
+     * The Points.
+     */
     private int points;
 
+    /**
+     * Instantiates a new End game gui.
+     *
+     * @param gui       the gui
+     * @param isHost    the is host
+     * @param rivalName the rival name
+     * @param c1        the c 1
+     * @param c2        the c 2
+     * @param results   the results
+     * @param points    the points
+     * @param isRanked  the is ranked
+     */
     public end_game_gui(online_mode_gui gui, boolean isHost, String rivalName, Playable_Character c1,
                         Playable_Character c2, Fight_Results results, int points, boolean isRanked){
         this.character1 = c1;
@@ -55,10 +142,19 @@ public class end_game_gui {
         end_game();
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * End game.
+     */
     public void end_game(){
         JLabel char1, char2, gameResult;
         JTextField rival, user;

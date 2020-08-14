@@ -18,15 +18,64 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 
+/**
+ * The type Chat gui.
+ */
 public class chat_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
+    /**
+     * The Msgs.
+     */
     private List<message> msgs;
+    /**
+     * The Friend.
+     */
     private String friend;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3;
+    /**
+     * The Model.
+     */
     private ChatTextsTableModel model;
 
+    /**
+     * Instantiates a new Chat gui.
+     *
+     * @param gui    the gui
+     * @param msgs   the msgs
+     * @param friend the friend
+     */
     public chat_gui(online_mode_gui gui, List<message> msgs, String friend){
         this.gui = gui;
         this.msgs = msgs;
@@ -48,10 +97,19 @@ public class chat_gui {
         chat();
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * Chat.
+     */
     private void chat(){
 
         JTable table;
@@ -130,8 +188,14 @@ public class chat_gui {
         gui.reloadGUI();
     }
 
-    //https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
+    /**
+     * The type Header chat renderer.
+     */
+//https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
     public class HeaderChatRenderer extends JLabel implements TableCellRenderer {
+        /**
+         * Instantiates a new Header chat renderer.
+         */
         public HeaderChatRenderer() {
             setFont(f3);
             setForeground(Color.YELLOW);
@@ -139,6 +203,17 @@ public class chat_gui {
             setHorizontalAlignment(JTextField.LEFT);
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
@@ -148,13 +223,35 @@ public class chat_gui {
 
     }
 
+    /**
+     * The type Chat table renderer.
+     */
     class ChatTableRenderer implements TableCellRenderer {
+        /**
+         * The Default renderer.
+         */
         private TableCellRenderer defaultRenderer;
 
+        /**
+         * Instantiates a new Chat table renderer.
+         *
+         * @param renderer the renderer
+         */
         public ChatTableRenderer(TableCellRenderer renderer) {
             defaultRenderer = renderer;
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value instanceof Component) {
                 return (Component) value;
@@ -163,10 +260,22 @@ public class chat_gui {
         }
     }
 
+    /**
+     * The type Chat texts table model.
+     */
     class ChatTextsTableModel extends AbstractTableModel {
+        /**
+         * The Rows.
+         */
         private Object[][] rows;
+        /**
+         * The Columns.
+         */
         private String[] columns = {friend};
 
+        /**
+         * Instantiates a new Chat texts table model.
+         */
         public ChatTextsTableModel(){
             rows = new Object[msgs.size()][1];
             for(int i = 0; i < msgs.size();++i){
@@ -182,6 +291,13 @@ public class chat_gui {
             }
         }
 
+        /**
+         * Sets value at.
+         *
+         * @param value  the value
+         * @param row    the row
+         * @param column the column
+         */
         @Override
         public void setValueAt(Object value, int row, int column)
         {
@@ -192,26 +308,72 @@ public class chat_gui {
             rows[row][column] = aux;
         }
 
+        /**
+         * Gets column name.
+         *
+         * @param column the column
+         * @return the column name
+         */
         public String getColumnName(int column) {
             return columns[column];
         }
+
+        /**
+         * Gets row count.
+         *
+         * @return the row count
+         */
         public int getRowCount() {
             return rows.length;
         }
+
+        /**
+         * Gets column count.
+         *
+         * @return the column count
+         */
         public int getColumnCount() {
             return columns.length;
         }
+
+        /**
+         * Gets value at.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the value at
+         */
         public Object getValueAt(int row, int column) {
             return rows[row][column];
         }
+
+        /**
+         * Is cell editable boolean.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the boolean
+         */
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+
+        /**
+         * Gets column class.
+         *
+         * @param column the column
+         * @return the column class
+         */
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
         }
     }
 
+    /**
+     * Add message.
+     *
+     * @param m the m
+     */
     public void addMessage(message m){
         if(m.getContent().length() <= 30) {
             JTextField aux;

@@ -486,9 +486,11 @@ public class round {
      * @param eHurt the e hurt
      */
 // Gestión de colisiones, cambios de orientación y daños entre los personajes
-    public void fightManagement(hitBox pHurt, hitBox eHurt){
-        // Gestiona las colisiones y daños
-        collidesManagement(pHurt, eHurt);
+    public void fightManagement(hitBox pHurt, hitBox eHurt, boolean manageCollides){
+        if(manageCollides) {
+            // Gestiona las colisiones y daños
+            collidesManagement(pHurt, eHurt);
+        }
         // EL 400 ES EL ANCHO DE LA IMAGEN
         // Si se sobrepasan y alguno está mirando en las direccion incorrecta
         if((player.getPlayer().getOrientation() == -1 && enemy.getPlayer().getOrientation() == 1
@@ -639,7 +641,7 @@ public class round {
         hitBox pHurt = player.getPlayer().getHurtbox();
         hitBox eHurt = enemy.getPlayer().getHurtbox();
 
-        fightManagement(pHurt,eHurt);
+        fightManagement(pHurt,eHurt, true);
         cameraManagement(pHurt,eHurt);
 
         // Obtención de los frames a dibujar del jugador

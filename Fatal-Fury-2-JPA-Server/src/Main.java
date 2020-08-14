@@ -104,7 +104,9 @@ public class Main {
         }
 
         public synchronized void doStop(String msg) {
-            con.sendString(msgID.toServer.notification, "SERVER CLOSED");
+            try {
+                con.sendString(msgID.toServer.notification, "SERVER CLOSED");
+            }catch (Exception e){}
             threads.remove(client);
             threadsByUser.remove(rqM.getUserLogged());
             con.sendString(msgID.toServer.notification,msg);
@@ -127,37 +129,31 @@ public class Main {
                 }
                 else if(con.isConnected()) {
                     con.waitForRequestOrTramit();
-                    Object cer = con.receiveObject(msgID.toServer.request);
-                    if(cer != null && !cer.equals("NONE") && !cer.equals("")){
-                        String res = rqM.getManager().addCertificateToKeystore((certificate) cer);
-                        con.sendString(msgID.toServer.request,res);
+                    String tramits = con.receiveString(msgID.toServer.tramits);
+                    String request = con.receiveString(msgID.toServer.request);
+                    if (tramits.equals("DISCONNECT") || forzedClose) {
+                        threads.remove(client);
+                        manager.desconnectUser(rqM.getUserLogged());
+                        con.close();
+                        cp.doStop();
+                        doStop();
                     }
                     else {
-                        String tramits = con.receiveString(msgID.toServer.tramits);
-                        String request = con.receiveString(msgID.toServer.request);
-                        if (tramits.equals("DISCONNECT") || forzedClose) {
-                            threads.remove(client);
-                            manager.desconnectUser(rqM.getUserLogged());
-                            con.close();
-                            cp.doStop();
-                            doStop();
-                        } else {
-                            rqM.manageRequest(request);
-                            if (!logged && rqM.isLogged()) {
-                                logged = true;
-                                String aux = "";
-                                if (threadsByUser.containsKey(rqM.getUserLogged())) {
-                                    aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
-                                }
-                                if (threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)) {
-                                    rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
-                                    rqM.setCon(con);
-                                    threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
-                                }
-                                threadsByUser.put(rqM.getUserLogged(), this);
-                            } else if (logged && !rqM.isLogged()) {
-                                logged = false;
+                        rqM.manageRequest(request);
+                        if (!logged && rqM.isLogged()) {
+                            logged = true;
+                            String aux = "";
+                            if (threadsByUser.containsKey(rqM.getUserLogged())) {
+                                aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
                             }
+                            if (threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)) {
+                                rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
+                                rqM.setCon(con);
+                                threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
+                            }
+                            threadsByUser.put(rqM.getUserLogged(), this);
+                        } else if (logged && !rqM.isLogged()) {
+                            logged = false;
                         }
                     }
                 }
@@ -205,7 +201,7 @@ public class Main {
                         timeReference = System.currentTimeMillis();
                     }
                     else{
-                        if(System.currentTimeMillis() - timeReference > 5000){
+                        if(System.currentTimeMillis() - timeReference > 10000){
                             clientHandler.this.setForzedClose(true);
                             doStop();
                         }

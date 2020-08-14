@@ -81,20 +81,49 @@ public class online_mode {
      */
     conToClientPort = 55555;
 
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
 
+    /**
+     * The User logged.
+     */
     private String userLogged = null;
 
-    //Información de la partida en curso
+    /**
+     * The Rival.
+     */
+//Información de la partida en curso
     private String rival = "";
-    private Playable_Character char1 = Playable_Character.TERRY, char2 = Playable_Character.TERRY;
-    private boolean isRanked = false, isHost = false;
+    /**
+     * The Char 1.
+     */
+    private Playable_Character char1 = Playable_Character.TERRY, /**
+     * The Char 2.
+     */
+    char2 = Playable_Character.TERRY;
+    /**
+     * The Is ranked.
+     */
+    private boolean isRanked = false, /**
+     * The Is host.
+     */
+    isHost = false;
+    /**
+     * The Rank points.
+     */
     private int rankPoints = 0;
+    /**
+     * The Result.
+     */
+    private Fight_Results result;
 
     /**
      * Instantiates a new Online mode.
      *
-     * @param debug the debug
+     * @param screen the screen
+     * @param debug  the debug
      */
     public online_mode(Screen screen, boolean debug) {
         if(!debug) {
@@ -109,6 +138,11 @@ public class online_mode {
         this.gui = new online_mode_gui(this, screen, onlineState);
     }
 
+    /**
+     * Retry initial connection boolean.
+     *
+     * @return the boolean
+     */
     public boolean retryInitialConnection(){
         boolean ok = reconnectToServer();
         gui.clearGui();
@@ -122,6 +156,11 @@ public class online_mode {
         }
     }
 
+    /**
+     * Reconnect to server boolean.
+     *
+     * @return the boolean
+     */
     public boolean reconnectToServer(){
         conToServer = new connection(serverIp, serverPort, 0, false);
         if(!conToServer.isConnected()){
@@ -187,10 +226,12 @@ public class online_mode {
     /**
      * Generate fight.
      *
-     * @param isHost the is host
-     * @param pC     the p c
-     * @param pE     the p e
-     * @param sce    the sce
+     * @param isHost   the is host
+     * @param pC       the p c
+     * @param pE       the p e
+     * @param sce      the sce
+     * @param isRanked the is ranked
+     * @param rival    the rival
      */
     public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce, boolean isRanked, String rival){
         this.rankPoints = 0;
@@ -251,6 +292,12 @@ public class online_mode {
         gui.setOnlineState(GameState.ONLINE_FIGHT);
     }
 
+    /**
+     * Synchronize boolean.
+     *
+     * @param isHost the is host
+     * @return the boolean
+     */
     private boolean synchronize(boolean isHost){
         if(isHost){
             for(int i = 0; i < 1000 ;++i){
@@ -310,7 +357,10 @@ public class online_mode {
                 }
 
                 Fight_Results results = fight.getFight_result();
-                conToClient.reliableSendString(msgID.toClient.tramits,"GAME ENDED:"+results.toString(), 200);
+                this.result =results;
+                if(isHost) {
+                    conToClient.reliableSendString(msgID.toClient.tramits, "GAME ENDED:" + results.toString(), 200);
+                }
                 int r = 0;
                 switch (results){
                     case PLAYER1_WIN:
@@ -336,7 +386,7 @@ public class online_mode {
                             res = conToServer.receiveString(msgID.toServer.request);
                         }while (!res.contains("GAME REGISTERED"));
                     }
-                    rankPoints = Integer.parseInt(res);
+                    rankPoints = Integer.parseInt(res.split(":")[1]);
                 }
                 else{
                     if (isHost) {
@@ -349,7 +399,9 @@ public class online_mode {
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                 fight.getPlayer().stop();
                 fight.getEnemy().stop();
-                conToClient.close();
+                if(conToClient.isConnected()) {
+                    conToClient.close();
+                }
                 fight = null;
                 conToClient = null;
                 gui.setOnlineState(GameState.GAME_END);
@@ -361,6 +413,12 @@ public class online_mode {
         }
     }
 
+    /**
+     * Generate con to client boolean.
+     *
+     * @param ip the ip
+     * @return the boolean
+     */
     public boolean generateConToClient(String ip){
         //conToClient = new connection(ip, 5560, 0, true);
         //conToClient.setPortSend(5561);
@@ -502,123 +560,291 @@ public class online_mode {
         this.conToClient = con;
     }
 
+    /**
+     * Gets online state.
+     *
+     * @return the online state
+     */
     public GameState getOnlineState() {
         return onlineState;
     }
 
+    /**
+     * Sets online state.
+     *
+     * @param onlineState the online state
+     */
     public void setOnlineState(GameState onlineState) {
         this.onlineState = onlineState;
     }
 
+    /**
+     * Is debug boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDebug() {
         return debug;
     }
 
+    /**
+     * Sets debug.
+     *
+     * @param debug the debug
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
+    /**
+     * Is searching boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSearching() {
         return searching;
     }
 
+    /**
+     * Sets searching.
+     *
+     * @param searching the searching
+     */
     public void setSearching(boolean searching) {
         this.searching = searching;
     }
 
+    /**
+     * Gets con to server.
+     *
+     * @return the con to server
+     */
     public connection getConToServer() {
         return conToServer;
     }
 
+    /**
+     * Sets con to server.
+     *
+     * @param conToServer the con to server
+     */
     public void setConToServer(connection conToServer) {
         this.conToServer = conToServer;
     }
 
+    /**
+     * Gets server ip.
+     *
+     * @return the server ip
+     */
     public String getServerIp() {
         return serverIp;
     }
 
+    /**
+     * Sets server ip.
+     *
+     * @param serverIp the server ip
+     */
     public void setServerIp(String serverIp) {
         this.serverIp = serverIp;
     }
 
+    /**
+     * Gets server port.
+     *
+     * @return the server port
+     */
     public int getServerPort() {
         return serverPort;
     }
 
+    /**
+     * Sets server port.
+     *
+     * @param serverPort the server port
+     */
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
     }
 
+    /**
+     * Gets con to client port.
+     *
+     * @return the con to client port
+     */
     public int getConToClientPort() {
         return conToClientPort;
     }
 
+    /**
+     * Sets con to client port.
+     *
+     * @param conToClientPort the con to client port
+     */
     public void setConToClientPort(int conToClientPort) {
         this.conToClientPort = conToClientPort;
     }
 
+    /**
+     * Gets gui.
+     *
+     * @return the gui
+     */
     public online_mode_gui getGui() {
         return gui;
     }
 
+    /**
+     * Sets gui.
+     *
+     * @param gui the gui
+     */
     public void setGui(online_mode_gui gui) {
         this.gui = gui;
     }
 
+    /**
+     * Gets user logged.
+     *
+     * @return the user logged
+     */
     public String getUserLogged() {
         return userLogged;
     }
 
+    /**
+     * Sets user logged.
+     *
+     * @param userLogged the user logged
+     */
     public void setUserLogged(String userLogged) {
         this.userLogged = userLogged;
     }
 
+    /**
+     * Gets rival.
+     *
+     * @return the rival
+     */
     public String getRival() {
         return rival;
     }
 
+    /**
+     * Sets rival.
+     *
+     * @param rival the rival
+     */
     public void setRival(String rival) {
         this.rival = rival;
     }
 
+    /**
+     * Gets char 1.
+     *
+     * @return the char 1
+     */
     public Playable_Character getChar1() {
         return char1;
     }
 
+    /**
+     * Sets char 1.
+     *
+     * @param char1 the char 1
+     */
     public void setChar1(Playable_Character char1) {
         this.char1 = char1;
     }
 
+    /**
+     * Gets char 2.
+     *
+     * @return the char 2
+     */
     public Playable_Character getChar2() {
         return char2;
     }
 
+    /**
+     * Sets char 2.
+     *
+     * @param char2 the char 2
+     */
     public void setChar2(Playable_Character char2) {
         this.char2 = char2;
     }
 
+    /**
+     * Is ranked boolean.
+     *
+     * @return the boolean
+     */
     public boolean isRanked() {
         return isRanked;
     }
 
+    /**
+     * Sets ranked.
+     *
+     * @param ranked the ranked
+     */
     public void setRanked(boolean ranked) {
         isRanked = ranked;
     }
 
+    /**
+     * Is host boolean.
+     *
+     * @return the boolean
+     */
     public boolean isHost() {
         return isHost;
     }
 
+    /**
+     * Sets host.
+     *
+     * @param host the host
+     */
     public void setHost(boolean host) {
         isHost = host;
     }
 
+    /**
+     * Gets rank points.
+     *
+     * @return the rank points
+     */
     public int getRankPoints() {
         return rankPoints;
     }
 
+    /**
+     * Sets rank points.
+     *
+     * @param rankPoints the rank points
+     */
     public void setRankPoints(int rankPoints) {
         this.rankPoints = rankPoints;
+    }
+
+    /**
+     * Gets result.
+     *
+     * @return the result
+     */
+    public Fight_Results getResult() {
+        return result;
+    }
+
+    /**
+     * Sets result.
+     *
+     * @param result the result
+     */
+    public void setResult(Fight_Results result) {
+        this.result = result;
     }
 }

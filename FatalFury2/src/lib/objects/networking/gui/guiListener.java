@@ -17,19 +17,51 @@ import lib.objects.networking.online_mode;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
+/**
+ * The type Gui listener.
+ */
 public class guiListener implements ActionListener {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
+    /**
+     * The Online controller.
+     */
     private online_mode online_controller;
+    /**
+     * The Type.
+     */
     private guiItems type;
+    /**
+     * The Con to server.
+     */
     private connection conToServer;
+    /**
+     * The Additional information.
+     */
     private String additionalInformation;
 
+    /**
+     * Instantiates a new Gui listener.
+     *
+     * @param gui  the gui
+     * @param type the type
+     */
     public guiListener(online_mode_gui gui, guiItems type){
         this.gui = gui;
         this.type = type;
         this.online_controller = gui.getOnline_controller();
         this.conToServer = online_controller.getConToServer();
     }
+
+    /**
+     * Instantiates a new Gui listener.
+     *
+     * @param gui                   the gui
+     * @param type                  the type
+     * @param additionalInformation the additional information
+     */
     public guiListener(online_mode_gui gui, guiItems type, String additionalInformation){
         this.gui = gui;
         this.type = type;
@@ -38,6 +70,11 @@ public class guiListener implements ActionListener {
         this.additionalInformation = additionalInformation;
     }
 
+    /**
+     * Action performed.
+     *
+     * @param actionEvent the action event
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (type == guiItems.CLOSE_GAME) {
@@ -105,11 +142,11 @@ public class guiListener implements ActionListener {
                 break;
             case LOGIN:
                 try {
-                    pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase();
+                    pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase().replace(":",";");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase();
+                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase().replace(":",";");
                 switch (type){
                     case SHOW:
                         gui.clearGui();
@@ -168,7 +205,7 @@ public class guiListener implements ActionListener {
                         gui.closePopUpWithConfirmation(guiItems.QUIT_YES, guiItems.QUIT_NO);
                         break;
                     case VERIFY_BUTTON:
-                        code  = Integer.parseInt(((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_CODE)).getText());
+                        code  = Integer.parseInt(((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_CODE)).getText().replace(":",";"));
                         res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"VERIFY ACCOUNT:"+user+":"+code, 0);
                         if(res.equals("VERIFIED")){
                             gui.closeVerification();
@@ -202,10 +239,10 @@ public class guiListener implements ActionListener {
                 }
                 break;
             case REGISTER:
-                pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase();
-                pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD_2)).getText().toUpperCase();
-                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase();
-                email = ((JTextField)gui.getComponentsOnScreen().get(guiItems.EMAIL)).getText().toUpperCase();
+                pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD)).getText().toUpperCase().replace(":",";");
+                pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.PASSWORD_2)).getText().toUpperCase().replace(":",";");
+                user = ((JTextField)gui.getComponentsOnScreen().get(guiItems.USERNAME)).getText().toUpperCase().replace(":",";");
+                email = ((JTextField)gui.getComponentsOnScreen().get(guiItems.EMAIL)).getText().toUpperCase().replace(":",";");
                 switch (type){
                     case SHOW:
                         gui.clearGui();
@@ -391,6 +428,10 @@ public class guiListener implements ActionListener {
                         gui.closeSearchingGame();
                         conToServer.sendString(msgID.toServer.request,"CANCEL SEARCH GAME");
                         break;
+                    case CANCEL_SEARCH_RANK_GAME:
+                        gui.closeSearchingGame();
+                        conToServer.sendString(msgID.toServer.request,"CANCEL SEARCH GAME");
+                        break;
                     case FRIEND_REQUEST_NOTIFICATION:
                         gui.friendRequest(gui.getNotifications().getFriendRequest().get(0));
                         gui.getNotifications().getFriendRequest().remove(0);
@@ -523,9 +564,9 @@ public class guiListener implements ActionListener {
                         System.out.println("Despues del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
                         break;
                     case CONFIRM_CHANGE_PASS:
-                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
-                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
-                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase().replace(":",";");
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase().replace(":",";");
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase().replace(":",";");
                         if(pass.length() == 0 || oldpass.length() == 0 || pass2.length() == 0){
                             gui.popUp("No field can be empty.");
                         }
@@ -552,16 +593,16 @@ public class guiListener implements ActionListener {
                         }
                         break;
                     case SHOW:
-                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
-                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
-                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase().replace(":",";");
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase().replace(":",";");
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase().replace(":",";");
                         gui.closeChangePass();
                         gui.changePass(true,oldpass,pass,pass2);
                         break;
                     case HIDE:
-                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase();
-                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase();
-                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase();
+                        oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase().replace(":",";");
+                        pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase().replace(":",";");
+                        pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase().replace(":",";");
                         gui.closeChangePass();
                         gui.changePass(false,oldpass,pass,pass2);
                         break;
@@ -591,8 +632,7 @@ public class guiListener implements ActionListener {
             case CHARACTER_SELECTION:
                 switch (type){
                     case BACK:
-                        gui.clearGui();
-                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        gui.getChar_sel().close();
                         break;
                     case QUIT_BUTTON:
                         quitGame();
@@ -751,6 +791,9 @@ public class guiListener implements ActionListener {
         }
     }
 
+    /**
+     * Delete friend.
+     */
     private void deleteFriend(){
         String friend = gui.getFriends().get(gui.getFriendSelected());
         boolean end = false;
@@ -767,8 +810,11 @@ public class guiListener implements ActionListener {
         gui.popUp(friend + " has been removed from your friends.");
     }
 
+    /**
+     * Add friend gestion.
+     */
     private void addFriendGestion(){
-        String friend = ((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_NAME)).getText().toUpperCase();
+        String friend = ((JTextField)gui.getComponentsOnScreen().get(guiItems.INTRODUCE_NAME)).getText().toUpperCase().replace(":",";");
         gui.closeAddFriend();
         if(friend.equals(gui.getUserLogged())){
             gui.popUp("You can't add yourself.");
@@ -797,6 +843,11 @@ public class guiListener implements ActionListener {
         }
     }
 
+    /**
+     * Answer friend request.
+     *
+     * @param accepted the accepted
+     */
     private void answerFriendRequest(boolean accepted){
         String res = "";
         if(accepted){
@@ -827,8 +878,11 @@ public class guiListener implements ActionListener {
         gui.getNotifications().clearFriendRequestNotification();
     }
 
+    /**
+     * Send message.
+     */
     private void sendMessage(){
-        String msg = ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).getText();
+        String msg = ((JTextField)gui.getComponentsOnScreen().get(guiItems.MESSAGE_WRITER)).getText().replace(":",";");
         String friend = gui.getFriends().get(gui.getFriendSelected());
         if(msg != null && !msg.trim().equals("")){
             int id = 0;
@@ -842,12 +896,22 @@ public class guiListener implements ActionListener {
         }
     }
 
+    /**
+     * Quit game.
+     */
     private void quitGame(){
         if(!gui.getComponentsOnScreen().containsKey(guiItems.QUIT_YES)) {
             gui.popUpWithConfirmation("Are you sure you want to quit?", guiItems.QUIT_YES, guiItems.QUIT_NO);
         }
     }
 
+    /**
+     * Encrypt string.
+     *
+     * @param strClearText the str clear text
+     * @return the string
+     * @throws Exception the exception
+     */
     public static String encrypt(String strClearText) throws Exception{
         String strData="";
         String strKey = strClearText;

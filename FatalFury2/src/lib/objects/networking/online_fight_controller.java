@@ -52,6 +52,9 @@ public class online_fight_controller extends fight_controller {
      */
     private InputStream fontStream = this.getClass().getResourceAsStream("/files/fonts/m04b.TTF");
 
+    /**
+     * The Online player.
+     */
     private online_user_controller onlinePlayer;
 
     /**
@@ -130,7 +133,9 @@ public class online_fight_controller extends fight_controller {
      */
     @Override
     public void startNewRound(boolean hasEnd) {
-        currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
+        currentRoundOnline = new online_round(player,enemy,roundTime, scorePlayer, scoreEnemy, con, isServer, messageIdentifier);
+        currentRound = currentRoundOnline;
+                //currentRound = new round(player,enemy,roundTime, scorePlayer, scoreEnemy);
         currentRound.addListener(this);
         currentRound.startRound(hasEnd);
     }
@@ -150,6 +155,11 @@ public class online_fight_controller extends fight_controller {
         }
     }
 
+    /**
+     * Connection lost boolean.
+     *
+     * @return the boolean
+     */
     public boolean connectionLost(){
         return onlinePlayer.isConnectionLost();
     }

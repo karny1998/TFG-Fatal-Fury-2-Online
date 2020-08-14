@@ -66,6 +66,9 @@ public class user_controller extends character_controller{
         input_control.start();
     }
 
+    /**
+     * Inputs gestion.
+     */
     protected void inputsGestion(){
         mov = "";
         if(!standBy) {

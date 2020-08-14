@@ -81,8 +81,14 @@ public class connection {
      */
     protected Map<Integer, String> pendingMsgs = new HashMap<>();
 
+    /**
+     * The Pending ac ks.
+     */
     protected Map<Integer, String> pendingACKs = new HashMap<>();
 
+    /**
+     * The Pending objects.
+     */
     protected Map<Integer, sendableObject> pendingObjects = new HashMap<>();
     /**
      * The proccess which receives messages constantly.
@@ -98,7 +104,10 @@ public class connection {
      * The Sm.
      */
     protected Semaphore sm = new Semaphore(1),
-            notificationSM = new Semaphore(1);
+    /**
+     * The Notification sm.
+     */
+    notificationSM = new Semaphore(1);
 
     /**
      * The Out.
@@ -115,8 +124,14 @@ public class connection {
      */
     private boolean isUDP = true;
 
+    /**
+     * The Waiter list.
+     */
     private List<Pair<Boolean, Boolean>> waiterList = new ArrayList<>();
 
+    /**
+     * The Path.
+     */
     private String path = System.getProperty("user.dir") + "/.files/certs/";
 
     /**
@@ -185,6 +200,13 @@ public class connection {
         this.rec.start();
     }
 
+    /**
+     * Generate tcp secure socket.
+     *
+     * @param ip   the ip
+     * @param port the port
+     * @throws Exception the exception
+     */
     private void generateTCPSecureSocket(String ip, int port) throws Exception {
         File archivo = new File(path+"ownClientKey.jks");
         System.setProperty("javax.net.ssl.trustStore", path+"clientTrustedCerts.jks");
@@ -192,14 +214,21 @@ public class connection {
         if (!archivo.exists()) {
             firstConnectionToServer(ip, port);
         }
-        //System.setProperty("javax.net.ssl.keyStore", path+"ownClientKey.jks");
-        //System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
-        System.setProperty("javax.net.ssl.keyStore", path+"clientKey.jks");
+        System.setProperty("javax.net.ssl.keyStore", path+"ownClientKey.jks");
         System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
+        //System.setProperty("javax.net.ssl.keyStore", path+"clientKey.jks");
+        //System.setProperty("javax.net.ssl.keyStorePassword","clientpass");
         SSLSocketFactory clientFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         socketTCP = clientFactory.createSocket(ip, port);
     }
 
+    /**
+     * First connection to server.
+     *
+     * @param ip   the ip
+     * @param port the port
+     * @throws Exception the exception
+     */
     private void firstConnectionToServer(String ip, int port) throws Exception {
         Certificate cer = selfSign("dc=OwnPlayer");
         writeCertificate(cer);
@@ -214,13 +243,25 @@ public class connection {
         this.rec = new receiver(this);
         this.rec.start();
 
+        sendString(msgID.toServer.request, "FIRST CONNECTION");
+
         sendObjectWaitingAnswerString(msgID.toServer.request,new certificate(cer), 0);
         try{
+			sendString(msgID.toServer.tramits, "DICONNECT");
+            do{
+                Thread.sleep(100);
+            }while(isConnected());
             this.rec.doStop();
             close();
         }catch (Exception e){}
     }
 
+    /**
+     * Write certificate.
+     *
+     * @param cer the cer
+     * @throws Exception the exception
+     */
     public void writeCertificate(Certificate cer) throws Exception{
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(null, null);
@@ -238,11 +279,17 @@ public class connection {
         out.close();
     }
 
+    /**
+     * Self sign certificate.
+     *
+     * @param subjectDN the subject dn
+     * @return the certificate
+     * @throws Exception the exception
+     */
     public static Certificate selfSign(String subjectDN) throws Exception{
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
         gen.initialize(2048, new SecureRandom());
         KeyPair keyPair = gen.generateKeyPair();
-        System.out.println(keyPair.toString());
 
         Provider bcProvider = new BouncyCastleProvider();
         Security.addProvider(bcProvider);
@@ -262,6 +309,9 @@ public class connection {
         return new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
     }
 
+    /**
+     * Weupnp.
+     */
     public void weupnp(){
         System.out.println("Starting weupnp");
 
@@ -309,18 +359,42 @@ public class connection {
         } catch (Exception e) {}
     }
 
+    /**
+     * Send string reliable.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendStringReliable(int id, String msg){
         send(id, msg, true, "R");
     }
 
+    /**
+     * Send object reliable.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendObjectReliable(int id, Object msg){
         send(id, msg, false, "R");
     }
 
+    /**
+     * Send string.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendString(int id, String msg){
         send(id, msg, true, "NR");
     }
 
+    /**
+     * Send object.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendObject(int id, Object msg){
         send(id, msg, false, "NR");
     }
@@ -328,8 +402,10 @@ public class connection {
     /**
      * Envía el mensaje msg con identificador id sin confirmar la recepción
      *
-     * @param id  the id
-     * @param msg the msg
+     * @param id     the id
+     * @param msg    the msg
+     * @param string the string
+     * @param r      the r
      */
     private void send(int id, Object msg, boolean string, String r){
         if(isUDP) {
@@ -338,6 +414,8 @@ public class connection {
             try {
                 socketUDP.send(packet);
             } catch (Exception e) {
+                socketTCP = null;
+                socketUDP = null;
                 /*e.printStackTrace();*/
             }
         }
@@ -351,7 +429,11 @@ public class connection {
                     p = new packet(id, false, (sendableObject)msg);
                 }
                 out.writeObject(p);
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){
+                socketTCP = null;
+                socketUDP = null;
+                //e.printStackTrace();
+            }
         }
     }
 
@@ -380,6 +462,8 @@ public class connection {
 
     /**
      * Send hi.
+     *
+     * @return the boolean
      */
     public boolean sendHi(){
         long timeReference = System.currentTimeMillis();
@@ -388,8 +472,8 @@ public class connection {
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
                 boolean ok = false;
-                while (!ok && System.currentTimeMillis()-timeReference < 5000) {
-                    System.out.println("se envia hi");
+                while (!ok && System.currentTimeMillis()-timeReference < 10000) {
+                    //System.out.println("se envia hi");
                     socketUDP.send(packet);
                     Thread.sleep(100);
                     if (receiveACK(msgID.toClient.hi)) {
@@ -414,6 +498,12 @@ public class connection {
         }
     }
 
+    /**
+     * Receive ack boolean.
+     *
+     * @param id the id
+     * @return the boolean
+     */
     public boolean receiveACK(int id){
         boolean ack = pendingACKs.containsKey(id);
         if(ack){
@@ -422,10 +512,22 @@ public class connection {
         return ack;
     }
 
+    /**
+     * Receive string string.
+     *
+     * @param id the id
+     * @return the string
+     */
     public String receiveString(int id){
         return (String)receive(id,true);
     }
 
+    /**
+     * Receive object object.
+     *
+     * @param id the id
+     * @return the object
+     */
     public Object receiveObject(int id){
         return receive(id,false);
     }
@@ -433,7 +535,8 @@ public class connection {
     /**
      * Devuelve el mensaje asociando al identificador id  (cadena vacía si no se ha recibido) string.
      *
-     * @param id the id
+     * @param id     the id
+     * @param string the string
      * @return the object
      */
     private Object receive(int id, boolean string){
@@ -493,7 +596,7 @@ public class connection {
                 boolean reliable = aux[1].equals("R");
                 // Envía la confirmación si corresponde
                 if(reliable){
-                    System.out.println("Se envia ack");
+                    //System.out.println("Se envia ack");
                     sendAck(idM);
                 }
                 try {
@@ -525,7 +628,7 @@ public class connection {
                     sm.acquire();
                     if(received.isObject()){
                         pendingObjects.put(received.getId(), received.getObject());
-                        System.out.println("Se recibe: " + received.getObject().toString());
+                        //System.out.println("Se recibe: " + received.getObject().toString());
                     }
                     else {
                         pendingMsgs.put(received.getId(), received.getMessage());
@@ -557,19 +660,64 @@ public class connection {
         }
     }
 
+    /**
+     * Send string waiting answer string string.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the string
+     */
     public String sendStringWaitingAnswerString(int id, Object msg, int timeout){
         return (String) sendWaitingAnswer(id, msg, timeout, true, true);
     }
+
+    /**
+     * Send object waiting answer string string.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the string
+     */
     public String sendObjectWaitingAnswerString(int id, Object msg, int timeout){
         return (String) sendWaitingAnswer(id, msg, timeout, false, true);
     }
+
+    /**
+     * Send string waiting answer object object.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the object
+     */
     public Object sendStringWaitingAnswerObject(int id, Object msg, int timeout){
         return sendWaitingAnswer(id, msg, timeout, true, false);
     }
+
+    /**
+     * Send object waiting answer object object.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the object
+     */
     public Object sendObjectWaitingAnswerObject(int id, Object msg, int timeout){
         return sendWaitingAnswer(id, msg, timeout, false, false);
     }
 
+    /**
+     * Send waiting answer object.
+     *
+     * @param id            the id
+     * @param msg           the msg
+     * @param timeout       the timeout
+     * @param sendString    the send string
+     * @param receiveString the receive string
+     * @return the object
+     */
     private Object sendWaitingAnswer(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
         if(isUDP) {
             try {
@@ -634,10 +782,26 @@ public class connection {
         }
     }
 
+    /**
+     * Reliable send string boolean.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the boolean
+     */
     public boolean reliableSendString(int id, String msg, int timeout){
         return reliableSend(id, msg, timeout, true);
     }
 
+    /**
+     * Reliable send object boolean.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the boolean
+     */
     public boolean reliableSendObject(int id, Object msg, int timeout){
         return reliableSend(id, msg, timeout, false);
     }
@@ -649,6 +813,7 @@ public class connection {
      * @param id      the id
      * @param msg     the msg
      * @param timeout the timeout
+     * @param string  the string
      * @return the boolean
      */
     private boolean reliableSend(int id, Object msg, int timeout, boolean string){
@@ -682,6 +847,11 @@ public class connection {
         return false;
     }
 
+    /**
+     * Receive notifications string.
+     *
+     * @return the string
+     */
     public String receiveNotifications(){
         if (pendingMsgs.containsKey(msgID.toServer.notification)) {
             String aux = pendingMsgs.get(msgID.toServer.notification);
@@ -701,8 +871,10 @@ public class connection {
      */
     public void close(){
         if(isUDP) {
-            socketUDP.disconnect();
-            socketUDP.close();
+            try{
+                //socketUDP.disconnect();
+                socketUDP.close();
+            }catch(Exception e){}
         }
         else{
             try {
@@ -849,6 +1021,7 @@ public class connection {
      * Sets port send.
      *
      * @param portSend the port send
+     * @return the port send
      */
     public boolean setPortSend(int portSend) {
         this.portSend = portSend;

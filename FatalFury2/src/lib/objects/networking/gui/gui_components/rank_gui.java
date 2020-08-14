@@ -24,15 +24,62 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Rank gui.
+ */
 public class rank_gui {
+    /**
+     * The Gui.
+     */
     private online_mode_gui gui;
+    /**
+     * The Players.
+     */
     private List<profile> players;
+    /**
+     * The Friend.
+     */
     private String friend;
-    private Color grey1 = new Color(33,32,57), grey2 = new Color(66,64,114),grey3 = new Color(45,48,85),
-            grey4 = new Color(99,96,171), brown = new Color(140,105,57), blue = new Color(0,0,148);
-    private Font f,f2,f3;
+    /**
+     * The Grey 1.
+     */
+    private Color grey1 = new Color(33,32,57), /**
+     * The Grey 2.
+     */
+    grey2 = new Color(66,64,114), /**
+     * The Grey 3.
+     */
+    grey3 = new Color(45,48,85),
+    /**
+     * The Grey 4.
+     */
+    grey4 = new Color(99,96,171), /**
+     * The Brown.
+     */
+    brown = new Color(140,105,57), /**
+     * The Blue.
+     */
+    blue = new Color(0,0,148);
+    /**
+     * The F.
+     */
+    private Font f, /**
+     * The F 2.
+     */
+    f2, /**
+     * The F 3.
+     */
+    f3;
+    /**
+     * The Model.
+     */
     private ChatTextsTableModel model;
 
+    /**
+     * Instantiates a new Rank gui.
+     *
+     * @param gui the gui
+     */
     public rank_gui(online_mode_gui gui){
         this.gui = gui;
         this.f = gui.getF();
@@ -49,10 +96,19 @@ public class rank_gui {
         rank();
     }
 
+    /**
+     * Res int.
+     *
+     * @param x the x
+     * @return the int
+     */
     private int res(int x){
         return gui.res(x);
     }
 
+    /**
+     * Rank.
+     */
     private void rank(){
 
         JTable table;
@@ -111,8 +167,14 @@ public class rank_gui {
         gui.reloadGUI();
     }
 
-    //https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
+    /**
+     * The type Header ranking renderer.
+     */
+//https://www.codejava.net/java-se/swing/jtable-column-header-custom-renderer-examples
     public class HeaderRankingRenderer extends JLabel implements TableCellRenderer {
+        /**
+         * Instantiates a new Header ranking renderer.
+         */
         public HeaderRankingRenderer() {
             setFont(f3);
             setForeground(Color.ORANGE);
@@ -120,6 +182,17 @@ public class rank_gui {
             setHorizontalAlignment(JTextField.CENTER);
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
@@ -129,13 +202,35 @@ public class rank_gui {
 
     }
 
+    /**
+     * The type Ranking table renderer.
+     */
     class RankingTableRenderer implements TableCellRenderer {
+        /**
+         * The Default renderer.
+         */
         private TableCellRenderer defaultRenderer;
 
+        /**
+         * Instantiates a new Ranking table renderer.
+         *
+         * @param renderer the renderer
+         */
         public RankingTableRenderer(TableCellRenderer renderer) {
             defaultRenderer = renderer;
         }
 
+        /**
+         * Gets table cell renderer component.
+         *
+         * @param table      the table
+         * @param value      the value
+         * @param isSelected the is selected
+         * @param hasFocus   the has focus
+         * @param row        the row
+         * @param column     the column
+         * @return the table cell renderer component
+         */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value instanceof Component) {
                 return (Component) value;
@@ -144,10 +239,22 @@ public class rank_gui {
         }
     }
 
+    /**
+     * The type Chat texts table model.
+     */
     class ChatTextsTableModel extends AbstractTableModel {
+        /**
+         * The Rows.
+         */
         private Object[][] rows;
+        /**
+         * The Columns.
+         */
         private String[] columns = {"RANK","USER", "WINS", "LOSES", "POINTS"};
 
+        /**
+         * Instantiates a new Chat texts table model.
+         */
         public ChatTextsTableModel(){
             rows = new Object[players.size()][5];
             for(int i = 0; i < players.size();++i){
@@ -180,21 +287,62 @@ public class rank_gui {
             }
         }
 
+        /**
+         * Gets column name.
+         *
+         * @param column the column
+         * @return the column name
+         */
         public String getColumnName(int column) {
             return columns[column];
         }
+
+        /**
+         * Gets row count.
+         *
+         * @return the row count
+         */
         public int getRowCount() {
             return rows.length;
         }
+
+        /**
+         * Gets column count.
+         *
+         * @return the column count
+         */
         public int getColumnCount() {
             return columns.length;
         }
+
+        /**
+         * Gets value at.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the value at
+         */
         public Object getValueAt(int row, int column) {
             return rows[row][column];
         }
+
+        /**
+         * Is cell editable boolean.
+         *
+         * @param row    the row
+         * @param column the column
+         * @return the boolean
+         */
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+
+        /**
+         * Gets column class.
+         *
+         * @param column the column
+         * @return the column class
+         */
         public Class getColumnClass(int column) {
             return getValueAt(0, column).getClass();
         }
