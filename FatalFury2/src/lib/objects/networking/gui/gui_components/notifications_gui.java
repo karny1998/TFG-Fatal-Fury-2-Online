@@ -119,8 +119,12 @@ public class notifications_gui {
      * @param friend the friend
      */
     public void addFriendRequest(String friend){
-        friendRequest.add(friend);
-        showNotifications();
+        if(!friendRequest.contains(friend)) {
+            friendRequest.add(friend);
+            if(gui.getOnlineState() == GameState.PRINCIPAL_GUI || gui.getOnlineState() == GameState.PROFILE_GUI) {
+                showNotifications();
+            }
+        }
     }
 
     /**

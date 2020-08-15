@@ -158,6 +158,10 @@ public class friend_list_gui {
 
         gui.getItemsOnScreen().remove(guiItems.ADD_FRIEND);
         gui.getItemsOnScreen().add(0,guiItems.ADD_FRIEND);
+        gui.getItemsOnScreen().remove(guiItems.ADD_FRIEND);
+        gui.getItemsOnScreen().add(0,guiItems.ADD_FRIEND);
+
+        gui.reloadGUI();
     }
 
     /**

@@ -66,6 +66,7 @@ public class serverManager {
         loggedUsers.remove(us);
         usersIP.remove(us);
         searchingGameUsers.remove(us);
+        searchingRankedGameUsers.remove(us);
         pendingFriendsInvitatiosns.remove(us);
         boolean erased = false;
         for(int i = 0; !erased && i < ongoingGames.size(); ++i){
@@ -85,7 +86,7 @@ public class serverManager {
 
     public synchronized boolean searchGame(String newPlayer, boolean ranked){
         List<String> listAux;
-        if(ranked){
+        if(!ranked){
             listAux = searchingGameUsers;
         }
         else{
@@ -148,8 +149,13 @@ public class serverManager {
         String res = dbm.registerPlayer(username, email, password);
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(res.equals("OK")){
-            sendVerificationCode(username,email,p.getCode());
-            return "REGISTERED";
+            try {
+                sendVerificationCode(username, email, p.getCode());
+                return "REGISTERED";
+            }catch (Exception e){
+                dbm.remove(p);
+                return "ERROR:Error sending verification mail.";
+            }
         }
         return res;
     }
@@ -223,17 +229,6 @@ public class serverManager {
             return "ERROR:El jugador no existe.";
         }
 
-        boolean areFriends = false;
-        for(int i = 0; !areFriends && i < p1.getFriendsAsSoliciter().size();++i){
-            areFriends = p1.getFriendsAsSoliciter().get(i).getUsername().equals(user2);
-        }
-        for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
-            areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
-        }
-        if(areFriends){
-            return "ERROR:Los dos jugadores ya son amigos.";
-        }
-
         boolean hasSolicitude = false;
         int sol = 0;
         for(int i = 0; !hasSolicitude && i < p1.getReceivedFriendRequest().size();++i){
@@ -252,11 +247,30 @@ public class serverManager {
         }
         p2.getSentFriendRequest().remove(sol);
 
+        dbm.save(p1);
+        dbm.save(p2);
+
+        dbm.refresh(p1);
+        dbm.refresh(p2);
+
+        boolean areFriends = false;
+        for(int i = 0; !areFriends && i < p1.getFriendsAsSoliciter().size();++i){
+            areFriends = p1.getFriendsAsSoliciter().get(i).getUsername().equals(user2);
+        }
+        for(int i = 0; !areFriends && i < p1.getFriendsAsReceiver().size();++i){
+            areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
+        }
+        if(areFriends){
+            return "ERROR:Los dos jugadores ya son amigos.";
+        }
+
         if(ok) {
             p2.getFriendsAsSoliciter().add(p1);
             p1.getFriendsAsReceiver().add(p2);
             dbm.save(p1);
             dbm.save(p2);
+            dbm.refresh(p1);
+            dbm.refresh(p2);
             if(loggedUsers.containsKey(user2)){
                 loggedUsers.get(user2).sendString(msgID.toServer.notification,"NEW FRIEND:"+user1);
             }
@@ -264,6 +278,8 @@ public class serverManager {
         }
         dbm.save(p1);
         dbm.save(p2);
+        dbm.refresh(p1);
+        dbm.refresh(p2);
         return "FRIEND REQUEST REJECTED";
     }
 
@@ -292,6 +308,8 @@ public class serverManager {
             p2.getFriendsAsReceiver().remove(x);
             dbm.save(p1);
             dbm.save(p2);
+            dbm.refresh(p1);
+            dbm.refresh(p2);
             if(loggedUsers.containsKey(user2)){
                 loggedUsers.get(user2).sendString(msgID.toServer.notification,"DELETED FRIEND:"+user1);
             }
@@ -314,6 +332,8 @@ public class serverManager {
             p2.getFriendsAsSoliciter().remove(x);
             dbm.save(p1);
             dbm.save(p2);
+            dbm.refresh(p1);
+            dbm.refresh(p2);
             if(loggedUsers.containsKey(user2)){
                 loggedUsers.get(user2).sendString(msgID.toServer.notification,"DELETED FRIEND:"+user1);
             }
@@ -609,6 +629,7 @@ public class serverManager {
         try {
             p.setPassword(encrypt(pass));
             dbm.save(p);
+            dbm.refresh(p);
             sendRecoverAccount(user, p.getEmail(),pass);
         } catch (Exception e) {
             return "ERROR:Has been a problem.";
@@ -628,29 +649,22 @@ public class serverManager {
         try {
             p.setPassword(pass);
             dbm.save(p);
+            dbm.refresh(p);
         } catch (Exception e) {
             return "ERROR:Has been a problem.";
         }
         return "CHANGED";
     }
 
-    private void sendRecoverAccount(String user, String cor, String pass){
+    private void sendRecoverAccount(String user, String cor, String pass) throws MessagingException{
         String msg = "Hi, " + user + ".<br/> Your password has been changed to : "+ pass
                 +"<br/>You can chage your password in your profile." +"<br/>Regards.";
-        try {
-            sendmail(cor, msg, "Recover Account");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        sendmail(cor, msg, "Recover Account");
     }
 
-    private void sendVerificationCode(String user, String cor, int cod){
+    private void sendVerificationCode(String user, String cor, int cod) throws MessagingException{
         String msg = "Hi, " + user + ".<br/> Your verification code is: "+ cod+"<br/>Thanks for entering our community.";
-        try {
-            sendmail(cor, msg, "Verification Code");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        sendmail(cor, msg, "Verification Code");
     }
 
 

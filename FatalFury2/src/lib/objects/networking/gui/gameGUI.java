@@ -153,7 +153,7 @@ public class gameGUI extends JPanel {
      */
     public void setFullscreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
-        if(true){
+        if(fullscreen){
             Dimension d = principal.getGame().getSize();
             multiplier = (double)d.getHeight()/(double)resY;
         }

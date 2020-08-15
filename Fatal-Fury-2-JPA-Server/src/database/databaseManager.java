@@ -35,6 +35,24 @@ public class databaseManager {
         return ok;
     }
 
+    public String remove(Object obj){
+        String ok = "OK";
+        try {
+            EntityTransaction trans = em.getTransaction();
+            trans.begin();
+            em.remove(obj);
+            trans.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            ok = e.getMessage();
+        }
+        return ok;
+    }
+
+    public void refresh(Object obj){
+        em.refresh(obj);
+    }
+
     public Object findByKey(Class c, Object id){
         try{
             return em.find(c, id);

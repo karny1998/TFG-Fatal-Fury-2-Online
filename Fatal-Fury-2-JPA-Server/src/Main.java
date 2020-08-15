@@ -121,44 +121,45 @@ public class Main {
         @Override
         public void run(){
             while(keepRunning()) {
-                if(forzedClose){
-                    threads.remove(client);
-                    manager.desconnectUser(rqM.getUserLogged());
-                    con.close();
-                    doStop();
-                }
-                else if(con.isConnected()) {
-                    con.waitForRequestOrTramit();
-                    String tramits = con.receiveString(msgID.toServer.tramits);
-                    String request = con.receiveString(msgID.toServer.request);
-                    if (tramits.equals("DISCONNECT") || forzedClose) {
+                try {
+                    if (forzedClose) {
                         threads.remove(client);
                         manager.desconnectUser(rqM.getUserLogged());
                         con.close();
-                        cp.doStop();
+                        doStop();
+                    } else if (con.isConnected()) {
+                        con.waitForRequestOrTramit();
+                        String tramits = con.receiveString(msgID.toServer.tramits);
+                        String request = con.receiveString(msgID.toServer.request);
+                        if (tramits.equals("DISCONNECT") || forzedClose) {
+                            threads.remove(client);
+                            manager.desconnectUser(rqM.getUserLogged());
+                            con.close();
+                            cp.doStop();
+                            doStop();
+                        } else {
+                            rqM.manageRequest(request);
+                            if (!logged && rqM.isLogged()) {
+                                logged = true;
+                                String aux = "";
+                                if (threadsByUser.containsKey(rqM.getUserLogged())) {
+                                    aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
+                                }
+                                if (threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)) {
+                                    rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
+                                    rqM.setCon(con);
+                                    threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
+                                }
+                                threadsByUser.put(rqM.getUserLogged(), this);
+                            } else if (logged && !rqM.isLogged()) {
+                                logged = false;
+                            }
+                        }
+                    } else {
                         doStop();
                     }
-                    else {
-                        rqM.manageRequest(request);
-                        if (!logged && rqM.isLogged()) {
-                            logged = true;
-                            String aux = "";
-                            if (threadsByUser.containsKey(rqM.getUserLogged())) {
-                                aux = threadsByUser.get(rqM.getUserLogged()).getRqM().getCon().getSocket().getInetAddress().getHostAddress();
-                            }
-                            if (threadsByUser.containsKey(rqM.getUserLogged()) && !con.getSocket().getInetAddress().getHostAddress().equals(aux)) {
-                                rqM = threadsByUser.get(rqM.getUserLogged()).getRqM();
-                                rqM.setCon(con);
-                                threadsByUser.get(rqM.getUserLogged()).doStop("SESSION CLOSED:Se ha iniciado sesión desde otro ordenador.");
-                            }
-                            threadsByUser.put(rqM.getUserLogged(), this);
-                        } else if (logged && !rqM.isLogged()) {
-                            logged = false;
-                        }
-                    }
-                }
-                else{
-                    doStop();
+                }catch (Exception e){
+                    con.sendString(msgID.toServer.request, "ERROR:Has been a problem.");
                 }
             }
         }
@@ -309,9 +310,13 @@ public class Main {
                     e.printStackTrace();
                 }
                 if(cm.equals("exit")){
-                    for(Map.Entry<InetAddress,clientHandler> c : threads.entrySet()){
-                        c.getValue().doStop();
-                    }
+                    try {
+                        for(Map.Entry<InetAddress,clientHandler> c : threads.entrySet()){
+                            try {
+                                c.getValue().doStop();
+                            }catch (Exception e){}
+                        }
+                    }catch (Exception e){}
                     doStop();
                     try {
                         socket.close();

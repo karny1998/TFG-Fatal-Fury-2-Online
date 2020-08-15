@@ -415,4 +415,6 @@ public enum guiItems{
     /**
      * Confirm end game gui items.
      */
-    CONFIRM_END_GAME}
+    CONFIRM_END_GAME,
+    FRIEND_BUSY
+}
