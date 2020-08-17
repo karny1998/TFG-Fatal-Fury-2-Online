@@ -57,9 +57,15 @@ public class databaseManager {
         try{
             return em.find(c, id);
         }catch (Exception e){
-            e.printStackTrace();
             return null;
         }
+    }
+
+    public int getGlobalIaTimes(){
+        String sql = "SELECT SUM(times_vs_global_ia) FROM player;";
+        Query q = em.createNativeQuery(sql);
+        int value = ((Number) q.getSingleResult()).intValue();
+        return value;
     }
 
     public List<Message> getUserMessages(String user1, String user2){

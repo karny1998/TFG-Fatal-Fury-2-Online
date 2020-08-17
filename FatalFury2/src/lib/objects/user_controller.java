@@ -166,6 +166,7 @@ public class user_controller extends character_controller{
      * Reset.
      */
     @Override
+    public
     // Resetea el personaje en base al número de jugador
     void reset() {
         if(playerNum == 1){reset(this.player.getCharac(),500,290, -1);}

@@ -65,6 +65,10 @@ public class Player implements Serializable {
     private List<Player> pending_messages = new ArrayList<>();
     @Column(name="code")
     private int code;
+    @Column(name="times_vs_global_ia")
+    private int timesVSglobalIa = 0;
+    @Column(name="times_vs_own_ia")
+    private int timesVSownlIa = 0;
 
     /**
      * Instantiates a new Player.
@@ -375,6 +379,22 @@ public class Player implements Serializable {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public int getTimesVSglobalIa() {
+        return timesVSglobalIa;
+    }
+
+    public void setTimesVSglobalIa(int timesVSglobalIa) {
+        this.timesVSglobalIa = timesVSglobalIa;
+    }
+
+    public int getTimesVSownlIa() {
+        return timesVSownlIa;
+    }
+
+    public void setTimesVSownlIa(int timesVSownlIa) {
+        this.timesVSownlIa = timesVSownlIa;
     }
 
     @Override

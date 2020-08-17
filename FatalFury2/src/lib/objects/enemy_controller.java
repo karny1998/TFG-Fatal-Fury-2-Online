@@ -191,7 +191,27 @@ public class enemy_controller extends character_controller{
         this.player.setRival(rival);
         this.rival = rival;
         if(agentIa && !agentIaCreated){
-            agent_controller aux = new agent_controller(rival, this.player,ia_loader.dif.HARD, training);
+            agent_controller aux = new agent_controller("basic", rival, this.player,ia_loader.dif.HARD, training);
+            ia = aux;
+            agente = aux.getAgente();
+            agentIaCreated = true;
+        }
+        else if(agentIaCreated){
+            ia.setPlayer(rival);
+        }
+        else {
+            if(!agentIa){
+                ia = new ia_controller(rival, this.player, ia_loader.dif.EASY);
+            }
+        }
+    }
+
+    // Asigna el rival y define la IA
+    public void setRival(character rival, String user) {
+        this.player.setRival(rival);
+        this.rival = rival;
+        if(agentIa && !agentIaCreated){
+            agent_controller aux = new agent_controller(user, rival, this.player,ia_loader.dif.HARD, training);
             ia = aux;
             agente = aux.getAgente();
             agentIaCreated = true;

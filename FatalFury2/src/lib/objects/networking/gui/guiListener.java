@@ -87,6 +87,7 @@ public class guiListener implements ActionListener {
             GameState onlineState = gui.getOnlineState();
             if(type != guiItems.FRIEND_SEL_BUTTON){
                 gui.closeFriendInteractionPopUp();
+                gui.closeSelectIa();
                 if(type != guiItems.SEND_MESSAGE && gui.getComponentsOnScreen().containsKey(guiItems.CHAT)){
                     gui.closeChat();
                     if(onlineState == GameState.PROFILE_GUI){
@@ -445,6 +446,19 @@ public class guiListener implements ActionListener {
                             break;
                         case RANKING_BUTTON:
                             gui.setOnlineState(GameState.ONLINE_RANKING);
+                            break;
+                        case VS_IA_BUTTON:
+                            gui.selectIa();
+                            break;
+                        case CANCEL_SELECT_IA:
+                            gui.closeSelectIa();
+                            break;
+                        case GLOBAL_IA_BUTTON:
+                            gui.character_selection_ia(true);
+                            break;
+                        case PERSONAL_IA_BUTTON:
+                            gui.character_selection_ia(false);
+                            break;
                         default:
                             System.out.println("SE HA PRETADO UN BOTON");
                             break;

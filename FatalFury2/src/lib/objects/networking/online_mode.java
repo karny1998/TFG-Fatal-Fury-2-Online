@@ -8,6 +8,8 @@ import lib.objects.networking.gui.online_mode_gui;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
+import lib.training.stateCalculator;
+import lib.utils.sendableObjects.simpleObjects.qtable;
 
 import javax.security.sasl.SaslServer;
 import java.io.BufferedReader;
@@ -33,11 +35,11 @@ public class online_mode {
      * The Player.
      */
 // Controladores de los personajes
-    private online_user_controller player;
+    private character_controller player;
     /**
      * The Enemy.
      */
-    private online_user_controller enemy = null;
+    private character_controller enemy = null;
     /**
      * The Scene.
      */
@@ -119,6 +121,8 @@ public class online_mode {
      */
     private Fight_Results result;
 
+    private int isVsIA = 0;
+
     /**
      * Instantiates a new Online mode.
      *
@@ -180,12 +184,12 @@ public class online_mode {
         if (itsMe) {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, true);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, false);
-            enemy.setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, false);
             enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, true);
-            enemy.setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -193,7 +197,7 @@ public class online_mode {
         player.setRival(enemy.getPlayer());
         player.getPlayer().setMapLimit(mapLimit);
         scene = new scenary(Scenario_type.USA);
-        fight = new online_fight_controller(player, enemy, scene, conToClient, itsMe, msgID.toClient.fight, -2);
+        fight = new online_fight_controller((online_user_controller)player, (online_user_controller)enemy, scene, conToClient, itsMe, msgID.toClient.fight, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
@@ -223,6 +227,70 @@ public class online_mode {
         System.out.println("Se ha creado la pelea");
     }
 
+    public void generateVsIAFight(Playable_Character pC, Scenario_type sce, boolean isGlobal){
+        this.isHost = true;
+        if(isGlobal){isVsIA = 2;}
+        else{isVsIA = 1;}
+
+        Double table[][];
+        qtable aux;
+        double epsilon = 0.0;
+        if(isGlobal){
+            aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"GET GLOBAL IA",0);
+        }
+        else{
+            aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"GET OWN IA",0);
+        }
+        table = aux.getTableDouble();
+        epsilon = Double.parseDouble(conToServer.receiveString(msgID.toServer.request).split(":")[1]);
+
+        stateCalculator.initialize();
+        this.rankPoints = 0;
+        this.char1 = pC;
+        this.char2 = Playable_Character.TERRY;
+        this.rival = "IA";
+        this.isRanked = isRanked;
+
+        player = new user_controller(pC, 1);
+        if(enemy == null) {
+            enemy = new enemy_controller(char2, 2, true, true);
+        }
+        else{
+            enemy.reset();
+        }
+        enemy.setRival(player.getPlayer());
+        enemy.getPlayer().setMapLimit(mapLimit);
+        player.setRival(enemy.getPlayer());
+        enemy.getIa().setDif(ia_loader.dif.HARD);
+        player.getPlayer().setMapLimit(mapLimit);
+        ((enemy_controller)enemy).setRival(player.getPlayer(), userLogged);
+        ((enemy_controller)enemy).getAgente().setUser(userLogged);
+        ((enemy_controller)enemy).getAgente().setqTable(table);
+        enemy.getPlayer().setMapLimit(mapLimit);
+        player.setRival(enemy.getPlayer());
+        player.getPlayer().setMapLimit(mapLimit);
+
+        scene = new scenary(sce);
+
+        fight = new fight_controller(player,enemy,scene);
+        fight.setMapLimit(mapLimit);
+        fight.setVsIa(true);
+        fight.setIaLvl(ia_loader.dif.HARD);
+
+        audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
+        audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+
+        ((enemy_controller)enemy).getAgente().setUseRegression(true);
+        if(epsilon < 1.0){
+            ((enemy_controller)enemy).getAgente().writeQTableAndRegister();
+            ((enemy_controller)enemy).getAgente().trainRegression();
+        }
+        ((enemy_controller)enemy).getAgente().setEpsilon(epsilon);
+
+        gui.getPrincipal().gameOn();
+        gui.setOnlineState(GameState.ONLINE_FIGHT);
+    }
+
     /**
      * Generate fight.
      *
@@ -234,6 +302,7 @@ public class online_mode {
      * @param rival    the rival
      */
     public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce, boolean isRanked, String rival){
+        isVsIA = 0;
         this.rankPoints = 0;
         this.char1 = pC;
         this.char2 = pE;
@@ -243,12 +312,12 @@ public class online_mode {
         if (isHost) {
             player = new online_user_controller(pC, 1, conToClient, true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
-            enemy.setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(pC, 1, conToClient, false);
             enemy = new online_user_controller(pE, 2, conToClient, true);
-            enemy.setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -270,7 +339,7 @@ public class online_mode {
             return;
         }
 
-        fight = new online_fight_controller(player, enemy, scene, conToClient, isHost, msgID.toClient.fight, -2);
+        fight = new online_fight_controller((online_user_controller)player, (online_user_controller)enemy, scene, conToClient, isHost, msgID.toClient.fight, -2);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
 
@@ -347,18 +416,28 @@ public class online_mode {
             fight.getAnimation(screenObjects);
             if (fight.getEnd()) {
 
-                if(((online_fight_controller)fight).connectionLost()){
-                    gui.setOnlineState(GameState.PRINCIPAL_GUI);
-                    gui.clearGui();
-                    gui.principalGUI();
-                    gui.popUp("Connection with rival lost. The game will count as tie.");
-                    conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
-                            gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":0:" + isRanked);
+                if(isVsIA == 0) {
+                    if (((online_fight_controller) fight).connectionLost()) {
+                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                        gui.clearGui();
+                        gui.principalGUI();
+                        gui.popUp("Connection with rival lost. The game will count as tie.");
+                        conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
+                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":0:" + isRanked);
+                    }
+                }
+                else if(isVsIA == 1){
+                    conToServer.sendString(msgID.toServer.request, "TRAIN OWN IA");
+                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable()));
+                }
+                else{
+                    conToServer.sendString(msgID.toServer.request, "TRAIN GLOBAL IA");
+                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable()));
                 }
 
                 Fight_Results results = fight.getFight_result();
                 this.result =results;
-                if(isHost) {
+                if(isVsIA == 0 && isHost) {
                     conToClient.reliableSendString(msgID.toClient.tramits, "GAME ENDED:" + results.toString(), 200);
                 }
                 int r = 0;
@@ -374,32 +453,32 @@ public class online_mode {
                         break;
                 }
 
-                if(isRanked) {
-                    String res = "";
-                    if (isHost) {
-                        res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "REGISTER GAME:" +
-                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
-                                + r + ":" + isRanked, 0);
-                    }
-                    else{
-                        do {
-                            res = conToServer.receiveString(msgID.toServer.request);
-                        }while (!res.contains("GAME REGISTERED"));
-                    }
-                    rankPoints = Integer.parseInt(res.split(":")[1]);
-                }
-                else{
-                    if (isHost) {
-                        conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
-                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
-                                + r + ":" + isRanked);
+                if(isVsIA == 0) {
+                    if (isRanked) {
+                        String res = "";
+                        if (isHost) {
+                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "REGISTER GAME:" +
+                                    gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                    + r + ":" + isRanked, 0);
+                        } else {
+                            do {
+                                res = conToServer.receiveString(msgID.toServer.request);
+                            } while (!res.contains("GAME REGISTERED"));
+                        }
+                        rankPoints = Integer.parseInt(res.split(":")[1]);
+                    } else {
+                        if (isHost) {
+                            conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
+                                    gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                    + r + ":" + isRanked);
+                        }
                     }
                 }
 
                 audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
                 fight.getPlayer().stop();
                 fight.getEnemy().stop();
-                if(conToClient.isConnected()) {
+                if(isVsIA == 0 && conToClient.isConnected()) {
                     conToClient.close();
                 }
                 fight = null;
@@ -457,7 +536,7 @@ public class online_mode {
      *
      * @return the player
      */
-    public online_user_controller getPlayer() {
+    public character_controller getPlayer() {
         return player;
     }
 
@@ -475,7 +554,7 @@ public class online_mode {
      *
      * @return the enemy
      */
-    public online_user_controller getEnemy() {
+    public character_controller getEnemy() {
         return enemy;
     }
 

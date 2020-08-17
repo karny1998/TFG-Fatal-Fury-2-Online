@@ -29,6 +29,16 @@ public class ia_stats {
      */
     private String filename = "ia_stadistics.xml";
 
+
+    /**
+     * Instantiates a new Ia stats.
+     */
+    public ia_stats(String user) {
+        this.filename = "ia_stadistics"+user+".xml";
+        fights.add(actualFight, new fight_stats());
+        fights.get(actualFight).setId(actualFight);
+    }
+
     /**
      * Instantiates a new Ia stats.
      */

@@ -10,6 +10,7 @@ public class packet implements Serializable {
     private boolean isObject;
     private String message = null;
     private sendableObject object = null;
+    private static final long serialVersionUID = 7825704047223397490L;
 
     public packet(int id, boolean reliable, String message) {
         this.id = id;

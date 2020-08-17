@@ -1,7 +1,6 @@
 package lib.training;
 
 import lib.Enums.Movement;
-import lib.objects.character;
 import lib.utils.Pair;
 
 import java.io.*;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * The type Agent.
  */
-public class agent{
+public class agent {
     /**
      * Tabla de valores Q, es decir, la tabla de recompensas para las acciones en cada estado.
      */
@@ -19,7 +18,7 @@ public class agent{
     /**
      * El buffer para el experience replay, es decir, para poder "revivir" transiciones pasadas.
      */
-    private List<Pair<Pair<state,Movement>,Pair<Double,state>>> experienceBuffer = new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>();
+    private List<Pair<Pair<state, Movement>, Pair<Double, state>>> experienceBuffer = new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>();
     /**
      * El número máximo de experiencias a tener en el buffer.
      */
@@ -27,7 +26,7 @@ public class agent{
     /**
      * El resgistro de todas las transiciones desde que comenzó el entrenamiento.
      */
-    private List<Pair<Pair<state,Movement>,Pair<Double,state>>> trainingRegister = new ArrayList<>();
+    private List<Pair<Pair<state, Movement>, Pair<Double, state>>> trainingRegister = new ArrayList<>();
     /**
      * Frecuencia con la que se "reviven" experiencias.
      */
@@ -190,7 +189,7 @@ public class agent{
         if(Math.random() > 1-experienceFrequency){
             // Se reviven 5 experiencias aleatorias del buffer
             for(int h = 0; h < 5; ++h){
-                Pair<Pair<state,Movement>,Pair<Double,state>> aux = experienceBuffer.get((int) (experienceBuffer.size()*Math.random()));
+                Pair<Pair<state, Movement>, Pair<Double, state>> aux = experienceBuffer.get((int) (experienceBuffer.size()*Math.random()));
                 giveReward(aux.first.first, aux.second.second, aux.first.second, true, false);
             }
         }
@@ -593,7 +592,7 @@ public class agent{
                 j = 1;
             }
             values.add(Math.pow(j,i));
-            values.add(Math.pow((double)stateCalculator.getIdMov().get(s.getPlayerState()),i));
+            values.add(Math.pow((double) stateCalculator.getIdMov().get(s.getPlayerState()),i));
             values.add(Math.pow(s.getSimpleDistance(),i));
             values.add(Math.pow(s.getSimpleLife(),i));
             values.add(Math.pow(s.getSimplePlayerLife(),i));
@@ -797,7 +796,7 @@ public class agent{
      *
      * @return the action to execute
      */
-    public Movement  getActionToExecute() {
+    public Movement getActionToExecute() {
         return actionToExecute;
     }
 

@@ -89,7 +89,7 @@ public abstract  class character_controller {
      * Reset.
      */
 // Resetea el personaje
-    abstract void reset();
+    public abstract void reset();
 
     /**
      * Stop ia.

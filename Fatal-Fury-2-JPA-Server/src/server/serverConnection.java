@@ -54,7 +54,7 @@ public class serverConnection{
             }
             out.writeObject(p);
         }catch (Exception e){
-            /*e.printStackTrace();*/
+            //e.printStackTrace();
             try {
                 if(socket != null) {
                     socket.close();

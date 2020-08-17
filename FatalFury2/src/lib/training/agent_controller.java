@@ -90,7 +90,7 @@ public class agent_controller extends ia_controller{
      * @param lvl      the lvl
      * @param training the training
      */
-    public  agent_controller(character p, character e, ia_loader.dif lvl, boolean training){
+    public  agent_controller(String user, character p, character e, ia_loader.dif lvl, boolean training){
         super(p,e,lvl);
         this.movementsKeys = e.getMovementsKeys();
         this.training = training;
@@ -106,7 +106,7 @@ public class agent_controller extends ia_controller{
 
         state s = new state(100,100,player.getState(),dis,1,90,0,0, enemy.getY() < 40);
 
-        this.agente = new agent(s,0.99,0.75,0.25);
+        this.agente = new agent(user, s,0.99,0.75,0.25);
 
         ia_control = new Timer(1, new ActionListener() {
             @Override

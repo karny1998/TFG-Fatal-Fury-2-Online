@@ -624,6 +624,9 @@ public class connection {
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
+                /*f(received.getId() != msgID.toServer.ping) {
+                    System.out.println("Se recibe: " + received.toString());
+                }*/
                 try {
                     sm.acquire();
                     if(received.isObject()){
@@ -632,15 +635,12 @@ public class connection {
                     }
                     else {
                         pendingMsgs.put(received.getId(), received.getMessage());
-                        if(received.getId() != msgID.toServer.ping) {
-                            System.out.println("Se recibe: " + received.getMessage());
-                        }
                         if(received.getId() == msgID.toServer.notification){
                             notificationSM.release();
                         }
                     }
                 }catch (Exception e){
-                    /*e.printStackTrace();*/
+                    //e.printStackTrace();
                     sm.release();
                 }
                 sm.release();
@@ -654,7 +654,7 @@ public class connection {
             }
 
         }catch (Exception e){
-            /*e.printStackTrace();*/
+            //e.printStackTrace();
             socketTCP = null;
             socketUDP = null;
         }

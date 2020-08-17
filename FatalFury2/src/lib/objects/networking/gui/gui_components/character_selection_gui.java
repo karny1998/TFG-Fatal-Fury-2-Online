@@ -130,7 +130,7 @@ public class character_selection_gui {
     /**
      * The Time.
      */
-    private int time = 20;
+    private int time = 5;
     /**
      * The Time on screen.
      */
@@ -154,6 +154,8 @@ public class character_selection_gui {
      * The All ok.
      */
     private boolean allOk = false;
+    //0 = online 1 = own ia 2 = global ia
+    private int vsIa = 0;
 
     /**
      * Instantiates a new Character selection gui.
@@ -164,18 +166,28 @@ public class character_selection_gui {
      * @param rivalName the rival name
      * @param isRanked  the is ranked
      */
-    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked){
+    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked, int vsIa){
+        this.isHost = isHost;
+        this.vsIa = vsIa;
+        if(vsIa > 0){
+            this.isHost = true;
+        }
         this.isRanked = isRanked;
         this.ip = ip;
         this.rivalName = rivalName;
         this.gui = gui;
 
-        boolean ok = gui.getOnline_controller().generateConToClient(ip);
-        if(!ok){
-            return;
+        if(vsIa == 0) {
+            boolean ok = gui.getOnline_controller().generateConToClient(ip);
+            if (!ok) {
+                return;
+            }
+            this.allOk = true;
+            this.conToClient = gui.getOnline_controller().getConToClient();
         }
-        this.allOk = true;
-        this.conToClient = gui.getOnline_controller().getConToClient();
+        else {
+            this.allOk = true;
+        }
 
         try {
             f4 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float)res(60));
@@ -184,7 +196,6 @@ public class character_selection_gui {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.isHost = isHost;
         this.f = gui.getF();
         this.f2 = gui.getF2();
         this.f3 = gui.getF3();
@@ -212,9 +223,11 @@ public class character_selection_gui {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String trat = conToClient.receiveString(msgID.toClient.tramits);
-                if(trat.equals("LEFT THE GAME")){
-                    close();
+                if(vsIa == 0) {
+                    String trat = conToClient.receiveString(msgID.toClient.tramits);
+                    if (trat.equals("LEFT THE GAME")) {
+                        close();
+                    }
                 }
                 --time;
                 String aux = Integer.toString(time);
@@ -225,7 +238,12 @@ public class character_selection_gui {
                 gui.getGui().repaint();
                 if(time == 0){
                     timer.stop();
-                    generateGame();
+                    if(vsIa == 0) {
+                        generateOnlineGame();
+                    }
+                    else{
+                        generateIaGame();
+                    }
                 }
             }
         });
@@ -235,7 +253,7 @@ public class character_selection_gui {
     /**
      * Generate game.
      */
-    private void generateGame(){
+    private void generateOnlineGame(){
         if(isHost) {
             boolean ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":"+chosen_map.toString(), 200);
             if(!ok){
@@ -303,6 +321,10 @@ public class character_selection_gui {
             }
             gui.getOnline_controller().generateFight(isHost, rivalC, chosen_character, chosen_map, isRanked,rivalName);
         }
+    }
+
+    void generateIaGame(){
+        gui.getOnline_controller().generateVsIAFight(chosen_character,chosen_map,vsIa == 2);
     }
 
     /**

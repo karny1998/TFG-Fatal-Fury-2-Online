@@ -35,5 +35,6 @@
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="javax.mail" level="project" />
     <orderEntry type="library" name="activation-1.1" level="project" />
+    <orderEntry type="library" name="ia" level="project" />
   </component>
 </module>

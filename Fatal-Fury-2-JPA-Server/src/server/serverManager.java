@@ -2,12 +2,17 @@ package server;
 
 import database.databaseManager;
 import database.models.*;
+import lib.Enums.Movement;
+import lib.training.agent;
+import lib.training.state;
+import lib.training.stateCalculator;
 import lib.utils.Pair;
 import lib.utils.converter;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.sendableObjectsList;
 import lib.utils.sendableObjects.simpleObjects.certificate;
 import lib.utils.sendableObjects.simpleObjects.profile;
+import lib.utils.sendableObjects.simpleObjects.qtable;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -16,6 +21,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.Query;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +31,7 @@ import java.net.InetAddress;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class serverManager {
     private static databaseManager dbm;
@@ -36,8 +43,10 @@ public class serverManager {
     private List<Pair<String,String>> ongoingRankedGames = new ArrayList<>();
     private Map<String, String> pendingFriendsInvitatiosns = new HashMap<>();
     private boolean shuttingDown = false;
+    public Semaphore trainingGlobalIa = new Semaphore(1);
 
     public serverManager(databaseManager dbm){
+        stateCalculator.initialize();
         this.dbm = dbm;
     }
 
@@ -725,5 +734,63 @@ public class serverManager {
         }catch (Exception e){
             return "ERROR:Problem adding the certificate.";
         }
+    }
+
+    public qtable getQtable(String user){
+        agent aux = new agent(user);
+        return new qtable(aux.getqTable());//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
+    }
+
+    public String trainOwnIA(String user, qtable table){
+        try {
+            agent aux = new agent(user);
+            aux.setqTable(table.getTableDouble());
+            //aux.setTrainingRegister(table.getTransitions());
+            aux.writeQTableAndRegister();
+
+            trainGlobalIA(table);
+
+            Player p1 = (Player) dbm.findByKey(Player.class, user);
+            if (p1 == null){
+                return "ERROR:Has been some problem.";
+            }
+            p1.setTimesVSglobalIa(p1.getTimesVSglobalIa()+1);
+            p1.setTimesVSownlIa(p1.getTimesVSownlIa()+1);
+            dbm.save(p1);
+            dbm.refresh(p1);
+        }catch (Exception e){
+            return "ERROR:Has been some problem.";
+        }
+        return "TRAINED";
+    }
+
+    public String trainGlobalIA(qtable table){
+        try {
+            trainingGlobalIa.acquire();
+            agent aux = new agent("GLOBAL");
+            //aux.setTrainingRegister(table.getTransitions());
+            aux.writeQTableAndRegister();
+            aux = new agent("GLOBAL");
+            aux.clearQtable();
+            aux.loadTraining("trainingRegisterGLOBAL.txt");
+            aux.writeQTableAndRegister();
+        }catch (Exception e){
+            trainingGlobalIa.release();
+            return "ERROR:Has been some problem.";
+        }
+        trainingGlobalIa.release();
+        return "TRAINED";
+    }
+
+    public int getPlayerIAtimes(String user){
+        Player p1 = (Player) dbm.findByKey(Player.class, user);
+        if (p1 == null){
+            return 0;
+        }
+        return p1.getTimesVSownlIa();
+    }
+
+    public int getGlobalIaTimes(){
+        return dbm.getGlobalIaTimes();
     }
 }

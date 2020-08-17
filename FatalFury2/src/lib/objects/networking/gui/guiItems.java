@@ -416,5 +416,9 @@ public enum guiItems{
      * Confirm end game gui items.
      */
     CONFIRM_END_GAME,
-    FRIEND_BUSY
+    FRIEND_BUSY,
+    VS_IA_BUTTON,
+    GLOBAL_IA_BUTTON,
+    PERSONAL_IA_BUTTON,
+    CANCEL_SELECT_IA
 }
