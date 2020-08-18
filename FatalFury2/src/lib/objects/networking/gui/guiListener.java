@@ -104,6 +104,7 @@ public class guiListener implements ActionListener {
                             boolean ok = gui.getOnline_controller().retryInitialConnection();
                             if(ok){
                                 gui.getPinger().setCon(gui.getOnline_controller().getConToServer());
+                                gui.getNotifier().setCon(gui.getOnline_controller().getConToServer());
                             }
                             break;
                         case QUIT_YES:
@@ -814,7 +815,7 @@ public class guiListener implements ActionListener {
                     break;
             }
         }catch(Exception e){
-            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+            gui.setOnlineState(GameState.SERVER_PROBLEM);
             gui.clearGui();
         }
     }

@@ -59,6 +59,8 @@ public class Regression {
      */
     private LinearRegression finalModel;
 
+    private String user = "";
+
     /**
      * Instantiates a new Regression.
      */
@@ -94,13 +96,17 @@ public class Regression {
      * @param fromTraining the from training
      * @throws IOException the io exception
      */
-    public Regression(int folds, int grade, int maxGrade, String t, String q, int fromTraining) throws IOException {
+    public Regression(int folds, int grade, int maxGrade, String user, String t, String q, int fromTraining) throws IOException {
         csvGenerator =  new qTableToCSV(t,q, fromTraining);
 
+        this.user = user;
         this.folds  = folds;
         this.grade = grade;
         this.maxGrade = maxGrade;
         this.simple = false;
+
+        this.data = System.getProperty("user.dir") + "/.files/qTable" + user +".csv";
+        this.modelPath =  System.getProperty("user.dir") + "/.files/regressionModel" + user +".model";
     }
 
     /**
@@ -155,7 +161,11 @@ public class Regression {
             model.buildClassifier(trainDataSet);
 
             Evaluation eval = new Evaluation(trainDataSet);
-            eval.crossValidateModel(model, validateDataSet, foldsCV, new Random(1));
+            int foldsAux = foldsCV;
+            if(foldsCV > validateDataSet.size()){
+                foldsAux = validateDataSet.size();
+            }
+            eval.crossValidateModel(model, validateDataSet, foldsAux, new Random(1));
 
             //System.out.println("Grade: " + i + " Relative absolute error: " + eval.relativeAbsoluteError());
 

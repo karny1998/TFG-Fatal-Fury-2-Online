@@ -5,6 +5,7 @@ import lib.utils.sendableObjects.sendableObject;
 import java.time.LocalDateTime;
 
 public class message extends sendableObject {
+    private static final long serialVersionUID = 7617345688754547713L;
     private Integer id;
     private String transmitter;
     private String receiver;
@@ -65,5 +66,9 @@ public class message extends sendableObject {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }

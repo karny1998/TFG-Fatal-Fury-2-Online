@@ -5,6 +5,7 @@ import lib.utils.sendableObjects.sendableObject;
 import java.time.LocalDateTime;
 
 public class game extends sendableObject {
+    private static final long serialVersionUID = 7617345688754547712L;
     private Integer id;
     private String player1;
     private String player2;
@@ -107,5 +108,9 @@ public class game extends sendableObject {
 
     public void setCharacter2(String character2) {
         this.character2 = character2;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }

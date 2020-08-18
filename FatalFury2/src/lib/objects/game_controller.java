@@ -925,10 +925,9 @@ public class game_controller {
             trainer.getFight().drawHpBarPlayer(g, offset);
             trainer.getFight().drawHpBarEnemy(g, offset);
         }
-        else if(state == GameState.ONLINE_MODE && online.getFight() != null){
+        else if(state == GameState.ONLINE_MODE && online.getOnlineState() == GameState.ONLINE_FIGHT && online.getFight() != null){
             online.getFight().drawHpBarPlayer(g, offset);
             online.getFight().drawHpBarEnemy(g, offset);
-            online.getFight().writeDirecly(g,offset);
         }
         else if(state == GameState.RANKING){
             ranking.printRanking(g);

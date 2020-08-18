@@ -5,6 +5,7 @@ import lib.utils.sendableObjects.sendableObject;
 import java.util.ArrayList;
 
 public class profile extends sendableObject {
+    private static final long serialVersionUID = 7617345688754547717L;
     private String user;
     private int points;
     private int normalWins, normalLoses, rankedWins, rankedLoses;
@@ -74,5 +75,9 @@ public class profile extends sendableObject {
 
     public void setGames(ArrayList<game> games) {
         this.games = games;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }

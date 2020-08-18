@@ -169,14 +169,21 @@ public class Screen extends JPanel{
         Dimension d = this.getSize();
         // Offset a bajar el scenario
         int offset = 0;
+        fight_controller fight = null;
+        if(game.getFight() != null){
+            fight = game.getFight();
+        }
+        else if(game.getOnline() != null && game.getOnline().getFight() != null){
+            fight = game.getOnline().getFight();
+        }
         // Si ha terminado la ronda o pelena el offset es 0
-        if(game.getFight() != null && !game.getFight().getEnd()) {
-            Movement s = game.getFight().getPlayer().getPlayer().getState();
+        if(fight != null && !fight.getEnd()) {
+            Movement s = fight.getPlayer().getPlayer().getState();
             boolean ended = s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT;
-            s = game.getFight().getEnemy().getPlayer().getState();
+            s = fight.getEnemy().getPlayer().getState();
             ended = (ended || s == Movement.VICTORY_FIGHT || s == Movement.VICTORY_ROUND || s == Movement.DEFEAT);
             if(!ended) {
-                offset = (int) (game.getFight().getCurrentRound().getScenaryOffsetY() * 3);
+                offset = (int) (fight.getCurrentRound().getScenaryOffsetY() * 3);
                 g2d.translate(0, -offset);
             }
         }
@@ -197,7 +204,7 @@ public class Screen extends JPanel{
             }
         }
         // Si hay una pelea en marcha se aplica el offeset calculado
-        if(game.getFight() != null) {
+        if(game.getFight() != null || game.getOnline() != null && game.getOnline().getFight() != null) {
             game.writeDirecly(g2d, offset);
         }
         // En caso contrario se pinta con offset 0

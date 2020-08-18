@@ -179,62 +179,77 @@ public class online_mode_gui {
      * Draw gui.
      */
     public void drawGUI() {
-        if (!notifier.isAlive()) {
-            this.notifier = new notificationsReceiver();
-            this.notifier.start();
-        }
-        if (gui.getMultiplier() != m) {
-            m = gui.getMultiplier();
-            try {
-                f = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (25.0 * m));
-                f2 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (15.0 * m));
-                f3 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (35.0 * m));
-            } catch (FontFormatException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            /*if (notifier == null || !notifier.isAlive()) {
+                this.notifier = new notificationsReceiver();
+                this.notifier.start();
             }
-        }
-        principal.guiOn();
-        switch (onlineState) {
-            case SERVER_PROBLEM:
-                server_problem(false);
-                break;
-            case LOGIN_REGISTER:
-                login_register();
-                break;
-            case LOGIN:
-                login(false, "", "");
-                break;
-            case REGISTER:
-                register(false, "", "", "", "");
-                break;
-            case PRINCIPAL_GUI:
-                principalGUI();
-                break;
-            case PROFILE_GUI:
-                profileGUI();
-                break;
-            case ONLINE_RANKING:
-                ranking();
-                break;
-            case ONLINE_SEARCHING_FIGHT:
-                break;
-            case GAME_END:
-                if (!componentsOnScreen.containsKey(guiItems.GAME_RESULT)) {
-                    gui.setBack(6);
-                    new end_game_gui(this, online_controller.isHost(), online_controller.getRival(),
-                            online_controller.getChar1(), online_controller.getChar2(),
-                            online_controller.getResult(), online_controller.getRankPoints(), online_controller.isRanked());
+            if (pinger == null || !pinger.isAlive()) {
+                this.pinger = new serverPinger(online_controller.getConToServer());
+                this.pinger.start();
+            }*/
+            if (gui.getMultiplier() != m) {
+                m = gui.getMultiplier();
+                try {
+                    f = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (25.0 * m));
+                    f2 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (15.0 * m));
+                    f3 = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/files/fonts/m04b.TTF")).deriveFont((float) (35.0 * m));
+                } catch (FontFormatException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                break;
-            case CHARACTER_SELECTION:
+            }
+            principal.guiOn();
+            switch (onlineState) {
+                case SERVER_PROBLEM:
+                    server_problem(false);
+                    break;
+                case LOGIN_REGISTER:
+                    login_register();
+                    break;
+                case LOGIN:
+                    login(false, "", "");
+                    break;
+                case REGISTER:
+                    register(false, "", "", "", "");
+                    break;
+                case PRINCIPAL_GUI:
+                    principalGUI();
+                    break;
+                case PROFILE_GUI:
+                    profileGUI();
+                    break;
+                case ONLINE_RANKING:
+                    ranking();
+                    break;
+                case ONLINE_SEARCHING_FIGHT:
+                    break;
+                case GAME_END:
+                    if (!componentsOnScreen.containsKey(guiItems.GAME_RESULT)) {
+                        gui.setBack(6);
+                        new end_game_gui(this, online_controller.isHost(), online_controller.getRival(),
+                                online_controller.getChar1(), online_controller.getChar2(),
+                                online_controller.getResult(), online_controller.getRankPoints(), online_controller.isRanked());
+                    }
+                    break;
+                case CHARACTER_SELECTION:
                 /*if(!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
                     character_selection(false, "127.0.0.1", "ss",false);
                 }*/
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+        }catch (Exception e){
+            setOnlineState(GameState.SERVER_PROBLEM);
+            clearGui();
+            if(notifier != null && notifier.isAlive()){
+                notifier.doStop();
+            }
+            if(pinger != null && pinger.isAlive()){
+                pinger.doStop();
+            }
         }
     }
 
@@ -1181,6 +1196,10 @@ public class online_mode_gui {
      * @param friend the friend
      */
     public void chat(String friend) {
+        guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
+                guiItems.PROFILE_BUTTON, guiItems.BACK, guiItems.VS_IA_BUTTON};
+        enableComponents(items, false);
+
         sendableObjectsList msgs = (sendableObjectsList) online_controller.getConToServer().sendStringWaitingAnswerObject(msgID.toServer.request, "MESSAGE HISTORIAL:" + friend, 0);
         friendMessages = new ArrayList<>();
         for (sendableObject m : msgs.getMsgs()) {
@@ -1318,8 +1337,8 @@ public class online_mode_gui {
     public void closeChat(){
         if(componentsOnScreen.containsKey(guiItems.CHAT)) {
             deleteComponents(new guiItems[]{guiItems.CHAT, guiItems.SEND_MESSAGE, guiItems.MESSAGE_WRITER, guiItems.CLOSE_CHAT});
-            enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON,
-                    guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON, guiItems.BACK}, true);
+            enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
+                    guiItems.PROFILE_BUTTON, guiItems.BACK, guiItems.VS_IA_BUTTON}, true);
             pendingMessages.remove(friends.get(friendSelected));
 
             new friend_list_gui(this,friends,pendingMessages);
@@ -1478,7 +1497,7 @@ public class online_mode_gui {
          */
         @Override
         public void run(){
-            while(keepRunning()) {
+            while(keepRunning() && con.isConnected()) {
                 try {
                     String notification = con.receiveNotifications();
                     String res[] = notification.split(":");
@@ -1513,6 +1532,9 @@ public class online_mode_gui {
                         }
                     }
                     else if (res[0].equals("DELETED FRIEND") && (onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI)) {
+                        if(componentsOnScreen.containsKey(guiItems.CHAT) || friends.get(friendSelected).equals(res[1])){
+                            closeChat();
+                        }
                         if(friends.contains(res[1])) {
                             friends.remove(res[1]);
                             pendingMessages.remove(res[1]);
@@ -1564,6 +1586,14 @@ public class online_mode_gui {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public connection getCon() {
+            return con;
+        }
+
+        public void setCon(connection con) {
+            this.con = con;
         }
     }
 
@@ -1641,7 +1671,7 @@ public class online_mode_gui {
          */
         @Override
         public void run(){
-            while(keepRunning()) {
+            while(keepRunning() && con.isConnected()) {
                 try {
                     con.sendString(msgID.toServer.ping, "PING");
                     Thread.sleep(500);
@@ -1654,7 +1684,8 @@ public class online_mode_gui {
                 }
                 else{
                     if(System.currentTimeMillis() - timeReference > 10000){
-                        onlineState = GameState.SERVER_PROBLEM;
+                        setOnlineState(GameState.SERVER_PROBLEM);
+                        clearGui();
                         setUserLogged("");
                     }
                 }

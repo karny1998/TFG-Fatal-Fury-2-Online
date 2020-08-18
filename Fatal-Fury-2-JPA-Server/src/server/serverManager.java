@@ -738,7 +738,7 @@ public class serverManager {
 
     public qtable getQtable(String user){
         agent aux = new agent(user);
-        return new qtable(aux.getqTable());//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
+        return new qtable(aux.getqTable(), "");//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
     }
 
     public String trainOwnIA(String user, qtable table){
@@ -768,11 +768,7 @@ public class serverManager {
         try {
             trainingGlobalIa.acquire();
             agent aux = new agent("GLOBAL");
-            //aux.setTrainingRegister(table.getTransitions());
-            aux.writeQTableAndRegister();
-            aux = new agent("GLOBAL");
-            aux.clearQtable();
-            aux.loadTraining("trainingRegisterGLOBAL.txt");
+            aux.loadTrainingFromString(table.getTransitions());
             aux.writeQTableAndRegister();
         }catch (Exception e){
             trainingGlobalIa.release();

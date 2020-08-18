@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class sendableObjectsList extends sendableObject {
+    private static final long serialVersionUID = 7617345688754547715L;
     private ArrayList<sendableObject> msgs;
 
     public sendableObjectsList(ArrayList<sendableObject> l){
@@ -23,5 +24,9 @@ public class sendableObjectsList extends sendableObject {
 
     public void setMsgs(ArrayList<sendableObject> msgs) {
         this.msgs = msgs;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }

@@ -5,6 +5,7 @@ import lib.utils.Pair;
 import lib.utils.packet;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.simpleObjects.certificate;
+import lib.utils.sendableObjects.simpleObjects.string;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
 import org.bitlet.weupnp.PortMappingEntry;
@@ -191,13 +192,16 @@ public class connection {
                 in = new ObjectInputStream(socketTCP.getInputStream());
             }
             notificationSM.acquire();
+            this.rec = new receiver(this);
+            this.rec.start();
         }catch (Exception e){
             e.printStackTrace();
             socketTCP = null;
             socketUDP = null;
+            if(this.rec != null){
+                rec.doStop();
+            }
         }
-        this.rec = new receiver(this);
-        this.rec.start();
     }
 
     /**
@@ -412,10 +416,16 @@ public class connection {
             bufSend = (Integer.toString(id) + ";"+ r + ";" + (String)msg).getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
-                socketUDP.send(packet);
+                synchronized (socketUDP) {
+                    socketUDP.send(packet);
+                }
             } catch (Exception e) {
                 socketTCP = null;
                 socketUDP = null;
+                try {
+                    in.close();
+                    out.close();
+                } catch (Exception ex) {}
                 /*e.printStackTrace();*/
             }
         }
@@ -428,10 +438,17 @@ public class connection {
                 else {
                     p = new packet(id, false, (sendableObject)msg);
                 }
-                out.writeObject(p);
+                synchronized (out) {
+                    out.writeObject(p);
+                }
+
             }catch (Exception e){
                 socketTCP = null;
                 socketUDP = null;
+                try {
+                    in.close();
+                    out.close();
+                } catch (Exception ex) {}
                 //e.printStackTrace();
             }
         }
@@ -447,7 +464,9 @@ public class connection {
             bufSend = (Integer.toString(id) + ";NR;ACK").getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
-                socketUDP.send(packet);
+                synchronized (socketUDP) {
+                    socketUDP.send(packet);
+                }
             } catch (Exception e) {
                 /*e.printStackTrace();*/
             }
@@ -455,7 +474,9 @@ public class connection {
         else{
             try{
                 packet p = new packet(id, false, "ACK");
-                out.writeObject(p);
+                synchronized (out) {
+                    out.writeObject(p);
+                }
             }catch (Exception e){/*e.printStackTrace();*/}
         }
     }
@@ -474,7 +495,9 @@ public class connection {
                 boolean ok = false;
                 while (!ok && System.currentTimeMillis()-timeReference < 10000) {
                     //System.out.println("se envia hi");
-                    socketUDP.send(packet);
+                    synchronized (socketUDP) {
+                        socketUDP.send(packet);
+                    }
                     Thread.sleep(100);
                     if (receiveACK(msgID.toClient.hi)) {
                         ok = true;
@@ -489,7 +512,9 @@ public class connection {
         else{
             try{
                 packet p = new packet(0, false, "HI");
-                out.writeObject(p);
+                synchronized (out) {
+                    out.writeObject(p);
+                }
                 return true;
             }catch (Exception e){
                 /*e.printStackTrace();*/
@@ -574,7 +599,7 @@ public class connection {
      * Recibe cualquier mensaje pendiente y lo guarda en pendingMessages.
      */
     public void receive(){
-        if(blockReception || socketTCP != null && !socketTCP.isConnected()){
+        if(blockReception || socketTCP == null && !isUDP || socketTCP != null && !socketTCP.isConnected()){
             return;
         }
         //if(blockReception || socketTCP != null && !socketTCP.isConnected()){return;}
@@ -620,13 +645,17 @@ public class connection {
                 sm.release();
             }
             else{
-                packet received = (packet) in.readObject();
+                packet received;
+                synchronized (in) {
+                    received = (packet) in.readObject();
+                }
+
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
-                /*f(received.getId() != msgID.toServer.ping) {
+                if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.toString());
-                }*/
+                }
                 try {
                     sm.acquire();
                     if(received.isObject()){
@@ -640,7 +669,7 @@ public class connection {
                         }
                     }
                 }catch (Exception e){
-                    //e.printStackTrace();
+                    e.printStackTrace();
                     sm.release();
                 }
                 sm.release();
@@ -654,9 +683,13 @@ public class connection {
             }
 
         }catch (Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
             socketTCP = null;
             socketUDP = null;
+            try {
+                in.close();
+                out.close();
+            } catch (Exception ex) {}
         }
     }
 
@@ -719,6 +752,9 @@ public class connection {
      * @return the object
      */
     private Object sendWaitingAnswer(int id, Object msg, int timeout, boolean sendString, boolean receiveString){
+        waiterAlarm waiter = null;
+        int timeWaiter = 5000;
+        if(timeout > 0){timeWaiter = timeout;}
         if(isUDP) {
             try {
                 for (int i = 0; i < 10; ++i) {
@@ -750,7 +786,13 @@ public class connection {
             synchronized(waiterList) {
                 waiterList.add(localWaiter);
             }
+            string waiterWakeUp = new string("false");
+            waiter = new waiterAlarm(localWaiter,timeWaiter, waiterWakeUp);
+            waiter.start();
             while(!error && !(timeout > 0 && System.currentTimeMillis() - ref > timeout)){
+                if(waiterWakeUp.getContent().equals("true")){
+                    return null;
+                }
                 if (receiveString) {
                     String res = receiveString(id);
                     if (res != null && !res.equals("") && !res.equals("NONE")) {
@@ -779,6 +821,48 @@ public class connection {
             return "";
         } else {
             return null;
+        }
+    }
+
+    private class waiterAlarm extends Thread {
+        private string waiterWakeUp;
+        private Pair<Boolean,Boolean> waiter;
+        private boolean stop = false;
+        private final Thread thread;
+        private long time;
+
+        public waiterAlarm(Pair<Boolean,Boolean> waiter, int time, string waiterWakeUp) {
+            this.thread = new Thread(this);
+            this.waiter = waiter;
+            this.time = time;
+            this.waiterWakeUp = waiterWakeUp;
+        }
+
+        @Override
+        public void start() {
+            this.thread.start();
+        }
+
+        public synchronized void doStop() {
+            this.stop = true;
+        }
+
+        private synchronized boolean keepRunning() {
+            return this.stop == false;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(time);
+                synchronized (waiter.first) {
+                    waiter.second = true;
+                    waiter.first.notify();
+                }
+                waiterWakeUp.setContent("true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -823,7 +907,9 @@ public class connection {
                 if(isUDP) {
                     bufSend = (Integer.toString(id) + ";R;" + (String)msg).getBytes();
                     DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
-                    socketUDP.send(packet);
+                    synchronized (socketUDP) {
+                        socketUDP.send(packet);
+                    }
                 }
                 else{
                     try{
@@ -834,7 +920,9 @@ public class connection {
                         else{
                             p = new packet(0, true, (sendableObject)msg);
                         }
-                        out.writeObject(p);
+                        synchronized (out) {
+                            out.writeObject(p);
+                        }
                     }catch (Exception e){/*e.printStackTrace();*/}
                 }
                 Thread.sleep(timeout);
@@ -881,11 +969,13 @@ public class connection {
                 socketTCP.close();
                 in.close();
                 out.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 /*e.printStackTrace();*/
             }
         }
-        rec.doStop();
+        if(this.rec != null){
+            rec.doStop();
+        }
     }
 
     /**

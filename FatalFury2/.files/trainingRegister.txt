@@ -2105,3 +2105,6 @@ HARD_PUNCH
 -100.0
 # Destiny state #
 35,47,NORMAL_JUMP,656,2,1084,0,0,1,false
+#-----------#
+# NEW FIGHT #
+#-----------#

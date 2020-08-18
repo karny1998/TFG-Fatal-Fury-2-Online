@@ -52,7 +52,12 @@ public class serverConnection{
             else{
                 p = new packet(id, false, (sendableObject)msg);
             }
-            out.writeObject(p);
+            synchronized (out) {
+                out.writeObject(p);
+            }
+            if(id != 0) {
+                System.out.println("Manda " + p.toString());
+            }
         }catch (Exception e){
             //e.printStackTrace();
             try {
@@ -86,7 +91,9 @@ public class serverConnection{
                 else {
                     p = new packet(id, true, (sendableObject)msg);
                 }
-                out.writeObject(p);
+                synchronized (out) {
+                    out.writeObject(p);
+                }
             }catch (Exception e){/*e.printStackTrace();*/}
             try {
                 Thread.sleep(timeout);
@@ -109,7 +116,9 @@ public class serverConnection{
     public void sendAck(int id){
         try{
             packet p = new packet(id, false, "ACK");
-            out.writeObject(p);
+            synchronized (out) {
+                out.writeObject(p);
+            }
         }catch (Exception e){/*e.printStackTrace();*/}
     }
 
@@ -174,7 +183,10 @@ public class serverConnection{
     public void receive(){
         if(blockReception){return;}
         try {
-            packet received = (packet) in.readObject();
+            packet received;
+            synchronized (in) {
+                received = (packet) in.readObject();
+            }
             if(!received.isObject() && received.getMessage().equals("HI")){
                 sendAck(-1);
                 return;
@@ -197,6 +209,7 @@ public class serverConnection{
         }catch (Exception e){
             this.close();
             rec.doStop();
+            socket = null;
             /*e.printStackTrace();*/
         }
     }

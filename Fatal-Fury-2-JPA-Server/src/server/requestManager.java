@@ -27,14 +27,18 @@ public class requestManager {
                 con.sendString(msgID.toServer.request, res);
             }
             else if (request.contains("LOGIN:")) {
-                if (userLogged == null) {
+                if (userLogged == null ||userLogged.equals(request.split(":")[1])) {
                     String aux[] = request.split(":");
                     String res = manager.connectUser(client, con, aux[1], aux[2]);
                     if (res.equals("LOGGED")) {
                         userLogged = aux[1];
                     }
+                    else{
+                        userLogged = null;
+                    }
                     con.sendString(msgID.toServer.request, res);
-                } else {
+                }
+                else {
                     con.sendString(1, "E:Estás logeado en otra cuenta");
                 }
             }
@@ -152,39 +156,44 @@ public class requestManager {
             else if (request.contains("FIRST CONNECTION")) {
                 Object cer;
                 do {
+                    Thread.sleep(200);
                     cer = con.receiveObject(msgID.toServer.request);
-                } while (cer == null || cer.equals("NONE") || cer.equals(""));
+                } while ((cer == null || cer.equals("NONE") || cer.equals("")) && con.isConnected());
                 String res = manager.addCertificateToKeystore((certificate) cer);
                 con.sendString(msgID.toServer.request, res);
             }
             else if (request.contains("GET OWN IA")) {
                 qtable q = manager.getQtable(userLogged);
-                con.sendString(msgID.toServer.request,"EPSILON:"+ (1.0-((double)manager.getPlayerIAtimes(userLogged))/50.0));
                 con.sendObject(msgID.toServer.request, q);
+                con.sendString(msgID.toServer.request,"EPSILON:"+ (1.0-((double)manager.getPlayerIAtimes(userLogged))/50.0));
             }
             else if (request.contains("GET GLOBAL IA")) {
                 qtable q = manager.getQtable("GLOBAL");
-                con.sendString(msgID.toServer.request,"EPSILON:"+ (1.0-((double)manager.getGlobalIaTimes())/100.0));
                 con.sendObject(msgID.toServer.request, q);
+                con.sendString(msgID.toServer.request,"EPSILON:"+ (1.0-((double)manager.getGlobalIaTimes())/100.0));
             }
             else if (request.contains("TRAIN OWN IA")) {
                 Object table;
                 do {
+                    Thread.sleep(200);
                     table = con.receiveObject(msgID.toServer.request);
-                } while (table == null || table.equals("NONE") || table.equals(""));
+                } while ((table == null || table.equals("NONE") || table.equals("")) && con.isConnected());
                 manager.trainOwnIA(userLogged, (qtable) table);
             }
             else if (request.contains("TRAIN GLOBAL IA")) {
                 Object table;
                 do {
+                    Thread.sleep(200);
                     table = con.receiveObject(msgID.toServer.request);
-                } while (table == null || table.equals("NONE") || table.equals(""));
+                } while ((table == null || table.equals("NONE") || table.equals("")) && con.isConnected());
                 manager.trainGlobalIA((qtable) table);
             }
         }catch (Exception e){
             e.printStackTrace();
-            con.sendString(msgID.toServer.request, "ERROR:Has been some problem.");
-            con.sendObject(msgID.toServer.request, null);
+            if(con.isConnected()) {
+                con.sendString(msgID.toServer.request, "ERROR:Has been some problem.");
+                con.sendObject(msgID.toServer.request, null);
+            }
         }
     }
 

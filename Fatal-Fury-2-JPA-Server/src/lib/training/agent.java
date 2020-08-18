@@ -42,7 +42,7 @@ public class agent {
     /**
      * Ganma, valoración de acciones futuras.
      */
-    private double ganma = 0.65;
+    private double ganma = 0.75;
     /**
      * Alpha, factor de aprendizaje.
      */
@@ -445,6 +445,49 @@ public class agent {
         }
     }
 
+    public String trainingToString(){
+        String train = "";
+
+        train += "#-----------#\n";
+        train += "# NEW FIGHT #\n";
+        train += "#-----------#\n";
+        int x = trainingRegister.size();
+        for(int i = 0; i < x; ++i) {
+            Pair<Pair<state, Movement>, Pair<Double, state>> aux = trainingRegister.get(i);
+            train += "# Source state #\n";
+            train += aux.first.first.toString()+"\n";
+            train += "# Action #\n";
+            train += aux.first.second.toString()+"\n";
+            train += "# Reward #\n";
+            train += aux.second.first.toString()+"\n";
+            train += "# Destiny state #\n";
+            train += aux.second.second.toString()+"\n";
+        }
+
+        return train;
+    }
+
+    public void loadTrainingFromString(String t){
+        String train[] = t.split("\n");
+        int i = 3;
+        while(i < train.length){
+            ++i;
+            String estado[] = train[i].split(",");
+            state s = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                    Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[6]),
+                    Integer.parseInt(estado[7]), Integer.parseInt(estado[8]), Boolean.parseBoolean(estado[9]));
+            ++i;++i;
+            Movement action = Movement.valueOf(train[i]);
+            ++i;++i;++i;++i;
+            estado = train[i].split(",");
+            state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
+                    Integer.parseInt(estado[3]), Integer.parseInt(estado[4]), Integer.parseInt(estado[6]),
+                    Integer.parseInt(estado[7]), Integer.parseInt(estado[8]), Boolean.parseBoolean(estado[9]));
+            giveReward(s, s2, action, false, true);
+            ++i;
+        }
+    }
+
     /**
      * Escribe la tabla y el registro del entrenamiento
      */
@@ -616,7 +659,7 @@ public class agent {
         if(useRegression){
             try {
                 if (regression == null) {
-                    regression = new Regression(5, 1, 10, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
+                    regression = new Regression(5, 1, 10, user, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
                 }
                 regression.calculateModel();
                 regression.loadModel();
@@ -935,7 +978,7 @@ public class agent {
         this.useRegression = useRegression;
         if(useRegression){
             try {
-                regression = new Regression(5, 1, 10, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
+                regression = new Regression(5, 1, 10, user, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
                 regression.loadModel();
                 model = regression.getFinalModel().coefficients();
             }catch (Exception e){

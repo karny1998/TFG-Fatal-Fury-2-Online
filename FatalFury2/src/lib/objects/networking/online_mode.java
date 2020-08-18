@@ -147,8 +147,11 @@ public class online_mode {
      *
      * @return the boolean
      */
-    public boolean retryInitialConnection(){
-        boolean ok = reconnectToServer();
+    public boolean retryInitialConnection() {
+        boolean ok = true;
+        if (conToServer == null || !conToServer.isConnected()){
+            ok = reconnectToServer();
+        }
         gui.clearGui();
         if(ok){
             gui.setOnlineState(GameState.LOGIN_REGISTER);
@@ -156,6 +159,7 @@ public class online_mode {
         }
         else{
             gui.setOnlineState(GameState.SERVER_PROBLEM);
+            gui.clearGui();
             return false;
         }
     }
@@ -228,67 +232,72 @@ public class online_mode {
     }
 
     public void generateVsIAFight(Playable_Character pC, Scenario_type sce, boolean isGlobal){
-        this.isHost = true;
-        if(isGlobal){isVsIA = 2;}
-        else{isVsIA = 1;}
+        try {
+            this.isHost = true;
+            if (isGlobal) {
+                isVsIA = 2;
+            } else {
+                isVsIA = 1;
+            }
 
-        Double table[][];
-        qtable aux;
-        double epsilon = 0.0;
-        if(isGlobal){
-            aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"GET GLOBAL IA",0);
-        }
-        else{
-            aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request,"GET OWN IA",0);
-        }
-        table = aux.getTableDouble();
-        epsilon = Double.parseDouble(conToServer.receiveString(msgID.toServer.request).split(":")[1]);
+            Double table[][];
+            qtable aux;
+            double epsilon = 0.0;
+            if (isGlobal) {
+                aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request, "GET GLOBAL IA", 0);
+            } else {
+                aux = (qtable) conToServer.sendStringWaitingAnswerObject(msgID.toServer.request, "GET OWN IA", 0);
+            }
+            table = aux.getTableDouble();
+            String d ="";
+            do{
+                Thread.sleep(200);
+                d = conToServer.receiveString(msgID.toServer.request);
+            }while(!d.contains("EPSILON"));
+            epsilon = Double.parseDouble(d.split(":")[1]);
 
-        stateCalculator.initialize();
-        this.rankPoints = 0;
-        this.char1 = pC;
-        this.char2 = Playable_Character.TERRY;
-        this.rival = "IA";
-        this.isRanked = isRanked;
+            stateCalculator.initialize();
+            this.rankPoints = 0;
+            this.char1 = pC;
+            this.char2 = Playable_Character.TERRY;
+            this.rival = "IA";
+            this.isRanked = isRanked;
 
-        player = new user_controller(pC, 1);
-        if(enemy == null) {
+            player = new user_controller(pC, 1);
             enemy = new enemy_controller(char2, 2, true, true);
-        }
-        else{
-            enemy.reset();
-        }
-        enemy.setRival(player.getPlayer());
-        enemy.getPlayer().setMapLimit(mapLimit);
-        player.setRival(enemy.getPlayer());
-        enemy.getIa().setDif(ia_loader.dif.HARD);
-        player.getPlayer().setMapLimit(mapLimit);
-        ((enemy_controller)enemy).setRival(player.getPlayer(), userLogged);
-        ((enemy_controller)enemy).getAgente().setUser(userLogged);
-        ((enemy_controller)enemy).getAgente().setqTable(table);
-        enemy.getPlayer().setMapLimit(mapLimit);
-        player.setRival(enemy.getPlayer());
-        player.getPlayer().setMapLimit(mapLimit);
 
-        scene = new scenary(sce);
+            enemy.setRival(player.getPlayer());
+            enemy.getPlayer().setMapLimit(mapLimit);
+            player.setRival(enemy.getPlayer());
+            enemy.getIa().setDif(ia_loader.dif.HARD);
+            player.getPlayer().setMapLimit(mapLimit);
+            ((enemy_controller) enemy).setRival(player.getPlayer(), userLogged);
+            ((enemy_controller) enemy).getAgente().setUser(userLogged);
+            ((enemy_controller) enemy).getAgente().setqTable(table);
+            enemy.getPlayer().setMapLimit(mapLimit);
+            player.setRival(enemy.getPlayer());
+            player.getPlayer().setMapLimit(mapLimit);
 
-        fight = new fight_controller(player,enemy,scene);
-        fight.setMapLimit(mapLimit);
-        fight.setVsIa(true);
-        fight.setIaLvl(ia_loader.dif.HARD);
+            scene = new scenary(sce);
 
-        audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
-        audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
+            fight = new fight_controller(player, enemy, scene);
+            fight.setMapLimit(mapLimit);
+            fight.setVsIa(true);
+            fight.setIaLvl(ia_loader.dif.HARD);
 
-        ((enemy_controller)enemy).getAgente().setUseRegression(true);
-        if(epsilon < 1.0){
-            ((enemy_controller)enemy).getAgente().writeQTableAndRegister();
-            ((enemy_controller)enemy).getAgente().trainRegression();
-        }
-        ((enemy_controller)enemy).getAgente().setEpsilon(epsilon);
+            audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
+            audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
 
-        gui.getPrincipal().gameOn();
-        gui.setOnlineState(GameState.ONLINE_FIGHT);
+            ((enemy_controller) enemy).getAgente().setUseRegression(true);
+            if (epsilon < 1.0) {
+                ((enemy_controller) enemy).getAgente().writeQTableAndRegister();
+                ((enemy_controller) enemy).getAgente().trainRegression();
+            }
+            ((enemy_controller) enemy).getAgente().setEpsilon(epsilon);
+
+            gui.getPrincipal().gameOn();
+            gui.setOnlineState(GameState.ONLINE_FIGHT);
+        }catch (Exception e){e.printStackTrace();}
     }
 
     /**
@@ -428,11 +437,11 @@ public class online_mode {
                 }
                 else if(isVsIA == 1){
                     conToServer.sendString(msgID.toServer.request, "TRAIN OWN IA");
-                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable()));
+                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable(), ((enemy_controller)enemy).getAgente().trainingToString()));
                 }
                 else{
                     conToServer.sendString(msgID.toServer.request, "TRAIN GLOBAL IA");
-                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable()));
+                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable(), ((enemy_controller)enemy).getAgente().trainingToString()));
                 }
 
                 Fight_Results results = fight.getFight_result();

@@ -100,6 +100,7 @@ public class Main {
             threadsByUser.remove(rqM.getUserLogged());
             con.close();
             manager.desconnectUser(rqM.getUserLogged());
+            cp.doStop();
             this.stop = true;
         }
 
@@ -111,6 +112,7 @@ public class Main {
             threadsByUser.remove(rqM.getUserLogged());
             con.sendString(msgID.toServer.notification,msg);
             con.close();
+            cp.doStop();
             this.stop = true;
         }
 
