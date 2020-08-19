@@ -39,7 +39,7 @@ public class requestManager {
                     con.sendString(msgID.toServer.request, res);
                 }
                 else {
-                    con.sendString(1, "E:Estás logeado en otra cuenta");
+                    con.sendString(1, "ERROR:You are login in other account.");
                 }
             }
             else if (request.contains("LOG OFF")) {
@@ -48,21 +48,21 @@ public class requestManager {
                     userLogged = null;
                     con.sendString(msgID.toServer.request, "LOGGED OFF");
                 } else {
-                    con.sendString(msgID.toServer.request, "E:No estás logeado en ninguna cuenta");
+                    con.sendString(msgID.toServer.request, "ERROR:You are't logged.");
                 }
             }
             else if (request.equals("SEARCH GAME")) {
                 if (userLogged != null) {
                     manager.searchGame(userLogged, false);
                 } else {
-                    con.sendString(msgID.toServer.request, "E:No estás logeado en ninguna cuenta");
+                    con.sendString(msgID.toServer.request, "ERROR:You are't logged.");
                 }
             }
             else if (request.equals("SEARCH RANKED GAME")) {
                 if (userLogged != null) {
                     manager.searchGame(userLogged, true);
                 } else {
-                    con.sendString(msgID.toServer.request, "E:No estás logeado en ninguna cuenta");
+                    con.sendString(msgID.toServer.request, "ERROR:You are't logged.");
                 }
             }
             else if (request.contains("SEND FRIEND REQUEST:")) {

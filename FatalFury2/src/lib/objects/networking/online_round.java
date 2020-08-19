@@ -83,15 +83,19 @@ public class online_round extends round {
                 int time = Integer.parseInt(aux[10]);
                 timeLeft = time;
                 p.applyDamage(p.getLife()-pL);
+                e.applyDamage(e.getLife()-eL);
                 if(!p.isJumping()) {
                     p.setX(pX);
                     p.setY(pY);
+                    player.setX(pX);
+                    player.setY(pY);
                     p.setOrientation(pO);
                 }
-                e.applyDamage(e.getLife()-eL);
                 if(!e.isJumping()) {
                     e.setX(eX);
                     e.setY(eY);
+                    enemy.setX(pX);
+                    enemy.setY(pY);
                     e.setOrientation(eO);
                 }
                 if(character.isKnockback(pS) && !p.inKnockback()){

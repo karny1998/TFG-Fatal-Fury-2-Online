@@ -81,7 +81,7 @@ public class online_mode {
     private int serverPort = 5555, /**
      * The Con to client port.
      */
-    conToClientPort = 55555;
+    conToClientPort = 5556;
 
     /**
      * The Gui.
@@ -123,6 +123,8 @@ public class online_mode {
 
     private int isVsIA = 0;
 
+    private Screen screen;
+
     /**
      * Instantiates a new Online mode.
      *
@@ -130,6 +132,7 @@ public class online_mode {
      * @param debug  the debug
      */
     public online_mode(Screen screen, boolean debug) {
+        this.screen = screen;
         if(!debug) {
             conToServer = new connection(serverIp, serverPort, 0, false);
             if(!conToServer.isConnected()){
@@ -147,7 +150,7 @@ public class online_mode {
      *
      * @return the boolean
      */
-    public boolean retryInitialConnection() {
+    /*public boolean retryInitialConnection() {
         boolean ok = true;
         if (conToServer == null || !conToServer.isConnected()){
             ok = reconnectToServer();
@@ -162,21 +165,31 @@ public class online_mode {
             gui.clearGui();
             return false;
         }
-    }
+    }*/
 
     /**
      * Reconnect to server boolean.
      *
      * @return the boolean
      */
-    public boolean reconnectToServer(){
-        conToServer = new connection(serverIp, serverPort, 0, false);
-        if(!conToServer.isConnected()){
-            return false;
+    public void reconnectToServer(){
+        if(conToServer != null){
+            if(conToServer.isConnected()) {
+                conToServer.sendString(msgID.toServer.tramits, "DISCONNECT");
+            }
+            conToServer.close();
         }
-        else {
-            conToServer.setPortSend(serverPort);
-            return true;
+        conToServer = new connection(serverIp, serverPort, 0, false);
+        conToServer.setPortSend(serverPort);
+        boolean ok = conToServer.isConnected();
+        if(ok){
+            if(this.gui != null){
+                gui.stop();
+            }
+            this.gui = new online_mode_gui(this, screen, GameState.LOGIN);
+        }
+        else{
+            this.gui = new online_mode_gui(this, screen, GameState.SERVER_PROBLEM);
         }
     }
 
@@ -512,7 +525,10 @@ public class online_mode {
         //conToClient.setPortSend(5561);
         //return true;
         conToClient = new connection(ip, conToClientPort, 0, true);
-        boolean ok = conToClient.setPortSend(conToClientPort);
+        boolean ok =  false;
+        try{
+            ok = conToClient.setPortSend(conToClientPort);
+        }catch (Exception e){e.printStackTrace();}
         if(!ok){
             gui.setOnlineState(GameState.PRINCIPAL_GUI);
             gui.clearGui();

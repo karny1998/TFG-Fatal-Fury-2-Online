@@ -416,9 +416,7 @@ public class connection {
             bufSend = (Integer.toString(id) + ";"+ r + ";" + (String)msg).getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
-                synchronized (socketUDP) {
-                    socketUDP.send(packet);
-                }
+                socketUDP.send(packet);
             } catch (Exception e) {
                 socketTCP = null;
                 socketUDP = null;
@@ -464,9 +462,7 @@ public class connection {
             bufSend = (Integer.toString(id) + ";NR;ACK").getBytes();
             DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
             try {
-                synchronized (socketUDP) {
-                    socketUDP.send(packet);
-                }
+                socketUDP.send(packet);
             } catch (Exception e) {
                 /*e.printStackTrace();*/
             }
@@ -494,18 +490,17 @@ public class connection {
             try {
                 boolean ok = false;
                 while (!ok && System.currentTimeMillis()-timeReference < 10000) {
-                    //System.out.println("se envia hi");
-                    synchronized (socketUDP) {
-                        socketUDP.send(packet);
-                    }
+                    System.out.println("se envia hi a " + address.getHostAddress() + " " + packet.toString());
+                    socketUDP.send(packet);
                     Thread.sleep(100);
                     if (receiveACK(msgID.toClient.hi)) {
+                        System.out.println("SE HA RECIBIDO EL PUTO ACK");
                         ok = true;
                     }
                 }
                 return ok;
             } catch (Exception e) {
-                /*e.printStackTrace();*/
+                e.printStackTrace();
                 return false;
             }
         }
@@ -599,9 +594,10 @@ public class connection {
      * Recibe cualquier mensaje pendiente y lo guarda en pendingMessages.
      */
     public void receive(){
-        if(blockReception || socketTCP == null && !isUDP || socketTCP != null && !socketTCP.isConnected()){
+        /*if(blockReception || socketTCP == null && !isUDP || socketTCP != null && !socketTCP.isConnected()){
+            System.out.println("SE QUEDA AQUI");
             return;
-        }
+        }*/
         //if(blockReception || socketTCP != null && !socketTCP.isConnected()){return;}
         try {
             if(isUDP) {
@@ -637,7 +633,6 @@ public class connection {
                             pendingMsgs.put(idM, aux[2]);
                         }
                     }
-                    //System.out.println("Se recibe: " + aux[2]);
                 }catch (Exception e){
                     /*e.printStackTrace();*/
                     sm.release();
@@ -653,9 +648,9 @@ public class connection {
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
-                if(received.getId() != msgID.toServer.ping) {
+                //if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.toString());
-                }
+                //}
                 try {
                     sm.acquire();
                     if(received.isObject()){
@@ -907,9 +902,7 @@ public class connection {
                 if(isUDP) {
                     bufSend = (Integer.toString(id) + ";R;" + (String)msg).getBytes();
                     DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);
-                    synchronized (socketUDP) {
-                        socketUDP.send(packet);
-                    }
+                    socketUDP.send(packet);
                 }
                 else{
                     try{
@@ -1116,7 +1109,9 @@ public class connection {
     public boolean setPortSend(int portSend) {
         this.portSend = portSend;
         if(isUDP) {
-            socketUDP.connect(address, portSend);
+            try {
+                socketUDP.connect(address, portSend);
+            }catch (Exception e){}
             return sendHi();
         }
         return true;

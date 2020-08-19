@@ -16,15 +16,15 @@ import javax.validation.constraints.Size;
 public class Player implements Serializable {
     @Id
     @Column(name = "username", nullable = false)
-    @Size(min = 3, max = 10, message="ERROR:El nombre tiene que tener entre 3 y 10 caracteres.")
-    @Pattern(regexp = "[A-z,0-9,_,-]+", message="ERROR:El nombre solo puede tener letras mayúsculas o minúsculas sin acentuar, números, y los caracteres \"_\" y \"-\".")
+    @Size(min = 3, max = 10, message="ERROR:Username must be between 3 and 10 chars.")
+    @Pattern(regexp = "[A-z,0-9,_,-]+", message="ERROR:Username can only contain uppercase and lowercase letters, numbers, \"_\" and  \"-\"")
     private String username;
     @Column(name = "email", unique = true, nullable = false)
-    @Size(min = 3, max = 100, message="ERROR:El correo tiene que tener entre 3 y 100 caracteres.")
-    @Pattern(regexp = "[^@]+@[A-z,0-9]+.[A-z]+", message="ERROR:El correo tiene que seguir el patron example@example.example.")
+    @Size(min = 3, max = 100, message="ERROR:Email must be between 3 and 100 chars.")
+    @Pattern(regexp = "[^@]+@[A-z,0-9]+.[A-z]+", message="ERROR:Email must be like: example@example.example.")
     private String email;
     @Column(name = "password", nullable = false)
-    @Size(min = 8, max = 100, message="ERROR:La contraseña tiene que tener entre 8 y 100 caracteres.")
+    @Size(min = 8, max = 100, message="ERROR:Password must be between 8 and 100 chars.")
     private String password;
     @Column(name = "active", nullable = false)
     private boolean active = false;

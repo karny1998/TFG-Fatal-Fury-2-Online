@@ -59,15 +59,22 @@ public class serverManager {
         else if(!p.isActive()){
             return "ERROR:The account hasn't been verified.";
         }
-        else if(p.getPassword().equals(pass)) {
-            Login l = new Login(p);
-            dbm.save(l);
-            loggedUsers.put(username, sc);
-            usersIP.put(username,add);
-            return  "LOGGED";
-        }
         else {
-            return "ERROR:Incorrect password.";
+            try {
+                if(p.getPassword().equals(encrypt(pass))) {
+                    Login l = new Login(p);
+                    dbm.save(l);
+                    loggedUsers.put(username, sc);
+                    usersIP.put(username,add);
+                    return  "LOGGED";
+                }
+                else {
+                    return "ERROR:Incorrect password.";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "ERROR:Has been some problem.";
+            }
         }
     }
 
@@ -172,7 +179,7 @@ public class serverManager {
     public String verifyAccount(String username, int cod){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if (p == null){
-            return "ERROR:El jugador solicitante no existe.";
+            return "ERROR:The player doesn't exist.";
         }
         if(p.getCode() == cod){
             p.setActive(true);
@@ -187,11 +194,11 @@ public class serverManager {
     public String friendsRequest(String user1, String user2){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
-            return "ERROR:El jugador solicitante no existe.";
+            return "ERROR:The player doesn't exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, user2);
         if (p2 == null){
-            return "ERROR:El jugador no existe.";
+            return "ERROR:The player doesn't exist.";
         }
 
         boolean areFriends = false;
@@ -202,7 +209,7 @@ public class serverManager {
             areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
         }
         if(areFriends){
-            return "ERROR:Los dos jugadores ya son amigos.";
+            return "ERROR:Both art already friends.";
         }
 
         areFriends = false;
@@ -213,7 +220,7 @@ public class serverManager {
             areFriends = p1.getReceivedFriendRequest().get(i).getUsername().equals(user2);
         }
         if(areFriends){
-            return "ERROR:Ya se ha enviado la solicitud de amistad.";
+            return "ERROR:You have already sent him a friend request.";
         }
 
         p1.getSentFriendRequest().add(p2);
@@ -231,11 +238,11 @@ public class serverManager {
     public String answerFriendsRequest(String user1, String user2, boolean ok){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
-            return "ERROR:El jugador solicitante no existe.";
+            return "ERROR:The player doesn't exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, user2);
         if (p2 == null){
-            return "ERROR:El jugador no existe.";
+            return "ERROR:The player doesn't exist.";
         }
 
         boolean hasSolicitude = false;
@@ -245,7 +252,7 @@ public class serverManager {
             sol = i;
         }
         if(!hasSolicitude){
-            return "ERROR:No se ha podido responder a la solicitud de amistad.";
+            return "ERROR:Problem answering the friend request.";
         }
         p1.getReceivedFriendRequest().remove(sol);
         sol = 0;
@@ -270,7 +277,7 @@ public class serverManager {
             areFriends = p1.getFriendsAsReceiver().get(i).getUsername().equals(user2);
         }
         if(areFriends){
-            return "ERROR:Los dos jugadores ya son amigos.";
+            return "ERROR:Both are already friends.";
         }
 
         if(ok) {
@@ -295,11 +302,11 @@ public class serverManager {
     public String removeFriend(String user1, String user2){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
-            return "ERROR:El jugador solicitante no existe.";
+            return "ERROR:The player doesn't exist.";
         }
         Player p2 = (Player) dbm.findByKey(Player.class, user2);
         if (p2 == null){
-            return "ERROR:El jugador no existe.";
+            return "ERROR:The player doesn't exist.";
         }
         boolean areFriends = false;
         int x = 0;
@@ -329,7 +336,7 @@ public class serverManager {
             x = i;
         }
         if(!areFriends){
-            return "ERROR:Los dos jugadores no son amigos.";
+            return "ERROR:You are't friends.";
         }
         else{
             p1.getFriendsAsReceiver().remove(x);
@@ -410,7 +417,7 @@ public class serverManager {
         }
         try {
             if (ranked) {
-                boolean erased = false;
+                boolean erased = true;
                 for(int i = 0; !erased && i < ongoingRankedGames.size(); ++i){
                     if(ongoingRankedGames.get(i).first.equals(user1) || ongoingRankedGames.get(i).second.equals(user1)){
                         ongoingRankedGames.remove(i);
@@ -635,6 +642,7 @@ public class serverManager {
             return "ERROR:The player does not exist.";
         }
         String pass = String.valueOf((int)(Math.random()*999999999));
+        System.out.println("pass " + pass);
         try {
             p.setPassword(encrypt(pass));
             dbm.save(p);
@@ -651,12 +659,15 @@ public class serverManager {
         if (p == null){
             return "ERROR:The player does not exist.";
         }
-        if (!p.getPassword().equals(oldp)){
-            return "ERROR:Incorrect password.";
-        }
-        String pass = newp;
         try {
-            p.setPassword(pass);
+            if (!p.getPassword().equals(encrypt(oldp))){
+                return "ERROR:Incorrect password.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            p.setPassword(encrypt(newp));
             dbm.save(p);
             dbm.refresh(p);
         } catch (Exception e) {
@@ -672,7 +683,7 @@ public class serverManager {
     }
 
     private void sendVerificationCode(String user, String cor, int cod) throws MessagingException{
-        String msg = "Hi, " + user + ".<br/> Your verification code is: "+ cod+"<br/>Thanks for entering our community.";
+        String msg = "Hi, " + user + ".<br/> Your verification code is: "+ cod+"<br/>Thanks for joining our community.";
         sendmail(cor, msg, "Verification Code");
     }
 
@@ -714,7 +725,6 @@ public class serverManager {
             e.printStackTrace();
             throw new Exception(e);
         }
-        System.out.println(strData);
         strData.replace(":",".");
         return strData;
     }

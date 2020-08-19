@@ -77,6 +77,7 @@ public class guiListener implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        gui.updateTimeReference();
         try{
             if (type == guiItems.CLOSE_GAME) {
                 System.exit(0);
@@ -85,6 +86,11 @@ public class guiListener implements ActionListener {
             int code;
             profile prof;
             GameState onlineState = gui.getOnlineState();
+            if(type == guiItems.AUXILIAR_BACKGROUND && !gui.getItemsOnScreen().contains(guiItems.ACCEPT_FRIEND_CHALLENGE)){
+                gui.closeAllPopUps();
+                gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+            }
             if(type != guiItems.FRIEND_SEL_BUTTON){
                 gui.closeFriendInteractionPopUp();
                 gui.closeSelectIa();
@@ -101,11 +107,7 @@ public class guiListener implements ActionListener {
                     switch (type){
                         case RETRY_CONNECTION:
                             gui.clearGui();
-                            boolean ok = gui.getOnline_controller().retryInitialConnection();
-                            if(ok){
-                                gui.getPinger().setCon(gui.getOnline_controller().getConToServer());
-                                gui.getNotifier().setCon(gui.getOnline_controller().getConToServer());
-                            }
+                            gui.getOnline_controller().reconnectToServer();
                             break;
                         case QUIT_YES:
                             System.exit(0);
@@ -169,7 +171,7 @@ public class guiListener implements ActionListener {
                             }
                             else {
                                 try {
-                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "LOGIN:" + user + ":" + encrypt(pass), 0);
+                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "LOGIN:" + user + ":" + pass, 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -268,7 +270,7 @@ public class guiListener implements ActionListener {
                             }
                             else{
                                 try {
-                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER:"+user+":"+email+":"+encrypt(pass), 0);
+                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"REGISTER:"+user+":"+email+":"+pass, 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -558,19 +560,16 @@ public class guiListener implements ActionListener {
                             gui.getNotifications().getFriendRequest().remove(0);
                             break;
                         case CHANGE_PASS_BUTTON:
-                            System.out.println("Antes del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
                             gui.changePass(false,"","","");
-                            System.out.println("Despues del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
                             break;
                         case CANCEL_CHANGE_PASS:
-                            System.out.println("Antes del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
                             gui.closeChangePass();
-                            System.out.println("Despues del boton controlados " + gui.getItemsOnScreen().size() + " y en pantalla " + gui.getGui().getComponents().length);
                             break;
                         case CONFIRM_CHANGE_PASS:
                             oldpass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.OLD_PASS)).getText().toUpperCase().replace(":",";");
                             pass = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS)).getText().toUpperCase().replace(":",";");
                             pass2 = ((JTextField)gui.getComponentsOnScreen().get(guiItems.NEW_PASS_REPEAT)).getText().toUpperCase().replace(":",";");
+                            gui.closeChangePass();
                             if(pass.length() == 0 || oldpass.length() == 0 || pass2.length() == 0){
                                 gui.popUp("No field can be empty.");
                             }
@@ -579,7 +578,7 @@ public class guiListener implements ActionListener {
                             }
                             else{
                                 try {
-                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"CHANGE PASSWORD:"+encrypt(oldpass)+":"+encrypt(pass2), 0);
+                                    res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"CHANGE PASSWORD:"+oldpass+":"+pass2, 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -636,12 +635,14 @@ public class guiListener implements ActionListener {
                 case CHARACTER_SELECTION:
                     switch (type){
                         case BACK:
+                            gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
                             gui.getChar_sel().close();
                             break;
                         case QUIT_BUTTON:
                             quitGame();
                             break;
                         case QUIT_YES:
+                            gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
                             conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
                             conToServer.close();
                             System.exit(0);
@@ -664,6 +665,9 @@ public class guiListener implements ActionListener {
                                 if(gui.getComponentsOnScreen().containsKey(guiItems.CHAT)) {
                                     gui.closeChat();
                                 }
+                                gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                                gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                                gui.reloadGUI();
                                 gui.friendInteractionPopUp();
                             }
                             break;
@@ -671,28 +675,35 @@ public class guiListener implements ActionListener {
                             if(gui.getComponentsOnScreen().containsKey(guiItems.CHAT)) {
                                 gui.closeChat();
                             }
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.addFriend();
                             break;
                         case CONFIRM_ADD_BUTTON:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             addFriendGestion();
                             break;
                         case CANCEL_ADD_BUTTON:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.closeAddFriend();
                             break;
                         case MESSAGE_FRIEND:
                             if(!gui.getComponentsOnScreen().containsKey(guiItems.POP_UP_TABLE)) {
-                                /*gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
-                                boolean ok = false;
-                                for(int i = 0;  !ok && i < gui.getItemsOnScreen().size(); ++i){
-                                    if(gui.getItemsOnScreen().get(i) == guiItems.FRIEND_LIST || gui.getItemsOnScreen().get(i) == guiItems.ADD_FRIEND){
-                                        ok = true;
-                                        gui.getItemsOnScreen().add(i,guiItems.AUXILIAR_BACKGROUND);
-                                    }
-                                }*/
+                                gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                                gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                                gui.reloadGUI();
                                 gui.chat(gui.getFriends().get(gui.getFriendSelected()));
                             }
                             break;
                         case DELETE_FRIEND:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
                                     +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                             break;
@@ -719,21 +730,39 @@ public class guiListener implements ActionListener {
                             gui.setProfileToShow(prof);
                             break;
                         case ACCEPT_FRIEND:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             answerFriendRequest(true);
                             break;
                         case REJECT_FRIEND:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             answerFriendRequest(false);
                             break;
                         case POP_UP_BUTTON:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.closePopUp();
                             break;
                         case CANCEL_DELETE:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.closePopUpWithConfirmation(guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                             break;
                         case CONFIRM_DELETE:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             deleteFriend();
                             break;
                         case QUIT_BUTTON:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             quitGame();
                             break;
                         case QUIT_YES:
@@ -742,9 +771,15 @@ public class guiListener implements ActionListener {
                             System.exit(0);
                             break;
                         case QUIT_NO:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.closePopUpWithConfirmation(guiItems.QUIT_YES, guiItems.QUIT_NO);
                             break;
                         case FRIEND_REQUEST_NOTIFICATION:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.friendRequest(gui.getNotifications().getFriendRequest().get(0));
                             gui.getNotifications().getFriendRequest().remove(0);
                             break;
@@ -764,6 +799,9 @@ public class guiListener implements ActionListener {
                             }
                             break;
                         case OKEY_INVITATION_CANCELLED:
+                            gui.getItemsOnScreen().remove(guiItems.AUXILIAR_BACKGROUND);
+                            gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
+                            gui.reloadGUI();
                             gui.closePopUp(guiItems.OKEY_INVITATION_CANCELLED);
                             break;
                         default:
@@ -936,28 +974,4 @@ public class guiListener implements ActionListener {
         }
     }
 
-    /**
-     * Encrypt string.
-     *
-     * @param strClearText the str clear text
-     * @return the string
-     * @throws Exception the exception
-     */
-    public static String encrypt(String strClearText) throws Exception{
-        String strData="";
-        String strKey = strClearText;
-        try {
-            SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes(),"Blowfish");
-            Cipher cipher=Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
-            byte[] encrypted=cipher.doFinal(strClearText.getBytes());
-            strData=new String(encrypted);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
-        strData.replace(":",".");
-        return strData;
-    }
 }

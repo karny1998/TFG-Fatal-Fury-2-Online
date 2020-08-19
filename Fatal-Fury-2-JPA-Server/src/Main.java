@@ -25,7 +25,6 @@ public class Main {
     private static commander com;
     private static Map<InetAddress, clientHandler> threads = new HashMap<>();
     private static Map<String, clientHandler> threadsByUser = new HashMap<>();
-    private static Map<String, clientHandler> threadsBySession = new HashMap<>();
     private static boolean  shutdown = false;
 
     public static void main(String[] args) {
@@ -41,13 +40,14 @@ public class Main {
                 InetAddress newUser = newCon.getInetAddress();
                 serverConnection con = new serverConnection(newCon);
                 if(threads.containsKey(newUser)){
-                    threads.get(newUser).setCon(con);
+                    threadsByUser.remove(threads.get(newUser).getRqM().getUserLogged());
+                    manager.desconnectUser(threads.get(newUser).getRqM().getUserLogged());
+                    threads.get(newUser).doStop();
+                    threads.remove(newUser);
                 }
-                else {
-                    clientHandler c = new clientHandler(con, newUser);
-                    threads.put(newUser, c);
-                    c.start();
-                }
+                clientHandler c = new clientHandler(con, newUser);
+                threads.put(newUser, c);
+                c.start();
             }
         }catch (Exception e){
             e.printStackTrace();

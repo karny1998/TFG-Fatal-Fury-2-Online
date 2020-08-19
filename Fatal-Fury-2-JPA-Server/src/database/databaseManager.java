@@ -120,7 +120,7 @@ public class databaseManager {
             ok = save(obj);
         }
         else{
-            ok = "ERROR:El identificador ya está en uso.";
+            ok = "ERROR:Identifier already in use.";
         }
         return ok;
     }
@@ -146,11 +146,11 @@ public class databaseManager {
                 }
             }
             else {
-                ok = "ERROR:El correo electrónico ya está en uso.";
+                ok = "ERROR:Email already in use.";
             }
         }
         else{
-            ok = "ERROR:El nombre de usuario ya está en uso.";
+            ok = "ERROR:Username already in use.";
         }
         return ok;
     }

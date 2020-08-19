@@ -126,6 +126,7 @@ public class online_mode_gui {
      * The Pinger.
      */
     private serverPinger pinger;
+    private refresher screenRefresher;
     /**
      * The Chatgui.
      */
@@ -134,6 +135,7 @@ public class online_mode_gui {
      * The Notifications.
      */
     private notifications_gui notifications;
+    private long timeReference = System.currentTimeMillis();
     /**
      * The F.
      */
@@ -173,6 +175,8 @@ public class online_mode_gui {
         this.pinger.start();
         this.notifier = new notificationsReceiver();
         this.notifier.start();
+        this.screenRefresher = new refresher();
+        this.screenRefresher.start();
     }
 
     /**
@@ -338,8 +342,8 @@ public class online_mode_gui {
      */
     public void clearGui() {
         gui.removeAll();
-        componentsOnScreen.clear();
-        itemsOnScreen.clear();
+         componentsOnScreen.clear();
+         itemsOnScreen.clear();
     }
 
     /**
@@ -657,6 +661,7 @@ public class online_mode_gui {
 
             addComponents(items, components);
 
+            gui.setBack(3);
             reloadGUI();
         }
     }
@@ -761,6 +766,12 @@ public class online_mode_gui {
             JButton recover = generateSimpleButton("Recover account", guiItems.RECOVER_BUTTON, f2, Color.YELLOW, grey2, 780, 620, 225, 40, false);
 
             JTextField username = generateSimpleTextField(user, f, Color.YELLOW, grey2, 365, 520, 250, 60, true, false);
+            username.addActionListener(new AbstractAction(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    new guiListener(online_mode_gui.this, guiItems.LOGIN_BUTTON).actionPerformed(null);
+                }
+            });
 
             JTextField username2 = generateSimpleTextField("Username", f, Color.YELLOW, blue, 365, 460, 250, 60, false, true);
 
@@ -775,6 +786,12 @@ public class online_mode_gui {
             password.setForeground(Color.YELLOW);
             password.setBackground(grey2);
             password.setBounds((int) (665 * m), (int) (520 * m), (int) (250 * m), (int) (60 * m));
+            password.addActionListener(new AbstractAction(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    new guiListener(online_mode_gui.this, guiItems.LOGIN_BUTTON).actionPerformed(null);
+                }
+            });
 
             JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, blue, 665, 460, 250, 60, false, true);
 
@@ -856,6 +873,12 @@ public class online_mode_gui {
             JTextField password2_2 = generateSimpleTextField("Repeat password", f, Color.YELLOW, grey1, 290, 310, 680, 60, false, true);
 
             JTextField email = generateSimpleTextField(eml, f, Color.YELLOW, grey2, 290, 510, 680, 60, true, false);
+            email.addActionListener(new AbstractAction(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    new guiListener(online_mode_gui.this, guiItems.REGISTER_BUTTON).actionPerformed(null);
+                }
+            });
 
             JTextField email2 = generateSimpleTextField("Email", f, Color.YELLOW, grey1, 290, 450, 680, 60, false, true);
 
@@ -882,10 +905,12 @@ public class online_mode_gui {
      */
     public void ranking() {
         if (!componentsOnScreen.containsKey(guiItems.RANKING)) {
-            guiItems items[] = {guiItems.AUXILIAR_BACKGROUND};
-            Component components[] = {auxiliarBackgroud()};
             new rank_gui(this);
             new friend_list_gui(this, friends, pendingMessages);
+            notifications.showNotifications();
+            guiItems items[] = {guiItems.AUXILIAR_BACKGROUND};
+            Component components[] = {auxiliarBackgroud()};
+            addComponents(items,components);
         }
     }
 
@@ -943,6 +968,12 @@ public class online_mode_gui {
         password_2.setForeground(Color.YELLOW);
         password_2.setBackground(grey2);
         password_2.setBounds((int) (290 * m), (int) (445 * m), (int) (680 * m), (int) (60 * m));
+        password_2.addActionListener(new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                new guiListener(online_mode_gui.this, guiItems.CONFIRM_CHANGE_PASS).actionPerformed(null);
+            }
+        });
 
         JTextField password2_2 = generateSimpleTextField("Repeat new password", f, Color.YELLOW, grey1, 290, 375, 680, 60, false, true);
 
@@ -1069,6 +1100,12 @@ public class online_mode_gui {
         JTextField popup = generateSimpleTextField("Introduce the username:", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
 
         JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
+        name.addActionListener(new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                new guiListener(online_mode_gui.this, guiItems.CONFIRM_ADD_BUTTON).actionPerformed(null);
+            }
+        });
 
         JButton popupB1 = generateSimpleButton("Add", guiItems.CONFIRM_ADD_BUTTON, f, Color.YELLOW, grey2, 420, 420, 200, 60, false);
         JButton popupB2 = generateSimpleButton("Cancel", guiItems.CANCEL_ADD_BUTTON, f, Color.YELLOW, grey2, 660, 420, 200, 60, false);
@@ -1141,6 +1178,12 @@ public class online_mode_gui {
         JTextField popup = generateSimpleTextField("   Verification code", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
 
         JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
+        name.addActionListener(new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                new guiListener(online_mode_gui.this, guiItems.VERIFY_BUTTON).actionPerformed(null);
+            }
+        });
 
         JButton popupB1 = generateSimpleButton("Okey", guiItems.VERIFY_BUTTON, f, Color.YELLOW, grey2, 533, 420, 200, 60, false);
 
@@ -1221,8 +1264,8 @@ public class online_mode_gui {
             notifications.showNotifications();
             profile = new profile_gui(this, profileToShow);
             gui.setBack(3);
-            gui.repaint();
-            gui.revalidate();
+            /*gui.repaint();
+            gui.revalidate();*/
         }
     }
 
@@ -1340,6 +1383,11 @@ public class online_mode_gui {
             enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
                     guiItems.PROFILE_BUTTON, guiItems.BACK, guiItems.VS_IA_BUTTON}, true);
             pendingMessages.remove(friends.get(friendSelected));
+
+            if(onlineState == GameState.ONLINE_RANKING){
+                itemsOnScreen.remove(guiItems.AUXILIAR_BACKGROUND);
+                itemsOnScreen.add(guiItems.AUXILIAR_BACKGROUND);
+            }
 
             new friend_list_gui(this,friends,pendingMessages);
             reloadGUI();
@@ -1542,7 +1590,7 @@ public class online_mode_gui {
                         }
                     }
                     else if (res[0].equals("SEARCH GAME") || res[0].equals("SEARCH RANKED GAME")) {
-                        if (onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI) {
+                        if (onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI || onlineState == GameState.ONLINE_SEARCHING_FIGHT) {
                             String ip = res[2], name = res[3];
                             boolean isHost = Boolean.parseBoolean(res[1]);
                             setOnlineState(GameState.CHARACTER_SELECTION);
@@ -1690,6 +1738,11 @@ public class online_mode_gui {
                     }
                 }
             }
+            if(keepRunning() && !con.isConnected()){
+                setOnlineState(GameState.SERVER_PROBLEM);
+                clearGui();
+                setUserLogged("");
+            }
         }
 
         /**
@@ -1754,6 +1807,49 @@ public class online_mode_gui {
         public void setTimeReference(long timeReference) {
             this.timeReference = timeReference;
         }
+    }
+
+    protected class refresher extends Thread {
+        private boolean stop = false;
+        private final Thread thread;
+
+        public refresher() {
+            this.thread = new Thread(this);
+        }
+
+        @Override
+        public void start() {
+            this.thread.start();
+        }
+
+        public synchronized void doStop() {
+            this.stop = true;
+        }
+
+        private synchronized boolean keepRunning() {
+            return this.stop == false;
+        }
+
+        @Override
+        public void run() {
+            while (keepRunning()) {
+                try {
+                    Thread.sleep(5000);
+                    if(System.currentTimeMillis() - online_mode_gui.this.getTimeReference() > 600000) {
+                        online_mode_gui.this.updateTimeReference();
+                        online_mode_gui.this.reloadGUI();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void stop(){
+        this.notifier.doStop();
+        this.screenRefresher.doStop();
+        this.pinger.doStop();
     }
 
     /**
@@ -2296,5 +2392,17 @@ public class online_mode_gui {
      */
     public void setPinger(serverPinger pinger) {
         this.pinger = pinger;
+    }
+
+    public void updateTimeReference() {
+        timeReference = System.currentTimeMillis();
+    }
+
+    public long getTimeReference() {
+        return timeReference;
+    }
+
+    public void setTimeReference(long timeReference) {
+        this.timeReference = timeReference;
     }
 }

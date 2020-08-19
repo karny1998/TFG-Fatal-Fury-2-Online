@@ -268,7 +268,7 @@ public class rank_gui {
                     c = grey4;
                 }
 
-                rank = gui.generateSimpleTextField(Integer.toString(i)+".",f,Color.RED,c,0,0,140,40,false,true);
+                rank = gui.generateSimpleTextField(Integer.toString(i+1)+".",f,Color.RED,c,0,0,140,40,false,true);
                 rank.setHorizontalAlignment(JTextField.CENTER);
                 user = gui.generateSimpleTextField(pAux.getUser(),f,Color.YELLOW,c,0,0,250,40,false,true);
                 user.setHorizontalAlignment(JTextField.CENTER);

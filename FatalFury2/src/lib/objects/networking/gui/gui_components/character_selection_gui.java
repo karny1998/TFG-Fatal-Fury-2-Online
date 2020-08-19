@@ -313,7 +313,7 @@ public class character_selection_gui {
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
             }
-            ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":", 200);
+            ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":empty", 200);
             if(!ok){
                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
                 gui.clearGui();
@@ -641,5 +641,13 @@ public class character_selection_gui {
      */
     public void setAllOk(boolean allOk) {
         this.allOk = allOk;
+    }
+
+    public connection getConToClient() {
+        return conToClient;
+    }
+
+    public void setConToClient(connection conToClient) {
+        this.conToClient = conToClient;
     }
 }
