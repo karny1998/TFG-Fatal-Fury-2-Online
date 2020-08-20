@@ -648,9 +648,9 @@ public class connection {
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
-                //if(received.getId() != msgID.toServer.ping) {
+                if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.toString());
-                //}
+                }
                 try {
                     sm.acquire();
                     if(received.isObject()){

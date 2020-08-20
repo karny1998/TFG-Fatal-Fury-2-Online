@@ -3,12 +3,14 @@ package lib.objects.networking;
 import lib.Enums.*;
 import lib.input.controlListener;
 import lib.maps.scenary;
+import lib.menus.menu;
 import lib.objects.*;
 import lib.objects.networking.gui.online_mode_gui;
 import lib.sound.audio_manager;
 import lib.sound.fight_audio;
 import lib.sound.menu_audio;
 import lib.training.stateCalculator;
+import lib.utils.Pair;
 import lib.utils.sendableObjects.simpleObjects.qtable;
 
 import javax.security.sasl.SaslServer;
@@ -125,13 +127,18 @@ public class online_mode {
 
     private Screen screen;
 
+    private long timeReference = System.currentTimeMillis();
+
+    private menu escapeMenu;
+
     /**
      * Instantiates a new Online mode.
      *
      * @param screen the screen
      * @param debug  the debug
      */
-    public online_mode(Screen screen, boolean debug) {
+    public online_mode(Screen screen, menu escapeMenu, boolean debug) {
+        this.escapeMenu = escapeMenu;
         this.screen = screen;
         if(!debug) {
             conToServer = new connection(serverIp, serverPort, 0, false);
@@ -430,86 +437,127 @@ public class online_mode {
      * @param screenObjects the screen objects
      */
     public void online_game(Map<Item_Type, screenObject> screenObjects){
-        if(onlineState != GameState.ONLINE_FIGHT) {
+        if(onlineState != GameState.ONLINE_FIGHT && onlineState != GameState.ONLINE_ESCAPE) {
             gui.drawGUI();
         }
-        else{
-            screenObjects.remove(Item_Type.MENU);
-            fight.getAnimation(screenObjects);
-            if (fight.getEnd()) {
-
-                if(isVsIA == 0) {
-                    if (((online_fight_controller) fight).connectionLost()) {
-                        gui.setOnlineState(GameState.PRINCIPAL_GUI);
-                        gui.clearGui();
-                        gui.principalGUI();
-                        gui.popUp("Connection with rival lost. The game will count as tie.");
-                        conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
-                                gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":0:" + isRanked);
+        else {
+            if (controlListener.menuInput(1, controlListener.ESC_INDEX) && System.currentTimeMillis() - timeReference > 300.0) {
+                timeReference = System.currentTimeMillis();
+                onlineState = GameState.ONLINE_ESCAPE;
+            } else if (onlineState == GameState.ONLINE_ESCAPE) {
+                screenObject s = escapeMenu.getFrame();
+                screenObjects.put(Item_Type.MENU, s);
+                Pair<menu, Selectionable> p = escapeMenu.select();
+                // Si se ha presionado enter para seleccionar alguna opción
+                if (controlListener.menuInput(1, controlListener.ENT_INDEX)) {
+                    audio_manager.menu.play(menu_audio.indexes.option_selected);
+                    switch (p.getValue()) {
+                        // Retomar la partida
+                        case ESCAPE_RESUME:
+                            screenObjects.remove(Item_Type.MENU);
+                            escapeMenu.updateTime();
+                            onlineState = GameState.ONLINE_FIGHT;
+                            break;
+                        // Volver al menú de juego
+                        case ESCAPE_BACK:
+                            fight.setHasEnded(true);
+                            screen.getGame().clearInterface(screenObjects);
+                            if(isHost) {
+                                fight.setFight_result(Fight_Results.PLAYER2_WIN);
+                            }
+                            else{
+                                if(isVsIA == 0) {
+                                    conToClient.reliableSendString(msgID.toClient.tramits, "SURRENDER",200);
+                                }
+                                fight.setFight_result(Fight_Results.PLAYER1_WIN);
+                            }
+                            audio_manager.endFight();
+                            audio_manager.menu.loop(menu_audio.indexes.menu_theme);
+                            break;
+                        // Salir del juego
+                        case ESCAPE_EXIT:
+                            System.exit(0);
+                            break;
                     }
                 }
-                else if(isVsIA == 1){
-                    conToServer.sendString(msgID.toServer.request, "TRAIN OWN IA");
-                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable(), ((enemy_controller)enemy).getAgente().trainingToString()));
-                }
-                else{
-                    conToServer.sendString(msgID.toServer.request, "TRAIN GLOBAL IA");
-                    conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller)enemy).getAgente().getqTable(), ((enemy_controller)enemy).getAgente().trainingToString()));
-                }
-
-                Fight_Results results = fight.getFight_result();
-                this.result =results;
-                if(isVsIA == 0 && isHost) {
-                    conToClient.reliableSendString(msgID.toClient.tramits, "GAME ENDED:" + results.toString(), 200);
-                }
-                int r = 0;
-                switch (results){
-                    case PLAYER1_WIN:
-                        r = 1;
-                        break;
-                    case PLAYER2_WIN:
-                        r = 2;
-                        break;
-                    default:
-                        r = 0;
-                        break;
-                }
-
-                if(isVsIA == 0) {
-                    if (isRanked) {
-                        String res = "";
-                        if (isHost) {
-                            res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "REGISTER GAME:" +
-                                    gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
-                                    + r + ":" + isRanked, 0);
-                        } else {
-                            do {
-                                res = conToServer.receiveString(msgID.toServer.request);
-                            } while (!res.contains("GAME REGISTERED"));
-                        }
-                        rankPoints = Integer.parseInt(res.split(":")[1]);
-                    } else {
-                        if (isHost) {
+            }
+            if (onlineState != GameState.ONLINE_ESCAPE) {
+                screenObjects.remove(Item_Type.MENU);
+            }
+            if (fight != null) {
+                fight.getAnimation(screenObjects);
+                if (fight.getEnd()) {
+                    if (isVsIA == 0) {
+                        if (((online_fight_controller) fight).connectionLost()) {
+                            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+                            gui.clearGui();
+                            gui.principalGUI();
+                            gui.popUp("Connection with rival lost. The game will count as tie.");
                             conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
-                                    gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
-                                    + r + ":" + isRanked);
+                                    gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":0:" + isRanked);
+                        }
+                    } else if (isVsIA == 1) {
+                        conToServer.sendString(msgID.toServer.request, "TRAIN OWN IA");
+                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().trainingToString()));
+                    } else {
+                        conToServer.sendString(msgID.toServer.request, "TRAIN GLOBAL IA");
+                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().trainingToString()));
+                    }
+
+                    Fight_Results results = fight.getFight_result();
+                    this.result = results;
+                    if (isVsIA == 0 && isHost) {
+                        conToClient.reliableSendString(msgID.toClient.tramits, "GAME ENDED:" + results.toString(), 200);
+                    }
+                    int r = 0;
+                    switch (results) {
+                        case PLAYER1_WIN:
+                            r = 1;
+                            break;
+                        case PLAYER2_WIN:
+                            r = 2;
+                            break;
+                        default:
+                            r = 0;
+                            break;
+                    }
+
+                    if (isVsIA == 0) {
+                        if (isRanked) {
+                            String res = "";
+                            if (isHost) {
+                                res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "REGISTER GAME:" +
+                                        gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                        + r + ":" + isRanked, 0);
+                            } else {
+                                do {
+                                    res = conToServer.receiveString(msgID.toServer.request);
+                                } while (!res.contains("GAME REGISTERED"));
+                            }
+                            rankPoints = Integer.parseInt(res.split(":")[1]);
+                        } else {
+                            if (isHost) {
+                                conToServer.sendString(msgID.toServer.request, "REGISTER GAME:" +
+                                        gui.getUserLogged() + ":" + rival + ":" + char1.toString() + ":" + char2.toString() + ":"
+                                        + r + ":" + isRanked);
+                            }
                         }
                     }
-                }
 
-                audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
-                fight.getPlayer().stop();
-                fight.getEnemy().stop();
-                if(isVsIA == 0 && conToClient.isConnected()) {
-                    conToClient.close();
+                    audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
+                    fight.getPlayer().stop();
+                    fight.getEnemy().stop();
+                    if (isVsIA == 0 && conToClient.isConnected()) {
+                        conToClient.close();
+                    }
+                    fight = null;
+                    conToClient = null;
+                    gui.setOnlineState(GameState.GAME_END);
+                    gui.clearGui();
+                    gui.getPrincipal().guiOn();
+                    audio_manager.endFight();
+                    audio_manager.menu.play(menu_audio.indexes.menu_theme);
                 }
-                fight = null;
-                conToClient = null;
-                gui.setOnlineState(GameState.GAME_END);
-                gui.clearGui();
-                gui.getPrincipal().guiOn();
-                audio_manager.endFight();
-                audio_manager.menu.play(menu_audio.indexes.menu_theme);
             }
         }
     }

@@ -41,6 +41,8 @@ public class audio_manager {
      */
     private static double volumen_sfx;
 
+    private static double guiAbsoluteVolume;
+    private static boolean onOnline = false;
 
     /**
      * The constant optionsFilePath.
@@ -75,8 +77,14 @@ public class audio_manager {
      */
     public audio_manager(){
         update();
+        guiAbsoluteVolume = volumen_musica;
         menu = new menu_audio();
-        menu.update(volumen_musica, volumen_sfx, volumen_voces);
+        if(onOnline){
+            menu.update(guiAbsoluteVolume, guiAbsoluteVolume, guiAbsoluteVolume);
+        }
+        else{
+            menu.update(volumen_musica, volumen_sfx, volumen_voces);
+        }
         actual = estado.MENUS;
     }
 
@@ -91,7 +99,12 @@ public class audio_manager {
         if (actual == estado.MENUS){
             menu.close();
             fight = new fight_audio(p1, p2, map);
-            fight.update(volumen_musica, volumen_sfx, volumen_voces);
+            if(onOnline){
+                fight.update(guiAbsoluteVolume, guiAbsoluteVolume, guiAbsoluteVolume);
+            }
+            else {
+                fight.update(volumen_musica, volumen_sfx, volumen_voces);
+            }
             actual = estado.PELEA;
         }
     }
@@ -103,7 +116,12 @@ public class audio_manager {
         if (actual == estado.PELEA){
             fight.close();
             menu = new menu_audio();
-            menu.update_init(volumen_musica, volumen_sfx, volumen_voces);
+            if(onOnline){
+                menu.update_init(guiAbsoluteVolume, guiAbsoluteVolume, guiAbsoluteVolume);
+            }
+            else {
+                menu.update_init(volumen_musica, volumen_sfx, volumen_voces);
+            }
             actual = estado.MENUS;
         }
     }
@@ -113,11 +131,27 @@ public class audio_manager {
      */
     public static void update(){
         readOptions();
-        if (actual == estado.PELEA){
-            fight.update(volumen_musica, volumen_sfx, volumen_voces);
-        } else if (actual == estado.MENUS){
-            menu.update(volumen_musica, volumen_sfx, volumen_voces);
+
+        if(onOnline){
+            if (actual == estado.PELEA){
+                fight.update(guiAbsoluteVolume, guiAbsoluteVolume, guiAbsoluteVolume);
+            } else if (actual == estado.MENUS){
+                menu.update(guiAbsoluteVolume, guiAbsoluteVolume, guiAbsoluteVolume);
+            }
         }
+        else {
+            if (actual == estado.PELEA){
+                fight.update(volumen_musica, volumen_sfx, volumen_voces);
+            } else if (actual == estado.MENUS){
+                menu.update(volumen_musica, volumen_sfx, volumen_voces);
+            }
+        }
+    }
+
+    public static void update(double lvl){
+        guiAbsoluteVolume = lvl;
+        if(fight != null){fight.update(lvl, lvl, lvl);}
+        if(menu != null){menu.update(lvl, lvl, lvl);}
     }
 
     /**
@@ -160,5 +194,19 @@ public class audio_manager {
         }
     }
 
+    public static double getGuiAbsoluteVolume() {
+        return guiAbsoluteVolume;
+    }
 
+    public static void setGuiAbsoluteVolume(double guiAbsoluteVolume) {
+        audio_manager.guiAbsoluteVolume = guiAbsoluteVolume;
+    }
+
+    public static boolean isOnOnline() {
+        return onOnline;
+    }
+
+    public static void setOnOnline(boolean onOnline) {
+        audio_manager.onOnline = onOnline;
+    }
 }

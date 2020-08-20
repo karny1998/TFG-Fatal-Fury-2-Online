@@ -14,6 +14,8 @@ import lib.objects.networking.connection;
 import lib.objects.networking.gui.gui_components.friend_list_gui;
 import lib.objects.networking.msgID;
 import lib.objects.networking.online_mode;
+import lib.sound.audio_manager;
+import lib.sound.menu_audio;
 import lib.utils.sendableObjects.simpleObjects.message;
 import lib.utils.sendableObjects.simpleObjects.profile;
 
@@ -77,6 +79,17 @@ public class guiListener implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        if(type == guiItems.NORMAL_BUTTON || type == guiItems.RANKED_BUTTON
+                || type == guiItems.GLOBAL_IA_BUTTON || type == guiItems.PERSONAL_IA_BUTTON
+                || type == guiItems.LOGIN_BUTTON || type == guiItems.REGISTER_BUTTON){
+            audio_manager.menu.play(menu_audio.indexes.option_selected);
+        }
+        else if(type == guiItems.BACK || type == guiItems.QUIT_BUTTON){
+            audio_manager.menu.play(menu_audio.indexes.back);
+        }
+        else {
+            audio_manager.menu.play(menu_audio.indexes.move_cursor);
+        }
         gui.updateTimeReference();
         try{
             if (type == guiItems.CLOSE_GAME) {
@@ -128,6 +141,9 @@ public class guiListener implements ActionListener {
                             break;
                         case BACK:
                             gui.clearGui();
+                            gui.getOnline_controller().getConToServer().close();
+                            gui.stop();
+                            gui.getOnline_controller().setConToServer(null);
                             ((Screen)gui.getPrincipal().getGame()).getGame().setState(GameState.NAVIGATION);
                             gui.getPrincipal().gameOn();
                         case QUIT_BUTTON:
@@ -176,6 +192,7 @@ public class guiListener implements ActionListener {
                                     e.printStackTrace();
                                 }
                                 if (res.equals("LOGGED")) {
+                                    audio_manager.setOnOnline(true);
                                     gui.clearGui();
                                     gui.setUserLogged(user);
                                     gui.setOnlineState(GameState.PRINCIPAL_GUI);
@@ -383,12 +400,13 @@ public class guiListener implements ActionListener {
                             gui.closePopUpWithConfirmation(guiItems.QUIT_YES, guiItems.QUIT_NO);
                             break;
                         case LOG_OUT_YES:
+                            audio_manager.setOnOnline(false);
                             conToServer.sendStringWaitingAnswerString(msgID.toServer.request,"LOG OFF",0);
                             gui.setOnlineState(GameState.LOGIN);
                             gui.clearGui();
                             break;
                         case LOG_OUT_NO:
-                            gui.clearGui();
+                            gui.closeAllPopUps();
                             break;
                         case CLOSE_CHAT:
                             gui.closeChat();
@@ -479,6 +497,9 @@ public class guiListener implements ActionListener {
                                     gui.closeChat();
                                     gui.getProfile().swapHistorial(false);
                                 }
+                                if(gui.getComponentsOnScreen().containsKey(guiItems.CONFIRM_CHANGE_PASS)) {
+                                    gui.closeChangePass();
+                                }
                                 gui.friendInteractionPopUp();
                             }
                             break;
@@ -503,7 +524,7 @@ public class guiListener implements ActionListener {
                             break;
                         case DELETE_FRIEND:
                             gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
-                                    +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                                    +" will be removed from friends. Are you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                             break;
                         case INVITE_FRIEND:
                             res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CHALLENGE FRIEND:"+gui.getFriends().get(gui.getFriendSelected()),0);
@@ -635,8 +656,11 @@ public class guiListener implements ActionListener {
                 case CHARACTER_SELECTION:
                     switch (type){
                         case BACK:
-                            gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
+                            if(gui.getChar_sel().getConToClient() != null && gui.getChar_sel().getConToClient().isConnected()) {
+                                gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
+                            }
                             gui.getChar_sel().close();
+                            gui.setOnlineState(GameState.PRINCIPAL_GUI);
                             break;
                         case QUIT_BUTTON:
                             quitGame();
@@ -705,7 +729,7 @@ public class guiListener implements ActionListener {
                             gui.getItemsOnScreen().add(0,guiItems.AUXILIAR_BACKGROUND);
                             gui.reloadGUI();
                             gui.popUpWithConfirmation(gui.getFriends().get(gui.getFriendSelected())
-                                    +" will be removed\nfrom friends.\nAre you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
+                                    +" will be removed from friends. Are you sure?", guiItems.CONFIRM_DELETE, guiItems.CANCEL_DELETE);
                             break;
                         case INVITE_FRIEND:
                             res = conToServer.sendStringWaitingAnswerString(msgID.toServer.request, "CHALLENGE FRIEND:"+gui.getFriends().get(gui.getFriendSelected()),0);
@@ -895,9 +919,9 @@ public class guiListener implements ActionListener {
             if (res.equals("FRIEND REQUEST SENT")) {
                 guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_CODE, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
                 gui.deleteComponents(items);
-                items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
-                        guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND,guiItems.FRIEND_LIST, guiItems.BACK};
-                gui.enableComponents(items, true);
+
+                gui.enableAll(true);
+
                 gui.popUp("Friend request to " + friend + " sent.");
                 System.out.println("Has enviado una solicitud de amistad");
             } else {

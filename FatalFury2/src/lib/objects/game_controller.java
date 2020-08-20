@@ -501,7 +501,7 @@ public class game_controller {
                             break;
                         case ONLINE:
                             state = GameState.ONLINE_MODE;
-                            online = new online_mode(screen,false);
+                            online = new online_mode(screen, escapeMenu,false);
                             break;
                     }
                 }
@@ -886,7 +886,7 @@ public class game_controller {
      * @param screenObjects the screen objects
      */
 // Borrar todos los elementos de la pantalla que pertenecen a la interfaz de pelea
-    private void clearInterface(Map<Item_Type, screenObject> screenObjects) {
+    public void clearInterface(Map<Item_Type, screenObject> screenObjects) {
         screenObjects.remove(Item_Type.SHADOW_1);
         screenObjects.remove(Item_Type.SHADOW_2);
         screenObjects.remove(Item_Type.TIMER1);

@@ -18,9 +18,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,6 +153,12 @@ public class rank_gui {
             @Override
             protected void configureScrollBarColors() {
                 this.thumbColor = Color.YELLOW;
+            }
+        });
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
+                gui.closeAllPopUps();
             }
         });
         //scrollPane.setBorder(new LineBorder(Color.black, 0));

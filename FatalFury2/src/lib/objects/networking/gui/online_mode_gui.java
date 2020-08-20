@@ -9,6 +9,7 @@ import lib.objects.networking.connection;
 import lib.objects.networking.gui.gui_components.*;
 import lib.objects.networking.msgID;
 import lib.objects.networking.online_mode;
+import lib.sound.audio_manager;
 import lib.utils.sendableObjects.sendableObject;
 import lib.utils.sendableObjects.sendableObjectsList;
 import lib.utils.sendableObjects.simpleObjects.message;
@@ -18,12 +19,17 @@ import videojuegos.Principal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.SliderUI;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Year;
 import java.util.*;
 import java.util.List;
 
@@ -246,6 +252,7 @@ public class online_mode_gui {
                     break;
             }
         }catch (Exception e){
+            e.printStackTrace();
             setOnlineState(GameState.SERVER_PROBLEM);
             clearGui();
             if(notifier != null && notifier.isAlive()){
@@ -315,6 +322,19 @@ public class online_mode_gui {
                 componentsOnScreen.get(items[i]).setEnabled(enable);
                 if (items[i] == guiItems.FRIEND_LIST || items[i] == guiItems.HISTORIAL) {
                     JScrollPane scroll = (JScrollPane) componentsOnScreen.get(items[i]);
+                    scroll.getVerticalScrollBar().setEnabled(enable);
+                    scroll.getViewport().getView().setEnabled(enable);
+                }
+            }
+        }
+    }
+
+    public void enableAll(boolean enable) {
+        for (int i = 0; i < itemsOnScreen.size(); ++i) {
+            if(!(itemsOnScreen.get(i) == guiItems.REGISTER_TABLE && onlineState == GameState.REGISTER)){
+                componentsOnScreen.get(itemsOnScreen.get(i)).setEnabled(enable);
+                if (itemsOnScreen.get(i) == guiItems.FRIEND_LIST || itemsOnScreen.get(i) == guiItems.HISTORIAL) {
+                    JScrollPane scroll = (JScrollPane) componentsOnScreen.get(itemsOnScreen.get(i));
                     scroll.getVerticalScrollBar().setEnabled(enable);
                     scroll.getViewport().getView().setEnabled(enable);
                 }
@@ -601,13 +621,7 @@ public class online_mode_gui {
         guiItems items[] = {guiItems.POP_UP, okey, guiItems.POP_UP_TABLE};
         Component components[] = {popup, popupB, table};
 
-        guiItems items2[] = new guiItems[itemsOnScreen.size()];
-
-        for (int i = 0; i < itemsOnScreen.size(); ++i) {
-            items2[i] = itemsOnScreen.get(i);
-        }
-
-        enableComponents(items2, false);
+        enableAll(false);
 
         addComponents(items, components);
 
@@ -639,7 +653,7 @@ public class online_mode_gui {
             } else if (friendChallenge) {
                 msg = "Waiting friend answer.";
             }
-            msg = fillText(msg, 16, 2);
+            msg = fillText(msg, 17, 4);
 
             guiItems type = guiItems.CANCEL_SEARCH_GAME;
             if (rank) {
@@ -693,13 +707,7 @@ public class online_mode_gui {
         guiItems items[] = {guiItems.POP_UP, yes, no, guiItems.POP_UP_TABLE};
         Component components[] = {popup, popupB1, popupB2, table};
 
-        guiItems items2[] = new guiItems[itemsOnScreen.size()];
-
-        for (int i = 0; i < itemsOnScreen.size(); ++i) {
-            items2[i] = itemsOnScreen.get(i);
-        }
-
-        enableComponents(items2, false);
+        enableAll(false);
 
         addComponents(items, components);
 
@@ -811,8 +819,7 @@ public class online_mode_gui {
             }
 
             gui.setBack(1);
-            gui.repaint();
-            gui.revalidate();
+            reloadGUI();
         }
     }
 
@@ -828,15 +835,6 @@ public class online_mode_gui {
     public void register(Boolean show, String user, String pass1, String pass2, String eml) {
         if (!componentsOnScreen.containsKey(guiItems.REGISTER_BUTTON)) {
             clearGui();
-            if (show) {
-                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
-                showPass.setMargin(new Insets((int) (5 * m), (int) (5 * m), (int) (5 * m), (int) (5 * m)));
-                addComponents(new guiItems[]{guiItems.HIDE}, new Component[]{showPass});
-            } else {
-                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
-                showPass.setMargin(new Insets((int) (5 * m), (int) (5 * m), (int) (5 * m), (int) (5 * m)));
-                addComponents(new guiItems[]{guiItems.SHOW}, new Component[]{showPass});
-            }
 
             JButton login = generateSimpleButton("Register", guiItems.REGISTER_BUTTON, f, Color.YELLOW, grey1, 515, 600, 250, 60, false);
 
@@ -856,7 +854,7 @@ public class online_mode_gui {
             password.setBackground(grey2);
             password.setBounds((int) (290 * m), (int) (240 * m), (int) (680 * m), (int) (60 * m));
 
-            JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, grey1, 290, 170, 680, 60, false, true);
+            JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, grey1, 290, 170, 200, 60, false, true);
 
             JPasswordField password_2 = new JPasswordField(pass2);
             if (!show) {
@@ -894,9 +892,21 @@ public class online_mode_gui {
 
             addComponents(items, components);
 
+            if (show) {
+                JButton showPass = generateSimpleButton("Hide", guiItems.HIDE, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
+                showPass.setMargin(new Insets((int) (5 * m), (int) (5 * m), (int) (5 * m), (int) (5 * m)));
+                itemsOnScreen.add(0, guiItems.HIDE);
+                componentsOnScreen.put(guiItems.HIDE, showPass);
+            }
+            else {
+                JButton showPass = generateSimpleButton("Show", guiItems.SHOW, f2, Color.YELLOW, grey2, 493, 181, 80, 40, false);
+                showPass.setMargin(new Insets((int) (5 * m), (int) (5 * m), (int) (5 * m), (int) (5 * m)));
+                itemsOnScreen.add(0, guiItems.SHOW);
+                componentsOnScreen.put(guiItems.SHOW, showPass);
+            }
+
             gui.setBack(2);
-            gui.repaint();
-            gui.revalidate();
+            reloadGUI();
         }
     }
 
@@ -924,6 +934,7 @@ public class online_mode_gui {
      */
     public void changePass(Boolean show, String oldpas, String pass1, String pass2) {
         closeAllPopUps();
+        enableAll(false);
 
         JButton confirm = generateSimpleButton("Confirm", guiItems.CONFIRM_CHANGE_PASS, f, Color.YELLOW, grey1, 415, 528, 200, 60, false);
 
@@ -1030,10 +1041,13 @@ public class online_mode_gui {
             JButton profile = generateSimpleButton("Profile", guiItems.PROFILE_BUTTON, f, Color.YELLOW, grey1, 308, 595, 200, 65, false);
             JButton exit = generateSimpleButton("Quit", guiItems.QUIT_BUTTON, f, Color.YELLOW, grey1, 508, 595, 200, 65, false);
             JButton back = backButton();
+            JTextField textVolume = generateSimpleTextField("VOLUME",f,Color.YELLOW,grey3,50,592,230,40,false,true);
+            textVolume.setHorizontalAlignment(JTextField.CENTER);
+            JSlider slider = volumeSlider();
 
-            guiItems items[] = {guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.VS_IA_BUTTON, guiItems.PROFILE_BUTTON,
+            guiItems items[] = {guiItems.VOLUME_SLIDER,guiItems.VOLUME_TEXT, guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.VS_IA_BUTTON, guiItems.PROFILE_BUTTON,
                     guiItems.QUIT_BUTTON, guiItems.BACK, guiItems.AUXILIAR_BACKGROUND};
-            Component components[] = {normal, ranked, ranking, vsia, profile, exit, back, auxiliarBackgroud()};
+            Component components[] = {slider,textVolume, normal, ranked, ranking, vsia, profile, exit, back, auxiliarBackgroud()};
 
             addComponents(items, components);
 
@@ -1041,6 +1055,35 @@ public class online_mode_gui {
             gui.repaint();
             gui.revalidate();
         }
+    }
+
+    public JSlider volumeSlider(){
+        JSlider slider = new JSlider(JSlider.HORIZONTAL,0,100, (int) (audio_manager.getGuiAbsoluteVolume()*100.0));
+        slider.setBackground(grey3);
+        slider.setBounds(res(50),res(630),res(230),res(40));
+        slider.setPaintLabels(true);
+        Hashtable position = new Hashtable();
+        JLabel aux = new JLabel("0");
+        aux.setForeground(Color.YELLOW);
+        aux.setFont(f2);
+        position.put(0, aux);
+        aux = new JLabel("50");
+        aux.setForeground(Color.YELLOW);
+        aux.setFont(f2);
+        position.put(50, aux);
+        aux = new JLabel("100");
+        aux.setForeground(Color.YELLOW);
+        aux.setFont(f2);
+        position.put(100, aux);
+        slider.setLabelTable(position);
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                double val = ((JSlider)e.getSource()).getValue();
+                audio_manager.update(val/100.0);
+            }
+        });
+
+        return slider;
     }
 
     /**
@@ -1097,6 +1140,8 @@ public class online_mode_gui {
     public void addFriend() {
         closeAllPopUps();
 
+        enableAll(false);
+
         JTextField popup = generateSimpleTextField("Introduce the username:", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
 
         JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
@@ -1129,15 +1174,13 @@ public class online_mode_gui {
         itemsOnScreen.add(0, guiItems.CONFIRM_ADD_BUTTON);
         itemsOnScreen.add(0, guiItems.CANCEL_ADD_BUTTON);
 
-        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
-                guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND, guiItems.FRIEND_LIST, guiItems.BACK, guiItems.VS_IA_BUTTON};
-        enableComponents(items, false);
-
         reloadGUI();
     }
 
     public void selectIa() {
         closeAllPopUps();
+
+        enableAll(false);
 
         JButton global = generateSimpleButton("Global IA", guiItems.GLOBAL_IA_BUTTON, f, Color.YELLOW, grey2, 405, 250, 462, 60, false);
         JButton personal = generateSimpleButton("Personal IA", guiItems.PERSONAL_IA_BUTTON, f, Color.YELLOW, grey2, 405, 330, 462, 60, false);
@@ -1161,10 +1204,6 @@ public class online_mode_gui {
         itemsOnScreen.add(0, guiItems.CANCEL_SELECT_IA);
         itemsOnScreen.add(0, guiItems.PERSONAL_IA_BUTTON);
         itemsOnScreen.add(0, guiItems.GLOBAL_IA_BUTTON);
-
-        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
-                guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND, guiItems.FRIEND_LIST, guiItems.BACK, guiItems.VS_IA_BUTTON};
-        enableComponents(items, false);
 
         reloadGUI();
     }
@@ -1194,13 +1233,7 @@ public class online_mode_gui {
         guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_CODE, guiItems.VERIFY_BUTTON, guiItems.POP_UP_TABLE};
         Component components[] = {popup, name, popupB1, table};
 
-        guiItems items2[] = new guiItems[itemsOnScreen.size()];
-
-        for (int i = 0; i < itemsOnScreen.size(); ++i) {
-            items2[i] = itemsOnScreen.get(i);
-        }
-
-        enableComponents(items2, false);
+        enableAll(false);
 
         addComponents(items, components);
 
@@ -1224,11 +1257,7 @@ public class online_mode_gui {
         deleteComponents(items);
         guiItems items2[] = new guiItems[itemsOnScreen.size()];
 
-        for (int i = 0; i < itemsOnScreen.size(); ++i) {
-            items2[i] = itemsOnScreen.get(i);
-        }
-
-        enableComponents(items2, true);
+        enableAll(true);
 
         reloadGUI();
     }
@@ -1321,6 +1350,12 @@ public class online_mode_gui {
     }
 
     public void closeAllPopUps() {
+        if(itemsOnScreen.contains(guiItems.CANCEL_CHANGE_PASS)){
+            deleteComponents(new guiItems[]{guiItems.REGISTER_TABLE,guiItems.HIDE,guiItems.SHOW});
+        }
+        if(itemsOnScreen.contains(guiItems.REJECT_FRIEND_CHALLENGE)){
+            ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND_CHALLENGE)).getActionListeners()[0].actionPerformed(null);
+        }
         guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME,
                 guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON,
                 guiItems.POP_UP_TABLE, guiItems.YES_BUTTON, guiItems.NOT_BUTTON,
@@ -1333,10 +1368,11 @@ public class online_mode_gui {
                 guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS_TEXT, guiItems.NEW_PASS_REPEAT,
                 guiItems.NEW_PASS_REPEAT_TEXT, guiItems.CANCEL_FRIEND_CHALLENGE,
                 guiItems.ACCEPT_FRIEND_CHALLENGE, guiItems.REJECT_FRIEND_CHALLENGE,
-                guiItems.REGISTER_TABLE, guiItems.OKEY_INVITATION_CANCELLED,
-                guiItems.RETRY_CONNECTION, guiItems.GLOBAL_IA_BUTTON,
-                guiItems.PERSONAL_IA_BUTTON, guiItems.CANCEL_SELECT_IA};
+                guiItems.OKEY_INVITATION_CANCELLED,  guiItems.RETRY_CONNECTION,
+                guiItems.GLOBAL_IA_BUTTON,  guiItems.PERSONAL_IA_BUTTON,
+                guiItems.CANCEL_SELECT_IA, guiItems.CANCEL_CHANGE_PASS};
         deleteComponents(items);
+        enableAll(true);
     }
 
     /**
@@ -1347,9 +1383,8 @@ public class online_mode_gui {
             guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
             deleteComponents(items);
 
-            items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
-                    guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND, guiItems.FRIEND_LIST, guiItems.BACK, guiItems.VS_IA_BUTTON};
-            enableComponents(items, true);
+            enableAll(true);
+
             reloadGUI();
         }
     }
@@ -1357,9 +1392,7 @@ public class online_mode_gui {
     public void closeSelectIa() {
         guiItems items[] = {guiItems.GLOBAL_IA_BUTTON, guiItems.PERSONAL_IA_BUTTON, guiItems.CANCEL_SELECT_IA, guiItems.POP_UP_TABLE};
         deleteComponents(items);
-        items = new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON,
-                guiItems.PROFILE_BUTTON, guiItems.ADD_FRIEND, guiItems.FRIEND_LIST, guiItems.BACK, guiItems.VS_IA_BUTTON};
-        enableComponents(items, true);
+        enableAll(true);
         reloadGUI();
     }
 
@@ -1405,11 +1438,8 @@ public class online_mode_gui {
         deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, yes, no});
         guiItems items[] = new guiItems[itemsOnScreen.size()];
 
-        for(int i = 0; i < itemsOnScreen.size();++i){
-            items[i] = itemsOnScreen.get(i);
-        }
+        enableAll(true);
 
-        enableComponents(items, true);
         reloadGUI();
     }
 
@@ -1437,11 +1467,8 @@ public class online_mode_gui {
         deleteComponents(new guiItems[]{guiItems.POP_UP_TABLE, guiItems.POP_UP, okey});
         guiItems items[] = new guiItems[itemsOnScreen.size()];
 
-        for(int i = 0; i < itemsOnScreen.size();++i){
-            items[i] = itemsOnScreen.get(i);
-        }
+        enableAll(true);
 
-        enableComponents(items, true);
         reloadGUI();
     }
 
@@ -1457,8 +1484,10 @@ public class online_mode_gui {
      * Close change pass.
      */
     public void closeChangePass(){
-        deleteComponents(new guiItems[]{guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS, guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT,
-                guiItems.NEW_PASS_REPEAT, guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE, guiItems.HIDE, guiItems.SHOW});
+        enableAll(true);
+        deleteComponents(new guiItems[]{guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS,
+                guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT, guiItems.NEW_PASS_REPEAT,
+                guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE, guiItems.HIDE, guiItems.SHOW});
         reloadGUI();
     }
 

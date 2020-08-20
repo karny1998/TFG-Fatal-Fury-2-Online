@@ -185,6 +185,12 @@ public class profile_gui {
             }
         });
         scrollPane.setBorder(new LineBorder(Color.black, 0));
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
+                gui.closeAllPopUps();
+            }
+        });
 
         scroll1 = scrollPane;
 

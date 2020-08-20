@@ -109,6 +109,13 @@ public class online_fight_controller extends fight_controller {
                     this.fight_result = Fight_Results.valueOf(res.split(":")[1]);
                 }
             }
+            else{
+                String res = con.receiveString(msgID.toClient.tramits);
+                if (res.contains("SURRENDER")) {
+                    this.hasEnded = true;
+                    this.fight_result = Fight_Results.PLAYER2_WIN;
+                }
+            }
             if (con.isConnected()) {
                 if (reconnecting) {
                     reconnecting = false;

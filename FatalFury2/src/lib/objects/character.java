@@ -612,7 +612,7 @@ public class character {
      * Stop.
      */
 // Se para la animación actual del personaje y se pone en standing
-    void stop(){
+    public void stop(){
         movements.get(state).getAnim().reset();
         state = Movement.STANDING;
         movements.get(state).getAnim().start();

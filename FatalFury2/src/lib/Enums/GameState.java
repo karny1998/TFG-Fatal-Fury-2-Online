@@ -107,5 +107,7 @@ public enum GameState {
     CHARACTER_SELECTION,
     ONLINE_RANKING,
     SERVER_PROBLEM,
-    GAME_END
+    GAME_END,
+    ONLINE_ESCAPE,
+    SURE_ONLINE;
 }
