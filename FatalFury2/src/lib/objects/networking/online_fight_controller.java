@@ -168,11 +168,6 @@ public class online_fight_controller extends fight_controller {
      * @return the boolean
      */
     public boolean connectionLost(){
-        if(isServer) {
-            return onlinePlayer.isConnectionLost();
-        }
-        else{
-            return false;
-        }
+        return onlinePlayer.isConnectionLost();
     }
 }
