@@ -69,7 +69,7 @@ public class online_round extends round {
         }
         else{
             ///////////////////////////////////////////////////////////
-            fightManagement(pHurt, eHurt, false);
+            //fightManagement(pHurt, eHurt, false);
             ///////////////////////////////////////////////////////////
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receiveString(messageIdentifier);

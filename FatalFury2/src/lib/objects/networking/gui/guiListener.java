@@ -79,6 +79,7 @@ public class guiListener implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        if(type == guiItems.NONE){return;}
         if(type == guiItems.NORMAL_BUTTON || type == guiItems.RANKED_BUTTON
                 || type == guiItems.GLOBAL_IA_BUTTON || type == guiItems.PERSONAL_IA_BUTTON
                 || type == guiItems.LOGIN_BUTTON || type == guiItems.REGISTER_BUTTON){

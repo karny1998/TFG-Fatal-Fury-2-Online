@@ -617,6 +617,21 @@ public class online_mode_gui {
         ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540, 280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370), res(220), res(540), res(280));
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {}
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener(online_mode_gui.this, guiItems.NONE).actionPerformed(null);
+            }
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {}
+        });
 
         guiItems items[] = {guiItems.POP_UP, okey, guiItems.POP_UP_TABLE};
         Component components[] = {popup, popupB, table};
@@ -669,6 +684,28 @@ public class online_mode_gui {
             ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540, 280);
             JLabel table = new JLabel(icon);
             table.setBounds(res(370), res(220), res(540), res(280));
+            table.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent mouseEvent) {
+                }
+
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent mouseEvent) {
+                    new guiListener(online_mode_gui.this, guiItems.NONE).actionPerformed(null);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent mouseEvent) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent mouseEvent) {
+                }
+            });
 
             guiItems items[] = {guiItems.POP_UP, type, guiItems.POP_UP_TABLE};
             Component components[] = {popup, popupB, table};
@@ -703,6 +740,28 @@ public class online_mode_gui {
         ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540, 280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370), res(220), res(540), res(280));
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener(online_mode_gui.this, guiItems.NONE).actionPerformed(null);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
 
         guiItems items[] = {guiItems.POP_UP, yes, no, guiItems.POP_UP_TABLE};
         Component components[] = {popup, popupB1, popupB2, table};
@@ -991,6 +1050,28 @@ public class online_mode_gui {
         ImageIcon icon = loadIcon("/assets/sprites/menu/tablon_register.png", 788, 590);
         JLabel table = new JLabel(icon);
         table.setBounds(res(246), 65, res(788), res(590));
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener(online_mode_gui.this, guiItems.NONE).actionPerformed(null);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
 
         guiItems items[] = {guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS, guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT,
                 guiItems.NEW_PASS_REPEAT, guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE};
@@ -1158,6 +1239,28 @@ public class online_mode_gui {
         ImageIcon icon = loadIcon("/assets/sprites/menu/pop_up.png", 540, 280);
         JLabel table = new JLabel(icon);
         table.setBounds(res(370), res(220), res(540), res(280));
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                new guiListener(online_mode_gui.this, guiItems.NONE).actionPerformed(null);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
 
         guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME, guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON, guiItems.POP_UP_TABLE};
         Component components[] = {popup, name, popupB1, popupB2, table};

@@ -236,7 +236,8 @@ public class end_game_gui {
         Component comps[] = {gameResult, char1, char2, user, rival, confirm};
 
         if(isRanked){
-            JTextField pts = gui.generateSimpleTextField(points+"pts", f3, Color.YELLOW, new Color(0,0,0,0), 515, 470, 250, 80, false, true);
+            JTextField pts = gui.generateSimpleTextField(points+"pts", f3, Color.YELLOW, new Color(0,0,0,0), 515, 400, 250, 80, false, true);
+            pts.setHorizontalAlignment(JTextField.CENTER);
             items = new guiItems[]{guiItems.GAME_RESULT, guiItems.PLAYER_1_CHAR, guiItems.PLAYER_2_CHAR, guiItems.PLAYER_USERNAME, guiItems.RIVAL_USERNAME, guiItems.RANK_POINTS, guiItems.CONFIRM_END_GAME} ;
             comps = new Component[]{gameResult, char1, char2, user, rival, pts, confirm};
         }

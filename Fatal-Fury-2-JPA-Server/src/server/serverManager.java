@@ -524,28 +524,37 @@ public class serverManager {
 
     private Pair<Integer,Integer> evaluatePoints(Player p1, Player p2, int r){
         int p1P = 0, p2P = 0;
-        switch (r){
-            case 1:
-                p1P = 20;
-                p2P = -20;
-                break;
-            case 2:
-                p1P = -20;
-                p2P = 20;
-                break;
-            default:
-                break;
-        }
-
+        int discount = 0;
         if(p1.getRankScore() > p2.getRankScore()){
-            p1P += (p2.getRankScore() - p1.getRankScore())/10;
-            p2P += (p1.getRankScore() - p2.getRankScore())/10;
+            discount = (p1.getRankScore() - p2.getRankScore())/10;
+            switch (r){
+                case 1:
+                    p1P = 20 - discount;
+                    p2P = -20 + discount;
+                    break;
+                case 2:
+                    p1P = -20 - discount;
+                    p2P = 20 + discount;
+                    break;
+                default:
+                    break;
+            }
         }
         else if(p1.getRankScore() < p2.getRankScore()){
-            p2P += (p2.getRankScore() - p1.getRankScore())/10;
-            p1P += (p1.getRankScore() - p2.getRankScore())/10;
+            discount = (p2.getRankScore() - p1.getRankScore())/10;
+            switch (r){
+                case 1:
+                    p1P = 20 + discount;
+                    p2P = -20 - discount;
+                    break;
+                case 2:
+                    p1P = -20 + discount;
+                    p2P = 20 - discount;
+                    break;
+                default:
+                    break;
+            }
         }
-
         return new Pair<>(p1P, p2P);
     }
 

@@ -813,7 +813,7 @@ public class connection {
             }
         }
         if (receiveString) {
-            return "";
+            return "NONE";
         } else {
             return null;
         }

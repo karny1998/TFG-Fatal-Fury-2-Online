@@ -422,5 +422,6 @@ public enum guiItems{
     PERSONAL_IA_BUTTON,
     CANCEL_SELECT_IA,
     VOLUME_SLIDER,
-    VOLUME_TEXT
+    VOLUME_TEXT,
+    NONE
 }

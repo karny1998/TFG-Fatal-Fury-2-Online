@@ -91,13 +91,19 @@ public class online_user_controller extends user_controller {
             }
         }
         else{
-            con.sendString(menssageIdentifier, mov);
+            if(!standBy) {
+                con.sendString(menssageIdentifier, mov);
+            }
         }
-        if(rival == null) {
-            return player.getFrame(mov, pHurt, eHurt, false);
+        if(!standBy) {
+            if (rival == null) {
+                return player.getFrame(mov, pHurt, eHurt, false);
+            } else {
+                return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
+            }
         }
-        else {
-            return player.getFrame(mov, pHurt, eHurt, rival.isAttacking());
+        else{
+            return player.getFrame("", pHurt, eHurt, false);
         }
     }
 
@@ -191,5 +197,19 @@ public class online_user_controller extends user_controller {
      */
     public void setConnectionLost(boolean connectionLost) {
         this.connectionLost = connectionLost;
+    }
+
+    @Override
+    public void startStandBy(){
+        this.timeReference = System.currentTimeMillis();
+        this.standBy = true;
+    }
+
+    /**
+     * End stand by.
+     */
+    public void endStandBy(){
+        this.timeReference = System.currentTimeMillis();
+        this.standBy = false;
     }
 }
