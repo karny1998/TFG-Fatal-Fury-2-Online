@@ -308,13 +308,13 @@ public class online_mode {
         this.isRanked = isRanked;
         this.isHost = isHost;
         if (isHost) {
-            player = new online_user_controller(pC, 1, conToClient, isHost, true);
-            enemy = new online_user_controller(pE, 2, conToClient, isHost,false);
+            player = new online_user_controller(pC, 1, conToClient,  true);
+            enemy = new online_user_controller(pE, 2, conToClient, false);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
-            player = new online_user_controller(pC, 1, conToClient,isHost, false);
-            enemy = new online_user_controller(pE, 2, conToClient, isHost,true);
+            player = new online_user_controller(pC, 1, conToClient, false);
+            enemy = new online_user_controller(pE, 2, conToClient, true);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
