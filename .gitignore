@@ -25,3 +25,5 @@ hs_err_pid*
 .idea
 
 out/
+
+IA_Analyzer/src/jarFiles/commons-math3-3.6.1/docs/apidocs/

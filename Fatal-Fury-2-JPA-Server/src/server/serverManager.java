@@ -101,6 +101,10 @@ public class serverManager {
     }
 
     public synchronized boolean searchGame(String newPlayer, boolean ranked){
+        if(searchingRankedGameUsers.contains(newPlayer)
+            || searchingGameUsers.contains(newPlayer)){
+            return true;
+        }
         List<String> listAux;
         if(!ranked){
             listAux = searchingGameUsers;

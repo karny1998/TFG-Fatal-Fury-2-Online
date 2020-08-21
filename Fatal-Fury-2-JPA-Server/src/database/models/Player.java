@@ -21,7 +21,7 @@ public class Player implements Serializable {
     private String username;
     @Column(name = "email", unique = true, nullable = false)
     @Size(min = 3, max = 100, message="ERROR:Email must be between 3 and 100 chars.")
-    @Pattern(regexp = "[^@]+@[A-z,0-9]+.[A-z]+", message="ERROR:Email must be like: example@example.example.")
+    @Pattern(regexp = "[^@]+@[A-z,0-9]+.[A-z]+", message="ERROR:Email must be like example@example.example")
     private String email;
     @Column(name = "password", nullable = false)
     @Size(min = 8, max = 100, message="ERROR:Password must be between 8 and 100 chars.")

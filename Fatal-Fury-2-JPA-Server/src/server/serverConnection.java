@@ -198,9 +198,9 @@ public class serverConnection{
                 serverPendingObjects.put(received.getId(), received.getObject());
             }
             else {
-                //if(received.getId() != msgID.toServer.ping) {
+                if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.getMessage());
-                //}
+                }
                 serverPendingMessages.put(received.getId(), received.getMessage());
             }
             if(received.getId() == msgID.toServer.request || received.getId() == msgID.toServer.tramits){
