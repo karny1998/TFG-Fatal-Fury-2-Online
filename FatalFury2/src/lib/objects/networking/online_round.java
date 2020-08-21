@@ -66,14 +66,19 @@ public class online_round extends round {
             String msg = p.getState().toString() + ":" + p.getOrientation() + ":" + p.getLife() + ":" + p.getX() + ":" + p.getY() + ":" +
                     e.getState().toString() + ":" + e.getOrientation() + ":" + e.getLife() + ":" + e.getX() + ":" + e.getY() + ":" + timeLeft;
             con.sendString(messageIdentifier, msg);
+            // Obtención de los frames a dibujar del jugador
+            screenObject ply;
+            ply = player.getAnimation(pHurt,eHurt);
+            screenObjects.put(Item_Type.PLAYER, ply);
+            // Obtención de los frames a dibujar del enemigo
+            ply = enemy.getAnimation(eHurt,pHurt);
+            screenObjects.put(Item_Type.ENEMY, ply);
         }
         else{
-            ///////////////////////////////////////////////////////////
-            //fightManagement(pHurt, eHurt, false);
-            ///////////////////////////////////////////////////////////
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receiveString(messageIdentifier);
             if(!msg.equals("") && !msg.equals("NONE")){
+                System.out.println(msg);
                 String aux[] = msg.split(":");
                 Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[5]);
                 int pO = Integer.parseInt(aux[1]), eO = Integer.parseInt(aux[6]);
@@ -84,39 +89,48 @@ public class online_round extends round {
                 timeLeft = time;
                 p.applyDamage(p.getLife()-pL);
                 e.applyDamage(e.getLife()-eL);
-                if(!p.isJumping()) {
-                    p.setX(pX);
-                    p.setY(pY);
-                    player.setX(pX);
-                    player.setY(pY);
-                    p.setOrientation(pO);
-                    pHurt = player.getPlayer().getHurtbox();
-                }
-                if(!e.isJumping()) {
-                    e.setX(eX);
-                    e.setY(eY);
-                    enemy.setX(pX);
-                    enemy.setY(pY);
-                    e.setOrientation(eO);
-                    eHurt = enemy.getPlayer().getHurtbox();
-                }
+
                 if(character.isKnockback(pS) && !p.inKnockback()){
                     p.setState(pS,pHurt,eHurt);
                 }
                 if(character.isKnockback(eS) && !e.inKnockback()){
                     e.setState(eS,eHurt,pHurt);
                 }
+
+                p.setOrientation(pO);
+                e.setOrientation(eO);
+
+                // Obtención de los frames a dibujar del jugador
+                screenObject ply;
+                ply = player.getAnimation(pHurt,eHurt);
+                ply.setX(pX);
+                ply.setY(pY);
+                screenObjects.put(Item_Type.PLAYER, ply);
+                // Obtención de los frames a dibujar del enemigo
+                ply = enemy.getAnimation(eHurt,pHurt);
+                ply.setX(eX);
+                ply.setY(eY);
+                screenObjects.put(Item_Type.ENEMY, ply);
+
+                p.setX(pX);
+                p.setY(pY);
+                player.setX(pX);
+                player.setY(pY);
+                pHurt = player.getPlayer().getHurtbox();
+
+                e.setX(eX);
+                e.setY(eY);
+                enemy.setX(pX);
+                enemy.setY(pY);
+                eHurt = enemy.getPlayer().getHurtbox();
+
+                ///////////////////////////////////////////////////////////
+                //fightManagement(pHurt, eHurt, false);
+                ///////////////////////////////////////////////////////////
             }
         }
-        cameraManagement(pHurt, eHurt);
 
-        // Obtención de los frames a dibujar del jugador
-        screenObject ply;
-        ply = player.getAnimation(pHurt,eHurt);
-        screenObjects.put(Item_Type.PLAYER, ply);
-        // Obtención de los frames a dibujar del enemigo
-        ply = enemy.getAnimation(eHurt,pHurt);
-        screenObjects.put(Item_Type.ENEMY, ply);
+        cameraManagement(pHurt, eHurt);
 
         shadow1.setX(pHurt.getX()+pHurt.getWidth()/2 - shadow1.getWidth()/2);
         shadow2.setX(eHurt.getX()+eHurt.getWidth()/2 - shadow2.getWidth()/2);
