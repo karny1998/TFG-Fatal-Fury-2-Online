@@ -109,6 +109,12 @@ public enum Selectionable {
      * No selectionable.
      */
     NO,
+    /**
+     * Online selectionable.
+     */
     ONLINE,
+    /**
+     * Local selectionable.
+     */
     LOCAL
 }

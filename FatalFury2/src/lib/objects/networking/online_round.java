@@ -68,12 +68,11 @@ public class online_round extends round {
             con.sendString(messageIdentifier, msg);
         }
         else{
-            ///////////////////////////////////////////////////////////
-            //fightManagement(pHurt, eHurt, false);
-            ///////////////////////////////////////////////////////////
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receiveString(messageIdentifier);
-            if(!msg.equals("") && !msg.equals("NONE")){
+            if(msg != null && !msg.equals("NONE")){
+                ((online_user_controller)player).updateTimeReference();
+                ((online_user_controller)enemy).updateTimeReference();
                 String aux[] = msg.split(":");
                 Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[5]);
                 int pO = Integer.parseInt(aux[1]), eO = Integer.parseInt(aux[6]);
@@ -90,6 +89,7 @@ public class online_round extends round {
                     player.setX(pX);
                     player.setY(pY);
                     p.setOrientation(pO);
+                    pHurt = player.getPlayer().getHurtbox();
                 }
                 if(!e.isJumping()) {
                     e.setX(eX);
@@ -97,12 +97,19 @@ public class online_round extends round {
                     enemy.setX(pX);
                     enemy.setY(pY);
                     e.setOrientation(eO);
+                    eHurt = enemy.getPlayer().getHurtbox();
                 }
                 if(character.isKnockback(pS) && !p.inKnockback()){
                     p.setState(pS,pHurt,eHurt);
                 }
+                else if(p.getState() != pS){
+                    ((online_user_controller) player).setOnlineMov(p.getMovementsKeys().get(pS));
+                }
                 if(character.isKnockback(eS) && !e.inKnockback()){
                     e.setState(eS,eHurt,pHurt);
+                }
+                else if(e.getState() != eS){
+                    ((online_user_controller) player).setOnlineMov(e.getMovementsKeys().get(eS));
                 }
             }
         }

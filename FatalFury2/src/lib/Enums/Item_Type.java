@@ -233,6 +233,9 @@ public enum Item_Type {
      * Totaln 5 item type.
      */
     TOTALN5,
+    /**
+     * Background item type.
+     */
     BACKGROUND
 }
 

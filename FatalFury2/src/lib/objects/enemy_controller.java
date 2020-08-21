@@ -206,7 +206,13 @@ public class enemy_controller extends character_controller{
         }
     }
 
-    // Asigna el rival y define la IA
+    /**
+     * Sets rival.
+     *
+     * @param rival the rival
+     * @param user  the user
+     */
+// Asigna el rival y define la IA
     public void setRival(character rival, String user) {
         this.player.setRival(rival);
         this.rival = rival;

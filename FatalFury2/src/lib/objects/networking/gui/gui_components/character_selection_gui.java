@@ -154,7 +154,10 @@ public class character_selection_gui {
      * The All ok.
      */
     private boolean allOk = false;
-    //0 = online 1 = own ia 2 = global ia
+    /**
+     * The Vs ia.
+     */
+//0 = online 1 = own ia 2 = global ia
     private int vsIa = 0;
 
     /**
@@ -165,6 +168,7 @@ public class character_selection_gui {
      * @param ip        the ip
      * @param rivalName the rival name
      * @param isRanked  the is ranked
+     * @param vsIa      the vs ia
      */
     public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked, int vsIa){
         this.isHost = isHost;
@@ -323,6 +327,9 @@ public class character_selection_gui {
         }
     }
 
+    /**
+     * Generate ia game.
+     */
     void generateIaGame(){
         gui.getOnline_controller().generateVsIAFight(chosen_character,chosen_map,vsIa == 2);
     }
@@ -442,6 +449,9 @@ public class character_selection_gui {
         gui.reloadGUI();
     }
 
+    /**
+     * Close.
+     */
     public void close(){
         timer.stop();
         gui.setOnlineState(GameState.PRINCIPAL_GUI);
@@ -643,10 +653,20 @@ public class character_selection_gui {
         this.allOk = allOk;
     }
 
+    /**
+     * Gets con to client.
+     *
+     * @return the con to client
+     */
     public connection getConToClient() {
         return conToClient;
     }
 
+    /**
+     * Sets con to client.
+     *
+     * @param conToClient the con to client
+     */
     public void setConToClient(connection conToClient) {
         this.conToClient = conToClient;
     }

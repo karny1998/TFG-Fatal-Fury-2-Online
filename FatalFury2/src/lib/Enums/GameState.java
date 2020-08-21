@@ -99,15 +99,48 @@ public enum GameState {
      * Online searching fight game state.
      */
     ONLINE_SEARCHING_FIGHT,
+    /**
+     * Login register game state.
+     */
     LOGIN_REGISTER,
+    /**
+     * Register game state.
+     */
     REGISTER,
+    /**
+     * Login game state.
+     */
     LOGIN,
+    /**
+     * Principal gui game state.
+     */
     PRINCIPAL_GUI,
+    /**
+     * Profile gui game state.
+     */
     PROFILE_GUI,
+    /**
+     * Character selection game state.
+     */
     CHARACTER_SELECTION,
+    /**
+     * Online ranking game state.
+     */
     ONLINE_RANKING,
+    /**
+     * Server problem game state.
+     */
     SERVER_PROBLEM,
+    /**
+     * Game end game state.
+     */
     GAME_END,
+    /**
+     * Online escape game state.
+     */
     ONLINE_ESCAPE,
+    /**
+     * Sure online game state.
+     */
     SURE_ONLINE;
 }

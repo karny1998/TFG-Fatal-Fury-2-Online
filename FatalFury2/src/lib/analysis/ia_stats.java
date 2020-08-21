@@ -32,6 +32,8 @@ public class ia_stats {
 
     /**
      * Instantiates a new Ia stats.
+     *
+     * @param user the user
      */
     public ia_stats(String user) {
         this.filename = "ia_stadistics"+user+".xml";

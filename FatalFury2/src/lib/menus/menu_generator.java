@@ -43,6 +43,11 @@ public class menu_generator {
         return men;
     }
 
+    /**
+     * Mode menu.
+     *
+     * @return the menu
+     */
     private static menu mode(){
         menu men = new menu();
         men.setOrden(new Selectionable[]{Selectionable.ONLINE, Selectionable.LOCAL});

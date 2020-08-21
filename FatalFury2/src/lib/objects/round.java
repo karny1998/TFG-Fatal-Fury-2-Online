@@ -482,8 +482,9 @@ public class round {
     /**
      * Fight management.
      *
-     * @param pHurt the p hurt
-     * @param eHurt the e hurt
+     * @param pHurt          the p hurt
+     * @param eHurt          the e hurt
+     * @param manageCollides the manage collides
      */
 // Gestión de colisiones, cambios de orientación y daños entre los personajes
     public void fightManagement(hitBox pHurt, hitBox eHurt, boolean manageCollides){

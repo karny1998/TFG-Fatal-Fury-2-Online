@@ -132,6 +132,9 @@ public class online_mode_gui {
      * The Pinger.
      */
     private serverPinger pinger;
+    /**
+     * The Screen refresher.
+     */
     private refresher screenRefresher;
     /**
      * The Chatgui.
@@ -141,6 +144,9 @@ public class online_mode_gui {
      * The Notifications.
      */
     private notifications_gui notifications;
+    /**
+     * The Time reference.
+     */
     private long timeReference = System.currentTimeMillis();
     /**
      * The F.
@@ -329,6 +335,11 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Enable all.
+     *
+     * @param enable the enable
+     */
     public void enableAll(boolean enable) {
         for (int i = 0; i < itemsOnScreen.size(); ++i) {
             if(!(itemsOnScreen.get(i) == guiItems.REGISTER_TABLE && onlineState == GameState.REGISTER)){
@@ -784,6 +795,8 @@ public class online_mode_gui {
 
     /**
      * Server problem.
+     *
+     * @param serverClosed the server closed
      */
     public void server_problem(boolean serverClosed) {
         if (!componentsOnScreen.containsKey(guiItems.RETRY_CONNECTION) && !componentsOnScreen.containsKey(guiItems.CLOSE_GAME)) {
@@ -1138,6 +1151,11 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Volume slider j slider.
+     *
+     * @return the j slider
+     */
     public JSlider volumeSlider(){
         JSlider slider = new JSlider(JSlider.HORIZONTAL,0,100, (int) (audio_manager.getGuiAbsoluteVolume()*100.0));
         slider.setBackground(grey3);
@@ -1280,6 +1298,9 @@ public class online_mode_gui {
         reloadGUI();
     }
 
+    /**
+     * Select ia.
+     */
     public void selectIa() {
         closeAllPopUps();
 
@@ -1429,6 +1450,11 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Character selection ia.
+     *
+     * @param isGlobal the is global
+     */
     public void character_selection_ia(boolean isGlobal) {
         if (!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
             setOnlineState(GameState.CHARACTER_SELECTION);
@@ -1452,6 +1478,9 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Close all pop ups.
+     */
     public void closeAllPopUps() {
         if(itemsOnScreen.contains(guiItems.CANCEL_CHANGE_PASS)){
             deleteComponents(new guiItems[]{guiItems.REGISTER_TABLE,guiItems.HIDE,guiItems.SHOW});
@@ -1492,6 +1521,9 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Close select ia.
+     */
     public void closeSelectIa() {
         guiItems items[] = {guiItems.GLOBAL_IA_BUTTON, guiItems.PERSONAL_IA_BUTTON, guiItems.CANCEL_SELECT_IA, guiItems.POP_UP_TABLE};
         deleteComponents(items);
@@ -1768,10 +1800,20 @@ public class online_mode_gui {
             }
         }
 
+        /**
+         * Gets con.
+         *
+         * @return the con
+         */
         public connection getCon() {
             return con;
         }
 
+        /**
+         * Sets con.
+         *
+         * @param con the con
+         */
         public void setCon(connection con) {
             this.con = con;
         }
@@ -1941,27 +1983,53 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * The type Refresher.
+     */
     protected class refresher extends Thread {
+        /**
+         * The Stop.
+         */
         private boolean stop = false;
+        /**
+         * The Thread.
+         */
         private final Thread thread;
 
+        /**
+         * Instantiates a new Refresher.
+         */
         public refresher() {
             this.thread = new Thread(this);
         }
 
+        /**
+         * Start.
+         */
         @Override
         public void start() {
             this.thread.start();
         }
 
+        /**
+         * Do stop.
+         */
         public synchronized void doStop() {
             this.stop = true;
         }
 
+        /**
+         * Keep running boolean.
+         *
+         * @return the boolean
+         */
         private synchronized boolean keepRunning() {
             return this.stop == false;
         }
 
+        /**
+         * Run.
+         */
         @Override
         public void run() {
             while (keepRunning()) {
@@ -1978,6 +2046,9 @@ public class online_mode_gui {
         }
     }
 
+    /**
+     * Stop.
+     */
     public void stop(){
         this.notifier.doStop();
         this.screenRefresher.doStop();
@@ -2526,14 +2597,27 @@ public class online_mode_gui {
         this.pinger = pinger;
     }
 
+    /**
+     * Update time reference.
+     */
     public void updateTimeReference() {
         timeReference = System.currentTimeMillis();
     }
 
+    /**
+     * Gets time reference.
+     *
+     * @return the time reference
+     */
     public long getTimeReference() {
         return timeReference;
     }
 
+    /**
+     * Sets time reference.
+     *
+     * @param timeReference the time reference
+     */
     public void setTimeReference(long timeReference) {
         this.timeReference = timeReference;
     }

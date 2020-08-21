@@ -123,19 +123,32 @@ public class online_mode {
      */
     private Fight_Results result;
 
+    /**
+     * The Is vs ia.
+     */
     private int isVsIA = 0;
 
+    /**
+     * The Screen.
+     */
     private Screen screen;
 
+    /**
+     * The Time reference.
+     */
     private long timeReference = System.currentTimeMillis();
 
+    /**
+     * The Escape menu.
+     */
     private menu escapeMenu;
 
     /**
      * Instantiates a new Online mode.
      *
-     * @param screen the screen
-     * @param debug  the debug
+     * @param screen     the screen
+     * @param escapeMenu the escape menu
+     * @param debug      the debug
      */
     public online_mode(Screen screen, menu escapeMenu, boolean debug) {
         this.escapeMenu = escapeMenu;
@@ -201,56 +214,12 @@ public class online_mode {
     }
 
     /**
-     * Generate fight.
+     * Generate vs ia fight.
+     *
+     * @param pC       the p c
+     * @param sce      the sce
+     * @param isGlobal the is global
      */
-    private void generateFight(){
-        System.out.println("Se esta creando la pelea");
-        if (itsMe) {
-            player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, true);
-            enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, false);
-            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
-            enemy.setPlayerNum(2);
-        } else {
-            player = new online_user_controller(Playable_Character.TERRY, 1, conToClient, false);
-            enemy = new online_user_controller(Playable_Character.TERRY, 2, conToClient, true);
-            ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
-            enemy.setPlayerNum(2);
-        }
-        enemy.setRival(player.getPlayer());
-        enemy.getPlayer().setMapLimit(mapLimit);
-        player.setRival(enemy.getPlayer());
-        player.getPlayer().setMapLimit(mapLimit);
-        scene = new scenary(Scenario_type.USA);
-        fight = new online_fight_controller((online_user_controller)player, (online_user_controller)enemy, scene, conToClient, itsMe, msgID.toClient.fight, -2);
-        fight.setMapLimit(mapLimit);
-        fight.setVsIa(false);
-        audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
-        audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-        try {
-            Thread.sleep(5000);
-        } catch (Exception e) {}
-        //conToClient.setBlockReception(false);
-
-        if (itsMe) {
-            boolean ok = false;
-            do {
-                System.out.println("Se ha enviado el READY");
-                ok = conToClient.reliableSendString(0, "READY", 100);
-            } while (!ok);
-        } else {
-            String msg = conToClient.receiveString(0);
-            System.out.println("Se esta esperando el ready");
-            while (!msg.equals("READY")) {
-                msg = conToClient.receiveString(0);
-            }
-            System.out.println("Se ha recibido el ready");
-            for (int i = 0; i < 5; ++i) {
-                conToClient.sendAck(0);
-            }
-        }
-        System.out.println("Se ha creado la pelea");
-    }
-
     public void generateVsIAFight(Playable_Character pC, Scenario_type sce, boolean isGlobal){
         try {
             this.isHost = true;
@@ -339,13 +308,13 @@ public class online_mode {
         this.isRanked = isRanked;
         this.isHost = isHost;
         if (isHost) {
-            player = new online_user_controller(pC, 1, conToClient, true);
-            enemy = new online_user_controller(pE, 2, conToClient, false);
+            player = new online_user_controller(pC, 1, conToClient, isHost, true);
+            enemy = new online_user_controller(pE, 2, conToClient, isHost,false);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
-            player = new online_user_controller(pC, 1, conToClient, false);
-            enemy = new online_user_controller(pE, 2, conToClient, true);
+            player = new online_user_controller(pC, 1, conToClient,isHost, false);
+            enemy = new online_user_controller(pE, 2, conToClient, isHost,true);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }

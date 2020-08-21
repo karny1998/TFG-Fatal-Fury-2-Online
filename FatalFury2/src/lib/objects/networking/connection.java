@@ -819,13 +819,38 @@ public class connection {
         }
     }
 
+    /**
+     * The type Waiter alarm.
+     */
     private class waiterAlarm extends Thread {
+        /**
+         * The Waiter wake up.
+         */
         private string waiterWakeUp;
+        /**
+         * The Waiter.
+         */
         private Pair<Boolean,Boolean> waiter;
+        /**
+         * The Stop.
+         */
         private boolean stop = false;
+        /**
+         * The Thread.
+         */
         private final Thread thread;
+        /**
+         * The Time.
+         */
         private long time;
 
+        /**
+         * Instantiates a new Waiter alarm.
+         *
+         * @param waiter       the waiter
+         * @param time         the time
+         * @param waiterWakeUp the waiter wake up
+         */
         public waiterAlarm(Pair<Boolean,Boolean> waiter, int time, string waiterWakeUp) {
             this.thread = new Thread(this);
             this.waiter = waiter;
@@ -833,19 +858,33 @@ public class connection {
             this.waiterWakeUp = waiterWakeUp;
         }
 
+        /**
+         * Start.
+         */
         @Override
         public void start() {
             this.thread.start();
         }
 
+        /**
+         * Do stop.
+         */
         public synchronized void doStop() {
             this.stop = true;
         }
 
+        /**
+         * Keep running boolean.
+         *
+         * @return the boolean
+         */
         private synchronized boolean keepRunning() {
             return this.stop == false;
         }
 
+        /**
+         * Run.
+         */
         @Override
         public void run() {
             try {

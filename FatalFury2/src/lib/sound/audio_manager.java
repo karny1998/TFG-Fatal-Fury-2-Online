@@ -41,7 +41,13 @@ public class audio_manager {
      */
     private static double volumen_sfx;
 
+    /**
+     * The constant guiAbsoluteVolume.
+     */
     private static double guiAbsoluteVolume;
+    /**
+     * The constant onOnline.
+     */
     private static boolean onOnline = false;
 
     /**
@@ -148,6 +154,11 @@ public class audio_manager {
         }
     }
 
+    /**
+     * Update.
+     *
+     * @param lvl the lvl
+     */
     public static void update(double lvl){
         guiAbsoluteVolume = lvl;
         if(fight != null){fight.update(lvl, lvl, lvl);}
@@ -194,18 +205,38 @@ public class audio_manager {
         }
     }
 
+    /**
+     * Gets gui absolute volume.
+     *
+     * @return the gui absolute volume
+     */
     public static double getGuiAbsoluteVolume() {
         return guiAbsoluteVolume;
     }
 
+    /**
+     * Sets gui absolute volume.
+     *
+     * @param guiAbsoluteVolume the gui absolute volume
+     */
     public static void setGuiAbsoluteVolume(double guiAbsoluteVolume) {
         audio_manager.guiAbsoluteVolume = guiAbsoluteVolume;
     }
 
+    /**
+     * Is on online boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isOnOnline() {
         return onOnline;
     }
 
+    /**
+     * Sets on online.
+     *
+     * @param onOnline the on online
+     */
     public static void setOnOnline(boolean onOnline) {
         audio_manager.onOnline = onOnline;
     }

@@ -17,6 +17,9 @@ public class ScreenOptions {
      * The constant screen.
      */
     private static JFrame screen;
+    /**
+     * The constant fullscreen.
+     */
     private static boolean fullscreen = false;
 
     /**
@@ -60,10 +63,20 @@ public class ScreenOptions {
 
     }
 
+    /**
+     * Is fullscreen boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isFullscreen() {
         return fullscreen;
     }
 
+    /**
+     * Sets fullscreen.
+     *
+     * @param fullscreen the fullscreen
+     */
     public static void setFullscreen(boolean fullscreen) {
         ScreenOptions.fullscreen = fullscreen;
     }

@@ -96,8 +96,16 @@ public class agent{
      */
     private double model[];
 
+    /**
+     * The User.
+     */
     private String user;
 
+    /**
+     * Instantiates a new Agent.
+     *
+     * @param user the user
+     */
     public agent(String user){
         this.user = user;
         int x = stateCalculator.getMax();
@@ -115,6 +123,7 @@ public class agent{
     /**
      * Instantiates a new Agent.
      *
+     * @param user     the user
      * @param initialS the initial s
      * @param epsilon  the epsilon
      * @param ganma    the ganma
@@ -138,6 +147,9 @@ public class agent{
         }
     }
 
+    /**
+     * Clear qtable.
+     */
     public void clearQtable(){
         int x = stateCalculator.getMax();
         int y = stateCalculator.getnActions();
@@ -446,6 +458,11 @@ public class agent{
         }
     }
 
+    /**
+     * Training to string string.
+     *
+     * @return the string
+     */
     public String trainingToString(){
         String train = "";
 
@@ -468,6 +485,11 @@ public class agent{
         return train;
     }
 
+    /**
+     * Load training from string.
+     *
+     * @param t the t
+     */
     public void loadTrainingFromString(String t){
         String train[] = t.split("\n");
         int i = 3;
@@ -1011,18 +1033,38 @@ public class agent{
         this.regression = regression;
     }
 
+    /**
+     * Get model double [ ].
+     *
+     * @return the double [ ]
+     */
     public double[] getModel() {
         return model;
     }
 
+    /**
+     * Sets model.
+     *
+     * @param model the model
+     */
     public void setModel(double[] model) {
         this.model = model;
     }
 
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * Sets user.
+     *
+     * @param user the user
+     */
     public void setUser(String user) {
         this.user = user;
     }

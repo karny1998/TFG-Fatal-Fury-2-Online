@@ -416,12 +416,36 @@ public enum guiItems{
      * Confirm end game gui items.
      */
     CONFIRM_END_GAME,
+    /**
+     * Friend busy gui items.
+     */
     FRIEND_BUSY,
+    /**
+     * Vs ia button gui items.
+     */
     VS_IA_BUTTON,
+    /**
+     * Global ia button gui items.
+     */
     GLOBAL_IA_BUTTON,
+    /**
+     * Personal ia button gui items.
+     */
     PERSONAL_IA_BUTTON,
+    /**
+     * Cancel select ia gui items.
+     */
     CANCEL_SELECT_IA,
+    /**
+     * Volume slider gui items.
+     */
     VOLUME_SLIDER,
+    /**
+     * Volume text gui items.
+     */
     VOLUME_TEXT,
+    /**
+     * None gui items.
+     */
     NONE
 }
