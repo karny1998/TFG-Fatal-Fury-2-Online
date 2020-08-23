@@ -13,14 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The type Database manager.
+ */
 public class databaseManager {
+    /**
+     * The Entity manager factory.
+     */
     EntityManagerFactory entityManagerFactory =  Persistence.createEntityManagerFactory("FatalFuryPersistence");
+    /**
+     * The Em.
+     */
     EntityManager em = entityManagerFactory.createEntityManager();
+    /**
+     * The Factory.
+     */
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    /**
+     * The Validator.
+     */
     Validator validator = factory.getValidator();
 
+    /**
+     * Instantiates a new Database manager.
+     */
     public databaseManager(){}
 
+    /**
+     * Save string.
+     *
+     * @param obj the obj
+     * @return the string
+     */
     public String save(Object obj){
         String ok = "OK";
         try {
@@ -35,6 +59,12 @@ public class databaseManager {
         return ok;
     }
 
+    /**
+     * Remove string.
+     *
+     * @param obj the obj
+     * @return the string
+     */
     public String remove(Object obj){
         String ok = "OK";
         try {
@@ -49,10 +79,22 @@ public class databaseManager {
         return ok;
     }
 
+    /**
+     * Refresh.
+     *
+     * @param obj the obj
+     */
     public void refresh(Object obj){
         em.refresh(obj);
     }
 
+    /**
+     * Find by key object.
+     *
+     * @param c  the c
+     * @param id the id
+     * @return the object
+     */
     public Object findByKey(Class c, Object id){
         try{
             return em.find(c, id);
@@ -61,6 +103,11 @@ public class databaseManager {
         }
     }
 
+    /**
+     * Get global ia times int.
+     *
+     * @return the int
+     */
     public int getGlobalIaTimes(){
         String sql = "SELECT SUM(times_vs_global_ia) FROM player;";
         Query q = em.createNativeQuery(sql);
@@ -68,6 +115,13 @@ public class databaseManager {
         return value;
     }
 
+    /**
+     * Get user messages list.
+     *
+     * @param user1 the user 1
+     * @param user2 the user 2
+     * @return the list
+     */
     public List<Message> getUserMessages(String user1, String user2){
         String sql = "SELECT * FROM message m WHERE ((m.receiver LIKE '" + user1 + "' OR m.transmitter LIKE '" + user1 + "')" +
                 " AND (m.receiver LIKE '" + user2 + "' OR m.transmitter LIKE '" + user2 + "')) ORDER BY m.id ASC;";
@@ -77,6 +131,12 @@ public class databaseManager {
         return list;
     }
 
+    /**
+     * Get user last games list.
+     *
+     * @param user the user
+     * @return the list
+     */
     public List<Game> getUserLastGames(String user){
         String sql = "SELECT * FROM game m WHERE (m.player1 LIKE '" + user + "' OR m.player2 LIKE '" + user + "') ORDER BY m.id DESC LIMIT 10;";
         Query q = em.createNativeQuery(sql, Game.class);
@@ -89,6 +149,11 @@ public class databaseManager {
         return null;
     }
 
+    /**
+     * Get ranking list.
+     *
+     * @return the list
+     */
     public List<Player> getRanking(){
         String sql = "SELECT * FROM player m ORDER BY m.rankscore DESC LIMIT 100;";
         Query q = em.createNativeQuery(sql, Player.class);
@@ -100,6 +165,12 @@ public class databaseManager {
         return null;
     }
 
+    /**
+     * Find player by email player.
+     *
+     * @param email the email
+     * @return the player
+     */
     public Player findPlayerByEmail(String email){
         try{
             TypedQuery<Player> query = em.createQuery("SELECT p FROM PLAYER p WHERE p.email = :email", Player.class);
@@ -113,6 +184,13 @@ public class databaseManager {
         }
     }
 
+    /**
+     * Insert string.
+     *
+     * @param obj the obj
+     * @param id  the id
+     * @return the string
+     */
     public String insert(Object obj, Object id){
         String ok = "OK";
         Object aux = findByKey(obj.getClass(), id);
@@ -125,6 +203,12 @@ public class databaseManager {
         return ok;
     }
 
+    /**
+     * Insert player string.
+     *
+     * @param p the p
+     * @return the string
+     */
     public String insertPlayer(Player p){
         String ok = "OK";
         Player aux = (Player) findByKey(Player.class, p.getUsername());
@@ -155,11 +239,22 @@ public class databaseManager {
         return ok;
     }
 
+    /**
+     * Register player string.
+     *
+     * @param username the username
+     * @param email    the email
+     * @param password the password
+     * @return the string
+     */
     public String registerPlayer(String username, String email, String password){
         Player p = new Player(username, email, password, false);
         return insertPlayer(p);
     }
 
+    /**
+     * Close.
+     */
     public synchronized void close(){
         em.close();
         entityManagerFactory.close();

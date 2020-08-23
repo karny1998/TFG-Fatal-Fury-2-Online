@@ -18,6 +18,9 @@ import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Main.
+ */
 public class Main {
     private static databaseManager dbm = new databaseManager();
     private static serverManager manager = new serverManager(dbm);
@@ -27,6 +30,11 @@ public class Main {
     private static Map<String, clientHandler> threadsByUser = new HashMap<>();
     private static boolean  shutdown = false;
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         try{
             //serverSocket = new ServerSocket(5555);
@@ -67,6 +75,9 @@ public class Main {
         return serverFactory.createServerSocket(port);
     }
 
+    /**
+     * The type Client handler.
+     */
     protected static class clientHandler extends Thread{
         private serverConnection con;
         private InetAddress client;
@@ -77,6 +88,12 @@ public class Main {
         private boolean forzedClose = false;
         private clientPinger cp;
 
+        /**
+         * Instantiates a new Client handler.
+         *
+         * @param con    the con
+         * @param client the client
+         */
         public clientHandler(serverConnection con, InetAddress client) {
             System.out.println("Conectado con el usuario: " + client.getHostAddress());
             this.thread = new Thread(this);
@@ -92,6 +109,9 @@ public class Main {
             this.thread.start();
         }
 
+        /**
+         * Do stop.
+         */
         public synchronized void doStop() {
             if(con.isConnected()) {
                 con.sendString(msgID.toServer.notification, "SERVER CLOSED");
@@ -104,6 +124,11 @@ public class Main {
             this.stop = true;
         }
 
+        /**
+         * Do stop.
+         *
+         * @param msg the msg
+         */
         public synchronized void doStop(String msg) {
             try {
                 con.sendString(msgID.toServer.notification, "SERVER CLOSED");
@@ -166,12 +191,20 @@ public class Main {
             }
         }
 
+        /**
+         * The type Client pinger.
+         */
         protected class clientPinger extends Thread{
             private serverConnection con;
             private boolean stop = false;
             private final Thread thread;
             private long timeReference = System.currentTimeMillis();
 
+            /**
+             * Instantiates a new Client pinger.
+             *
+             * @param con the con
+             */
             public clientPinger(serverConnection con) {
                 this.con = con;
                 this.thread = new Thread(this);
@@ -182,6 +215,9 @@ public class Main {
                 this.thread.start();
             }
 
+            /**
+             * Do stop.
+             */
             public synchronized void doStop() {
                 this.stop = true;
             }
@@ -213,61 +249,129 @@ public class Main {
             }
         }
 
+        /**
+         * Gets con.
+         *
+         * @return the con
+         */
         public serverConnection getCon() {
             return con;
         }
 
+        /**
+         * Sets con.
+         *
+         * @param con the con
+         */
         public void setCon(serverConnection con) {
             this.con.close();
             this.rqM.setCon(con);
             this.con = con;
         }
 
+        /**
+         * Gets client.
+         *
+         * @return the client
+         */
         public InetAddress getClient() {
             return client;
         }
 
+        /**
+         * Sets client.
+         *
+         * @param client the client
+         */
         public void setClient(InetAddress client) {
             this.client = client;
         }
 
+        /**
+         * Is stop boolean.
+         *
+         * @return the boolean
+         */
         public boolean isStop() {
             return stop;
         }
 
+        /**
+         * Sets stop.
+         *
+         * @param stop the stop
+         */
         public void setStop(boolean stop) {
             this.stop = stop;
         }
 
+        /**
+         * Gets thread.
+         *
+         * @return the thread
+         */
         public Thread getThread() {
             return thread;
         }
 
+        /**
+         * Gets rq m.
+         *
+         * @return the rq m
+         */
         public requestManager getRqM() {
             return rqM;
         }
 
+        /**
+         * Sets rq m.
+         *
+         * @param rqM the rq m
+         */
         public void setRqM(requestManager rqM) {
             this.rqM = rqM;
         }
 
+        /**
+         * Is logged boolean.
+         *
+         * @return the boolean
+         */
         public boolean isLogged() {
             return logged;
         }
 
+        /**
+         * Sets logged.
+         *
+         * @param logged the logged
+         */
         public void setLogged(boolean logged) {
             this.logged = logged;
         }
 
+        /**
+         * Is forzed close boolean.
+         *
+         * @return the boolean
+         */
         public boolean isForzedClose() {
             return forzedClose;
         }
 
+        /**
+         * Sets forzed close.
+         *
+         * @param forzedClose the forzed close
+         */
         public void setForzedClose(boolean forzedClose) {
             this.forzedClose = forzedClose;
         }
     }
 
+    /**
+     * The type Commander.
+     */
     protected static class commander extends Thread{
 
         private Map<InetAddress, clientHandler> threads = new HashMap<>();
@@ -280,6 +384,12 @@ public class Main {
 
         private final Thread thread;
 
+        /**
+         * Instantiates a new Commander.
+         *
+         * @param threads the threads
+         * @param socket  the socket
+         */
         public commander(Map<InetAddress, clientHandler> threads, ServerSocket socket) {
             this.socket = socket;
             this.thread = new Thread(this);
@@ -293,6 +403,9 @@ public class Main {
             this.thread.start();
         }
 
+        /**
+         * Do stop.
+         */
         public synchronized void doStop() {
             this.stop = true;
         }
@@ -334,11 +447,26 @@ public class Main {
         }
     }
 
+    /**
+     * The type Terminal.
+     */
     protected static class terminal{
+        /**
+         * The P.
+         */
         Process p;
+        /**
+         * The W.
+         */
         BufferedWriter w;
+        /**
+         * The R.
+         */
         BufferedReader r;
 
+        /**
+         * Instantiates a new Terminal.
+         */
         public terminal(){
             try{
                 p = Runtime.getRuntime().exec("cmd /c start cmd.exe");
@@ -347,6 +475,11 @@ public class Main {
             }catch (Exception e){e.printStackTrace();}
         }
 
+        /**
+         * Write.
+         *
+         * @param msg the msg
+         */
         public void write(String msg){
             try {
                 w.write(msg + System.lineSeparator());
@@ -354,6 +487,11 @@ public class Main {
             }catch (Exception e){e.printStackTrace();}
         }
 
+        /**
+         * Read line string.
+         *
+         * @return the string
+         */
         public String readLine(){
             try{
                 return r.readLine();

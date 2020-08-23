@@ -7,18 +7,33 @@ import lib.utils.sendableObjects.simpleObjects.qtable;
 
 import java.net.InetAddress;
 
+/**
+ * The type Request manager.
+ */
 public class requestManager {
     private serverManager manager;
     private serverConnection con;
     private InetAddress client;
     private String userLogged = null;
 
+    /**
+     * Instantiates a new Request manager.
+     *
+     * @param manager the manager
+     * @param con     the con
+     * @param client  the client
+     */
     public requestManager(serverManager manager, serverConnection con, InetAddress client){
         this.manager = manager;
         this.con = con;
         this.client = client;
     }
 
+    /**
+     * Manage request.
+     *
+     * @param request the request
+     */
     public void manageRequest(String request){
         try {
             if (request.contains("REGISTER:")) {
@@ -197,38 +212,83 @@ public class requestManager {
         }
     }
 
+    /**
+     * Is logged boolean.
+     *
+     * @return the boolean
+     */
     public boolean isLogged(){
         return userLogged != null;
     }
 
+    /**
+     * Gets manager.
+     *
+     * @return the manager
+     */
     public serverManager getManager() {
         return manager;
     }
 
+    /**
+     * Sets manager.
+     *
+     * @param manager the manager
+     */
     public void setManager(serverManager manager) {
         this.manager = manager;
     }
 
+    /**
+     * Gets con.
+     *
+     * @return the con
+     */
     public serverConnection getCon() {
         return con;
     }
 
+    /**
+     * Sets con.
+     *
+     * @param con the con
+     */
     public void setCon(serverConnection con) {
         this.con = con;
     }
 
+    /**
+     * Gets client.
+     *
+     * @return the client
+     */
     public InetAddress getClient() {
         return client;
     }
 
+    /**
+     * Sets client.
+     *
+     * @param client the client
+     */
     public void setClient(InetAddress client) {
         this.client = client;
     }
 
+    /**
+     * Gets user logged.
+     *
+     * @return the user logged
+     */
     public String getUserLogged() {
         return userLogged;
     }
 
+    /**
+     * Sets user logged.
+     *
+     * @param userLogged the user logged
+     */
     public void setUserLogged(String userLogged) {
         this.userLogged = userLogged;
     }

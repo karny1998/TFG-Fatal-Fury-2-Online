@@ -34,6 +34,9 @@ public class Game implements Serializable{
     @ManyToOne
     @JoinColumn(name = "tournament", nullable = true)
     private Tournament tournament;
+    /**
+     * The Ranked.
+     */
     @Column(name = "ranked", nullable = false)
     protected boolean ranked;
     @Column(name = "winnerPoints")
@@ -53,9 +56,11 @@ public class Game implements Serializable{
     /**
      * Instantiates a new Game.
      *
-     * @param player1 the player 1
-     * @param player2 the player 2
-     * @param result  the result
+     * @param player1    the player 1
+     * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
+     * @param result     the result
      */
     public Game(Player player1, Player player2, String character1, String character2, int result){
         this.player1 = player1;
@@ -72,6 +77,8 @@ public class Game implements Serializable{
      *
      * @param player1    the player 1
      * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
      * @param result     the result
      * @param tournament the tournament
      */
@@ -91,6 +98,8 @@ public class Game implements Serializable{
      *
      * @param player1      the player 1
      * @param player2      the player 2
+     * @param character1   the character 1
+     * @param character2   the character 2
      * @param result       the result
      * @param winnerPoints the winner points
      * @param loserPoints  the loser points
@@ -110,10 +119,12 @@ public class Game implements Serializable{
     /**
      * Instantiates a new Game.
      *
-     * @param player1 the player 1
-     * @param player2 the player 2
-     * @param date    the date
-     * @param result  the result
+     * @param player1    the player 1
+     * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
+     * @param date       the date
+     * @param result     the result
      */
     public Game(Player player1, Player player2, String character1, String character2, LocalDateTime date, int result){
         this.player1 = player1;
@@ -130,6 +141,8 @@ public class Game implements Serializable{
      *
      * @param player1    the player 1
      * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
      * @param date       the date
      * @param result     the result
      * @param tournament the tournament
@@ -150,6 +163,8 @@ public class Game implements Serializable{
      *
      * @param player1      the player 1
      * @param player2      the player 2
+     * @param character1   the character 1
+     * @param character2   the character 2
      * @param date         the date
      * @param result       the result
      * @param winnerPoints the winner points
@@ -311,26 +326,56 @@ public class Game implements Serializable{
         this.id = id;
     }
 
+    /**
+     * Gets tournament.
+     *
+     * @return the tournament
+     */
     public Tournament getTournament() {
         return tournament;
     }
 
+    /**
+     * Sets tournament.
+     *
+     * @param tournament the tournament
+     */
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
     }
 
+    /**
+     * Gets character 1.
+     *
+     * @return the character 1
+     */
     public String getCharacter1() {
         return character1;
     }
 
+    /**
+     * Sets character 1.
+     *
+     * @param character1 the character 1
+     */
     public void setCharacter1(String character1) {
         this.character1 = character1;
     }
 
+    /**
+     * Gets character 2.
+     *
+     * @return the character 2
+     */
     public String getCharacter2() {
         return character2;
     }
 
+    /**
+     * Sets character 2.
+     *
+     * @param character2 the character 2
+     */
     public void setCharacter2(String character2) {
         this.character2 = character2;
     }

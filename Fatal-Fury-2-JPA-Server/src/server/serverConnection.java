@@ -12,17 +12,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
+/**
+ * The type Server connection.
+ */
 public class serverConnection{
+    /**
+     * The Socket.
+     */
     protected Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    /**
+     * The Port receive.
+     */
     protected int portReceive;
+    /**
+     * The Server pending objects.
+     */
     protected Map<Integer, sendableObject> serverPendingObjects = new HashMap<>();
+    /**
+     * The Server pending messages.
+     */
     protected Map<Integer,String> serverPendingMessages = new HashMap<>();
+    /**
+     * The Rec.
+     */
     protected receiver rec;
+    /**
+     * The Block reception.
+     */
     protected  boolean blockReception = false;
-    protected Semaphore sm = new Semaphore(1), requestSM = new Semaphore(1);
+    /**
+     * The Sm.
+     */
+    protected Semaphore sm = new Semaphore(1), /**
+     * The Request sm.
+     */
+    requestSM = new Semaphore(1);
 
+    /**
+     * Instantiates a new Server connection.
+     *
+     * @param socket the socket
+     */
     public serverConnection(Socket socket) {
         this.socket = socket;
         try {
@@ -35,10 +67,22 @@ public class serverConnection{
         this.rec.start();
     }
 
+    /**
+     * Send string.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendString(int id, Object msg){
         send(id,msg,true);
     }
 
+    /**
+     * Send object.
+     *
+     * @param id  the id
+     * @param msg the msg
+     */
     public void sendObject(int id, Object msg){
         send(id,msg,false);
     }
@@ -72,10 +116,26 @@ public class serverConnection{
         }
     }
 
+    /**
+     * Reliable send string boolean.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the boolean
+     */
     public boolean reliableSendString(int id, Object msg, int timeout){
         return reliableSend(id, (String)msg,timeout, true);
     }
 
+    /**
+     * Reliable send object boolean.
+     *
+     * @param id      the id
+     * @param msg     the msg
+     * @param timeout the timeout
+     * @return the boolean
+     */
     public boolean reliableSendObject(int id, Object msg, int timeout){
         return reliableSend(id, (String)msg,timeout, false);
     }
@@ -122,14 +182,33 @@ public class serverConnection{
         }catch (Exception e){/*e.printStackTrace();*/}
     }
 
+    /**
+     * Receive string string.
+     *
+     * @param id the id
+     * @return the string
+     */
     public String receiveString(int id){
         return (String)receive(id, true);
     }
 
+    /**
+     * Receive object object.
+     *
+     * @param id the id
+     * @return the object
+     */
     public Object receiveObject(int id){
         return receive(id, false);
     }
 
+    /**
+     * Receive object.
+     *
+     * @param id     the id
+     * @param string the string
+     * @return the object
+     */
     public Object receive(int id, boolean string){
         if(blockReception || socket == null){return "";}
         try {
@@ -163,6 +242,9 @@ public class serverConnection{
         return "";
     }
 
+    /**
+     * Wait for request or tramit.
+     */
     public void waitForRequestOrTramit(){
         if (serverPendingMessages.containsKey(msgID.toServer.request)
             || serverPendingMessages.containsKey(msgID.toServer.tramits)
@@ -180,6 +262,9 @@ public class serverConnection{
         }
     }
 
+    /**
+     * Receive.
+     */
     public void receive(){
         if(blockReception){return;}
         try {
@@ -214,6 +299,11 @@ public class serverConnection{
         }
     }
 
+    /**
+     * Is connected boolean.
+     *
+     * @return the boolean
+     */
     public boolean isConnected(){return socket != null;}
 
     /**
@@ -282,6 +372,9 @@ public class serverConnection{
         }
     }
 
+    /**
+     * Close.
+     */
     public void  close(){
         try {
             in.close();
@@ -293,82 +386,182 @@ public class serverConnection{
         }catch (Exception e){/*e.printStackTrace();*/}
     }
 
+    /**
+     * Gets socket.
+     *
+     * @return the socket
+     */
     public Socket getSocket() {
         return socket;
     }
 
+    /**
+     * Sets socket.
+     *
+     * @param socket the socket
+     */
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
+    /**
+     * Gets out.
+     *
+     * @return the out
+     */
     public ObjectOutputStream getOut() {
         return out;
     }
 
+    /**
+     * Sets out.
+     *
+     * @param out the out
+     */
     public void setOut(ObjectOutputStream out) {
         this.out = out;
     }
 
+    /**
+     * Gets in.
+     *
+     * @return the in
+     */
     public ObjectInputStream getIn() {
         return in;
     }
 
+    /**
+     * Sets in.
+     *
+     * @param in the in
+     */
     public void setIn(ObjectInputStream in) {
         this.in = in;
     }
 
+    /**
+     * Gets port receive.
+     *
+     * @return the port receive
+     */
     public int getPortReceive() {
         return portReceive;
     }
 
+    /**
+     * Sets port receive.
+     *
+     * @param portReceive the port receive
+     */
     public void setPortReceive(int portReceive) {
         this.portReceive = portReceive;
     }
 
+    /**
+     * Gets server pending objects.
+     *
+     * @return the server pending objects
+     */
     public Map<Integer, sendableObject> getServerPendingObjects() {
         return serverPendingObjects;
     }
 
+    /**
+     * Sets server pending objects.
+     *
+     * @param serverPendingObjects the server pending objects
+     */
     public void setServerPendingObjects(Map<Integer, sendableObject> serverPendingObjects) {
         this.serverPendingObjects = serverPendingObjects;
     }
 
+    /**
+     * Gets server pending messages.
+     *
+     * @return the server pending messages
+     */
     public Map<Integer, String> getServerPendingMessages() {
         return serverPendingMessages;
     }
 
+    /**
+     * Sets server pending messages.
+     *
+     * @param serverPendingMessages the server pending messages
+     */
     public void setServerPendingMessages(Map<Integer, String> serverPendingMessages) {
         this.serverPendingMessages = serverPendingMessages;
     }
 
+    /**
+     * Gets rec.
+     *
+     * @return the rec
+     */
     public receiver getRec() {
         return rec;
     }
 
+    /**
+     * Sets rec.
+     *
+     * @param rec the rec
+     */
     public void setRec(receiver rec) {
         this.rec = rec;
     }
 
+    /**
+     * Is block reception boolean.
+     *
+     * @return the boolean
+     */
     public boolean isBlockReception() {
         return blockReception;
     }
 
+    /**
+     * Sets block reception.
+     *
+     * @param blockReception the block reception
+     */
     public void setBlockReception(boolean blockReception) {
         this.blockReception = blockReception;
     }
 
+    /**
+     * Gets sm.
+     *
+     * @return the sm
+     */
     public Semaphore getSm() {
         return sm;
     }
 
+    /**
+     * Sets sm.
+     *
+     * @param sm the sm
+     */
     public void setSm(Semaphore sm) {
         this.sm = sm;
     }
 
+    /**
+     * Gets request sm.
+     *
+     * @return the request sm
+     */
     public Semaphore getRequestSM() {
         return requestSM;
     }
 
+    /**
+     * Sets request sm.
+     *
+     * @param requestSM the request sm
+     */
     public void setRequestSM(Semaphore requestSM) {
         this.requestSM = requestSM;
     }

@@ -43,7 +43,7 @@ public class game_controller {
      * The training.
      */
 // Modo debug
-    boolean training = false;
+    boolean training = true;
     /**
      * The Trainer.
      */
@@ -238,6 +238,9 @@ public class game_controller {
         this.difficulty = menu_generator.generate_story_difficulty();
         this.escapeMenu = menu_generator.generate_scape();
         this.mapSelection = menu_generator.generate_map_selection();
+        if(training){
+            trainer = new IaVsIaTraining();
+        }
     }
 
     /**
@@ -922,8 +925,10 @@ public class game_controller {
 // Escribir directamente sobre el gráfico de la pantalla
     public void writeDirecly(Graphics2D g, int offset){
         if(training){
-            trainer.getFight().drawHpBarPlayer(g, offset);
-            trainer.getFight().drawHpBarEnemy(g, offset);
+            if(trainer.getFight() != null) {
+                trainer.getFight().drawHpBarPlayer(g, offset);
+                trainer.getFight().drawHpBarEnemy(g, offset);
+            }
         }
         else if(state == GameState.ONLINE_MODE && online.getOnlineState() == GameState.ONLINE_FIGHT && online.getFight() != null){
             online.getFight().drawHpBarPlayer(g, offset);

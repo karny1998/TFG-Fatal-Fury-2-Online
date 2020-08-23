@@ -78,8 +78,8 @@ public class Player implements Serializable {
     /**
      * Instantiates a new Player.
      *
-     * @param email    the email
      * @param username the username
+     * @param email    the email
      * @param password the password
      * @param active   the active
      */
@@ -291,108 +291,238 @@ public class Player implements Serializable {
         this.participatedTournaments = participatedTournaments;
     }
 
+    /**
+     * Gets friends as soliciter.
+     *
+     * @return the friends as soliciter
+     */
     public List<Player> getFriendsAsSoliciter() {
         return friendsAsSoliciter;
     }
 
+    /**
+     * Sets friends as soliciter.
+     *
+     * @param friendsAsSoliciter the friends as soliciter
+     */
     public void setFriendsAsSoliciter(List<Player> friendsAsSoliciter) {
         this.friendsAsSoliciter = friendsAsSoliciter;
     }
 
+    /**
+     * Gets friends as receiver.
+     *
+     * @return the friends as receiver
+     */
     public List<Player> getFriendsAsReceiver() {
         return friendsAsReceiver;
     }
 
+    /**
+     * Sets friends as receiver.
+     *
+     * @param friendsAsReceiver the friends as receiver
+     */
     public void setFriendsAsReceiver(List<Player> friendsAsReceiver) {
         this.friendsAsReceiver = friendsAsReceiver;
     }
 
+    /**
+     * Gets sent friend request.
+     *
+     * @return the sent friend request
+     */
     public List<Player> getSentFriendRequest() {
         return sentFriendRequest;
     }
 
+    /**
+     * Sets sent friend request.
+     *
+     * @param sentFriendRequest the sent friend request
+     */
     public void setSentFriendRequest(List<Player> sentFriendRequest) {
         this.sentFriendRequest = sentFriendRequest;
     }
 
+    /**
+     * Gets received friend request.
+     *
+     * @return the received friend request
+     */
     public List<Player> getReceivedFriendRequest() {
         return receivedFriendRequest;
     }
 
+    /**
+     * Sets received friend request.
+     *
+     * @param receivedFriendRequest the received friend request
+     */
     public void setReceivedFriendRequest(List<Player> receivedFriendRequest) {
         this.receivedFriendRequest = receivedFriendRequest;
     }
 
+    /**
+     * Add normal game result.
+     *
+     * @param won the won
+     */
     public void addNormalGameResult(boolean won){
         if(won){++normalWins;}
         else{++normalLoses;}
     }
 
+    /**
+     * Add ranked game result.
+     *
+     * @param won the won
+     */
     public void addRankedGameResult(boolean won){
         if(won){++rankWins;}
         else{++rankLoses;}
     }
 
+    /**
+     * Gets normal wins.
+     *
+     * @return the normal wins
+     */
     public int getNormalWins() {
         return normalWins;
     }
 
+    /**
+     * Sets normal wins.
+     *
+     * @param normalWins the normal wins
+     */
     public void setNormalWins(int normalWins) {
         this.normalWins = normalWins;
     }
 
+    /**
+     * Gets normal loses.
+     *
+     * @return the normal loses
+     */
     public int getNormalLoses() {
         return normalLoses;
     }
 
+    /**
+     * Sets normal loses.
+     *
+     * @param normalLoses the normal loses
+     */
     public void setNormalLoses(int normalLoses) {
         this.normalLoses = normalLoses;
     }
 
+    /**
+     * Gets rank wins.
+     *
+     * @return the rank wins
+     */
     public int getRankWins() {
         return rankWins;
     }
 
+    /**
+     * Sets rank wins.
+     *
+     * @param rankWins the rank wins
+     */
     public void setRankWins(int rankWins) {
         this.rankWins = rankWins;
     }
 
+    /**
+     * Gets rank loses.
+     *
+     * @return the rank loses
+     */
     public int getRankLoses() {
         return rankLoses;
     }
 
+    /**
+     * Sets rank loses.
+     *
+     * @param rankLoses the rank loses
+     */
     public void setRankLoses(int rankLoses) {
         this.rankLoses = rankLoses;
     }
 
+    /**
+     * Gets pending messages.
+     *
+     * @return the pending messages
+     */
     public List<Player> getPending_messages() {
         return pending_messages;
     }
 
+    /**
+     * Sets pending messages.
+     *
+     * @param pending_messages the pending messages
+     */
     public void setPending_messages(List<Player> pending_messages) {
         this.pending_messages = pending_messages;
     }
 
+    /**
+     * Gets code.
+     *
+     * @return the code
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * Sets code.
+     *
+     * @param code the code
+     */
     public void setCode(int code) {
         this.code = code;
     }
 
+    /**
+     * Gets times v sglobal ia.
+     *
+     * @return the times v sglobal ia
+     */
     public int getTimesVSglobalIa() {
         return timesVSglobalIa;
     }
 
+    /**
+     * Sets times v sglobal ia.
+     *
+     * @param timesVSglobalIa the times v sglobal ia
+     */
     public void setTimesVSglobalIa(int timesVSglobalIa) {
         this.timesVSglobalIa = timesVSglobalIa;
     }
 
+    /**
+     * Gets times v sownl ia.
+     *
+     * @return the times v sownl ia
+     */
     public int getTimesVSownlIa() {
         return timesVSownlIa;
     }
 
+    /**
+     * Sets times v sownl ia.
+     *
+     * @param timesVSownlIa the times v sownl ia
+     */
     public void setTimesVSownlIa(int timesVSownlIa) {
         this.timesVSownlIa = timesVSownlIa;
     }

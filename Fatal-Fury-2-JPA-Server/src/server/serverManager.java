@@ -33,6 +33,9 @@ import java.security.cert.Certificate;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+/**
+ * The type Server manager.
+ */
 public class serverManager {
     private static databaseManager dbm;
     private Map<String, serverConnection> loggedUsers = new HashMap<>();
@@ -43,14 +46,31 @@ public class serverManager {
     private List<Pair<String,String>> ongoingRankedGames = new ArrayList<>();
     private Map<String, String> pendingFriendsInvitatiosns = new HashMap<>();
     private boolean shuttingDown = false;
+    /**
+     * The Training global ia.
+     */
     public Semaphore trainingGlobalIa = new Semaphore(1);
 
+    /**
+     * Instantiates a new Server manager.
+     *
+     * @param dbm the dbm
+     */
     public serverManager(databaseManager dbm){
         stateCalculator.initialize();
         this.dbm = dbm;
     }
 
 
+    /**
+     * Connect user string.
+     *
+     * @param add      the add
+     * @param sc       the sc
+     * @param username the username
+     * @param pass     the pass
+     * @return the string
+     */
     public synchronized String connectUser(InetAddress add, serverConnection sc, String username, String pass){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(p == null){
@@ -78,6 +98,11 @@ public class serverManager {
         }
     }
 
+    /**
+     * Desconnect user.
+     *
+     * @param us the us
+     */
     public synchronized void desconnectUser(String us){
         loggedUsers.remove(us);
         usersIP.remove(us);
@@ -100,6 +125,13 @@ public class serverManager {
         }
     }
 
+    /**
+     * Search game boolean.
+     *
+     * @param newPlayer the new player
+     * @param ranked    the ranked
+     * @return the boolean
+     */
     public synchronized boolean searchGame(String newPlayer, boolean ranked){
         if(searchingRankedGameUsers.contains(newPlayer)
             || searchingGameUsers.contains(newPlayer)){
@@ -146,6 +178,14 @@ public class serverManager {
         return true;
     }
 
+    /**
+     * Create game between palyers boolean.
+     *
+     * @param p1     the p 1
+     * @param p2     the p 2
+     * @param ranked the ranked
+     * @return the boolean
+     */
     protected boolean createGameBetweenPalyers(String p1, String p2, boolean ranked){
         // Mensaje: eresHost?:direcciónRival
         String msg1 = "SEARCH GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2;
@@ -165,6 +205,14 @@ public class serverManager {
         return  true;
     }
 
+    /**
+     * Register user string.
+     *
+     * @param username the username
+     * @param email    the email
+     * @param password the password
+     * @return the string
+     */
     public String registerUser(String username, String email, String password){
         String res = dbm.registerPlayer(username, email, password);
         Player p = (Player) dbm.findByKey(Player.class, username);
@@ -180,6 +228,13 @@ public class serverManager {
         return res;
     }
 
+    /**
+     * Verify account string.
+     *
+     * @param username the username
+     * @param cod      the cod
+     * @return the string
+     */
     public String verifyAccount(String username, int cod){
         Player p = (Player) dbm.findByKey(Player.class, username);
         if (p == null){
@@ -195,6 +250,13 @@ public class serverManager {
         }
     }
 
+    /**
+     * Friends request string.
+     *
+     * @param user1 the user 1
+     * @param user2 the user 2
+     * @return the string
+     */
     public String friendsRequest(String user1, String user2){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
@@ -239,6 +301,14 @@ public class serverManager {
         return "FRIEND REQUEST SENT";
     }
 
+    /**
+     * Answer friends request string.
+     *
+     * @param user1 the user 1
+     * @param user2 the user 2
+     * @param ok    the ok
+     * @return the string
+     */
     public String answerFriendsRequest(String user1, String user2, boolean ok){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
@@ -303,6 +373,13 @@ public class serverManager {
         return "FRIEND REQUEST REJECTED";
     }
 
+    /**
+     * Remove friend string.
+     *
+     * @param user1 the user 1
+     * @param user2 the user 2
+     * @return the string
+     */
     public String removeFriend(String user1, String user2){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
@@ -361,12 +438,25 @@ public class serverManager {
         }
     }
 
+    /**
+     * Stop searching game.
+     *
+     * @param player the player
+     */
     public synchronized void stopSearchingGame(String player){
         searchingRankedGameUsers.remove(player);
         searchingGameUsers.remove(player);
         pendingFriendsInvitatiosns.remove(player);
     }
 
+    /**
+     * Send message string.
+     *
+     * @param transmitter the transmitter
+     * @param receiver    the receiver
+     * @param msg         the msg
+     * @return the string
+     */
     public String sendMessage(String transmitter, String receiver, String msg){
         Player p1 = (Player) dbm.findByKey(Player.class, transmitter);
         if (p1 == null){
@@ -405,11 +495,29 @@ public class serverManager {
         return "MESSAGE SENT";
     }
 
+    /**
+     * Message between users historial sendable objects list.
+     *
+     * @param user1 the user 1
+     * @param user2 the user 2
+     * @return the sendable objects list
+     */
     public sendableObjectsList messageBetweenUsersHistorial(String user1, String user2){
         ArrayList<sendableObject> list = converter.convertMessageList(dbm.getUserMessages(user1,user2));
         return new sendableObjectsList(list);
     }
 
+    /**
+     * Register game string.
+     *
+     * @param user1      the user 1
+     * @param user2      the user 2
+     * @param character1 the character 1
+     * @param character2 the character 2
+     * @param result     the result
+     * @param ranked     the ranked
+     * @return the string
+     */
     public synchronized String registerGame(String user1, String user2, String character1, String character2, int result, boolean ranked){
         Player p1 = (Player) dbm.findByKey(Player.class, user1);
         if (p1 == null){
@@ -494,6 +602,12 @@ public class serverManager {
         }
     }
 
+    /**
+     * Get user friends sendable objects list.
+     *
+     * @param user the user
+     * @return the sendable objects list
+     */
     public sendableObjectsList getUserFriends(String user){
         Player p = (Player) dbm.findByKey(Player.class, user);
         sendableObjectsList friends = new sendableObjectsList(new ArrayList<>());
@@ -512,6 +626,12 @@ public class serverManager {
         return friends;
     }
 
+    /**
+     * Get user profile profile.
+     *
+     * @param user the user
+     * @return the profile
+     */
     public profile getUserProfile(String user){
         List<Game> games;
         Player p = (Player) dbm.findByKey(Player.class, user);
@@ -558,6 +678,12 @@ public class serverManager {
         return new Pair<>(p1P, p2P);
     }
 
+    /**
+     * Pending friends request list sendable objects list.
+     *
+     * @param user the user
+     * @return the sendable objects list
+     */
     public sendableObjectsList pendingFriendsRequestList(String user){
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
@@ -566,6 +692,12 @@ public class serverManager {
         return new sendableObjectsList(converter.convertPlayerListToUsernameList(p.getReceivedFriendRequest()));
     }
 
+    /**
+     * Pending friends message list sendable objects list.
+     *
+     * @param user the user
+     * @return the sendable objects list
+     */
     public sendableObjectsList pendingFriendsMessageList(String user){
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
@@ -574,6 +706,13 @@ public class serverManager {
         return new sendableObjectsList(converter.convertPlayerListToUsernameList(p.getPending_messages()));
     }
 
+    /**
+     * Notify messages read string.
+     *
+     * @param receiver   the receiver
+     * @param transmiter the transmiter
+     * @return the string
+     */
     public String notifyMessagesRead(String receiver, String transmiter){
         Player p1 = (Player) dbm.findByKey(Player.class, receiver);
         if (p1 == null){
@@ -593,6 +732,13 @@ public class serverManager {
         return "OK";
     }
 
+    /**
+     * Challenge friend string.
+     *
+     * @param inviter  the inviter
+     * @param receptor the receptor
+     * @return the string
+     */
     public String challengeFriend(String inviter, String receptor){
         if(!loggedUsers.containsKey(receptor)){
             return "ERROR: The user isnt connected.";
@@ -610,6 +756,12 @@ public class serverManager {
         return "CHALLENGE SENT";
     }
 
+    /**
+     * Cancel invitation string.
+     *
+     * @param inviter the inviter
+     * @return the string
+     */
     public String cancelInvitation(String inviter){
         Player p1 = (Player) dbm.findByKey(Player.class, inviter);
         if (p1 == null){
@@ -623,6 +775,14 @@ public class serverManager {
         return "CHALLENGE CANCELLED";
     }
 
+    /**
+     * Answer friend challenge string.
+     *
+     * @param receptor the receptor
+     * @param inviter  the inviter
+     * @param accepted the accepted
+     * @return the string
+     */
     public String answerFriendChallenge(String receptor, String inviter, boolean accepted){
         if(!pendingFriendsInvitatiosns.containsKey(inviter) || !loggedUsers.containsKey(inviter)){
             return "ERROR:The invitation has expired.";
@@ -644,11 +804,22 @@ public class serverManager {
         return "CHALLENGE ANSWERED";
     }
 
+    /**
+     * Load ranking sendable objects list.
+     *
+     * @return the sendable objects list
+     */
     public sendableObjectsList loadRanking(){
         List<Player> list = dbm.getRanking();
         return new sendableObjectsList(converter.convertPlayerListToRanking(list));
     }
 
+    /**
+     * Recover account string.
+     *
+     * @param user the user
+     * @return the string
+     */
     public String recoverAccount(String user){
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
@@ -667,6 +838,14 @@ public class serverManager {
         return "RECOVERED";
     }
 
+    /**
+     * Change password string.
+     *
+     * @param user the user
+     * @param oldp the oldp
+     * @param newp the newp
+     * @return the string
+     */
     public String changePassword(String user, String oldp, String newp) {
         Player p = (Player) dbm.findByKey(Player.class, user);
         if (p == null){
@@ -724,6 +903,13 @@ public class serverManager {
         Transport.send(msg);
     }
 
+    /**
+     * Encrypt string.
+     *
+     * @param strClearText the str clear text
+     * @return the string
+     * @throws Exception the exception
+     */
     public static String encrypt(String strClearText) throws Exception{
         String strData="";
         String strKey = strClearText;
@@ -742,6 +928,12 @@ public class serverManager {
         return strData;
     }
 
+    /**
+     * Add certificate to keystore string.
+     *
+     * @param cer the cer
+     * @return the string
+     */
     public synchronized String addCertificateToKeystore(certificate cer){
         String path = System.getProperty("user.dir") + "/certs/serverTrustedCerts.jks";
         File file = new File(path);
@@ -759,11 +951,24 @@ public class serverManager {
         }
     }
 
+    /**
+     * Get qtable qtable.
+     *
+     * @param user the user
+     * @return the qtable
+     */
     public qtable getQtable(String user){
         agent aux = new agent(user);
         return new qtable(aux.getqTable(), "");//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
     }
 
+    /**
+     * Train own ia string.
+     *
+     * @param user  the user
+     * @param table the table
+     * @return the string
+     */
     public String trainOwnIA(String user, qtable table){
         try {
             agent aux = new agent(user);
@@ -787,6 +992,12 @@ public class serverManager {
         return "TRAINED";
     }
 
+    /**
+     * Train global ia string.
+     *
+     * @param table the table
+     * @return the string
+     */
     public String trainGlobalIA(qtable table){
         try {
             trainingGlobalIa.acquire();
@@ -801,6 +1012,12 @@ public class serverManager {
         return "TRAINED";
     }
 
+    /**
+     * Get player i atimes int.
+     *
+     * @param user the user
+     * @return the int
+     */
     public int getPlayerIAtimes(String user){
         Player p1 = (Player) dbm.findByKey(Player.class, user);
         if (p1 == null){
@@ -809,6 +1026,11 @@ public class serverManager {
         return p1.getTimesVSownlIa();
     }
 
+    /**
+     * Get global ia times int.
+     *
+     * @return the int
+     */
     public int getGlobalIaTimes(){
         return dbm.getGlobalIaTimes();
     }

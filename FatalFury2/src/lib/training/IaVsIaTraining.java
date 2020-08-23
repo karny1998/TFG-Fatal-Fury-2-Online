@@ -83,16 +83,18 @@ public class IaVsIaTraining {
     private boolean random = false, /**
      * The Against himself.
      */
-    againstHimself = false, /**
+    againstTrainedIa = false, /**
      * The Against person.
      */
     againstPerson = false, /**
-     * The Training.
+     * The Testing.
      */
-    training = true, /**
+    testing = true, /**
      * The Use regression.
      */
     useRegression = false;
+
+    private String nameIa = "", enemyIa = "";
 
     /**
      * Instantiates a new Ia vs ia training.
@@ -103,69 +105,146 @@ public class IaVsIaTraining {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             String aux = "";
             do{
-                System.out.print("Training (true, false): ");
+                System.out.print("Testing (true, false): ");
                 aux = in.readLine();
             }while (!aux.equals("true") && !(aux.equals("false")));
-            training = Boolean.parseBoolean(aux);
+            testing = Boolean.parseBoolean(aux);
             do{
-                System.out.print("Use regression (true, false): ");
+                System.out.print("Introduce IA name (A, B, C, D) (only A y C for testers): ");
                 aux = in.readLine();
-            }while (!aux.equals("true") && !(aux.equals("false")));
-            useRegression = Boolean.parseBoolean(aux);
-            do{
-                System.out.print("Aleatory fights (true, false): ");
-                aux = in.readLine();
-            }while (!aux.equals("true") && !(aux.equals("false")));
-            random = Boolean.parseBoolean(aux);
-            if(!random){
-                do{
-                    System.out.print("Against himself (true,false): ");
+            }while (!aux.equals("A") && !(aux.equals("B")) && !(aux.equals("C")) && !(aux.equals("D")));
+            switch (aux){
+                case "A":
+                    nameIa = "AleatoryRegresionYes";
+                    break;
+                case "B":
+                    nameIa = "AleatoryRegresionNo";
+                    break;
+                case "C":
+                    nameIa = "SameRegresionYes";
+                    break;
+                case "D":
+                    nameIa = "SameRegresionNo";
+                    break;
+                default:
+                    nameIa = "AleatoryRegresionYes";
+                    break;
+            }
+            filename = System.getProperty("user.dir") + "/.files/q_learning_stats"+ nameIa + ".xml";
+
+            if(testing){
+                useRegression = true;
+                this.times = 5000;
+                this.i = 5100;
+                this.againstTrainedIa = false;
+                this.loadTraining = false;
+                do {
+                    System.out.print("Against person (true,false): ");
                     aux = in.readLine();
-                }while (!aux.equals("true") && !(aux.equals("false")));
-                againstHimself = Boolean.parseBoolean(aux);
-                if(againstHimself){
-                    this.charac = Playable_Character.TERRY;
-                    this.pLvl = ia_loader.dif.HARD;
-                }
-                else {
+                } while (!aux.equals("true") && !(aux.equals("false")));
+                againstPerson = Boolean.parseBoolean(aux);
+                if(againstPerson){
+                    this.random = false;
                     do {
                         System.out.print("Rival (TERRY, MAI, ANDY): ");
                         aux = in.readLine();
                     } while (!aux.equals("TERRY") && !(aux.equals("MAI")) && !(aux.equals("ANDY")));
                     this.charac = Playable_Character.valueOf(aux);
-
-                    do{
-                        System.out.print("Against person (true,false): ");
+                }
+                else{
+                    do {
+                        System.out.print("Against trained ia (true,false): ");
                         aux = in.readLine();
-                    }while (!aux.equals("true") && !(aux.equals("false")));
-                    againstPerson = Boolean.parseBoolean(aux);
-
-                    if(!againstPerson) {
-                        do {
-                            System.out.print("Level (EASY, NORMAL, HARD, VERY_HARD): ");
+                    } while (!aux.equals("true") && !(aux.equals("false")));
+                    againstTrainedIa = Boolean.parseBoolean(aux);
+                    this.random = againstTrainedIa;
+                    if(againstTrainedIa){
+                        this.charac = Playable_Character.TERRY;
+                        this.pLvl = ia_loader.dif.HARD;
+                        do{
+                            System.out.print("Introduce IA name (A, B, C, D): ");
                             aux = in.readLine();
-                        } while (!aux.equals("EASY") && !(aux.equals("NORMAL")) && !(aux.equals("HARD")) && !(aux.equals("VERY_HARD")));
-                        this.pLvl = ia_loader.dif.valueOf(aux);
+                        }while (!aux.equals("A") && !(aux.equals("B")) && !(aux.equals("C")) && !(aux.equals("D")));
+                        switch (aux){
+                            case "A":
+                                enemyIa = "AleatoryRegresionYes";
+                                break;
+                            case "B":
+                                enemyIa = "AleatoryRegresionNo";
+                                break;
+                            case "C":
+                                enemyIa = "SameRegresionYes";
+                                break;
+                            case "D":
+                                enemyIa = "SameRegresionNo";
+                                break;
+                            default:
+                                enemyIa = "AleatoryRegresioYes";
+                                break;
+                        }
                     }
                 }
             }
+            else {
+                do {
+                    System.out.print("Use regression (true, false): ");
+                    aux = in.readLine();
+                } while (!aux.equals("true") && !(aux.equals("false")));
+                useRegression = Boolean.parseBoolean(aux);
+                do {
+                    System.out.print("Aleatory fights (true, false): ");
+                    aux = in.readLine();
+                } while (!aux.equals("true") && !(aux.equals("false")));
+                random = Boolean.parseBoolean(aux);
+                if (!random) {
+                    do {
+                        System.out.print("Against trained ia (true,false): ");
+                        aux = in.readLine();
+                    } while (!aux.equals("true") && !(aux.equals("false")));
+                    againstTrainedIa = Boolean.parseBoolean(aux);
+                    if (againstTrainedIa) {
+                        this.charac = Playable_Character.TERRY;
+                        this.pLvl = ia_loader.dif.HARD;
+                    } else {
+                        do {
+                            System.out.print("Rival (TERRY, MAI, ANDY): ");
+                            aux = in.readLine();
+                        } while (!aux.equals("TERRY") && !(aux.equals("MAI")) && !(aux.equals("ANDY")));
+                        this.charac = Playable_Character.valueOf(aux);
+
+                        do {
+                            System.out.print("Against person (true,false): ");
+                            aux = in.readLine();
+                        } while (!aux.equals("true") && !(aux.equals("false")));
+                        againstPerson = Boolean.parseBoolean(aux);
+
+                        if (!againstPerson) {
+                            do {
+                                System.out.print("Level (EASY, NORMAL, HARD, VERY_HARD): ");
+                                aux = in.readLine();
+                            } while (!aux.equals("EASY") && !(aux.equals("NORMAL")) && !(aux.equals("HARD")) && !(aux.equals("VERY_HARD")));
+                            this.pLvl = ia_loader.dif.valueOf(aux);
+                        }
+                    }
+                }
+
+                System.out.print("Iterations (integer): ");
+                aux = in.readLine();
+                this.times = Integer.parseInt(aux);
+
+                System.out.print("Starting iteration (integer): ");
+                aux = in.readLine();
+                this.i = Integer.parseInt(aux);
+
+                do {
+                    System.out.print("Load training (true,false): ");
+                    aux = in.readLine();
+                } while (!aux.equals("true") && !(aux.equals("false")));
+                this.loadTraining = Boolean.parseBoolean(aux);
+            }
+            in.close();
             this.ia = Playable_Character.TERRY;
             this.lvlIa = ia_loader.dif.HARD;
-
-            System.out.print("Iterations (integer): ");
-            aux = in.readLine();
-            this.times = Integer.parseInt(aux);
-
-            System.out.print("Starting iteration (integer): ");
-            aux = in.readLine();
-            this.i = Integer.parseInt(aux);
-
-            do{
-                System.out.print("Load training (true,false): ");
-                aux = in.readLine();
-            }while (!aux.equals("true") && !(aux.equals("false")));
-            this.loadTraining = Boolean.parseBoolean(aux);
-            in.close();
         }catch (Exception e){e.printStackTrace();}
     }
 
@@ -176,7 +255,7 @@ public class IaVsIaTraining {
         if (againstPerson) {
             player = new user_controller(charac, 1);
         }
-        else if(!againstHimself) {
+        else if(!againstTrainedIa) {
             if(random) {
                 int r = ((int) (Math.random() * 3.0)) % 3;
                 switch (r) {
@@ -212,20 +291,25 @@ public class IaVsIaTraining {
             player = new enemy_controller(charac, 1);
         }
         if(enemy == null) {
-            if(againstHimself) {
-                player = new enemy_controller(ia, 1, true, false);
+            if(againstTrainedIa) {
+                player = new enemy_controller(ia, 1, true);
             }
-            enemy = new enemy_controller(ia, 2, true, training);
+            enemy = new enemy_controller(ia, 2, true);
         }
         else{
-            if(againstHimself) {
+            if(againstTrainedIa) {
                 ((enemy_controller) player).reset();
             }
             enemy.reset();
         }
-        enemy.setRival(player.getPlayer());
+        enemy.setRival(player.getPlayer(), nameIa);
         enemy.getPlayer().setMapLimit(mapLimit);
-        player.setRival(enemy.getPlayer());
+        if(againstTrainedIa){
+            ((enemy_controller)player).setRival(enemy.getPlayer(), enemyIa);
+        }
+        else{
+            player.setRival(enemy.getPlayer());
+        }
         if(!againstPerson) {
             player.getIa().setDif(pLvl);
         }
@@ -238,25 +322,36 @@ public class IaVsIaTraining {
         fight.setIaLvl(lvlIa);
         audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
         audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-        double epsilon = 1.0 - (double)i/3000.0;
         agente = enemy.getAgente();
-        if(epsilon >= 0.05) {
-            enemy.getAgente().setEpsilon(epsilon);
+        if(testing) {
+            agente.setEpsilon(0.05);
+            agente.setUseRegression(true);
+            try{
+                agente.trainRegression();
+            }catch (Exception e){}
         }
         else{
-            enemy.getAgente().setEpsilon(0.05);
+            double epsilon = 1.0 - (double)i/3000.0;
+            if(epsilon >= 0.05) {
+                agente.setEpsilon(epsilon);
+            }
+            else{
+                agente.setEpsilon(0.05);
+            }
+            if(loadTraining){
+                agente.loadTraining("trainingRegister.txt");
+                loadTraining = false;
+            }
+            agente.setUseRegression(useRegression);
         }
-        if(loadTraining){
-            enemy.getAgente().loadTraining("trainingRegister.txt");
-            loadTraining = false;
+        if(againstTrainedIa) {
+            ((enemy_controller)player).getAgente().setEpsilon(0.05);
+            ((enemy_controller)player).getAgente().setUseRegression(true);
+            try{
+                ((enemy_controller)player).getAgente().trainRegression();
+            }catch (Exception e){}
         }
-        if(againstHimself) {
-            ((enemy_controller)player).getAgente().setEpsilon(0.0);
-        }
-        if(!training) {
-            enemy.getAgente().setEpsilon(0.0);
-        }
-        enemy.getAgente().setUseRegression(useRegression);
+
     }
 
 
@@ -281,7 +376,14 @@ public class IaVsIaTraining {
             enemy.getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
             enemy.getPlayer().getStats().saveUpdatedHistory();
             enemy.getPlayer().getStats().nextFight();
-            Fight_Results resultado = fight.getFight_result();
+            if(againstTrainedIa){
+                ((enemy_controller)player).getAgente().writeQTableAndRegister();
+                ((enemy_controller)player).getAgente().trainRegression();
+                ((enemy_controller)player).getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
+                ((enemy_controller)player).getPlayer().getStats().saveUpdatedHistory();
+                ((enemy_controller)player).getPlayer().getStats().nextFight();
+            }
+            //Fight_Results resultado = fight.getFight_result();
             audio_manager.fight.stopMusic(fight_audio.music_indexes.map_theme);
             ++this.i;
             generateFight();

@@ -5,6 +5,8 @@
             <accumulatedReward>-64</accumulatedReward>
             <currentRound>2</currentRound>
             <id>0</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
@@ -45,6 +47,8 @@
             <accumulatedReward>-226</accumulatedReward>
             <currentRound>2</currentRound>
             <id>1</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
@@ -85,6 +89,8 @@
             <accumulatedReward>189</accumulatedReward>
             <currentRound>2</currentRound>
             <id>2</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
@@ -125,6 +131,8 @@
             <accumulatedReward>147</accumulatedReward>
             <currentRound>2</currentRound>
             <id>3</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
             <rounds>
                 <round>
                     <blocked_hits>0</blocked_hits>
@@ -158,6 +166,26 @@
                     <remaining_time>71</remaining_time>
                     <result>1</result>
                     <successful_hits>7</successful_hits>
+                </round>
+            </rounds>
+        </fight>
+        <fight>
+            <accumulatedReward>-150</accumulatedReward>
+            <currentRound>0</currentRound>
+            <id>4</id>
+            <lvlRival>HARD</lvlRival>
+            <rival>TERRY</rival>
+            <rounds>
+                <round>
+                    <blocked_hits>0</blocked_hits>
+                    <id>0</id>
+                    <player_remaining_life>0</player_remaining_life>
+                    <realized_hits>15</realized_hits>
+                    <received_hits>0</received_hits>
+                    <remaining_life>0</remaining_life>
+                    <remaining_time>0</remaining_time>
+                    <result>0</result>
+                    <successful_hits>0</successful_hits>
                 </round>
             </rounds>
         </fight>

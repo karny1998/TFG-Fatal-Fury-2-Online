@@ -20,9 +20,11 @@ public class RankedGame extends Game{
     /**
      * Instantiates a new Ranked game.
      *
-     * @param player1 the player 1
-     * @param player2 the player 2
-     * @param result  the result
+     * @param player1    the player 1
+     * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
+     * @param result     the result
      */
     public RankedGame(Player player1, Player player2, String character1, String character2, int result){
         super(player1,player2,character1,character2,result);
@@ -34,6 +36,8 @@ public class RankedGame extends Game{
      *
      * @param player1    the player 1
      * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
      * @param result     the result
      * @param tournament the tournament
      */
@@ -47,6 +51,8 @@ public class RankedGame extends Game{
      *
      * @param player1      the player 1
      * @param player2      the player 2
+     * @param character1   the character 1
+     * @param character2   the character 2
      * @param result       the result
      * @param winnerPoints the winner points
      * @param loserPoints  the loser points
@@ -59,10 +65,12 @@ public class RankedGame extends Game{
     /**
      * Instantiates a new Ranked game.
      *
-     * @param player1 the player 1
-     * @param player2 the player 2
-     * @param date    the date
-     * @param result  the result
+     * @param player1    the player 1
+     * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
+     * @param date       the date
+     * @param result     the result
      */
     public RankedGame(Player player1, Player player2, String character1, String character2, LocalDateTime date, int result){
         super(player1,player2,character1,character2,date, result);
@@ -74,6 +82,8 @@ public class RankedGame extends Game{
      *
      * @param player1    the player 1
      * @param player2    the player 2
+     * @param character1 the character 1
+     * @param character2 the character 2
      * @param date       the date
      * @param result     the result
      * @param tournament the tournament
@@ -88,6 +98,8 @@ public class RankedGame extends Game{
      *
      * @param player1      the player 1
      * @param player2      the player 2
+     * @param character1   the character 1
+     * @param character2   the character 2
      * @param date         the date
      * @param result       the result
      * @param winnerPoints the winner points

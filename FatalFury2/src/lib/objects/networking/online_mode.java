@@ -253,7 +253,7 @@ public class online_mode {
             this.isRanked = isRanked;
 
             player = new user_controller(pC, 1);
-            enemy = new enemy_controller(char2, 2, true, true);
+            enemy = new enemy_controller(char2, 2, true);
 
             enemy.setRival(player.getPlayer());
             enemy.getPlayer().setMapLimit(mapLimit);

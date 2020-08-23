@@ -37,11 +37,6 @@ public class agent_controller extends ia_controller{
     private Movement previousState = Movement.STANDING;
 
     /**
-     * The Training.
-     */
-    private boolean training = false;
-
-    /**
      * The Move agent.
      */
     private String moveAgent = "";
@@ -89,12 +84,10 @@ public class agent_controller extends ia_controller{
      * @param p        the p
      * @param e        the e
      * @param lvl      the lvl
-     * @param training the training
      */
-    public  agent_controller(String user, character p, character e, ia_loader.dif lvl, boolean training){
+    public  agent_controller(String user, character p, character e, ia_loader.dif lvl){
         super(p,e,lvl);
         this.movementsKeys = e.getMovementsKeys();
-        this.training = training;
         hitBox pHurt = player.getHurtbox();
         hitBox eHurt = enemy.getHurtbox();
         int dis = 0;
@@ -141,18 +134,6 @@ public class agent_controller extends ia_controller{
         }
         else if(pHurt.getX() < eHurt.getX()){
             dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
-        }
-
-        if(!training) {
-            state s = new state(enemy.getLife(), player.getLife(), player.getState(), dis, round, time, round - pWins - 1, pWins, enemy.getY() < 40);
-            Movement m = agente.selectAction(s);
-            actionToExecute = agente.selectAction(s);
-            moveAgent = movementsKeys.get(m);
-            if(m == Movement.NONE){
-                actionToExecute = enemy.getCombos().get(move);
-                moveAgent = move;
-            }
-            return;
         }
 
         if(isStandBy()){
@@ -388,24 +369,6 @@ public class agent_controller extends ia_controller{
      */
     public void setPreviousState(Movement previousState) {
         this.previousState = previousState;
-    }
-
-    /**
-     * Is training boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isTraining() {
-        return training;
-    }
-
-    /**
-     * Sets training.
-     *
-     * @param training the training
-     */
-    public void setTraining(boolean training) {
-        this.training = training;
     }
 
     /**

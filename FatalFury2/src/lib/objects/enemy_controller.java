@@ -24,11 +24,6 @@ public class enemy_controller extends character_controller{
     protected boolean agentIaCreated = false;
 
     /**
-     * The Training.
-     */
-    private boolean training = false;
-
-    /**
      * The Agente.
      */
     private agent agente = null;
@@ -78,12 +73,10 @@ public class enemy_controller extends character_controller{
      * @param ch       the ch
      * @param pN       the p n
      * @param agentIa  the agent Ia
-     * @param training the training
      */
-    public enemy_controller(Playable_Character ch, int pN, boolean agentIa, boolean training){
+    public enemy_controller(Playable_Character ch, int pN, boolean agentIa){
         super(ch, pN, 750, 290, 1);
         this.agentIa = agentIa;
-        this.training = training;
         if(pN == 1){
             this.x = 500;
             this.player.setOrientation(-1);
@@ -191,7 +184,7 @@ public class enemy_controller extends character_controller{
         this.player.setRival(rival);
         this.rival = rival;
         if(agentIa && !agentIaCreated){
-            agent_controller aux = new agent_controller("basic", rival, this.player,ia_loader.dif.HARD, training);
+            agent_controller aux = new agent_controller("basic", rival, this.player,ia_loader.dif.HARD);
             ia = aux;
             agente = aux.getAgente();
             agentIaCreated = true;
@@ -217,7 +210,7 @@ public class enemy_controller extends character_controller{
         this.player.setRival(rival);
         this.rival = rival;
         if(agentIa && !agentIaCreated){
-            agent_controller aux = new agent_controller(user, rival, this.player,ia_loader.dif.HARD, training);
+            agent_controller aux = new agent_controller(user, rival, this.player,ia_loader.dif.HARD);
             ia = aux;
             agente = aux.getAgente();
             agentIaCreated = true;
@@ -267,24 +260,6 @@ public class enemy_controller extends character_controller{
      */
     public void setAgentIa(boolean agentIa) {
         this.agentIa = agentIa;
-    }
-
-    /**
-     * Is training boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isTraining() {
-        return training;
-    }
-
-    /**
-     * Sets training.
-     *
-     * @param training the training
-     */
-    public void setTraining(boolean training) {
-        this.training = training;
     }
 
     /**

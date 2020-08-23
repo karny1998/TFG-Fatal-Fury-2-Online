@@ -91,6 +91,7 @@ public class Regression {
      * @param folds        the folds
      * @param grade        the grade
      * @param maxGrade     the max grade
+     * @param user         the user
      * @param t            the t
      * @param q            the q
      * @param fromTraining the from training
