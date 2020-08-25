@@ -829,6 +829,9 @@ public class fight_controller implements roundListener {
                 enemy.getPlayer().getStats().getActualFight().currentRound().setRemaining_time(currentRound.getTimeLeft());
                 if (roundCounter < 4 && newRound){
                     enemy.getPlayer().getStats().getActualFight().nextRound();
+                    try{
+                        ((enemy_controller)player).getPlayer().getStats().getActualFight().nextRound();
+                    }catch (Exception e){}
                 }
                 /////////////////////////////////////////////
 

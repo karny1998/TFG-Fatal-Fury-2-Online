@@ -138,7 +138,16 @@ public class connection {
     /**
      * Instantiates a new Connection.
      */
-    public connection() {}
+    public connection(int port) {
+        try {
+            socketUDP = new DatagramSocket(port);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        this.isUDP = true;
+        this.rec = new receiver(this);
+        this.rec.start();
+    }
 
     /**
      * Instantiates a new Connection.
@@ -153,18 +162,18 @@ public class connection {
         this.timeout = timeout;
         try {
             if(isUDP) {
-                /*System.out.println("Attempting UPnP port forwarding...");
+                System.out.println("Attempting UPnP port forwarding...");
                 if (UPnP.isUPnPAvailable()) { //is UPnP available?
-                    if (UPnP.isMappedTCP(port)) { //is the port already mapped?
+                    if (UPnP.isMappedUDP(port)) { //is the port already mapped?
                         System.out.println("UPnP port forwarding not enabled: port is already mapped");
-                    } else if (UPnP.openPortTCP(port)) { //try to map port
+                    } else if (UPnP.openPortUDP(port)) { //try to map port
                         System.out.println("UPnP port forwarding enabled");
                     } else {
                         System.out.println("UPnP port forwarding failed");
                     }
                 } else {
                     System.out.println("UPnP is not available");
-                }*/
+                }
 
                 /*InetAddress inet = InetAddress.getLocalHost();
                 PortMapping desiredMapping = new PortMapping(port,
@@ -608,6 +617,7 @@ public class connection {
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
                 received = new String(packet.getData(), 0, packet.getLength());
+                System.out.println("Recibido: " + received);
                 if(received.equals("HI")){
                     sendAck(msgID.toClient.hi);
                     return;
@@ -634,7 +644,7 @@ public class connection {
                         }
                     }
                 }catch (Exception e){
-                    /*e.printStackTrace();*/
+                    e.printStackTrace();
                     sm.release();
                 }
                 sm.release();

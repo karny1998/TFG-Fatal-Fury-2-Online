@@ -157,7 +157,7 @@ public class IaVsIaTraining {
                         aux = in.readLine();
                     } while (!aux.equals("true") && !(aux.equals("false")));
                     againstTrainedIa = Boolean.parseBoolean(aux);
-                    this.random = againstTrainedIa;
+                    this.random = !againstTrainedIa;
                     if(againstTrainedIa){
                         this.charac = Playable_Character.TERRY;
                         this.pLvl = ia_loader.dif.HARD;
@@ -326,9 +326,12 @@ public class IaVsIaTraining {
         if(testing) {
             agente.setEpsilon(0.05);
             agente.setUseRegression(true);
-            try{
-                agente.trainRegression();
-            }catch (Exception e){}
+            if(agente.getModel() == null) {
+                try {
+                    agente.trainRegression();
+                } catch (Exception e) {
+                }
+            }
         }
         else{
             double epsilon = 1.0 - (double)i/3000.0;
@@ -347,9 +350,12 @@ public class IaVsIaTraining {
         if(againstTrainedIa) {
             ((enemy_controller)player).getAgente().setEpsilon(0.05);
             ((enemy_controller)player).getAgente().setUseRegression(true);
-            try{
-                ((enemy_controller)player).getAgente().trainRegression();
-            }catch (Exception e){}
+            if(testing && ((enemy_controller)player).getAgente().getModel() == null) {
+                try {
+                    ((enemy_controller) player).getAgente().trainRegression();
+                } catch (Exception e) {
+                }
+            }
         }
 
     }
@@ -368,18 +374,27 @@ public class IaVsIaTraining {
             generateFight();
             enemy.getPlayer().getStats().getActualFight().setRival(charac);
             enemy.getPlayer().getStats().getActualFight().setLvlRival(pLvl);
+            try {
+                ((enemy_controller) player).getPlayer().getStats().getActualFight().setRival(enemy.getPlayer().getCharac());
+                ((enemy_controller) player).getPlayer().getStats().getActualFight().setLvlRival(lvlIa);
+            }catch (Exception e){}
         }
         else if(fight.getEnd()){
             enemy.getPlayer().getStats().setFilename(filename);
             enemy.getAgente().writeQTableAndRegister();
-            enemy.getAgente().trainRegression();
+            if(!testing) {
+                enemy.getAgente().trainRegression();
+            }
             enemy.getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
             enemy.getPlayer().getStats().saveUpdatedHistory();
             enemy.getPlayer().getStats().nextFight();
             if(againstTrainedIa){
+                ((enemy_controller)player).getPlayer().getStats().setFilename(System.getProperty("user.dir") + "/.files/q_learning_stats"+ enemyIa + ".xml");
                 ((enemy_controller)player).getAgente().writeQTableAndRegister();
-                ((enemy_controller)player).getAgente().trainRegression();
-                ((enemy_controller)player).getPlayer().getStats().getActualFight().setAccumulatedReward((int) enemy.getAgente().getAccumulatedReward());
+                if(!testing) {
+                    ((enemy_controller) player).getAgente().trainRegression();
+                }
+                ((enemy_controller)player).getPlayer().getStats().getActualFight().setAccumulatedReward((int) ((enemy_controller)player).getAgente().getAccumulatedReward());
                 ((enemy_controller)player).getPlayer().getStats().saveUpdatedHistory();
                 ((enemy_controller)player).getPlayer().getStats().nextFight();
             }

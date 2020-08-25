@@ -331,6 +331,9 @@ public class online_mode {
         //Sincronizar
         boolean syncOk = synchronize(isHost);
         if(!syncOk){
+            try {
+                conToClient.close();
+            }catch (Exception e){}
             gui.setOnlineState(GameState.PRINCIPAL_GUI);
             gui.clearGui();
             gui.popUp("Connection lost with the rival.");
@@ -517,7 +520,9 @@ public class online_mode {
                     fight.getPlayer().stop();
                     fight.getEnemy().stop();
                     if (isVsIA == 0 && conToClient.isConnected()) {
-                        conToClient.close();
+                        try {
+                            conToClient.close();
+                        }catch (Exception e){}
                     }
                     fight = null;
                     conToClient = null;
@@ -547,6 +552,9 @@ public class online_mode {
             ok = conToClient.setPortSend(conToClientPort);
         }catch (Exception e){e.printStackTrace();}
         if(!ok){
+            try {
+                conToClient.close();
+            }catch (Exception e){}
             gui.setOnlineState(GameState.PRINCIPAL_GUI);
             gui.clearGui();
             gui.principalGUI();
