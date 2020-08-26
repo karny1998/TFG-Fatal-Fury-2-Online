@@ -1,7 +1,5 @@
 package database.models;
 
-import org.hibernate.annotations.DiscriminatorFormula;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;

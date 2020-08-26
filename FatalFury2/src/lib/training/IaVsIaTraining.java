@@ -94,7 +94,13 @@ public class IaVsIaTraining {
      */
     useRegression = false;
 
-    private String nameIa = "", enemyIa = "";
+    /**
+     * The Name ia.
+     */
+    private String nameIa = "", /**
+     * The Enemy ia.
+     */
+    enemyIa = "";
 
     /**
      * Instantiates a new Ia vs ia training.

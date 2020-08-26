@@ -45,7 +45,9 @@ public class serverManager {
     private List<Pair<String,String>> ongoingGames = new ArrayList<>();
     private List<Pair<String,String>> ongoingRankedGames = new ArrayList<>();
     private Map<String, String> pendingFriendsInvitatiosns = new HashMap<>();
-    private boolean shuttingDown = false;
+    private int portUDP = 5550;
+    private serverUDPSubConnection udpConnection;
+
     /**
      * The Training global ia.
      */
@@ -59,6 +61,7 @@ public class serverManager {
     public serverManager(databaseManager dbm){
         stateCalculator.initialize();
         this.dbm = dbm;
+        this.udpConnection = new serverUDPSubConnection(portUDP);
     }
 
 
@@ -186,16 +189,30 @@ public class serverManager {
      * @param ranked the ranked
      * @return the boolean
      */
-    protected boolean createGameBetweenPalyers(String p1, String p2, boolean ranked){
+    protected synchronized boolean createGameBetweenPalyers(String p1, String p2, boolean ranked){
+        loggedUsers.get(p1).sendString(msgID.toServer.notification,"WAITING ESTABLISH CONNECTION");
+        loggedUsers.get(p2).sendString(msgID.toServer.notification,"WAITING ESTABLISH CONNECTION");
+
+        do{
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }while (!udpConnection.getRelationIpPort().containsKey(usersIP.get(p1).getHostAddress())
+                || !udpConnection.getRelationIpPort().containsKey(usersIP.get(p2).getHostAddress()));
+
         // Mensaje: eresHost?:direcciónRival
-        String msg1 = "SEARCH GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2;
-        String msg2 = "SEARCH GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1;
+        String msg1 = "SEARCH GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2+":"+udpConnection.getRelationIpPort().get(usersIP.get(p2).getHostAddress());
+        String msg2 = "SEARCH GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1+":"+udpConnection.getRelationIpPort().get(usersIP.get(p1).getHostAddress());
         if(ranked){
-            msg1 = "SEARCH RANKED GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2;
-            msg2 = "SEARCH RANKED GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1;
+            msg1 = "SEARCH RANKED GAME:true:"+usersIP.get(p2).getHostAddress()+":"+p2+":"+udpConnection.getRelationIpPort().get(usersIP.get(p2).getHostAddress());
+            msg2 = "SEARCH RANKED GAME:false:"+usersIP.get(p1).getHostAddress()+":"+p1+":"+udpConnection.getRelationIpPort().get(usersIP.get(p1).getHostAddress());
         }
         loggedUsers.get(p1).sendString(msgID.toServer.notification,msg1);
         loggedUsers.get(p2).sendString(msgID.toServer.notification,msg2);
+        udpConnection.getRelationIpPort().remove(usersIP.get(p1).getHostAddress());
+        udpConnection.getRelationIpPort().remove(usersIP.get(p2).getHostAddress());
         if(ranked){
             ongoingRankedGames.add(new Pair<>(p1,p2));
         }

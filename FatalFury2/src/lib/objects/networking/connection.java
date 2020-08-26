@@ -138,9 +138,9 @@ public class connection {
     /**
      * Instantiates a new Connection.
      */
-    public connection(int port) {
+    public connection() {
         try {
-            socketUDP = new DatagramSocket(port);
+            socketUDP = new DatagramSocket();
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -205,6 +205,10 @@ public class connection {
             this.rec.start();
         }catch (Exception e){
             e.printStackTrace();
+            try{
+                socketTCP.close();
+                socketUDP.close();
+            }catch (Exception e2){}
             socketTCP = null;
             socketUDP = null;
             if(this.rec != null){
@@ -427,6 +431,10 @@ public class connection {
             try {
                 socketUDP.send(packet);
             } catch (Exception e) {
+                try{
+                    socketTCP.close();
+                    socketUDP.close();
+                }catch (Exception e2){}
                 socketTCP = null;
                 socketUDP = null;
                 try {
@@ -450,6 +458,10 @@ public class connection {
                 }
 
             }catch (Exception e){
+                try{
+                    socketTCP.close();
+                    socketUDP.close();
+                }catch (Exception e2){}
                 socketTCP = null;
                 socketUDP = null;
                 try {
@@ -689,6 +701,10 @@ public class connection {
 
         }catch (Exception e){
             e.printStackTrace();
+            try{
+                socketTCP.close();
+                socketUDP.close();
+            }catch (Exception e2){}
             socketTCP = null;
             socketUDP = null;
             try {
@@ -1025,12 +1041,24 @@ public class connection {
      *
      * @return the boolean
      */
-    public  boolean isConnected(){
+    public boolean isConnected(){
         if(isUDP){
             return socketUDP != null;
         }
         else{
             return socketTCP != null;
+        }
+    }
+
+    /**
+     * Connect.
+     */
+    public void connect(){
+        if(isUDP) {
+            try {
+                socketUDP.connect(address, portSend);
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -1158,9 +1186,6 @@ public class connection {
     public boolean setPortSend(int portSend) {
         this.portSend = portSend;
         if(isUDP) {
-            try {
-                socketUDP.connect(address, portSend);
-            }catch (Exception e){}
             return sendHi();
         }
         return true;
@@ -1218,5 +1243,270 @@ public class connection {
      */
     public void setBlockReception(boolean blockReception) {
         this.blockReception = blockReception;
+    }
+
+    /**
+     * Gets socket udp.
+     *
+     * @return the socket udp
+     */
+    public DatagramSocket getSocketUDP() {
+        return socketUDP;
+    }
+
+    /**
+     * Sets socket udp.
+     *
+     * @param socketUDP the socket udp
+     */
+    public void setSocketUDP(DatagramSocket socketUDP) {
+        this.socketUDP = socketUDP;
+    }
+
+    /**
+     * Gets socket tcp.
+     *
+     * @return the socket tcp
+     */
+    public Socket getSocketTCP() {
+        return socketTCP;
+    }
+
+    /**
+     * Sets socket tcp.
+     *
+     * @param socketTCP the socket tcp
+     */
+    public void setSocketTCP(Socket socketTCP) {
+        this.socketTCP = socketTCP;
+    }
+
+    /**
+     * Get buf receive byte [ ].
+     *
+     * @return the byte [ ]
+     */
+    public byte[] getBufReceive() {
+        return bufReceive;
+    }
+
+    /**
+     * Sets buf receive.
+     *
+     * @param bufReceive the buf receive
+     */
+    public void setBufReceive(byte[] bufReceive) {
+        this.bufReceive = bufReceive;
+    }
+
+    /**
+     * Get buf send byte [ ].
+     *
+     * @return the byte [ ]
+     */
+    public byte[] getBufSend() {
+        return bufSend;
+    }
+
+    /**
+     * Sets buf send.
+     *
+     * @param bufSend the buf send
+     */
+    public void setBufSend(byte[] bufSend) {
+        this.bufSend = bufSend;
+    }
+
+    /**
+     * Gets pending ac ks.
+     *
+     * @return the pending ac ks
+     */
+    public Map<Integer, String> getPendingACKs() {
+        return pendingACKs;
+    }
+
+    /**
+     * Sets pending ac ks.
+     *
+     * @param pendingACKs the pending ac ks
+     */
+    public void setPendingACKs(Map<Integer, String> pendingACKs) {
+        this.pendingACKs = pendingACKs;
+    }
+
+    /**
+     * Gets pending objects.
+     *
+     * @return the pending objects
+     */
+    public Map<Integer, sendableObject> getPendingObjects() {
+        return pendingObjects;
+    }
+
+    /**
+     * Sets pending objects.
+     *
+     * @param pendingObjects the pending objects
+     */
+    public void setPendingObjects(Map<Integer, sendableObject> pendingObjects) {
+        this.pendingObjects = pendingObjects;
+    }
+
+    /**
+     * Gets rec.
+     *
+     * @return the rec
+     */
+    public receiver getRec() {
+        return rec;
+    }
+
+    /**
+     * Sets rec.
+     *
+     * @param rec the rec
+     */
+    public void setRec(receiver rec) {
+        this.rec = rec;
+    }
+
+    /**
+     * Gets sm.
+     *
+     * @return the sm
+     */
+    public Semaphore getSm() {
+        return sm;
+    }
+
+    /**
+     * Sets sm.
+     *
+     * @param sm the sm
+     */
+    public void setSm(Semaphore sm) {
+        this.sm = sm;
+    }
+
+    /**
+     * Gets notification sm.
+     *
+     * @return the notification sm
+     */
+    public Semaphore getNotificationSM() {
+        return notificationSM;
+    }
+
+    /**
+     * Sets notification sm.
+     *
+     * @param notificationSM the notification sm
+     */
+    public void setNotificationSM(Semaphore notificationSM) {
+        this.notificationSM = notificationSM;
+    }
+
+    /**
+     * Gets out.
+     *
+     * @return the out
+     */
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+    /**
+     * Sets out.
+     *
+     * @param out the out
+     */
+    public void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
+
+    /**
+     * Gets in.
+     *
+     * @return the in
+     */
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    /**
+     * Sets in.
+     *
+     * @param in the in
+     */
+    public void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    /**
+     * Is udp boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isUDP() {
+        return isUDP;
+    }
+
+    /**
+     * Sets udp.
+     *
+     * @param UDP the udp
+     */
+    public void setUDP(boolean UDP) {
+        isUDP = UDP;
+    }
+
+    /**
+     * Gets waiter list.
+     *
+     * @return the waiter list
+     */
+    public List<Pair<Boolean, Boolean>> getWaiterList() {
+        return waiterList;
+    }
+
+    /**
+     * Sets waiter list.
+     *
+     * @param waiterList the waiter list
+     */
+    public void setWaiterList(List<Pair<Boolean, Boolean>> waiterList) {
+        this.waiterList = waiterList;
+    }
+
+    /**
+     * Gets path.
+     *
+     * @return the path
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * Sets path.
+     *
+     * @param path the path
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    /**
+     * Set address.
+     *
+     * @param ip the ip
+     */
+    public void setAddress(String ip){
+        try {
+            address = InetAddress.getByName(ip);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 }

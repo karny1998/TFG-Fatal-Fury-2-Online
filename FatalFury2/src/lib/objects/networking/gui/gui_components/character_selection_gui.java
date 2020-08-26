@@ -29,85 +29,104 @@ public class character_selection_gui {
     /**
      * The Grey 1.
      */
-    private Color grey1 = new Color(33,32,57), /**
+    private Color grey1 = new Color(33,32,57),
+    /**
      * The Grey 2.
      */
-    grey2 = new Color(66,64,114), /**
+    grey2 = new Color(66,64,114),
+    /**
      * The Grey 3.
      */
     grey3 = new Color(45,48,85),
     /**
      * The Grey 4.
      */
-    grey4 = new Color(99,96,171), /**
+    grey4 = new Color(99,96,171),
+    /**
      * The Brown.
      */
-    brown = new Color(140,105,57), /**
+    brown = new Color(140,105,57),
+    /**
      * The Blue.
      */
     blue = new Color(0,0,148);
     /**
      * The F.
      */
-    private Font f, /**
+    private Font f,
+    /**
      * The F 2.
      */
-    f2, /**
+    f2,
+    /**
      * The F 3.
      */
-    f3, /**
+    f3,
+    /**
      * The F 4.
      */
     f4;
     /**
      * The Terry icon.
      */
-    private ImageIcon terryIcon, /**
+    private ImageIcon terryIcon,
+    /**
      * The Andy icon.
      */
-    andyIcon, /**
+    andyIcon,
+    /**
      * The Mai icon.
      */
     maiIcon,
     /**
      * The Terry mug.
      */
-    terryMug, /**
+    terryMug,
+    /**
      * The Andy mug.
      */
-    andyMug, /**
+    andyMug,
+    /**
      * The Mai mug.
      */
-    maiMug, /**
+    maiMug,
+    /**
      * The Terry combos.
      */
     terryCombos,
     /**
      * The Andy combos.
      */
-    andyCombos, /**
+    andyCombos,
+    /**
      * The Mai combos.
      */
-    maiCombos, /**
+    maiCombos,
+    /**
      * The Unknown mug.
      */
     unknownMug,
     /**
      * The Australia.
      */
-    australia, /**
+    australia,
+    /**
      * The China.
      */
-    china, /**
+    china,
+    /**
      * The Usa.
      */
-    usa, /**
+    usa,
+    /**
      * The Usa icon.
      */
-    usaIcon, /**
+    usaIcon,
+    /**
      * The China icon.
      */
-    chinaIcon, /**
+    chinaIcon,
+    /**
      * The Australia icon.
      */
     australiaIcon;
@@ -136,9 +155,14 @@ public class character_selection_gui {
      */
     private JTextField timeOnScreen;
     /**
+     * The Port.
+     */
+    private int port = 0;
+    /**
      * The Ip.
      */
-    private String ip, /**
+    private String ip,
+    /**
      * The Rival name.
      */
     rivalName;
@@ -166,11 +190,12 @@ public class character_selection_gui {
      * @param gui       the gui
      * @param isHost    the is host
      * @param ip        the ip
+     * @param port      the port
      * @param rivalName the rival name
      * @param isRanked  the is ranked
      * @param vsIa      the vs ia
      */
-    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, String rivalName, boolean isRanked, int vsIa){
+    public character_selection_gui (online_mode_gui gui, boolean isHost, String ip, int port, String rivalName, boolean isRanked, int vsIa){
         this.isHost = isHost;
         this.vsIa = vsIa;
         if(vsIa > 0){
@@ -178,11 +203,12 @@ public class character_selection_gui {
         }
         this.isRanked = isRanked;
         this.ip = ip;
+        this.port = port;
         this.rivalName = rivalName;
         this.gui = gui;
 
         if(vsIa == 0) {
-            boolean ok = gui.getOnline_controller().generateConToClient(ip);
+            boolean ok = gui.getOnline_controller().generateConToClient(ip, port);
             if (!ok) {
                 return;
             }
@@ -231,21 +257,22 @@ public class character_selection_gui {
                     String trat = conToClient.receiveString(msgID.toClient.tramits);
                     if (trat.equals("LEFT THE GAME")) {
                         close();
+                        timer.stop();
+                        return;
                     }
                 }
                 --time;
                 String aux = Integer.toString(time);
-                if(time < 10){
-                    aux = "0"+aux;
+                if (time < 10) {
+                    aux = "0" + aux;
                 }
                 timeOnScreen.setText(aux);
                 gui.getGui().repaint();
-                if(time == 0){
+                if (time == 0) {
                     timer.stop();
-                    if(vsIa == 0) {
+                    if (vsIa == 0) {
                         generateOnlineGame();
-                    }
-                    else{
+                    } else {
                         generateIaGame();
                     }
                 }

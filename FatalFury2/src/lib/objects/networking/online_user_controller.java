@@ -199,6 +199,9 @@ public class online_user_controller extends user_controller {
         this.connectionLost = connectionLost;
     }
 
+    /**
+     * Start stand by.
+     */
     @Override
     public void startStandBy(){
         this.timeReference = System.currentTimeMillis();

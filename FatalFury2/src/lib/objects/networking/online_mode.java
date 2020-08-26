@@ -56,10 +56,12 @@ public class online_mode {
     /**
      * The Its me.
      */
-    private boolean itsMe = true, /**
+    private boolean itsMe = true,
+    /**
      * The Debug.
      */
-    debug  = false, /**
+    debug  = false,
+    /**
      * The Searching.
      */
     searching = false;
@@ -67,7 +69,8 @@ public class online_mode {
     /**
      * The Con to client.
      */
-    private connection conToClient, /**
+    private connection conToClient,
+    /**
      * The Con to server.
      */
     conToServer;
@@ -80,10 +83,15 @@ public class online_mode {
     /**
      * The Server port.
      */
-    private int serverPort = 5555, /**
+    private int serverPort = 5555,
+    /**
      * The Con to client port.
      */
-    conToClientPort = 5556;
+    conToClientPort = 5556,
+    /**
+     * The Upd server port.
+     */
+    updServerPort = 5550;
 
     /**
      * The Gui.
@@ -103,14 +111,16 @@ public class online_mode {
     /**
      * The Char 1.
      */
-    private Playable_Character char1 = Playable_Character.TERRY, /**
+    private Playable_Character char1 = Playable_Character.TERRY,
+    /**
      * The Char 2.
      */
     char2 = Playable_Character.TERRY;
     /**
      * The Is ranked.
      */
-    private boolean isRanked = false, /**
+    private boolean isRanked = false,
+    /**
      * The Is host.
      */
     isHost = false;
@@ -539,6 +549,37 @@ public class online_mode {
     /**
      * Generate con to client boolean.
      *
+     * @param ip   the ip
+     * @param port the port
+     * @return the boolean
+     */
+    public boolean generateConToClient(String ip, int port){
+        //conToClient = new connection(ip, 5560, 0, true);
+        //conToClient.setPortSend(5561);
+        //return true;
+        boolean ok =  false;
+        try{
+            conToClient.setAddress(ip);
+            ok = conToClient.setPortSend(port);
+        }catch (Exception e){e.printStackTrace();}
+        if(!ok){
+            try {
+                conToClient.close();
+            }catch (Exception e){}
+            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+            gui.clearGui();
+            gui.principalGUI();
+            gui.popUp("Has been a problem establishing the connection.");
+        }
+        /*else{
+            conToClient.connect();
+        }*/
+        return ok;
+    }
+
+    /**
+     * Generate con to client boolean.
+     *
      * @param ip the ip
      * @return the boolean
      */
@@ -550,6 +591,30 @@ public class online_mode {
         boolean ok =  false;
         try{
             ok = conToClient.setPortSend(conToClientPort);
+        }catch (Exception e){e.printStackTrace();}
+        if(!ok){
+            try {
+                conToClient.close();
+            }catch (Exception e){}
+            gui.setOnlineState(GameState.PRINCIPAL_GUI);
+            gui.clearGui();
+            gui.principalGUI();
+            gui.popUp("Has been a problem establishing the connection.");
+        }
+        return ok;
+    }
+
+    /**
+     * Generate udp connection boolean.
+     *
+     * @return the boolean
+     */
+    public boolean generateUdpConnection(){
+        conToClient = new connection();
+        conToClient.setAddress(serverIp);
+        boolean ok =  false;
+        try{
+            ok = conToClient.setPortSend(updServerPort);
         }catch (Exception e){e.printStackTrace();}
         if(!ok){
             try {

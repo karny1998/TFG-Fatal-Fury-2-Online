@@ -80,10 +80,10 @@ public class agent_controller extends ia_controller{
     /**
      * Contructor que pide el personaje del jugador, el de la ia, y la dificultad de esta última
      *
-     * @param user     the user
-     * @param p        the p
-     * @param e        the e
-     * @param lvl      the lvl
+     * @param user the user
+     * @param p    the p
+     * @param e    the e
+     * @param lvl  the lvl
      */
     public  agent_controller(String user, character p, character e, ia_loader.dif lvl){
         super(p,e,lvl);

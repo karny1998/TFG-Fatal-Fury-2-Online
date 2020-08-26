@@ -70,9 +70,9 @@ public class enemy_controller extends character_controller{
     /**
      * Instantiates a new Enemy controller.
      *
-     * @param ch       the ch
-     * @param pN       the p n
-     * @param agentIa  the agent Ia
+     * @param ch      the ch
+     * @param pN      the p n
+     * @param agentIa the agent Ia
      */
     public enemy_controller(Playable_Character ch, int pN, boolean agentIa){
         super(ch, pN, 750, 290, 1);

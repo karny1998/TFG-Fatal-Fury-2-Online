@@ -26,15 +26,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Hibernate 5.4.11-5.4.11" level="project" />
     <orderEntry type="library" name="JPA 2.0-2.0" level="project" />
     <orderEntry type="library" name="postgresql-42.2.14" level="project" />
     <orderEntry type="library" name="javax.validation:validation-api:2.0.0.Final" level="project" />
-    <orderEntry type="library" name="org.hibernate.validator:hibernate-validator:6.1.5.Final" level="project" />
     <orderEntry type="library" name="org.glassfish:javax.el:3.0.1-b11" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="javax.mail" level="project" />
     <orderEntry type="library" name="activation-1.1" level="project" />
     <orderEntry type="library" name="ia" level="project" />
+    <orderEntry type="library" name="hibernate-validator-5.4.3.Final" level="project" />
   </component>
 </module>

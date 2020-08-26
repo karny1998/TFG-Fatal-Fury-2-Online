@@ -128,6 +128,9 @@ public class Regression {
 
         this.dataSet = dataSet;
         int f = (int) (Math.random()*folds)%folds;
+        if(f > dataSet.size()){
+            f = dataSet.size();
+        }
         this.trainDataSet = dataSet.trainCV(folds,f);
         this.validateDataSet = dataSet.testCV(folds,f);
     }

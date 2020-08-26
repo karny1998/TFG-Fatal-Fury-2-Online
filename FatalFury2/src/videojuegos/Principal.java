@@ -20,8 +20,20 @@ import java.io.IOException;
  * The type Principal.
  */
 public class Principal extends JFrame {
+    /**
+     * The Card layout.
+     */
     CardLayout cardLayout;
-    JPanel mainPanel,game, gui;
+    /**
+     * The Main panel.
+     */
+    JPanel mainPanel, /**
+     * The Game.
+     */
+    game, /**
+     * The Gui.
+     */
+    gui;
 
     /**
      * Instantiates a new Principal.
@@ -168,26 +180,52 @@ public class Principal extends JFrame {
         });
     }
 
+    /**
+     * Game on.
+     */
     public void gameOn(){
         cardLayout.show(mainPanel, "game");
     }
 
+    /**
+     * Gui on.
+     */
     public void guiOn(){
         cardLayout.show(mainPanel, "gui");
     }
 
+    /**
+     * Gets game.
+     *
+     * @return the game
+     */
     public JPanel getGame() {
         return game;
     }
 
+    /**
+     * Sets game.
+     *
+     * @param game the game
+     */
     public void setGame(JPanel game) {
         this.game = game;
     }
 
+    /**
+     * Gets gui.
+     *
+     * @return the gui
+     */
     public JPanel getGui() {
         return gui;
     }
 
+    /**
+     * Sets gui.
+     *
+     * @param gui the gui
+     */
     public void setGui(JPanel gui) {
         this.gui = gui;
     }

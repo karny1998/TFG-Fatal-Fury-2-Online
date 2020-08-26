@@ -84,7 +84,8 @@ public class online_mode_gui {
     /**
      * The X table click.
      */
-    private int xTableClick = 0, /**
+    private int xTableClick = 0,
+    /**
      * The Y table click.
      */
     yTableClick = 0;
@@ -95,20 +96,24 @@ public class online_mode_gui {
     /**
      * The Grey 1.
      */
-    private Color grey1 = new Color(33, 32, 57), /**
+    private Color grey1 = new Color(33, 32, 57),
+    /**
      * The Grey 2.
      */
-    grey2 = new Color(66, 64, 114), /**
+    grey2 = new Color(66, 64, 114),
+    /**
      * The Grey 3.
      */
     grey3 = new Color(45, 48, 85),
     /**
      * The Grey 4.
      */
-    grey4 = new Color(99, 96, 171), /**
+    grey4 = new Color(99, 96, 171),
+    /**
      * The Brown.
      */
-    brown = new Color(140, 105, 57), /**
+    brown = new Color(140, 105, 57),
+    /**
      * The Blue.
      */
     blue = new Color(0, 0, 148);
@@ -151,10 +156,12 @@ public class online_mode_gui {
     /**
      * The F.
      */
-    private Font f, /**
+    private Font f,
+    /**
      * The F 2.
      */
-    f2, /**
+    f2,
+    /**
      * The F 3.
      */
     f3;
@@ -1427,10 +1434,11 @@ public class online_mode_gui {
      *
      * @param isHost   the is host
      * @param ip       the ip
+     * @param port     the port
      * @param rival    the rival
      * @param isRanked the is ranked
      */
-    public void character_selection_online(boolean isHost, String ip, String rival, boolean isRanked) {
+    public void character_selection_online(boolean isHost, String ip, int port, String rival, boolean isRanked) {
         if (!componentsOnScreen.containsKey(guiItems.SELECT_TERRY)) {
             clearGui();
             if (isHost) {
@@ -1438,7 +1446,7 @@ public class online_mode_gui {
             } else {
                 gui.setBack(4);
             }
-            char_sel = new character_selection_gui(this, isHost, ip, rival, isRanked,0);
+            char_sel = new character_selection_gui(this, isHost, ip, port, rival, isRanked,0);
             if (char_sel.isAllOk()) {
                 System.out.println("Se ha creado la gui de selección ");
             } else {
@@ -1461,10 +1469,10 @@ public class online_mode_gui {
             clearGui();
             gui.setBack(5);
             if(isGlobal) {
-                char_sel = new character_selection_gui(this, true, null, "GLOBAL IA", false, 2);
+                char_sel = new character_selection_gui(this, true, null, 0, "GLOBAL IA", false, 2);
             }
             else{
-                char_sel = new character_selection_gui(this, true, null, "PERSONAL IA", false, 1);
+                char_sel = new character_selection_gui(this, true, null, 0, "PERSONAL IA", false, 1);
             }
             if (char_sel.isAllOk()) {
                 reloadGUI();
@@ -1753,14 +1761,20 @@ public class online_mode_gui {
                             new friend_list_gui(online_mode_gui.this, friends, pendingMessages);
                         }
                     }
+                    else if(res[0].equals("WAITING ESTABLISH CONNECTION")){
+                        if (onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI || onlineState == GameState.ONLINE_SEARCHING_FIGHT) {
+                            online_controller.generateUdpConnection();
+                        }
+                    }
                     else if (res[0].equals("SEARCH GAME") || res[0].equals("SEARCH RANKED GAME")) {
                         if (onlineState == GameState.PRINCIPAL_GUI || onlineState == GameState.PROFILE_GUI || onlineState == GameState.ONLINE_SEARCHING_FIGHT) {
                             String ip = res[2], name = res[3];
                             boolean isHost = Boolean.parseBoolean(res[1]);
+                            int port = Integer.parseInt(res[4]);
                             setOnlineState(GameState.CHARACTER_SELECTION);
                             clearGui();
                             boolean isRanked = res[0].equals("SEARCH RANKED GAME");
-                            character_selection_online(isHost, ip, name, isRanked);
+                            character_selection_online(isHost, ip, port, name, isRanked);
                             System.out.println("Se cambia el estado a CHARACTER_SELECTION");
                         }
                     }
