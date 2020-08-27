@@ -658,7 +658,7 @@ public class guiListener implements ActionListener {
                     switch (type){
                         case BACK:
                             if(gui.getChar_sel().getConToClient() != null && gui.getChar_sel().getConToClient().isConnected()) {
-                                gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
+                                gui.getChar_sel().getConToClient().sendString(msgID.toClient.quit, "LEFT THE GAME");
                             }
                             gui.getChar_sel().close();
                             gui.setOnlineState(GameState.PRINCIPAL_GUI);
@@ -667,7 +667,7 @@ public class guiListener implements ActionListener {
                             quitGame();
                             break;
                         case QUIT_YES:
-                            gui.getChar_sel().getConToClient().sendString(msgID.toClient.tramits, "LEFT THE GAME");
+                            gui.getChar_sel().getConToClient().sendString(msgID.toClient.quit, "LEFT THE GAME");
                             conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");
                             conToServer.close();
                             System.exit(0);

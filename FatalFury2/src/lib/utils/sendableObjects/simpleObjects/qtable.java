@@ -14,6 +14,11 @@ public class qtable extends sendableObject {
      * The Table.
      */
     private double table[][];
+
+    /**
+     * The Visited.
+     */
+    private boolean visited[][];
     /**
      * The Transitions.
      */
@@ -23,20 +28,24 @@ public class qtable extends sendableObject {
      * Instantiates a new Qtable.
      *
      * @param table       the table
+     * @param visited     the visited
      * @param transitions the transitions
      */
-    public qtable(double[][] table, String transitions) {
+    public qtable(double[][] table, boolean visited[][], String transitions) {
         this.table = table;
         this.transitions = transitions;
+        this.visited = visited;
     }
 
     /**
      * Instantiates a new Qtable.
      *
      * @param table       the table
+     * @param visited     the visited
      * @param transitions the transitions
      */
-    public qtable(Double[][] table, String transitions) {
+    public qtable(Double[][] table, boolean visited[][], String transitions) {
+        this.visited = visited;
         this.table = new double[table.length][table[0].length];
         for(int i = 0; i < table.length; ++i){
             for(int j = 0; j < table[0].length; ++j){
@@ -104,5 +113,23 @@ public class qtable extends sendableObject {
      */
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    /**
+     * Get visited boolean [ ] [ ].
+     *
+     * @return the boolean [ ] [ ]
+     */
+    public boolean[][] getVisited() {
+        return visited;
+    }
+
+    /**
+     * Sets visited.
+     *
+     * @param visited the visited
+     */
+    public void setVisited(boolean[][] visited) {
+        this.visited = visited;
     }
 }

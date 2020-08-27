@@ -16,6 +16,11 @@ public class agent{
      * Tabla de valores Q, es decir, la tabla de recompensas para las acciones en cada estado.
      */
     private Double qTable[][];
+
+    /**
+     * The Visited.
+     */
+    private boolean visited[][];
     /**
      * El buffer para el experience replay, es decir, para poder "revivir" transiciones pasadas.
      */
@@ -111,10 +116,16 @@ public class agent{
         int x = stateCalculator.getMax();
         int y = stateCalculator.getnActions();
         qTable = new Double[x][y];
+        visited = new boolean[x][y];
         if(!loadQtable()) {
             for (int i = 0; i < x; ++i) {
                 for (int j = 0; j < y; ++j) {
                     qTable[i][j] = 0.0;
+                }
+            }
+            for (int i = 0; i < x; ++i) {
+                for (int j = 0; j < y; ++j) {
+                    visited[i][j] = false;
                 }
             }
         }
@@ -138,10 +149,16 @@ public class agent{
         int x = stateCalculator.getMax();
         int y = stateCalculator.getnActions();
         qTable = new Double[x][y];
+        visited = new boolean[x][y];
         if(!loadQtable()) {
             for (int i = 0; i < x; ++i) {
                 for (int j = 0; j < y; ++j) {
                     qTable[i][j] = 0.0;
+                }
+            }
+            for (int i = 0; i < x; ++i) {
+                for (int j = 0; j < y; ++j) {
+                    visited[i][j] = false;
                 }
             }
         }
@@ -156,6 +173,12 @@ public class agent{
         for (int i = 0; i < x; ++i) {
             for (int j = 0; j < y; ++j) {
                 qTable[i][j] = 0.0;
+            }
+        }
+
+        for (int i = 0; i < x; ++i) {
+            for (int j = 0; j < y; ++j) {
+                visited[i][j] = false;
             }
         }
     }
@@ -290,6 +313,8 @@ public class agent{
 
         // Función de actualización de la qTable
         qTable[i][j] = qTable[i][j] + alpha * (reward + ganma * futureReward - qTable[i][j]);
+
+        visited[i][j] = true;
 
         //System.out.println("action: " + action.toString() + " reward: " + reward + " future reward: " + futureReward + " q value: "+ qTable[i][j]);
 
@@ -501,6 +526,9 @@ public class agent{
                     Integer.parseInt(estado[7]), Integer.parseInt(estado[8]), Boolean.parseBoolean(estado[9]));
             ++i;++i;
             Movement action = Movement.valueOf(train[i]);
+
+            visited[s.getStateNum()][stateCalculator.idAction(action)] = true;
+
             ++i;++i;++i;++i;
             estado = train[i].split(",");
             state s2 = new state(Integer.parseInt(estado[0]), Integer.parseInt(estado[1]), Movement.valueOf(estado[2]),
@@ -517,6 +545,7 @@ public class agent{
     public void writeQTableAndRegister(){
         String path1 =  System.getProperty("user.dir") + "/.files/qTable"+user+".txt";
         String path2 =  System.getProperty("user.dir") + "/.files/trainingRegister"+user+".txt";
+        String path3 =  System.getProperty("user.dir") + "/.files/visited"+user+".txt";
         File f= new File(path1);
         f.delete();
         f = new File(path1);
@@ -528,6 +557,25 @@ public class agent{
             for(int i = 0; i < aux2; ++i){
                 for(int j = 0; j < aux1; ++j){
                     bw.write(Double.toString(qTable[i][j]));
+                    if(j < aux1-1){
+                        bw.write(" ");
+                    }
+                    else if(i < aux2-1){
+                        bw.write("\n");
+                    }
+                }
+            }
+            bw.close();
+            fos.close();
+
+            f = new File(path3);
+            fos = new FileOutputStream(f);
+            bw = new BufferedWriter(new OutputStreamWriter(fos));
+            aux1 = stateCalculator.getnActions();
+            aux2 = stateCalculator.getMax();
+            for(int i = 0; i < aux2; ++i){
+                for(int j = 0; j < aux1; ++j){
+                    bw.write(Boolean.toString(visited[i][j]));
                     if(j < aux1-1){
                         bw.write(" ");
                     }
@@ -587,6 +635,19 @@ public class agent{
                 ++i;
             }
             b.close();
+
+            path =  System.getProperty("user.dir") + "/.files/visited"+user+".txt";
+            f = new File(path);
+            b = new BufferedReader(new FileReader(f));
+            i = 0;
+            while((aux = b.readLine()) != null){
+                String values[] = aux.split(" ");
+                for(int j = 0; j < values.length; ++j){
+                    visited[i][j] = Boolean.parseBoolean(values[j]);
+                }
+                ++i;
+            }
+            b.close();
         }catch (Exception e){
             System.out.println("No se ha encontrado la q table, por lo que se empezará de 0");
             return false;
@@ -623,6 +684,9 @@ public class agent{
                         aux = b.readLine();
                         aux = b.readLine();
                         Movement action = Movement.valueOf(aux);
+
+                        visited[s.getStateNum()][stateCalculator.idAction(action)] = true;
+
                         aux = b.readLine();
                         aux = b.readLine();
                         aux = b.readLine();
@@ -1067,5 +1131,23 @@ public class agent{
      */
     public void setUser(String user) {
         this.user = user;
+    }
+
+    /**
+     * Get visited boolean [ ] [ ].
+     *
+     * @return the boolean [ ] [ ]
+     */
+    public boolean[][] getVisited() {
+        return visited;
+    }
+
+    /**
+     * Sets visited.
+     *
+     * @param visited the visited
+     */
+    public void setVisited(boolean[][] visited) {
+        this.visited = visited;
     }
 }

@@ -145,6 +145,47 @@ public class stateCalculator {
     }
 
     /**
+     * Generate sample state table state [ ] [ ].
+     *
+     * @return the state [ ] [ ]
+     */
+    public static state[][] generateSampleStateTable(){
+        int x = getMax();
+        int y = getnActions();
+        state table[][] = new state[x][y];
+        if(simple){
+            //Bucle de saltos
+            for(int j = 0; j < 2; ++j){
+                //Bucle de vida ia
+                for(int l = 0; l < 3; ++l){
+                    //Bucle de vida jugador
+                    for(int pL = 0; pL < 3; ++pL){
+                        //Bucle de distancia
+                        for(int d = 0; d < 3; ++d){
+                            //Bucle de estados
+                            for (Map.Entry<Movement, Integer> entry : idMov.entrySet()) {
+                                int aux1 = idMov.size();
+                                int aux2 = 3 * aux1;
+                                int aux3 = 3 * aux2;
+                                int aux4 = 2 * aux3;
+                                int val = j * aux4 + d * aux3 + pL * aux2 + l * aux1 + entry.getValue();
+                                state s = new state();
+                                s.setSimpleDistance(d);
+                                s.setSimplePlayerLife(pL);
+                                s.setSimpleLife(l);
+                                s.setJumping(j == 1);
+                                s.setStateNum(val);
+                                s.setPlayerState(entry.getKey());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return table;
+    }
+
+    /**
      * Return the id of the action "m" int.
      *
      * @param m the m

@@ -254,7 +254,7 @@ public class character_selection_gui {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(vsIa == 0) {
-                    String trat = conToClient.receiveString(msgID.toClient.tramits);
+                    String trat = conToClient.receiveString(msgID.toClient.quit);
                     if (trat.equals("LEFT THE GAME")) {
                         close();
                         timer.stop();
@@ -286,22 +286,28 @@ public class character_selection_gui {
      */
     private void generateOnlineGame(){
         if(isHost) {
+            System.out.println("El host pasa a notificar el personaje y mapa");
             boolean ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":"+chosen_map.toString(), 200);
+            System.out.println("El host ha notificado el personaje y mapa");
             if(!ok){
                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
+                return;
             }
             Playable_Character rivalC = null;
             ok = false;
             int i = 0;
-            while(!ok && i < 200){
+            System.out.println("El host pasa a recibir el personaje");
+            while(!ok && i < 30){
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                System.out.println("SE ENTRA A RECIBIR");
                 String msg = conToClient.receiveString(msgID.toClient.tramits);
+                System.out.println("TRAS ENTRAR A RECIBIR " + msg);
                 if(msg.contains(":")){
                     ok = true;
                     String res[] = msg.split(":");
@@ -315,20 +321,27 @@ public class character_selection_gui {
                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
+                return;
             }
+            System.out.println("El host ha recibido el personaje");
+            System.out.println("Es host y ha elegido " + chosen_character.toString() );
+            System.out.println(" y el otro "+ rivalC.toString());
             gui.getOnline_controller().generateFight(isHost, chosen_character, rivalC, chosen_map, isRanked,rivalName);
         }
         else{
             Playable_Character rivalC = null;
             boolean ok = false;
             int i = 0;
-            while(!ok && i < 200){
+            System.out.println("El no host pasa a recibir el personaje y mapa");
+            while(!ok && i < 30){
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                System.out.println("SE ENTRA A RECIBIR");
                 String msg = conToClient.receiveString(msgID.toClient.tramits);
+                System.out.println("TRAS ENTRAR A RECIBIR " + msg);
                 if(msg.contains(":")){
                     ok = true;
                     String res[] = msg.split(":");
@@ -343,13 +356,21 @@ public class character_selection_gui {
                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
+                return;
             }
+            System.out.println("El no host ha recibido el personaje y mapa");
+            System.out.println("El no host pasa a enviar el personaje");
             ok = conToClient.reliableSendString(msgID.toClient.tramits, chosen_character.toString()+":empty", 200);
+            System.out.println("El no host ha recibido el personaje y mapa");
             if(!ok){
                 gui.setOnlineState(GameState.PRINCIPAL_GUI);
                 gui.clearGui();
                 gui.popUp("Connection lost with the rival.");
+                return;
             }
+            System.out.println("El no host pasa ha enviado el personaje");
+            System.out.println("No es host y ha elegido " + chosen_character.toString());
+            System.out.println(" y el otro "+ rivalC.toString());
             gui.getOnline_controller().generateFight(isHost, rivalC, chosen_character, chosen_map, isRanked,rivalName);
         }
     }
@@ -510,6 +531,7 @@ public class character_selection_gui {
          */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            if(time <= 1){return;}
             Map<guiItems,Component> aux = gui.getComponentsOnScreen();
             boolean terry = false, andy = false, mai = false;
             switch (type){
@@ -530,6 +552,7 @@ public class character_selection_gui {
                     chosen_character = Playable_Character.TERRY;
                     break;
             }
+            System.out.println("se ha seleccionado " + chosen_character.toString());
             aux.get(guiItems.TERRY_MUG).setVisible(terry);
             aux.get(guiItems.TERRY_COMBOS).setVisible(terry);
             aux.get(guiItems.ANDY_MUG).setVisible(andy);
@@ -564,6 +587,7 @@ public class character_selection_gui {
          */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            if(time <= 1){return;}
             Map<guiItems,Component> aux = gui.getComponentsOnScreen();
             boolean usa = false, china = false, australia = false;
             switch (type){
@@ -584,6 +608,7 @@ public class character_selection_gui {
                     chosen_map = Scenario_type.USA;
                     break;
             }
+            System.out.println("se ha seleccionado " + chosen_map.toString());
             aux.get(guiItems.AUSTRALIA_MAP).setVisible(australia);
             aux.get(guiItems.CHINA_MAP).setVisible(china);
             aux.get(guiItems.USA_MAP).setVisible(usa);

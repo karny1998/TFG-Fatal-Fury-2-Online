@@ -585,6 +585,9 @@ public class connection {
         try {
             sm.acquire();
             if((string || isUDP) && pendingMsgs.containsKey(id)){
+                if(isUDP && id == -2) {
+                    System.out.println("SE ENTRA A RECIBIR" + id);
+                }
                 String msg = pendingMsgs.get(id);
                 pendingMsgs.remove(id);
                 sm.release();
@@ -629,13 +632,15 @@ public class connection {
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
                 received = new String(packet.getData(), 0, packet.getLength());
-                System.out.println("Recibido: " + received);
-                if(received.equals("HI")){
+                if (received.equals("HI")) {
                     sendAck(msgID.toClient.hi);
                     return;
                 }
                 String aux[] = received.split(";");
                 int idM = Integer.parseInt(aux[0]);
+                if (idM != msgID.toClient.fight && idM != msgID.toClient.character && idM != 0){
+                    System.out.println("Recibido: " + received);
+                }
                 boolean reliable = aux[1].equals("R");
                 // Envía la confirmación si corresponde
                 if(reliable){
@@ -670,9 +675,9 @@ public class connection {
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
-                if(received.getId() != msgID.toServer.ping) {
+                /*if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.toString());
-                }
+                }*/
                 try {
                     sm.acquire();
                     if(received.isObject()){

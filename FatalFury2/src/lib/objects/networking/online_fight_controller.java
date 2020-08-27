@@ -35,10 +35,7 @@ public class online_fight_controller extends fight_controller {
     /**
      * The Message identifier.
      */
-    private int messageIdentifier = 3, /**
-     * The Tramits identifier.
-     */
-    tramitsIdentifier = -2;
+    private int messageIdentifier = msgID.toClient.fight;
     /**
      * The Reconnecting.
      */
@@ -66,9 +63,8 @@ public class online_fight_controller extends fight_controller {
      * @param con      the con
      * @param isServer the is server
      * @param mI       the m i
-     * @param tID      the t id
      */
-    public online_fight_controller(online_user_controller p, online_user_controller e, scenary s, connection con, boolean isServer, int mI, int tID){
+    public online_fight_controller(online_user_controller p, online_user_controller e, scenary s, connection con, boolean isServer, int mI){
         super(p, e, s);
 
         if(p.isLocal()){
@@ -86,7 +82,6 @@ public class online_fight_controller extends fight_controller {
         this.con = con;
         this.isServer = isServer;
         this.messageIdentifier = mI;
-        this.tramitsIdentifier = tID;
         showIntro();
     }
 

@@ -138,6 +138,7 @@ public class qTableToCSV {
      */
     public boolean loadQtable(){
         String path =  System.getProperty("user.dir") + "/.files/" +qtable;
+        String path2 =  System.getProperty("user.dir") + "/.files/" + "visited" + qtable.substring(6, qtable.length());
         try {
             File f = new File(path);
             BufferedReader b = new BufferedReader(new FileReader(f));
@@ -149,6 +150,29 @@ public class qTableToCSV {
                     table[i][j] = Double.parseDouble(values[j]);
                 }
                 ++i;
+            }
+            b.close();
+
+            f = new File(path2);
+            b = new BufferedReader(new FileReader(f));
+            i = 0;
+            while((aux = b.readLine()) != null){
+                String values[] = aux.split(" ");
+                for(int j = 0; j < values.length; ++j){
+                    if(Boolean.parseBoolean(values[j])){
+                        times[i][j] = 1.0;
+                    }
+                }
+                ++i;
+            }
+            visited = stateCalculator.generateSampleStateTable();
+            for (int a = 0; a < stateCalculator.getnActions(); ++a) {
+                for (int s = 0; s < stateCalculator.getMax(); ++s) {
+                    if(times[s][a] == 0.0){
+                        visited[s][a] = null;
+                    }
+                    times[s][a] = 0.0;
+                }
             }
             b.close();
         }catch (Exception e){

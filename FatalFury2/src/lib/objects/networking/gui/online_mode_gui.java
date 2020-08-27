@@ -860,7 +860,7 @@ public class online_mode_gui {
                 }
             });
 
-            JTextField username2 = generateSimpleTextField("Username", f, Color.YELLOW, blue, 365, 460, 250, 60, false, true);
+            JTextField username2 = generateSimpleTextField("Username", f, Color.YELLOW, grey1, 365, 460, 250, 60, false, true);
 
             JPasswordField password = new JPasswordField(pass);
             if (!show) {
@@ -880,7 +880,7 @@ public class online_mode_gui {
                 }
             });
 
-            JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, blue, 665, 460, 250, 60, false, true);
+            JTextField password2 = generateSimpleTextField("Password", f, Color.YELLOW, grey1, 665, 460, 250, 60, false, true);
 
             guiItems items[] = {guiItems.LOGIN_BUTTON, guiItems.USERNAME, guiItems.PASSWORD, guiItems.USERNAME_TEXT,
                     guiItems.PASSWORD_TEXT, guiItems.BACK, guiItems.RECOVER_BUTTON};

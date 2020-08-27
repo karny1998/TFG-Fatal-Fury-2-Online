@@ -22,7 +22,7 @@ public class online_user_controller extends user_controller {
     /**
      * The Menssage identifier.
      */
-    private int menssageIdentifier = 1;
+    private int menssageIdentifier = msgID.toClient.character;
 
     /**
      * The Time reference.

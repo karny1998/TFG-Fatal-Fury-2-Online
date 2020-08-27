@@ -182,7 +182,7 @@ public class chat_gui {
         gui.getItemsOnScreen().remove(guiItems.CLOSE_CHAT);
         gui.getItemsOnScreen().add(0,guiItems.CLOSE_CHAT);
 
-        gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON,
+        gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON,guiItems.VS_IA_BUTTON,
                 guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
                 guiItems.BACK}, false);
         gui.reloadGUI();
@@ -386,6 +386,9 @@ public class chat_gui {
             model.setValueAt(aux, model.getRowCount(), 0);
             model.fireTableDataChanged();
             gui.reloadGUI();
+            gui.enableComponents(new guiItems[]{guiItems.NORMAL_BUTTON, guiItems.RANKED_BUTTON, guiItems.VS_IA_BUTTON,
+                    guiItems.RANKING_BUTTON, guiItems.QUIT_BUTTON, guiItems.PROFILE_BUTTON,
+                    guiItems.BACK}, false);
         }
         else{
             addMessage(new message(m.getId(),m.getTransmitter(),m.getReceiver(),m.getContent().substring(0,30)));

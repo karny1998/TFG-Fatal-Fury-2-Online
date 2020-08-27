@@ -6,28 +6,43 @@ import lib.utils.sendableObjects.sendableObject;
  * The type Qtable.
  */
 public class qtable extends sendableObject {
+    /**
+     * The constant serialVersionUID.
+     */
     private static final long serialVersionUID = 7617345688754547714L;
+    /**
+     * The Table.
+     */
     private double table[][];
+
+    private boolean visited[][];
+    /**
+     * The Transitions.
+     */
     private String transitions;
 
     /**
      * Instantiates a new Qtable.
      *
      * @param table       the table
+     * @param visited     the visited
      * @param transitions the transitions
      */
-    public qtable(double[][] table, String transitions) {
+    public qtable(double[][] table, boolean visited[][], String transitions) {
         this.table = table;
         this.transitions = transitions;
+        this.visited = visited;
     }
 
     /**
      * Instantiates a new Qtable.
      *
      * @param table       the table
+     * @param visited     the visited
      * @param transitions the transitions
      */
-    public qtable(Double[][] table, String transitions) {
+    public qtable(Double[][] table, boolean visited[][], String transitions) {
+        this.visited = visited;
         this.table = new double[table.length][table[0].length];
         for(int i = 0; i < table.length; ++i){
             for(int j = 0; j < table[0].length; ++j){
@@ -95,5 +110,23 @@ public class qtable extends sendableObject {
      */
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    /**
+     * Get visited boolean [ ] [ ].
+     *
+     * @return the boolean [ ] [ ]
+     */
+    public boolean[][] getVisited() {
+        return visited;
+    }
+
+    /**
+     * Sets visited.
+     *
+     * @param visited the visited
+     */
+    public void setVisited(boolean[][] visited) {
+        this.visited = visited;
     }
 }

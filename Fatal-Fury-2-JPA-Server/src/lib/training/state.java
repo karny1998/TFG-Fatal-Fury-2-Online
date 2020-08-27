@@ -67,6 +67,11 @@ public class state {
 
     /**
      * Instantiates a new State.
+     */
+    public state(){}
+
+    /**
+     * Instantiates a new State.
      *
      * @param life            the life
      * @param playerLife      the player life

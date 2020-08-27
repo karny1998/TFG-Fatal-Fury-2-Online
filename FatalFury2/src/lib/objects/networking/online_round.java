@@ -78,7 +78,6 @@ public class online_round extends round {
             character p = player.getPlayer(), e = enemy.getPlayer();
             String msg = con.receiveString(messageIdentifier);
             if(!msg.equals("") && !msg.equals("NONE")){
-                System.out.println(msg);
                 String aux[] = msg.split(":");
                 Movement pS = Movement.valueOf(aux[0]), eS = Movement.valueOf(aux[5]);
                 int pO = Integer.parseInt(aux[1]), eO = Integer.parseInt(aux[6]);

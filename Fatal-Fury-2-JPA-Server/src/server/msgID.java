@@ -30,7 +30,12 @@ public class msgID {
         /**
          * The constant tramits.
          */
-        public static int tramits = -2, /**
+        public static int tramits = -2,
+        /**
+         * The Quit.
+         */
+        quit = -3,
+        /**
          * The Hi.
          */
         hi = -1, /**

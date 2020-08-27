@@ -39,8 +39,8 @@ public class Main {
         try{
             //serverSocket = new ServerSocket(5555);
             serverSocket = generateTCPSecureServerSocket(5555);
-            com = new commander(threads,serverSocket);
-            com.start();
+            /*com = new commander(threads,serverSocket);
+            com.start();*/
             while(!shutdown){
                 Socket newCon = serverSocket.accept();
                 System.out.println("Se ha aceptado una conexion.\n");
@@ -57,6 +57,7 @@ public class Main {
                 threads.put(newUser, c);
                 c.start();
             }
+            manager.getUdpConnection().close();
         }catch (Exception e){
             e.printStackTrace();
             dbm.close();

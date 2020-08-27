@@ -41,10 +41,15 @@ public class serverUDPSubConnection {
      */
     protected receiver rec;
 
+    /**
+     * The Relation ip port.
+     */
     protected Map<String,Integer> relationIpPort = new HashMap<>();
 
     /**
      * Instantiates a new Connection.
+     *
+     * @param port the port
      */
     public serverUDPSubConnection(int port) {
         try {
@@ -75,7 +80,9 @@ public class serverUDPSubConnection {
     /**
      * Envía un ack de respuesta al mensaje idenfitifado por id.
      *
-     * @param id the id
+     * @param id       the id
+     * @param address  the address
+     * @param portSend the port send
      */
     public void sendAck(int id, InetAddress address, int portSend){
         bufSend = (Integer.toString(id) + ";NR;ACK").getBytes();
@@ -197,42 +204,92 @@ public class serverUDPSubConnection {
         }
     }
 
+    /**
+     * Gets socket udp.
+     *
+     * @return the socket udp
+     */
     public DatagramSocket getSocketUDP() {
         return socketUDP;
     }
 
+    /**
+     * Sets socket udp.
+     *
+     * @param socketUDP the socket udp
+     */
     public void setSocketUDP(DatagramSocket socketUDP) {
         this.socketUDP = socketUDP;
     }
 
+    /**
+     * Get buf receive byte [ ].
+     *
+     * @return the byte [ ]
+     */
     public byte[] getBufReceive() {
         return bufReceive;
     }
 
+    /**
+     * Sets buf receive.
+     *
+     * @param bufReceive the buf receive
+     */
     public void setBufReceive(byte[] bufReceive) {
         this.bufReceive = bufReceive;
     }
 
+    /**
+     * Get buf send byte [ ].
+     *
+     * @return the byte [ ]
+     */
     public byte[] getBufSend() {
         return bufSend;
     }
 
+    /**
+     * Sets buf send.
+     *
+     * @param bufSend the buf send
+     */
     public void setBufSend(byte[] bufSend) {
         this.bufSend = bufSend;
     }
 
+    /**
+     * Gets rec.
+     *
+     * @return the rec
+     */
     public receiver getRec() {
         return rec;
     }
 
+    /**
+     * Sets rec.
+     *
+     * @param rec the rec
+     */
     public void setRec(receiver rec) {
         this.rec = rec;
     }
 
+    /**
+     * Gets relation ip port.
+     *
+     * @return the relation ip port
+     */
     public Map<String, Integer> getRelationIpPort() {
         return relationIpPort;
     }
 
+    /**
+     * Sets relation ip port.
+     *
+     * @param relationIpPort the relation ip port
+     */
     public void setRelationIpPort(Map<String, Integer> relationIpPort) {
         this.relationIpPort = relationIpPort;
     }

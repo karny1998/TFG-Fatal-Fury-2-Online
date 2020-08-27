@@ -78,7 +78,7 @@ public class online_mode {
     /**
      * The Server ip.
      */
-    private String serverIp = "fatalfury2.sytes.net";//"127.0.0.1";//
+    private String serverIp = "35.189.87.224";//"fatalfury2.sytes.net";//"127.0.0.1";//
 
     /**
      * The Server port.
@@ -273,11 +273,20 @@ public class online_mode {
             ((enemy_controller) enemy).setRival(player.getPlayer(), userLogged);
             ((enemy_controller) enemy).getAgente().setUser(userLogged);
             ((enemy_controller) enemy).getAgente().setqTable(table);
+            ((enemy_controller) enemy).getAgente().setVisited(aux.getVisited());
+            ((enemy_controller) enemy).getAgente().writeQTableAndRegister();
             enemy.getPlayer().setMapLimit(mapLimit);
             player.setRival(enemy.getPlayer());
             player.getPlayer().setMapLimit(mapLimit);
 
             scene = new scenary(sce);
+
+            ((enemy_controller) enemy).getAgente().setUseRegression(true);
+            if (epsilon < 1.0) {
+                ((enemy_controller) enemy).getAgente().writeQTableAndRegister();
+                ((enemy_controller) enemy).getAgente().trainRegression();
+            }
+            ((enemy_controller) enemy).getAgente().setEpsilon(epsilon);
 
             fight = new fight_controller(player, enemy, scene);
             fight.setMapLimit(mapLimit);
@@ -286,13 +295,6 @@ public class online_mode {
 
             audio_manager.startFight(player.getPlayer().getCharac(), enemy.getPlayer().getCharac(), scene.getScenario());
             audio_manager.fight.loopMusic(fight_audio.music_indexes.map_theme);
-
-            ((enemy_controller) enemy).getAgente().setUseRegression(true);
-            if (epsilon < 1.0) {
-                ((enemy_controller) enemy).getAgente().writeQTableAndRegister();
-                ((enemy_controller) enemy).getAgente().trainRegression();
-            }
-            ((enemy_controller) enemy).getAgente().setEpsilon(epsilon);
 
             gui.getPrincipal().gameOn();
             gui.setOnlineState(GameState.ONLINE_FIGHT);
@@ -310,6 +312,7 @@ public class online_mode {
      * @param rival    the rival
      */
     public void generateFight(boolean isHost, Playable_Character pC, Playable_Character pE, Scenario_type sce, boolean isRanked, String rival){
+        System.out.println("Se reciben como pjs " + pC.toString() + "  " + pE.toString());
         isVsIA = 0;
         this.rankPoints = 0;
         this.char1 = pC;
@@ -321,11 +324,13 @@ public class online_mode {
             player = new online_user_controller(pC, 1, conToClient,  true);
             enemy = new online_user_controller(pE, 2, conToClient, false);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) player).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         } else {
             player = new online_user_controller(pC, 1, conToClient, false);
             enemy = new online_user_controller(pE, 2, conToClient, true);
             ((online_user_controller) enemy).setMenssageIdentifier(msgID.toClient.character);
+            ((online_user_controller) player).setMenssageIdentifier(msgID.toClient.character);
             enemy.setPlayerNum(2);
         }
         enemy.setRival(player.getPlayer());
@@ -339,6 +344,7 @@ public class online_mode {
         //conToClient.setBlockReception(false);
 
         //Sincronizar
+        System.out.println("Pasan a sincronizar");
         boolean syncOk = synchronize(isHost);
         if(!syncOk){
             try {
@@ -350,7 +356,7 @@ public class online_mode {
             return;
         }
 
-        fight = new online_fight_controller((online_user_controller)player, (online_user_controller)enemy, scene, conToClient, isHost, msgID.toClient.fight, -2);
+        fight = new online_fight_controller((online_user_controller)player, (online_user_controller)enemy, scene, conToClient, isHost, msgID.toClient.fight);
         fight.setMapLimit(mapLimit);
         fight.setVsIa(false);
 
@@ -480,10 +486,10 @@ public class online_mode {
                         }
                     } else if (isVsIA == 1) {
                         conToServer.sendString(msgID.toServer.request, "TRAIN OWN IA");
-                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().trainingToString()));
+                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().getVisited(), ((enemy_controller) enemy).getAgente().trainingToString()));
                     } else {
                         conToServer.sendString(msgID.toServer.request, "TRAIN GLOBAL IA");
-                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().trainingToString()));
+                        conToServer.sendObject(msgID.toServer.request, new qtable(((enemy_controller) enemy).getAgente().getqTable(), ((enemy_controller) enemy).getAgente().getVisited(), ((enemy_controller) enemy).getAgente().trainingToString()));
                     }
 
                     Fight_Results results = fight.getFight_result();

@@ -231,7 +231,12 @@ public class serverManager {
      * @return the string
      */
     public String registerUser(String username, String email, String password){
-        String res = dbm.registerPlayer(username, email, password);
+        String res = null;
+        try {
+            res = dbm.registerPlayer(username, email, encrypt(password));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Player p = (Player) dbm.findByKey(Player.class, username);
         if(res.equals("OK")){
             try {
@@ -692,6 +697,20 @@ public class serverManager {
                     break;
             }
         }
+        else{
+            switch (r){
+                case 1:
+                    p1P = 20;
+                    p2P = -20;
+                    break;
+                case 2:
+                    p1P = -20;
+                    p2P = 20;
+                    break;
+                default:
+                    break;
+            }
+        }
         return new Pair<>(p1P, p2P);
     }
 
@@ -976,7 +995,7 @@ public class serverManager {
      */
     public qtable getQtable(String user){
         agent aux = new agent(user);
-        return new qtable(aux.getqTable(), "");//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
+        return new qtable(aux.getqTable(), aux.getVisited(), "");//,new ArrayList<Pair<Pair<state, Movement>, Pair<Double, state>>>());
     }
 
     /**
@@ -990,6 +1009,7 @@ public class serverManager {
         try {
             agent aux = new agent(user);
             aux.setqTable(table.getTableDouble());
+            aux.setVisited(table.getVisited());
             //aux.setTrainingRegister(table.getTransitions());
             aux.writeQTableAndRegister();
 
@@ -1050,5 +1070,203 @@ public class serverManager {
      */
     public int getGlobalIaTimes(){
         return dbm.getGlobalIaTimes();
+    }
+
+    /**
+     * Gets dbm.
+     *
+     * @return the dbm
+     */
+    public static databaseManager getDbm() {
+        return dbm;
+    }
+
+    /**
+     * Sets dbm.
+     *
+     * @param dbm the dbm
+     */
+    public static void setDbm(databaseManager dbm) {
+        serverManager.dbm = dbm;
+    }
+
+    /**
+     * Gets logged users.
+     *
+     * @return the logged users
+     */
+    public Map<String, serverConnection> getLoggedUsers() {
+        return loggedUsers;
+    }
+
+    /**
+     * Sets logged users.
+     *
+     * @param loggedUsers the logged users
+     */
+    public void setLoggedUsers(Map<String, serverConnection> loggedUsers) {
+        this.loggedUsers = loggedUsers;
+    }
+
+    /**
+     * Gets users ip.
+     *
+     * @return the users ip
+     */
+    public Map<String, InetAddress> getUsersIP() {
+        return usersIP;
+    }
+
+    /**
+     * Sets users ip.
+     *
+     * @param usersIP the users ip
+     */
+    public void setUsersIP(Map<String, InetAddress> usersIP) {
+        this.usersIP = usersIP;
+    }
+
+    /**
+     * Gets searching game users.
+     *
+     * @return the searching game users
+     */
+    public List<String> getSearchingGameUsers() {
+        return searchingGameUsers;
+    }
+
+    /**
+     * Sets searching game users.
+     *
+     * @param searchingGameUsers the searching game users
+     */
+    public void setSearchingGameUsers(List<String> searchingGameUsers) {
+        this.searchingGameUsers = searchingGameUsers;
+    }
+
+    /**
+     * Gets searching ranked game users.
+     *
+     * @return the searching ranked game users
+     */
+    public List<String> getSearchingRankedGameUsers() {
+        return searchingRankedGameUsers;
+    }
+
+    /**
+     * Sets searching ranked game users.
+     *
+     * @param searchingRankedGameUsers the searching ranked game users
+     */
+    public void setSearchingRankedGameUsers(List<String> searchingRankedGameUsers) {
+        this.searchingRankedGameUsers = searchingRankedGameUsers;
+    }
+
+    /**
+     * Gets ongoing games.
+     *
+     * @return the ongoing games
+     */
+    public List<Pair<String, String>> getOngoingGames() {
+        return ongoingGames;
+    }
+
+    /**
+     * Sets ongoing games.
+     *
+     * @param ongoingGames the ongoing games
+     */
+    public void setOngoingGames(List<Pair<String, String>> ongoingGames) {
+        this.ongoingGames = ongoingGames;
+    }
+
+    /**
+     * Gets ongoing ranked games.
+     *
+     * @return the ongoing ranked games
+     */
+    public List<Pair<String, String>> getOngoingRankedGames() {
+        return ongoingRankedGames;
+    }
+
+    /**
+     * Sets ongoing ranked games.
+     *
+     * @param ongoingRankedGames the ongoing ranked games
+     */
+    public void setOngoingRankedGames(List<Pair<String, String>> ongoingRankedGames) {
+        this.ongoingRankedGames = ongoingRankedGames;
+    }
+
+    /**
+     * Gets pending friends invitatiosns.
+     *
+     * @return the pending friends invitatiosns
+     */
+    public Map<String, String> getPendingFriendsInvitatiosns() {
+        return pendingFriendsInvitatiosns;
+    }
+
+    /**
+     * Sets pending friends invitatiosns.
+     *
+     * @param pendingFriendsInvitatiosns the pending friends invitatiosns
+     */
+    public void setPendingFriendsInvitatiosns(Map<String, String> pendingFriendsInvitatiosns) {
+        this.pendingFriendsInvitatiosns = pendingFriendsInvitatiosns;
+    }
+
+    /**
+     * Gets port udp.
+     *
+     * @return the port udp
+     */
+    public int getPortUDP() {
+        return portUDP;
+    }
+
+    /**
+     * Sets port udp.
+     *
+     * @param portUDP the port udp
+     */
+    public void setPortUDP(int portUDP) {
+        this.portUDP = portUDP;
+    }
+
+    /**
+     * Gets udp connection.
+     *
+     * @return the udp connection
+     */
+    public serverUDPSubConnection getUdpConnection() {
+        return udpConnection;
+    }
+
+    /**
+     * Sets udp connection.
+     *
+     * @param udpConnection the udp connection
+     */
+    public void setUdpConnection(serverUDPSubConnection udpConnection) {
+        this.udpConnection = udpConnection;
+    }
+
+    /**
+     * Gets training global ia.
+     *
+     * @return the training global ia
+     */
+    public Semaphore getTrainingGlobalIa() {
+        return trainingGlobalIa;
+    }
+
+    /**
+     * Sets training global ia.
+     *
+     * @param trainingGlobalIa the training global ia
+     */
+    public void setTrainingGlobalIa(Semaphore trainingGlobalIa) {
+        this.trainingGlobalIa = trainingGlobalIa;
     }
 }
