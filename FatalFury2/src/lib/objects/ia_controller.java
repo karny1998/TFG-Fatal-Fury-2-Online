@@ -169,43 +169,48 @@ public class ia_controller {
      */
 // Realiza la gestión de la IA, es decir, analizar la situación, evaluar, y decidir un movimiento
     private void ia_gestion(){
-        // Actualiza la ruleta rusa en base a los procesadores
-        for(int i = 0; i < processor.length; ++i) {
-            processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], 4, player, enemy, time, round, pWins);
-        }
-        hitBox pHurt = player.getHurtbox();
-        hitBox eHurt = enemy.getHurtbox();
-        // Distancia entre los personajes
-        int dis = 0;
-        if (pHurt.getX() > eHurt.getX()){
-            dis = pHurt.getX() - (eHurt.getX()+eHurt.getWidth());
-        }
-        else if(pHurt.getX() < eHurt.getX()){
-            dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
-        }
-        // Comprobaciones de si ha pasado el tiempo suficiente
-        long current = System.currentTimeMillis();
-        boolean timeOk = current - timeReference2 > 300.0;
-        boolean timeOk2 = current - timeReference2 > 500.0;
-        if(timeOk){timeReference1 = current;}
-        if(timeOk2){timeReference2 = current;}
-        // Si ha pasado el tiempo de margen entre decisiones, o se está saltando y ha pasado el
-        // tiempo suficiente para ejecutar un ataque en el aire
-        if(timeOk && (enemy.endedMovement() || enemy.getState() == Movement.WALKING
+        try {
+            // Actualiza la ruleta rusa en base a los procesadores
+            for (int i = 0; i < processor.length; ++i) {
+                processor[i].updateRoulette(roulette, mood[round - 1], weights[round - 1], 4, player, enemy, time, round, pWins);
+            }
+            hitBox pHurt = player.getHurtbox();
+            hitBox eHurt = enemy.getHurtbox();
+            // Distancia entre los personajes
+            int dis = 0;
+            if (pHurt.getX() > eHurt.getX()) {
+                dis = pHurt.getX() - (eHurt.getX() + eHurt.getWidth());
+            } else if (pHurt.getX() < eHurt.getX()) {
+                dis = eHurt.getX() - (pHurt.getX() + pHurt.getWidth());
+            }
+            // Comprobaciones de si ha pasado el tiempo suficiente
+            long current = System.currentTimeMillis();
+            boolean timeOk = current - timeReference2 > 300.0;
+            boolean timeOk2 = current - timeReference2 > 500.0;
+            if (timeOk) {
+                timeReference1 = current;
+            }
+            if (timeOk2) {
+                timeReference2 = current;
+            }
+            // Si ha pasado el tiempo de margen entre decisiones, o se está saltando y ha pasado el
+            // tiempo suficiente para ejecutar un ataque en el aire
+            if (timeOk && (enemy.endedMovement() || enemy.getState() == Movement.WALKING
                     || enemy.getState() == Movement.WALKING_BACK || enemy.getState() == Movement.CROUCHED_WALKING
                     || enemy.getState() == Movement.STANDING)
-            || enemy.isJumping() && timeOk2){
-            Movement m = Movement.STANDING;
-            // Mientras se esté a una distancia a la que nunca se le vaya a dar con un ataque normal
-            // se sigue girando la ruleta mientras sea ataque normal
-            do{
-                m = roulette.spinRoulette();
-                if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
-                    break;
-                }
-            }while (dis > 175 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
-            move = movementsKeys.get(m);
-        }
+                    || enemy.isJumping() && timeOk2) {
+                Movement m = Movement.STANDING;
+                // Mientras se esté a una distancia a la que nunca se le vaya a dar con un ataque normal
+                // se sigue girando la ruleta mientras sea ataque normal
+                do {
+                    m = roulette.spinRoulette();
+                    if (enemy.isJumping() && (m == Movement.SOFT_PUNCH || m == Movement.HARD_PUNCH || m == Movement.HARD_KICK || m == Movement.SOFT_KICK)) {
+                        break;
+                    }
+                } while (dis > 175 && processor[0].isAttack(m) && !processor[0].isSpecial(m));
+                move = movementsKeys.get(m);
+            }
+        }catch (Exception e){}
     }
 
     /**

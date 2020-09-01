@@ -784,6 +784,9 @@ public class fight_controller implements roundListener {
 
                         // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
                         enemy.getPlayer().getStats().getActualFight().currentRound().setResult(2);
+                        try{
+                            ((enemy_controller)player).getPlayer().getStats().getActualFight().currentRound().setResult(1);
+                        }catch (Exception e){}
                         /////////////////////////////////////////////
 
                         break;
@@ -798,6 +801,9 @@ public class fight_controller implements roundListener {
 
                         // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
                         enemy.getPlayer().getStats().getActualFight().currentRound().setResult(1);
+                        try{
+                            ((enemy_controller)player).getPlayer().getStats().getActualFight().currentRound().setResult(2);
+                        }catch (Exception e){}
                         /////////////////////////////////////////////
 
                         break;
@@ -818,6 +824,9 @@ public class fight_controller implements roundListener {
 
                         // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
                         enemy.getPlayer().getStats().getActualFight().currentRound().setResult(0);
+                        try{
+                            ((enemy_controller)player).getPlayer().getStats().getActualFight().currentRound().setResult(0);
+                        }catch (Exception e){}
                         /////////////////////////////////////////////
 
                         break;

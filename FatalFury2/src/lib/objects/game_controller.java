@@ -43,7 +43,7 @@ public class game_controller {
      * The training.
      */
 // Modo debug
-    boolean training = false;
+    boolean training = true;
     /**
      * The Trainer.
      */
