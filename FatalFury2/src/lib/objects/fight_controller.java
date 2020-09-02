@@ -836,6 +836,13 @@ public class fight_controller implements roundListener {
                 enemy.getPlayer().getStats().getActualFight().currentRound().setPlayer_remaining_life(player.getPlayer().getLife());
                 enemy.getPlayer().getStats().getActualFight().currentRound().setRemaining_life(enemy.getPlayer().getLife());
                 enemy.getPlayer().getStats().getActualFight().currentRound().setRemaining_time(currentRound.getTimeLeft());
+
+                try {
+                    ((enemy_controller) player).getPlayer().getStats().getActualFight().currentRound().setPlayer_remaining_life(enemy.getPlayer().getLife());
+                    ((enemy_controller) player).getPlayer().getStats().getActualFight().currentRound().setRemaining_life(player.getPlayer().getLife());
+                    ((enemy_controller) player).getPlayer().getStats().getActualFight().currentRound().setRemaining_time(currentRound.getTimeLeft());
+                }catch (Exception e){}
+
                 if (roundCounter < 4 && newRound){
                     enemy.getPlayer().getStats().getActualFight().nextRound();
                     try{

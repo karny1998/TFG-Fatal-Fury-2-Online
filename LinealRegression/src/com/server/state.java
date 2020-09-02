@@ -48,11 +48,25 @@ public class state {
      */
     private boolean jumping = false;
 
+    /**
+     * The Simple life.
+     */
     private int simpleLife = 0;
 
+    /**
+     * The Simple player life.
+     */
     private int simplePlayerLife = 0;
 
+    /**
+     * The Simple distance.
+     */
     private int simpleDistance = 0;
+
+    /**
+     * Instantiates a new State.
+     */
+    public state(){}
 
     /**
      * Instantiates a new State.
@@ -329,26 +343,56 @@ public class state {
         return new state(life,playerLife,playerState,dis,round,remainingTime,iaVictories,playerVictories, jumping);
     }
 
+    /**
+     * Gets simple life.
+     *
+     * @return the simple life
+     */
     public int getSimpleLife() {
         return simpleLife;
     }
 
+    /**
+     * Sets simple life.
+     *
+     * @param simpleLife the simple life
+     */
     public void setSimpleLife(int simpleLife) {
         this.simpleLife = simpleLife;
     }
 
+    /**
+     * Gets simple player life.
+     *
+     * @return the simple player life
+     */
     public int getSimplePlayerLife() {
         return simplePlayerLife;
     }
 
+    /**
+     * Sets simple player life.
+     *
+     * @param simplePlayerLife the simple player life
+     */
     public void setSimplePlayerLife(int simplePlayerLife) {
         this.simplePlayerLife = simplePlayerLife;
     }
 
+    /**
+     * Gets simple distance.
+     *
+     * @return the simple distance
+     */
     public int getSimpleDistance() {
         return simpleDistance;
     }
 
+    /**
+     * Sets simple distance.
+     *
+     * @param simpleDistance the simple distance
+     */
     public void setSimpleDistance(int simpleDistance) {
         this.simpleDistance = simpleDistance;
     }

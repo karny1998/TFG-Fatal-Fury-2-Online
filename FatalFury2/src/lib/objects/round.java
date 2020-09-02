@@ -339,6 +339,10 @@ public class round {
                 }
                 else{
                     player.getPlayer().setState(Movement.STANDING_BLOCK_KNOCKBACK_SOFT, pHurt, eHurt);
+
+                    try {
+                        ((enemy_controller) player).getPlayer().getStats().getActualFight().addBlockedHit();
+                    }catch (Exception e){}
                 }
                 player_old_state = player_act_state;
                 playerHit = true;
@@ -368,6 +372,9 @@ public class round {
 
             // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
             enemy.getPlayer().getStats().getActualFight().addReceivedHit();
+            try{
+                ((enemy_controller)player).getPlayer().getStats().getActualFight().addSuccessfulHits();
+            }catch (Exception e){}
             /////////////////////////////////////////////
 
             // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
@@ -428,10 +435,18 @@ public class round {
 
             // REGISTRO DE INFORMACIÓN PARA ESTADÍSTICAS
             enemy.getPlayer().getStats().getActualFight().addSuccessfulHits();
+            try{
+                ((enemy_controller)player).getPlayer().getStats().getActualFight().addReceivedHit();
+            }catch (Exception e){}
             /////////////////////////////////////////////
 
             // Si se está cubriendo y el movimiento no es ser lanzado, se aplica el daño reducido
             if(playerCovers && enemyState != Movement.THROW){
+
+                try {
+                    ((enemy_controller) player).getPlayer().getStats().getActualFight().addBlockedHit();
+                }catch (Exception e){}
+
                 player.getPlayer().applyDamage((int) (dmgE*0.5));
                 scoreEnemy.addHit((int) (dmgE*10*0.5));
                 audio_manager.fight.playSfx(fight_audio.sfx_indexes.Hit_1);

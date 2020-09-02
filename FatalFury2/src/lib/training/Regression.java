@@ -49,7 +49,7 @@ public class Regression {
     folds = 5, /**
      * The Folds cv.
      */
-    foldsCV = 10;
+    foldsCV = 5;
     /**
      * The Csv generator.
      */
@@ -126,13 +126,13 @@ public class Regression {
         Collections.shuffle(dataSet);
         dataSet.setClassIndex(1);
 
-        this.dataSet = dataSet;
-        int f = (int) (Math.random()*folds)%folds;
-        if(f > dataSet.size()){
-            f = dataSet.size();
+        this.dataSet = dataSet;//new Instances(dataSet, 0, 300);
+        if(folds > dataSet.size()){
+            folds = dataSet.size();
         }
-        this.trainDataSet = dataSet.trainCV(folds,f);
-        this.validateDataSet = dataSet.testCV(folds,f);
+        int f = (int) (Math.random()*folds)%folds;
+        this.trainDataSet = this.dataSet.trainCV(folds,f);
+        this.validateDataSet = this.dataSet.testCV(folds,f);
     }
 
     /**
@@ -155,42 +155,55 @@ public class Regression {
      * @throws Exception the exception
      */
     public void kFoldCrossValidationPolynomialRegression() throws Exception {
-        double betterError = 1000.0;
-        int betterGrade = 1;
-        Evaluation betterEval = null;// = new Evaluation(trainDataSet);
-        LinearRegression betterModel = null; // new LinearRegression();;
+        double bestError = 999999.0;
+        int bestGrade = 1;
+        Evaluation bestEval = null;// = new Evaluation(trainDataSet);
+        LinearRegression bestModel = null; // new LinearRegression();;
 
         for(int i = grade; i <=  maxGrade; ++i){
             csvGenerator.generateCSV(i);
             loadDataset();
 
-            LinearRegression model = new LinearRegression();
-            model.buildClassifier(trainDataSet);
-
-            Evaluation eval = new Evaluation(trainDataSet);
+            double meanError = 0.0;
             int foldsAux = foldsCV;
             if(foldsCV > validateDataSet.size()){
                 foldsAux = validateDataSet.size();
             }
-            eval.crossValidateModel(model, validateDataSet, foldsAux, new Random(1));
+            for(int j = 2; j <= foldsAux; ++j){
+                int f = (int) (Math.random()*j)%j;
+                Instances trainAux = trainDataSet.trainCV(j,f);
+                Instances testAux = trainDataSet.testCV(j,f);
+                LinearRegression model = new LinearRegression();
+                model.buildClassifier(trainAux);
+                Evaluation eval = new Evaluation(trainDataSet);
+                eval.evaluateModel(model,testAux);
+                meanError += eval.relativeAbsoluteError();
+            }
 
-            //System.out.println("Grade: " + i + " Relative absolute error: " + eval.relativeAbsoluteError());
+            meanError /= (double)(foldsAux-1);
 
-            if(eval.relativeAbsoluteError() < betterError){
-                betterError = eval.relativeAbsoluteError();
-                betterGrade = i;
-                betterEval = eval;
-                betterModel = model;
+            System.out.println("Grade: " + i + " Relative absolute error: " + meanError);
+
+            if(meanError < bestError){
+                bestError = meanError;
+                bestGrade = i;
             }
         }
 
-        /*System.out.println("\nBetter grade: " + betterGrade);
+        csvGenerator.generateCSV(bestGrade);
+        loadDataset();
+        bestModel = new LinearRegression();
+        bestModel.buildClassifier(trainDataSet);
+        bestEval = new Evaluation(trainDataSet);
+        bestEval.evaluateModel(bestModel,validateDataSet);
+
+        System.out.println("\nBest grade: " + bestGrade);
         System.out.println("** Linear Regression Evaluation with Datasets **");
-        System.out.println(betterEval.toSummaryString());
+        System.out.println(bestEval.toSummaryString());
         System.out.print(" the expression for the input data as per alogorithm is ");
-        System.out.println(betterModel);*/
-        saveModel(betterModel);
-        finalModel  = betterModel;
+        System.out.println(bestModel);
+        saveModel(bestModel);
+        finalModel  = bestModel;
     }
 
     /**
