@@ -757,6 +757,29 @@ public class agent{
             }
         }
     }
+	
+	/**
+     * Sets use regression.
+     *
+     * @param useRegression the use regression
+     */
+    public void setUseRegression(boolean useRegression) {
+        this.useRegression = useRegression;
+        if(useRegression){
+            try {
+                regression = new Regression(5, 1, 10, user, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
+                regression.loadModel();
+                model = regression.getFinalModel().coefficients();
+            }catch (Exception e){
+                //e.printStackTrace();
+                trainRegression();
+            }
+        }
+        else{
+            regression = null;
+            model = null;
+        }
+    }
 
     /**
      * Getq table double [ ] [ ].
@@ -1054,29 +1077,6 @@ public class agent{
      */
     public boolean isUseRegression() {
         return useRegression;
-    }
-
-    /**
-     * Sets use regression.
-     *
-     * @param useRegression the use regression
-     */
-    public void setUseRegression(boolean useRegression) {
-        this.useRegression = useRegression;
-        if(useRegression){
-            try {
-                regression = new Regression(5, 1, 10, user, "trainingRegister"+user+".txt", "qTable"+user+".txt", 0);
-                regression.loadModel();
-                model = regression.getFinalModel().coefficients();
-            }catch (Exception e){
-                //e.printStackTrace();
-                regression = null;
-            }
-        }
-        else{
-            regression = null;
-            model = null;
-        }
     }
 
     /**

@@ -12,10 +12,10 @@
         <abajo>40</abajo>
         <izquierda>37</izquierda>
         <derecha>39</derecha>
-        <punetazo_debil>65</punetazo_debil>
-        <patada_debil>81</patada_debil>
-        <punetazo_fuerte>83</punetazo_fuerte>
-        <patada_fuerte>87</patada_fuerte>
+        <punetazo_debil>81</punetazo_debil>
+        <patada_debil>87</patada_debil>
+        <punetazo_fuerte>69</punetazo_fuerte>
+        <patada_fuerte>82</patada_fuerte>
         <aceptar>10</aceptar>
         <pausa_atras>27</pausa_atras>
     </controles_jugador_1>

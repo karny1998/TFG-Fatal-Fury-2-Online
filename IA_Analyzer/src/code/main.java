@@ -1,7 +1,7 @@
 public class main {
     public static void main(String[] args){
-        boolean simple = false;
-        stadistics s = new stadistics("q_learning_statsAleatoryRegresionYes.xml");
+        boolean simple = true;
+        stadistics s = new stadistics("q_learning_statsSameVsAleatory.xml");
         s.printEfectivity(simple);
         s.printAccumulatedReward(simple);
         s.printStadistics(simple);

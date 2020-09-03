@@ -340,7 +340,7 @@ public class IaVsIaTraining {
             }
         }
         else{
-            double epsilon = 1.0 - (double)i/3000.0;
+            double epsilon = 1.0 - (double)i/100.0;//3000.0;
             if(epsilon >= 0.05) {
                 agente.setEpsilon(epsilon);
             }
@@ -420,6 +420,9 @@ public class IaVsIaTraining {
                 dis = eHurt.getX() - (pHurt.getX()+pHurt.getWidth());
             }
             enemy.getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0, false));
+            if(againstTrainedIa){
+                ((enemy_controller)player).getAgente().restart(new state(100,100,Movement.STANDING,dis,1,90,0,0, false));
+            }
         }
         else{
             fight.getAnimation(screenObjects);

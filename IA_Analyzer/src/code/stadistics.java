@@ -25,6 +25,8 @@ public class stadistics {
      */
     private ia_stats stats;
 
+    private int grade = 5;
+
     /**
      * Instantiates a new Stadistics.
      *
@@ -73,7 +75,7 @@ public class stadistics {
         }
 
         if(simplified) {
-            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(5);
+            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(grade);
             PolynomialFunction fitted = new PolynomialFunction(fitter.fit(obs.toList()));
 
             double mat2[][] = new double[2][dim];
@@ -116,7 +118,7 @@ public class stadistics {
         }
 
         if(simplified) {
-            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(5);
+            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(grade);
             PolynomialFunction fitted = new PolynomialFunction(fitter.fit(obs.toList()));
 
             double mat2[][] = new double[2][dim];
@@ -133,7 +135,7 @@ public class stadistics {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesPaint(0, Color.BLUE);
         renderer.setSeriesStroke(0, new BasicStroke(2));
-        JFreeChart chart = ChartFactory.createXYLineChart("IA Accumulated reward during the games", "Iteration", "Accumulated reward in a game", dataset, PlotOrientation.VERTICAL, true, false, false);
+        JFreeChart chart = ChartFactory.createXYLineChart("Recompensa acumulada durante las partidas", "Iteración", "Recompensa acumulada", dataset, PlotOrientation.VERTICAL, true, false, false);
         chart.getXYPlot().getRangeAxis().setRange(-1000, 1000);
         ((NumberAxis) chart.getXYPlot().getRangeAxis()).setNumberFormatOverride(new DecimalFormat());
         chart.getXYPlot().setRenderer(renderer);
@@ -191,11 +193,12 @@ public class stadistics {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
         if(simplified){
-            String series[] = {"Won rounds in a game","Block ratio","Succesful hit ratio",
-                    "Remaining life","Player remainig life","Remaining time","Successful hit per received"};
+            String series[] = {"Ganar una ronda","Bloquear un ataque","Golpear a un enemigo con un ataque",
+                    "Vida restante al final de una ronda","Vida restante del enemigo al final de una ronda",
+                    "Tiempo restante al final de una ronda","Ataques exitosos de la IA sobre el total de exitosos"};
             WeightedObservedPoints obs[] = {obs1,obs2,obs3,obs4,obs5,obs6,obs7};
             for(int j = 0; j < 7;++j) {
-                PolynomialCurveFitter fitter = PolynomialCurveFitter.create(5);
+                PolynomialCurveFitter fitter = PolynomialCurveFitter.create(grade);
                 PolynomialFunction fitted = new PolynomialFunction(fitter.fit(obs[j].toList()));
 
                 double mat2[][] = new double[2][dim];
@@ -230,7 +233,7 @@ public class stadistics {
         renderer.setSeriesStroke(4, new BasicStroke(2));
         renderer.setSeriesStroke(5, new BasicStroke(2));
         renderer.setSeriesStroke(6, new BasicStroke(2));
-        JFreeChart chart = ChartFactory.createXYLineChart("IA Efectivity", "Iteration", "Ratio", dataset, PlotOrientation.VERTICAL, true, false, false);
+        JFreeChart chart = ChartFactory.createXYLineChart("Resumen del aprendizaje", "Iteración", "Promedio/Probabilidad", dataset, PlotOrientation.VERTICAL, true, false, false);
         chart.getXYPlot().getRangeAxis().setRange(0, 100);
         ((NumberAxis) chart.getXYPlot().getRangeAxis()).setNumberFormatOverride(new DecimalFormat("#'%'"));
         chart.getXYPlot().setRenderer(renderer);
@@ -245,7 +248,7 @@ public class stadistics {
         DefaultXYDataset dataset = new DefaultXYDataset();
         int dim = values[0].length;
         if(simplified) {
-            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(5);
+            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(grade);
             PolynomialFunction fitted = new PolynomialFunction(fitter.fit(obs.toList()));
 
             double mat2[][] = new double[2][dim];
@@ -316,13 +319,13 @@ public class stadistics {
             obs7.add(i, hitPerReceived[1][i-1]);
         }
 
-        printGraphic(simplified, win, obs1,"Won rounds", Color.BLUE, "Won rounds in a game", "Iteration", "Won rounds", "RoundWinRatio");
-        printGraphic(simplified, block, obs2,"Blocked attacks", Color.YELLOW, "Proportion between received and blocked attacks", "Iteration", "Blocked attacks", "BlockRatio");
-        printGraphic(simplified, hit, obs3,"Succesful attacks", Color.ORANGE, "Proportion between realized and successful attacks", "Iteration", "Susccessful attacks", "SuccessfulHitRatio");
-        printGraphic(simplified, life, obs4,"Remaining AI Life", Color.RED, "Average remaining AI mean life in a game", "Iteration", "Average AI remaining life", "RemainingLife");
-        printGraphic(simplified, playerLife, obs5,"Remaining enemy Life", Color.GREEN, "Average remaining enemy mean life in a game", "Iteration", "Average enemy remaining life", "EnemyRemainingLife");
-        printGraphic(simplified, time, obs6,"Remaining time", Color.PINK, "Average remaining time in a game", "Iteration", "Average remaining time", "RemainingTime");
-        printGraphic(simplified, hitPerReceived, obs7,"Successful attack per received", Color.MAGENTA, "Proportion between realized and received attacks", "Iteration", "Attack per received", "HitPerReceivedRatio");
+        printGraphic(simplified, win, obs1,"Won rounds", Color.BLUE, "Rondas ganadas por partida", "Iteración", "Rondas ganadas", "RoundWinRatio");
+        printGraphic(simplified, block, obs2,"Blocked attacks", Color.YELLOW, "Ataques bloqueados del total de recibidos", "Iteración", "Ataques bloqueados", "BlockRatio");
+        printGraphic(simplified, hit, obs3,"Succesful attacks", Color.ORANGE, "Ataques que golpearon al enemigo del total realizados", "Iteración", "Ataques exitosos", "SuccessfulHitRatio");
+        printGraphic(simplified, life, obs4,"Remaining AI Life", Color.RED, "Vida media restante al final de una ronda", "Iteración", "Vida media restante", "RemainingLife");
+        printGraphic(simplified, playerLife, obs5,"Remaining enemy Life", Color.GREEN, "Vida media restante del enemigo al final de una ronda", "Iteración", "Vida media restante del enemigo", "EnemyRemainingLife");
+        printGraphic(simplified, time, obs6,"Remaining time", Color.PINK, "Tiempo medio restante al final de una ronda", "Iteración", "Tiempo medio restante", "RemainingTime");
+        printGraphic(simplified, hitPerReceived, obs7,"Successful attack per received", Color.MAGENTA, "Ataques exitosos realizados por la IA del total de ataques exitosos", "Iteración", "Attack per received", "HitPerReceivedRatio");
     }
 
 
