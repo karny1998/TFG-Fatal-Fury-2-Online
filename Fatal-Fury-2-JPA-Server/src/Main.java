@@ -166,6 +166,9 @@ public class Main {
                             cp.doStop();
                             doStop();
                         } else {
+                            if(request.contains("LOG OFF")){
+                                threadsByUser.remove(rqM.getUserLogged());
+                            }
                             rqM.manageRequest(request);
                             if (!logged && rqM.isLogged()) {
                                 logged = true;

@@ -675,9 +675,9 @@ public class connection {
                 if(received.isReliable()){
                     sendAck(received.getId());
                 }
-                /*if(received.getId() != msgID.toServer.ping) {
+                if(received.getId() != msgID.toServer.ping) {
                     System.out.println("Se recibe: " + received.toString());
-                }*/
+                }
                 try {
                     sm.acquire();
                     if(received.isObject()){
@@ -691,7 +691,7 @@ public class connection {
                         }
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     sm.release();
                 }
                 sm.release();
@@ -705,7 +705,7 @@ public class connection {
             }
 
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             try{
                 socketTCP.close();
                 socketUDP.close();
@@ -968,7 +968,7 @@ public class connection {
     private boolean reliableSend(int id, Object msg, int timeout, boolean string){
         try {
             pendingACKs.remove(id);
-            for(int i = 0; i < 30; ++i){
+            for(int i = 0; i < 30 && isConnected(); ++i){
                 if(isUDP) {
                     bufSend = (Integer.toString(id) + ";R;" + (String)msg).getBytes();
                     DatagramPacket packet = new DatagramPacket(bufSend, bufSend.length, address, portSend);

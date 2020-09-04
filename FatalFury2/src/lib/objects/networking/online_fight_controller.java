@@ -98,19 +98,21 @@ public class online_fight_controller extends fight_controller {
         }
         else {
             if (!isServer) {
-                String res = con.receiveString(msgID.toClient.tramits);
+                String res = con.receiveString(msgID.toClient.end_game);
                 if (res.contains("GAME ENDED")) {
                     this.hasEnded = true;
                     this.fight_result = Fight_Results.valueOf(res.split(":")[1]);
+                    return;
                 }
             }
-            else{
-                String res = con.receiveString(msgID.toClient.tramits);
-                if (res.contains("SURRENDER")) {
-                    this.hasEnded = true;
-                    this.fight_result = Fight_Results.PLAYER2_WIN;
-                }
+
+            String res = con.receiveString(msgID.toClient.surrender);
+            if (res.contains("SURRENDER")) {
+                this.hasEnded = true;
+                this.fight_result = Fight_Results.PLAYER2_WIN;
+                return;
             }
+
             if (con.isConnected()) {
                 if (reconnecting) {
                     reconnecting = false;

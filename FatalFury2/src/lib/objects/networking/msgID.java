@@ -47,6 +47,8 @@ public class msgID {
         character = 2, /**
          * The Fight.
          */
-        fight = 3;
+        fight = 3,
+        end_game = 4,
+        surrender = 5;
     }
 }

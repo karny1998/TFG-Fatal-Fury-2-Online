@@ -78,7 +78,7 @@ public class online_mode {
     /**
      * The Server ip.
      */
-    private String serverIp = "35.189.87.224";//"fatalfury2.sytes.net";//"127.0.0.1";//
+    private String serverIp = "35.189.87.224";//"127.0.0.1";//"fatalfury2.sytes.net";////
 
     /**
      * The Server port.
@@ -385,37 +385,39 @@ public class online_mode {
      * @return the boolean
      */
     private boolean synchronize(boolean isHost){
+        boolean received = false;
         if(isHost){
+            conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
             for(int i = 0; i < 1000 ;++i){
-                conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     /*e.printStackTrace();*/
                 }
                 String res = conToClient.receiveString(msgID.toClient.synchronization);
-                if( res.equals("READY") || res.equals("ACK")){
+                if (res != null && (res.equals("READY") || res.equals("ACK"))){
                     return true;
                 }
             }
             return false;
         }
         else{
-            for(int i = 0; i < 1000 ;++i){
+            for(int i = 0; i < 1000 && !received;++i){
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     /*e.printStackTrace();*/
                 }
                 String res = conToClient.receiveString(msgID.toClient.synchronization);
-                if(res.equals("READY")){
-                    for(int j = 0; j < 10; ++j){
-                        conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
-                    }
-                    return true;
+                if(res != null && res.equals("READY")){
+                    received = true;
                 }
             }
-            return false;
+            if(!received){
+                return false;
+            }
+            conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+            return true;
         }
     }
 
@@ -455,7 +457,7 @@ public class online_mode {
                             }
                             else{
                                 if(isVsIA == 0) {
-                                    conToClient.reliableSendString(msgID.toClient.tramits, "SURRENDER",200);
+                                    conToClient.reliableSendString(msgID.toClient.surrender, "SURRENDER",200);
                                 }
                                 fight.setFight_result(Fight_Results.PLAYER1_WIN);
                             }
@@ -495,7 +497,9 @@ public class online_mode {
                     Fight_Results results = fight.getFight_result();
                     this.result = results;
                     if (isVsIA == 0 && isHost) {
-                        conToClient.reliableSendString(msgID.toClient.tramits, "GAME ENDED:" + results.toString(), 200);
+                        for(int i = 0; i < 30; ++i) {
+                            conToClient.sendString(msgID.toClient.end_game, "GAME ENDED:" + results.toString());
+                        }
                     }
                     int r = 0;
                     switch (results) {
