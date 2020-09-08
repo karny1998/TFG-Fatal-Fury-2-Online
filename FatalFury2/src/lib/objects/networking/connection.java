@@ -34,14 +34,7 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
 /**
- * Conexión mediante sockets UDP con un receptor.
- * Los mensajes al enviarse y recibirse siguen el siguiente patrón:
- * id:reliable:menssage
- * Siendo id el identificador del mensaje,
- * reliable R o NR, según si pide confirmación o no,
- * y message el mensaje a transmitir.
- * El caso de que el mensaje contenga R en reliable, se esperará una confirmación (ACK)
- * por parte del receptor
+ * Conexión mediante sockets UDP o TCP
  */
 public class connection {
     /**
@@ -515,7 +508,6 @@ public class connection {
                     socketUDP.send(packet);
                     Thread.sleep(100);
                     if (receiveACK(msgID.toClient.hi)) {
-                        System.out.println("SE HA RECIBIDO EL PUTO ACK");
                         ok = true;
                     }
                 }
