@@ -1250,7 +1250,7 @@ public class online_mode_gui {
 
         JTextField popup = generateSimpleTextField("Introduce the username:", f, Color.YELLOW, grey1, 405, 250, 490, 60, false, true);
 
-        JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey1, 485, 325, 300, 60, true, false);
+        JTextField name = generateSimpleTextField("", f, Color.YELLOW, grey2, 485, 325, 300, 60, true, false);
         name.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

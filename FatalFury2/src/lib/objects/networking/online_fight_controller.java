@@ -109,7 +109,12 @@ public class online_fight_controller extends fight_controller {
             String res = con.receiveString(msgID.toClient.surrender);
             if (res.contains("SURRENDER")) {
                 this.hasEnded = true;
-                this.fight_result = Fight_Results.PLAYER2_WIN;
+				if (!isServer) {
+					this.fight_result = Fight_Results.PLAYER2_WIN;
+				}
+				else{
+					this.fight_result = Fight_Results.PLAYER1_WIN;
+				}
                 return;
             }
 

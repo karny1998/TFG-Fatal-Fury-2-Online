@@ -387,7 +387,9 @@ public class online_mode {
     private boolean synchronize(boolean isHost){
         boolean received = false;
         if(isHost){
-            conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+			for(int i = 0; i < 50; ++i){
+				conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+			}
             for(int i = 0; i < 1000 ;++i){
                 try {
                     Thread.sleep(10);
@@ -416,7 +418,9 @@ public class online_mode {
             if(!received){
                 return false;
             }
-            conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+			for(int i = 0; i < 50; ++i){
+				conToClient.sendStringReliable(msgID.toClient.synchronization, "READY");
+			}
             return true;
         }
     }

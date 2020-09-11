@@ -106,8 +106,15 @@ public class guiListener implements ActionListener {
                 gui.getItemsOnScreen().add(guiItems.AUXILIAR_BACKGROUND);
             }
             if(type != guiItems.FRIEND_SEL_BUTTON){
-                gui.closeFriendInteractionPopUp();
-                gui.closeSelectIa();
+                if(gui.getComponentsOnScreen().containsKey(guiItems.CONFIRM_ADD_BUTTON)) {
+                    gui.closeFriendInteractionPopUp();
+                }
+                if(gui.getComponentsOnScreen().containsKey(guiItems.GLOBAL_IA_BUTTON)) {
+                    gui.closeSelectIa();
+                }
+                if(gui.getComponentsOnScreen().containsKey(guiItems.INVITE_FRIEND)) {
+                    gui.closeFriendInteractionPopUp();
+                }
                 if(type != guiItems.SEND_MESSAGE && gui.getComponentsOnScreen().containsKey(guiItems.CHAT)){
                     gui.closeChat();
                     if(onlineState == GameState.PROFILE_GUI){

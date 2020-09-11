@@ -149,7 +149,7 @@ public class character_selection_gui {
     /**
      * The Time.
      */
-    private int time = 5;
+    private int time = 20;
     /**
      * The Time on screen.
      */

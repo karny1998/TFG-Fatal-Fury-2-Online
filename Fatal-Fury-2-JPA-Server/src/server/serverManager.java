@@ -775,7 +775,7 @@ public class serverManager {
      * @param receptor the receptor
      * @return the string
      */
-    public String challengeFriend(String inviter, String receptor){
+    public synchronized String challengeFriend(String inviter, String receptor){
         if(!loggedUsers.containsKey(receptor)){
             return "ERROR: The user isnt connected.";
         }
@@ -798,7 +798,7 @@ public class serverManager {
      * @param inviter the inviter
      * @return the string
      */
-    public String cancelInvitation(String inviter){
+    public synchronized String cancelInvitation(String inviter){
         Player p1 = (Player) dbm.findByKey(Player.class, inviter);
         if (p1 == null){
             return "ERROR:The player does not exist.";
@@ -819,7 +819,7 @@ public class serverManager {
      * @param accepted the accepted
      * @return the string
      */
-    public String answerFriendChallenge(String receptor, String inviter, boolean accepted){
+    public synchronized String answerFriendChallenge(String receptor, String inviter, boolean accepted){
         if(!pendingFriendsInvitatiosns.containsKey(inviter) || !loggedUsers.containsKey(inviter)){
             return "ERROR:The invitation has expired.";
         }
