@@ -1,2 +1,2 @@
 # Clon-Fatal-Fury-2-Unizar
-Asignatura de videojuegos de la universidad de Zaragoza
+Clon del videojuego Fatal Fury 2 (SNK 1992), que implementa servicios en red y una inteligencia artificial adaptativa.
