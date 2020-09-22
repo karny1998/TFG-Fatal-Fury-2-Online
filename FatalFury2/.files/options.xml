@@ -5,7 +5,7 @@
         <vol_musica>100</vol_musica>
         <vol_voces>100</vol_voces>
         <vol_efectos>100</vol_efectos>
-        <full_screen>0</full_screen>
+        <full_screen>1</full_screen>
     </general>
     <controles_jugador_1>
         <arriba>38</arriba>
