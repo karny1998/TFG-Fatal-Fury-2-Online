@@ -1120,6 +1120,7 @@ public class online_mode_gui {
             componentsOnScreen.put(guiItems.SHOW, showPass);
         }
 
+        componentsOnScreen.get(guiItems.CHANGE_PASS_BUTTON).setVisible(false);
         reloadGUI();
     }
 
@@ -1496,6 +1497,9 @@ public class online_mode_gui {
         if(itemsOnScreen.contains(guiItems.REJECT_FRIEND_CHALLENGE)){
             ((JButton)componentsOnScreen.get(guiItems.REJECT_FRIEND_CHALLENGE)).getActionListeners()[0].actionPerformed(null);
         }
+        if(itemsOnScreen.contains(guiItems.CHANGE_PASS_BUTTON)){
+            componentsOnScreen.get(guiItems.CHANGE_PASS_BUTTON).setVisible(true);
+        }
         guiItems items[] = {guiItems.POP_UP, guiItems.INTRODUCE_NAME,
                 guiItems.CONFIRM_ADD_BUTTON, guiItems.CANCEL_ADD_BUTTON,
                 guiItems.POP_UP_TABLE, guiItems.YES_BUTTON, guiItems.NOT_BUTTON,
@@ -1631,6 +1635,7 @@ public class online_mode_gui {
         deleteComponents(new guiItems[]{guiItems.CONFIRM_CHANGE_PASS, guiItems.CANCEL_CHANGE_PASS, guiItems.OLD_PASS,
                 guiItems.OLD_PASS_TEXT, guiItems.NEW_PASS, guiItems.NEW_PASS_TEXT, guiItems.NEW_PASS_REPEAT,
                 guiItems.NEW_PASS_REPEAT_TEXT, guiItems.REGISTER_TABLE, guiItems.HIDE, guiItems.SHOW});
+        componentsOnScreen.get(guiItems.CHANGE_PASS_BUTTON).setVisible(true);
         reloadGUI();
     }
 

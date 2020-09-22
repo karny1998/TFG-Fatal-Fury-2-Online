@@ -128,7 +128,7 @@ public class game_controller {
      * The State.
      */
 // Estado del juego, inicalmente en opening
-    private GameState state = GameState.NAVIGATION;
+    private GameState state = GameState.OPENING_1;
     /**
      * The Ranking.
      */

@@ -315,8 +315,6 @@ public class guiListener implements ActionListener {
                             gui.closePopUp();
                             break;
                         case QUIT_BUTTON:
-                            gui.closeVerification();
-                            quitGame();
                             break;
                         case QUIT_YES:
                             conToServer.sendString(msgID.toServer.tramits,"DISCONNECT");

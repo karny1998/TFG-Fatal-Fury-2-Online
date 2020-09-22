@@ -155,7 +155,7 @@ public class connection {
         this.timeout = timeout;
         try {
             if(isUDP) {
-                System.out.println("Attempting UPnP port forwarding...");
+                /*System.out.println("Attempting UPnP port forwarding...");
                 if (UPnP.isUPnPAvailable()) { //is UPnP available?
                     if (UPnP.isMappedUDP(port)) { //is the port already mapped?
                         System.out.println("UPnP port forwarding not enabled: port is already mapped");
@@ -166,7 +166,7 @@ public class connection {
                     }
                 } else {
                     System.out.println("UPnP is not available");
-                }
+                }*/
 
                 /*InetAddress inet = InetAddress.getLocalHost();
                 PortMapping desiredMapping = new PortMapping(port,

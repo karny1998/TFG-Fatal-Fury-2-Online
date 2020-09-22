@@ -528,6 +528,11 @@ public class online_mode {
                             } else {
                                 do {
                                     res = conToServer.receiveString(msgID.toServer.request);
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                 } while (!res.contains("GAME REGISTERED"));
                             }
                             rankPoints = Integer.parseInt(res.split(":")[1]);
