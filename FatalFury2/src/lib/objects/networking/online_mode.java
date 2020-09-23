@@ -14,9 +14,7 @@ import lib.utils.Pair;
 import lib.utils.sendableObjects.simpleObjects.qtable;
 
 import javax.security.sasl.SaslServer;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import java.util.Map;
 
@@ -161,6 +159,16 @@ public class online_mode {
      * @param debug      the debug
      */
     public online_mode(Screen screen, menu escapeMenu, boolean debug) {
+        String path =  System.getProperty("user.dir") + "/.files/IPserver.txt";
+        try{
+            File f = new File(path);
+            BufferedReader b = new BufferedReader(new FileReader(f));
+            serverIp = b.readLine();
+            b.close();
+        }catch (Exception e){
+            serverIp = "35.189.87.224";
+        }
+
         this.escapeMenu = escapeMenu;
         this.screen = screen;
         if(!debug) {

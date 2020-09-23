@@ -48,7 +48,13 @@ public class msgID {
          * The Fight.
          */
         fight = 3,
+        /**
+         * The End game.
+         */
         end_game = 4,
+        /**
+         * The Surrender.
+         */
         surrender = 5;
     }
 }

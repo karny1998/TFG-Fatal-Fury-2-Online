@@ -757,8 +757,8 @@ public class agent{
             }
         }
     }
-	
-	/**
+
+    /**
      * Sets use regression.
      *
      * @param useRegression the use regression
